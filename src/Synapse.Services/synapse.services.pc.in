@@ -1,0 +1,6 @@
+Name: Synapse.Services
+Description: Synapse.Services
+Version: 
+
+Requires: 
+Libs: -r:@expanded_libdir@/@PACKAGE@/Dragon.Services.dll

@@ -1,0 +1,6 @@
+Name: Synapse.Core
+Description: Synapse.Core
+Version: 
+
+Requires: 
+Libs: -r:@expanded_libdir@/@PACKAGE@/Dragon.Core.dll

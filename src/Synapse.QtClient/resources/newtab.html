@@ -1,0 +1,122 @@
+<html>
+	<head>
+		<style type="text/css">
+			body * {
+				font-family: "Deja Vu Sans";
+				font-size: 9pt;
+			}
+			h2 {
+				margin-top: 0px;
+			}
+			a {
+				font-size: x-small;
+			}
+			table {
+				width: 100%;
+			}
+			td {
+				vertical-align: top;
+				padding: 0px;
+				margin: 0px;
+			}
+			form {
+				padding: 6px 0px;
+			}
+			#main {
+				padding-right: 6px;
+			}
+			#friends_header {
+				padding: 6px;
+				-webkit-border-radius: 3px;
+				background-color: #E1ECFE;
+			}
+			#friends_header ul {
+				list-style: none;
+				text-align: right;
+				margin: 0px;
+			}
+			#friends_header h2 {
+				float: left;
+			}
+			#friends_header ul li {
+				display: inline;
+				padding-right: 6px;
+			}
+			#sidebar {
+				width: 200px;
+			}
+			.sidebar_item {
+				-webkit-border-radius: 3px;
+				padding: 6px;
+				margin-bottom: 6px;
+			}
+			#recently_closed {
+				background-color: #FFF1A8;
+			}
+			#top_five, #bookmarked_mucs {
+				background-color: #E1ECFE;
+			}
+			#contact_search {
+				border-bottom: 1px solid #ccc;
+			}
+			#contact_search * {
+			}
+
+		</style>
+		<script type="text/javascript">
+			var data = {
+				favorites: [],
+				  recents: [],
+
+			};
+
+			function reload_data()
+			{
+			}
+		</script>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td id="main">
+					<div id="friends_header">
+						<h2>All Friends</h2>
+						<ul>
+							<li><a href="synapse.showRoster()">Show Friends List</a></li>
+							<li><a href="synapse.showMessageWindow()">Message Other...</a></li>
+						</ul>
+					</div>
+					<form id="contact_search">
+						<label>Search: <input type="text" value="" /></label>
+						<input type="submit" value="Search" />
+					</form>
+					<div id="friends">
+					</div>
+				</td>
+				<td id="sidebar">
+					<div id="top_five" class="sidebar_item">
+						<h2>Top 5 Friends</h2>
+						<ul>
+							<li>None Found</li>
+						</ul>
+					</div>
+
+					<div id="bookmarked_mucs" class="sidebar_item">
+						<h2>Chat Rooms</h2>
+						<ul>
+							<li>No bookmarks found.</li>
+						</ul>
+						<a href="synapse.showJoinChatWindow()">Create or join other chat room...</a>
+					</div>
+					<div id="recently_closed" class="sidebar_item">
+						<h2>Recently Closed Tabs</h2>
+						<ul>
+							<li>None Found</li>
+						</ul>
+						<a href="#">Clear List</a>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

@@ -1,0 +1,46 @@
+<Project name="Synapse.Xmpp" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="../../build/Debug" assembly="Synapse.Xmpp" />
+      <Build debugmode="True" target="Library" />
+      <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Release" assembly="Dragon.Core.Xmpp" />
+      <Build debugmode="False" target="Library" />
+      <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File name="Synapse.Xmpp/Account.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/ActivityFeed.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/IDiscoverable.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/Namespace.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/PersonalEventing.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/Microblogging.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/UserMood.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/UserTune.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/ClientStatus.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/IOperation.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/AccountService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/OperationService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/AbstractOperation.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/UserAvatars.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/AvatarManager.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/ChatStates.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/AbstractIqOperation.cs" subtype="Code" buildaction="Compile" />
+  </Contents>
+  <References>
+    <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/jabber-net.dll" />
+    <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
+    <ProjectReference type="Project" localcopy="True" refto="Synapse.Services" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  </References>
+  <GtkDesignInfo />
+</Project>

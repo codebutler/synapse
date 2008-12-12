@@ -1,0 +1,12 @@
+<Addin  id        = "Services"
+		isroot    = "true"
+		namespace = "Synapse"
+		author    = "Eric Butler"
+		copyright = "GPL-3"
+		url       = "http://www.synapse.im"
+		version   = "1.0">
+
+	<ExtensionPoint path="/Synapse/ServiceManager/Service">
+		<ExtensionNode name="Service" />
+	</ExtensionPoint>
+</Addin>

@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+dragondir=${libdir}/dragon
+
+Name: Dragon Services
+Description: Services library for the Dragon IM Framework
+Version: @VERSION@
+Libs: -r:System -r:Mono.Posix
+Requires: loudmouth-sharp glib-sharp-2.0 dragon-core

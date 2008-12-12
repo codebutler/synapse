@@ -1,0 +1,10 @@
+<Addin  id        = "Core"
+		isroot    = "true"
+		namespace = "Synapse"
+		author    = "Eric Butler"
+		copyright = "GPL-3"
+		url       = "http://www.synapse.im"
+		version   = "1.0">
+
+
+</Addin>

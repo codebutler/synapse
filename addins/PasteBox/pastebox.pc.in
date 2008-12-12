@@ -1,0 +1,6 @@
+Name: PasteBox
+Description: PasteBox
+Version: 
+
+Requires: 
+Libs: -r:@expanded_libdir@/@PACKAGE@/PasteBox.dll

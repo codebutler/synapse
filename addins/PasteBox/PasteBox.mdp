@@ -1,0 +1,39 @@
+<Project name="PasteBox" fileversion="2.0" language="C#" DefaultNamespace="Synapse.PasteBox" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="../../build/Debug" assembly="PasteBox" />
+      <Build debugmode="True" target="Library" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Release" assembly="PasteBox" />
+      <Build debugmode="False" target="Library" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File name="PasteBox.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="ActionHandler.cs" subtype="Code" buildaction="Compile" />
+    <File name="PasteBoxDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/PasteBoxDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="CodePasteFormatter.cs" subtype="Code" buildaction="Compile" />
+    <File name="IPasteFormatter.cs" subtype="Code" buildaction="Compile" />
+    <File name="SyntaxHighlighter.css" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="SyntaxHighlighter.js" subtype="Code" buildaction="EmbedAsResource" />
+  </Contents>
+  <References>
+    <ProjectReference type="Project" localcopy="True" refto="Synapse.UI" />
+    <ProjectReference type="Project" localcopy="True" refto="Synapse.Services" />
+    <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
+    <ProjectReference type="Gac" localcopy="True" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
+    <ProjectReference type="Assembly" localcopy="True" refto="../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll" />
+  </References>
+  <GtkDesignInfo />
+  <QyotoDesignInfo>
+    <Forms>
+      <QyotoForm UiFileName="PasteBoxDialog.ui" />
+    </Forms>
+  </QyotoDesignInfo>
+</Project>

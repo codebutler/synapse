@@ -1,0 +1,95 @@
+<ui version="4.0" >
+ <class>ChatWindow</class>
+ <widget class="QWidget" name="ChatWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>562</width>
+    <height>331</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Chat window</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout" >
+   <property name="spacing" >
+    <number>0</number>
+   </property>
+   <property name="margin" >
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QSplitter" name="splitter_2" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QSplitter" name="splitter" >
+      <property name="orientation" >
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="opaqueResize" >
+       <bool>true</bool>
+      </property>
+      <property name="childrenCollapsible" >
+       <bool>false</bool>
+      </property>
+      <widget class="Synapse.QtClient.ConversationWidget" native="1" name="m_ConversationWidget" >
+       <property name="url" stdset="0" >
+        <url>
+         <string>about:blank</string>
+        </url>
+       </property>
+      </widget>
+      <widget class="QWidget" native="1" name="bottomContainer" >
+       <layout class="QVBoxLayout" name="verticalLayout" >
+        <property name="spacing" >
+         <number>0</number>
+        </property>
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTextEdit" name="textEdit" >
+          <property name="frameShape" >
+           <enum>QFrame::NoFrame</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" native="1" name="leftContainer" >
+      <layout class="QVBoxLayout" name="verticalLayout_2" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="Synapse.QtClient.AvatarGrid&lt;jabber.connection.RoomParticipant>" name="participantsGrid" >
+         <property name="frameShape" >
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Synapse.QtClient.ConversationWidget</class>
+  </customwidget>
+  <customwidget>
+   <class>Synapse.QtClient.AvatarGrid&lt;jabber.connection.RoomParticipant></class>
+   <extends>QGraphicsView</extends>
+   <header>rostergrid.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,51 @@
+<Project name="Synapse.Services" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="../../build/Debug" assembly="Synapse.Services" />
+      <Build debugmode="True" target="Library" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <EnvironmentVariables />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="../../build/Release" assembly="Dragon.Services" />
+      <Build debugmode="False" target="Library" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File name="Synapse.Services/NetworkService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Services/NotificationService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Services/ScreensaverService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Services/NowPlayingService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack" subtype="Directory" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/IService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/ServiceManager.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/IRequiredService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/IInitializeService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/IExtensionService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/ServiceStartedHandler.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/IDelayedInitializeService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/DBusServiceManager.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/IDBusExportable.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/Application.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/Client.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/DBusConnection.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/IDBusObjectName.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.ServiceStack/IRegisterOnDemandService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Services.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
+  </Contents>
+  <References>
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099" />
+    <ProjectReference type="Gac" localcopy="True" refto="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
+    <ProjectReference type="Gac" localcopy="True" refto="gconf-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Gac" localcopy="True" refto="Hyena, Version=1.2.1.17581, Culture=neutral, PublicKeyToken=null" />
+  </References>
+  <GtkDesignInfo />
+</Project>

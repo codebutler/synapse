@@ -1,0 +1,6 @@
+Name: Synapse.Xmpp
+Description: Synapse.Xmpp
+Version: 
+
+Requires: 
+Libs: -r:@expanded_libdir@/@PACKAGE@/Dragon.Core.Xmpp.dll

@@ -1,0 +1,166 @@
+QWidget#containerWidget {
+	background-color: #222222;
+}
+
+QLabel#headerLabel {
+	color: #C7C7C7;
+	font-weight: bold;
+	/* background-color: #606060; */
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666666, stop: 1 #5D5D5D);
+	border-top: 1px solid #808080;
+}
+
+#m_AccountsContainer {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5D5D5D, stop: 1 #444444);
+}
+
+QLabel, QLineEdit, QTabBar, QTreeView, QGraphicsView {
+	color: white;
+}
+
+QSplitter::handle {
+	background-color: #1A1A1A;
+	image: url(resource:/handle.png);
+}
+
+QLabel#m_NameLabel {
+	font-weight: bold;
+}
+
+QLabel#m_StatusLabel {
+	font-size: 10pt;
+}
+
+QLineEdit {
+	border: 1px solid #2D2D2D;
+	background-color: #2D2D2D;
+	border-radius: 5px;
+}
+
+#activityFrame {
+	background-color: #2D2D2D;
+	border: 1px solid #2D2D2D;
+	border-radius: 5px;
+}
+
+#activityFrame QWebView {
+	background-color: #2D2D2D;
+}
+
+#friendsTab, #friendsTab QGraphicsView,
+#chatroomsTab QTreeView {
+	background-color: #333333;
+}
+
+#NoAccountsWidget QGraphicsView {
+	background: transparent;
+}
+
+QPushButton {
+	color: #BBBBBB;
+	border-radius: 5px;
+}
+
+QPushButton[flat="false"] {
+	background-color: #2D2D2D;
+	border: 1px solid #2D2D2D;
+	padding: 1px 3px;
+}
+
+QPushButton[flat="true"] {
+	background-color: transparent;
+	border: 1px solid transparent;
+	padding: 0px; /* FIXME: This doesn't seem to work */
+}
+
+QPushButton:hover, 
+QPushButton:checked {
+	background-color: #2D2D2D;
+	border: 1px solid #2D2D2D;
+	border-radius: 5px;
+}
+
+QTabWidget::pane { /* The tab widget frame */
+	border-bottom: 1px solid #1B1B1B;
+	/*
+	border-left: 1px solid  qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #2E2E2E, stop: 1 #333333);
+	border-right: 1px solid  qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #2E2E2E, stop: 1 #333333);
+	*/
+}
+
+QTabWidget::tab-bar {
+	left: 10px;
+
+ 	/*  FIXME */
+	/* top: 6px; */
+	top: 1px;
+}
+
+QTabBar::tab {	
+	padding: 2px 8px;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	background: transparent;
+	margin-top: 1px;
+
+ 	/* FIXME */
+	/* margin-bottom: 11px; */
+	margin-bottom: 6px;
+}
+
+QTabWidget::right-corner {
+	top: 13px;
+	left: 3px;
+}
+
+QTabBar::tab:selected {
+	background: #333;
+	border-top: 0px;
+	border-left: 1px solid #1B1B1B;
+	border-bottom: 1px solid #1B1B1B;
+	border-right: 1px solid #1B1B1B;
+	
+	padding-top: 5px;
+	margin-top: 0px;
+}
+
+QTabBar::tab:selected:!first {
+	margin-left: -1px;
+}
+
+QTabBar::tab:!last:!selected {
+	border-right: 1px solid #1B1B1B;
+}
+
+QListView {
+	background: #2D2D2D;
+}
+
+QScrollBar:vertical {
+	border: 0px;
+	background: #2D2D2D;
+	width: 15px;
+	margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+	background: #4F4F4F;
+	min-height: 20px;
+	border: 1px solid #4F4F4F;
+	border-radius: 5px;
+}
+
+QScrollBar::add-line:vertical {
+	height: 0px;
+	border: 0px;
+}
+
+QScrollBar::sub-line:vertical {
+	height: 0px;
+}
+
+QScrollBar::add-page:vertical, 
+QScrollBar::sub-page:vertical {
+	background: none;
+}

@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        background-color: #333333;
+        color: #BFBFBC;
+        margin: 2px;
+        font-size: small;
+      }
+      ul {
+            padding-left: 0px;
+            margin: 0px;
+      }
+      li {
+          list-style-type: none;
+          background: url('file:///usr/share/pixmaps/pidgin/status/32/person.png') no-repeat 4px center;
+          padding: 2px 2px 2px 40px;
+          margin-bottom: 2px;
+          border-bottom: 1px dotted #666;
+          min-height: 32px;
+      }
+      li:last-child {
+          margin-bottom: 0px !important;
+          border-bottom: 0px !important;
+      }
+      blockquote {
+        margin: 8px 6px;
+        color: #CCCCC9;
+        padding-left: 25px;
+      }
+      div.timestamp {
+          float: right;
+          font-size: xx-small;
+      }
+      a {
+        color: #6A6A6A;
+      }
+      .music {
+          background: url('/usr/share/icons/gnome/16x16/mimetypes/audio-x-generic.png') no-repeat;
+      }
+      div#actions {
+	text-align: right;
+      }
+    </style>
+    <script type="text/javascript">
+      function add_item (html) {
+        var itemsList = document.getElementById('items');
+        itemsList.innerHTML += html;
+      }
+    </script>
+  </head>
+  <body>
+    <ul id="items"></ul>
+  </body>
+</html>
