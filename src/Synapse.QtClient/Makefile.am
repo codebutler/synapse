@@ -153,7 +153,9 @@ FILES = \
 	PreferencesWindow.cs \
 	qt-gui/PreferencesWindow.cs \
 	ResizableGraphicsPixmapItem.cs \
-	ResourceFileEngine.cs 
+	ResourceFileEngine.cs \
+	AbstractSimpleFileEngine.cs \
+	AvatarFileEngine.cs 
 
 DATA_FILES = 
 
