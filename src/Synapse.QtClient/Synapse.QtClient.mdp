@@ -69,11 +69,11 @@
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <ProjectReference type="Gac" localcopy="True" refto="Hyena.Gui, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null" />
-    <ProjectReference type="Gac" localcopy="True" refto="Hyena, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null" />
     <ProjectReference type="Assembly" localcopy="True" refto="../../../../../../usr/lib/cli/kdebindings-4.4/qt-dotnet.dll" />
     <ProjectReference type="Assembly" localcopy="True" refto="../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
+    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.dll" />
+    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.Gui.dll" />
   </References>
   <GtkDesignInfo />
   <QyotoDesignInfo>

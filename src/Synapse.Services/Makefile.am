@@ -99,10 +99,10 @@ REFERENCES =  \
 	$(NOTIFY_SHARP_LIBS) \
 	System.Xml \
 	$(GCONF_SHARP_20_LIBS) \
-	Mono.Posix \
-	$(BANSHEE_1_HYENA_LIBS)
+	Mono.Posix
 
-DLL_REFERENCES = 
+DLL_REFERENCES =  \
+	../../contrib/Hyena.dll
 
 CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 

@@ -146,12 +146,12 @@ EXTRAS = \
 REFERENCES =  \
 	System \
 	System.Core \
-	$(BANSHEE_1_HYENA_LIBS) \
 	$(MONO_ADDINS_LIBS) \
 	System.Xml
 
 DLL_REFERENCES =  \
-	../../contrib/jabber-net.dll
+	../../contrib/jabber-net.dll \
+	../../contrib/Hyena.dll
 
 CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
