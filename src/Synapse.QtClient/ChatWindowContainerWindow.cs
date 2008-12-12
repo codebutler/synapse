@@ -97,22 +97,26 @@ namespace Synapse.QtClient
 
 		void HandleChatWindowOpened (AbstractChatWindowController window, bool focus)
 		{
-			var view = (QWidget)window.View;
-			
-			int index = m_Tabs.CurrentIndex + 1;
-			index = m_Tabs.InsertTab(index, view, view.WindowTitle);
-
-			if (focus)
-				m_Tabs.SetCurrentIndex(index);
-
-			TabAdded();
+			Application.Invoke(delegate {
+				var view = (QWidget)window.View;
+				
+				int index = m_Tabs.CurrentIndex + 1;
+				index = m_Tabs.InsertTab(index, view, view.WindowTitle);
+	
+				if (focus)
+					m_Tabs.SetCurrentIndex(index);
+	
+				TabAdded();
+			});
 		}
 
 		void HandleChatWindowClosed (AbstractChatWindowController window)
 		{
-			int index = m_Tabs.IndexOf((QWidget)window.View);
-			m_Tabs.RemoveTab(index);
-			TabClosed();
+			Application.Invoke(delegate {
+				int index = m_Tabs.IndexOf((QWidget)window.View);
+				m_Tabs.RemoveTab(index);
+				TabClosed();
+			});
 		}
 
 		[Q_SLOT]

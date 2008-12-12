@@ -52,7 +52,8 @@ namespace Synapse.UI.Controllers
 
 			m_GridModel = new MucAvatarGridModel(account, room);
 
-			Application.InvokeAndBlock(delegate {base.InitializeView();
+			Application.InvokeAndBlock(delegate {
+				base.InitializeView();
 				base.View.TextEntered += HandleTextEntered;
 				base.View.Closed += delegate {
 					m_Room.Leave(String.Empty);
@@ -82,16 +83,12 @@ namespace Synapse.UI.Controllers
 
 		void HandleOnSelfMessage(object sender, Message msg)
 		{
-			Application.Invoke(delegate {
-				AppendMessage(false, msg);
-			});
+			AppendMessage(false, msg);
 		}
 
 		void HandleOnRoomMessage(object sender, Message msg)
 		{
-			Application.Invoke(delegate {
-				AppendMessage(true, msg);
-			});
+			AppendMessage(true, msg);
 		}
 	}
 }
