@@ -1,4 +1,4 @@
-<Combine BaseDirectory="" name="Addins" fileversion="2.0">
+<Combine name="Addins" fileversion="2.0">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="CombineConfiguration">
       <Entry build="True" name="PasteBox" configuration="Debug" />
@@ -11,6 +11,6 @@
     <Execute type="None" entry="PasteBox" />
   </StartMode>
   <Entries>
-    <Entry filename="PasteBox/PasteBox.mdp" />
+    <Entry filename="addins/PasteBox/PasteBox.mdp" />
   </Entries>
 </Combine>

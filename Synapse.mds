@@ -5,16 +5,16 @@
       <Entry build="True" name="Synapse.Services" configuration="Debug" />
       <Entry build="True" name="Synapse.Xmpp" configuration="Debug" />
       <Entry build="True" name="Synapse.UI" configuration="Debug" />
-      <Entry build="True" name="Addins" configuration="Debug" />
       <Entry build="True" name="Synapse.QtClient" configuration="Debug" />
+      <Entry build="True" name="Addins" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="Synapse.Core" configuration="Release" />
       <Entry build="True" name="Synapse.Services" configuration="Release" />
       <Entry build="True" name="Synapse.Xmpp" configuration="Release" />
       <Entry build="True" name="Synapse.UI" configuration="Release" />
-      <Entry build="True" name="Addins" configuration="Release" />
       <Entry build="True" name="Synapse.QtClient" configuration="Release" />
+      <Entry build="True" name="Addins" configuration="Release" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="Synapse.Core" single="True">
@@ -22,15 +22,15 @@
     <Execute type="None" entry="Synapse.Services" />
     <Execute type="None" entry="Synapse.Xmpp" />
     <Execute type="None" entry="Synapse.UI" />
-    <Execute type="None" entry="Addins" />
     <Execute type="None" entry="Synapse.QtClient" />
+    <Execute type="None" entry="Addins" />
   </StartMode>
   <Entries>
     <Entry filename="src/Synapse.Core/Synapse.Core.mdp" />
     <Entry filename="src/Synapse.Services/Synapse.Services.mdp" />
     <Entry filename="src/Synapse.Xmpp/Synapse.Xmpp.mdp" />
     <Entry filename="src/Synapse.UI/Synapse.UI.mdp" />
-    <Entry filename="addins/Addins.mds" />
     <Entry filename="src/Synapse.QtClient/Synapse.QtClient.mdp" />
+    <Entry filename="Addins.mds" />
   </Entries>
 </Combine>
