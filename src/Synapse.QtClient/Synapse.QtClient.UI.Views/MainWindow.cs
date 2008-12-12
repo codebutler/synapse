@@ -56,6 +56,9 @@ namespace Synapse.QtClient.UI.Views
 		{
 			SetupUi();
 			base.WindowFlags = (uint)Qt.WindowType.FramelessWindowHint;
+
+			QPixmap pixmap = new QPixmap("resource:/tray.png");
+			base.WindowIcon = new QIcon(pixmap);
 			
 			QVBoxLayout layout = new QVBoxLayout();
 			layout.SetContentsMargins(0, 0, 0, 0);

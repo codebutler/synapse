@@ -57,6 +57,9 @@ namespace Synapse.QtClient
 			Gtk.Application.Init();
 
 			m_App = new QApplication(args);
+			m_App.ApplicationName = "Synapse";
+			m_App.ApplicationVersion = "0.1";
+			
 			InitQtWebKit.InitSmoke();
 
 			m_ResourceFileEngineHandler = new ResourceFileEngineHandler();
