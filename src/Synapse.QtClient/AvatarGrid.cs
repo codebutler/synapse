@@ -104,7 +104,6 @@ namespace Synapse.QtClient
 
 		public int IconHeight {
 			get {
-				//return (m_IconWidth + 10);
 				return m_IconWidth;
 			}
 		}		
@@ -194,18 +193,6 @@ namespace Synapse.QtClient
 				group.SetVisible(false);
 				m_Scene.AddItem(group);
 				m_Groups.Add(groupName, group);
-
-				/*
-				QLinearGradient gradient = new QLinearGradient(0, 0, 1, 0);
-				gradient.SetCoordinateMode(QGradient.CoordinateMode.ObjectBoundingMode);
-            	gradient.SetColorAt(0, new QColor("#4F4F4F"));
-            	gradient.SetColorAt(1, Qt.GlobalColor.transparent);
-				
-				QGraphicsRectItem bgItem = new QGraphicsRectItem(group);
-				bgItem.SetBrush(new QBrush(gradient));
-				bgItem.SetPen(new QPen(Qt.PenStyle.NoPen));
-				group.AddToGroup(bgItem);
-				*/
 
 				// Group Name
 				QGraphicsSimpleTextItem nameItem = new QGraphicsSimpleTextItem(groupName, group);

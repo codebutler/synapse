@@ -30,7 +30,6 @@ SYNAPSE_CORE_DLL_MDB=$(BUILD_DIR)/Synapse.Core.dll.mdb
 JABBER_NET_DLL_MDB_SOURCE=../../contrib/jabber-net.dll.mdb
 SYNAPSE_UI_DLL_MDB_SOURCE=../../build/Debug/Synapse.UI.dll.mdb
 SYNAPSE_UI_DLL_MDB=$(BUILD_DIR)/Synapse.UI.dll.mdb
-HYENA_DLL_MDB_SOURCE=../../contrib/Hyena.dll.mdb
 SYNAPSE_XMPP_DLL_MDB_SOURCE=../../build/Debug/Synapse.Xmpp.dll.mdb
 SYNAPSE_XMPP_DLL_MDB=$(BUILD_DIR)/Synapse.Xmpp.dll.mdb
 DRAGON_SERVICES_DLL=
@@ -69,7 +68,6 @@ SYNAPSE_UI_DLL=
 SYNAPSE_CORE_DLL_MDB=
 JABBER_NET_DLL_MDB_SOURCE=../../contrib/jabber-net.dll.mdb
 SYNAPSE_UI_DLL_MDB=
-HYENA_DLL_MDB_SOURCE=../../contrib/Hyena.dll.mdb
 SYNAPSE_XMPP_DLL_MDB=
 DRAGON_SERVICES_DLL_SOURCE=../../build/Release/Dragon.Services.dll
 DRAGON_SERVICES_DLL=$(BUILD_DIR)/Dragon.Services.dll
@@ -97,7 +95,6 @@ PROGRAMFILES = \
 	$(SYNAPSE_CORE_DLL_MDB) \
 	$(JABBER_NET_DLL_MDB) \
 	$(SYNAPSE_UI_DLL_MDB) \
-	$(HYENA_DLL_MDB) \
 	$(SYNAPSE_XMPP_DLL_MDB) \
 	$(DRAGON_SERVICES_DLL) \
 	$(SYNAPSE_SERVICES_DLL_MDB) \
@@ -144,7 +141,6 @@ include $(top_srcdir)/Makefile.include
 
 QTWEBKIT_DLL_CONFIG = $(BUILD_DIR)/qtwebkit.dll.config
 JABBER_NET_DLL_MDB = $(BUILD_DIR)/jabber-net.dll.mdb
-HYENA_DLL_MDB = $(BUILD_DIR)/Hyena.dll.mdb
 PASTEBOX_PC = $(BUILD_DIR)/pastebox.pc
 HYENA_DLL = $(BUILD_DIR)/Hyena.dll
 QTWEBKIT_DLL = $(BUILD_DIR)/qtwebkit.dll
@@ -154,7 +150,6 @@ $(eval $(call emit-deploy-target,SYNAPSE_DLL))
 $(eval $(call emit-deploy-target,QTWEBKIT_DLL_CONFIG))
 $(eval $(call emit-deploy-target,DRAGON_CORE_DLL))
 $(eval $(call emit-deploy-target,JABBER_NET_DLL_MDB))
-$(eval $(call emit-deploy-target,HYENA_DLL_MDB))
 $(eval $(call emit-deploy-target,DRAGON_SERVICES_DLL))
 $(eval $(call emit-deploy-wrapper,PASTEBOX_PC,pastebox.pc))
 $(eval $(call emit-deploy-target,HYENA_DLL))

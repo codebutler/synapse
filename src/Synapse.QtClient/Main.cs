@@ -55,7 +55,7 @@ namespace Synapse.QtClient
 			PlatformHacks.SetProcessName("synapse");
 
 			Gtk.Application.Init();
-
+			
 			m_App = new QApplication(args);
 			m_App.ApplicationName = "Synapse";
 			m_App.ApplicationVersion = "0.1";
@@ -68,6 +68,7 @@ namespace Synapse.QtClient
 			QtTraceListener listener = new QtTraceListener();
 			listener.TraceOutputOptions = TraceOptions.Callstack;
 			Debug.Listeners.Add(listener);
+			Debug.Listeners.Add(new ConsoleTraceListener());
 			Debug.WriteLine("Debug Mode On");
 			
 			Application.Initialize();

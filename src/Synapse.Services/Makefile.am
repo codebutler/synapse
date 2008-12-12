@@ -13,7 +13,6 @@ PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.Core.dll
 BUILD_DIR = ../../build/Debug
 
-HYENA_DLL_MDB_SOURCE=../../contrib/Hyena.dll.mdb
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
 SYNAPSE_SERVICES_DLL_MDB_SOURCE=../../build/Debug/Synapse.Services.dll.mdb
 SYNAPSE_SERVICES_DLL_MDB=$(BUILD_DIR)/Synapse.Services.dll.mdb
@@ -35,7 +34,6 @@ PROJECT_REFERENCES =  \
 	../../build/Release/Dragon.Core.dll
 BUILD_DIR = ../../build/Release
 
-HYENA_DLL_MDB_SOURCE=../../contrib/Hyena.dll.mdb
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
 SYNAPSE_SERVICES_DLL_MDB=
 SYNAPSE_CORE_DLL=
@@ -49,7 +47,6 @@ AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
 
 PROGRAMFILES = \
-	$(HYENA_DLL_MDB) \
 	$(HYENA_DLL) \
 	$(SYNAPSE_SERVICES_DLL_MDB) \
 	$(SYNAPSE_CORE_DLL) \
@@ -98,7 +95,6 @@ REFERENCES =  \
 	$(NDESK_DBUS_10_LIBS) \
 	$(NOTIFY_SHARP_LIBS) \
 	System.Xml \
-	$(GCONF_SHARP_20_LIBS) \
 	Mono.Posix
 
 DLL_REFERENCES =  \
@@ -108,11 +104,9 @@ CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG)
 
 include $(top_srcdir)/Makefile.include
 
-HYENA_DLL_MDB = $(BUILD_DIR)/Hyena.dll.mdb
 HYENA_DLL = $(BUILD_DIR)/Hyena.dll
 SYNAPSE_SERVICES_PC = $(BUILD_DIR)/synapse.services.pc
 
-$(eval $(call emit-deploy-target,HYENA_DLL_MDB))
 $(eval $(call emit-deploy-target,HYENA_DLL))
 $(eval $(call emit-deploy-wrapper,SYNAPSE_SERVICES_PC,synapse.services.pc))
 

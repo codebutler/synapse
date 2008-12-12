@@ -12,7 +12,6 @@ COMPILE_TARGET = library
 PROJECT_REFERENCES = 
 BUILD_DIR = ../../build/Debug
 
-HYENA_DLL_MDB_SOURCE=../../contrib/Hyena.dll.mdb
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
 SYNAPSE_CORE_DLL_MDB_SOURCE=../../build/Debug/Synapse.Core.dll.mdb
 SYNAPSE_CORE_DLL_MDB=$(BUILD_DIR)/Synapse.Core.dll.mdb
@@ -28,7 +27,6 @@ COMPILE_TARGET = library
 PROJECT_REFERENCES = 
 BUILD_DIR = ../../build/Release
 
-HYENA_DLL_MDB_SOURCE=../../contrib/Hyena.dll.mdb
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
 SYNAPSE_CORE_DLL_MDB=
 
@@ -38,7 +36,6 @@ AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
 
 PROGRAMFILES = \
-	$(HYENA_DLL_MDB) \
 	$(HYENA_DLL) \
 	$(SYNAPSE_CORE_DLL_MDB)  
 
@@ -86,11 +83,9 @@ CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG)
 
 include $(top_srcdir)/Makefile.include
 
-HYENA_DLL_MDB = $(BUILD_DIR)/Hyena.dll.mdb
 HYENA_DLL = $(BUILD_DIR)/Hyena.dll
 SYNAPSE_CORE_PC = $(BUILD_DIR)/synapse.core.pc
 
-$(eval $(call emit-deploy-target,HYENA_DLL_MDB))
 $(eval $(call emit-deploy-target,HYENA_DLL))
 $(eval $(call emit-deploy-wrapper,SYNAPSE_CORE_PC,synapse.core.pc))
 
