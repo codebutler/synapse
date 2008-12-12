@@ -41,9 +41,7 @@ namespace Synapse.UI.Controllers
 		// FIXME: I don't really like this method being here.
 		public void AppendMessage (Message msg)
 		{
-			Application.Invoke(delegate {
-				AppendMessage(true, msg);
-			});
+			AppendMessage(true, msg);
 		}
 		
 		protected void AppendMessage (bool incoming, Message msg)
@@ -52,42 +50,43 @@ namespace Synapse.UI.Controllers
 			string from = null;
 			string fromJid = null;
 
-			foreach (XmlNode child in msg) {
-				if (child.NamespaceURI == Namespace.ChatStates) {
-					if (child.Name == "active") {
-						base.View.AppendStatus("Active??", "message??");
-					} else if (child.Name == "composing") {
-						base.View.AppendStatus("composing??", "message??");
-					} else if (child.Name == "paused") {
-						base.View.AppendStatus("paused??", "message??");
-					} else if (child.Name == "inactive") {
-						base.View.AppendStatus("inactive??", "message??");
-					} else if (child.Name == "gone") {
-						base.View.AppendStatus("gone??", "message??");
+			Application.InvokeAndBlock(delegate {
+			
+				foreach (XmlNode child in msg) {
+					if (child.NamespaceURI == Namespace.ChatStates) {
+						if (child.Name == "active") {
+							base.View.AppendStatus("Active??", "message??");
+						} else if (child.Name == "composing") {
+							base.View.AppendStatus("composing??", "message??");
+						} else if (child.Name == "paused") {
+							base.View.AppendStatus("paused??", "message??");
+						} else if (child.Name == "inactive") {
+							base.View.AppendStatus("inactive??", "message??");
+						} else if (child.Name == "gone") {
+							base.View.AppendStatus("gone??", "message??");
+						}
+						
+						Console.WriteLine("GOT CHAT STATE " + child.Name);
 					}
-					
-					Console.WriteLine("GOT CHAT STATE " + child.Name);
 				}
-			}
+	
+				if (msg.Body != null) {			
+					if (msg.From == null) {
+						from = m_Account.User;
+						fromJid = m_Account.Jid;
+					} else { 	
+						fromJid = msg.From;
+						from = (this is ChatWindowController) ? msg.From.User : msg.From.Resource;
+					}
 
-			if (msg.Body != null) {			
-				if (msg.From == null) {
-					from = m_Account.User;
-					fromJid = m_Account.Jid;
-					// FIXME: Set iconPath
-				} else {
-				 	iconPath = AvatarManager.GetAvatarPath(msg.From);
-					fromJid = msg.From;
-					from = (this is ChatWindowController) ? msg.From.User : msg.From.Resource;
-				}
-				
-				Application.InvokeAndBlock(delegate {
+					iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(fromJid));
+					
 					bool isNext = (m_LastMessageJid == fromJid);
 					base.View.AppendMessage(incoming, isNext, iconPath, String.Empty, from, String.Empty,
 					                        String.Empty, from, msg.Body);
 					m_LastMessageJid = fromJid;
-				});
-			}
+				}
+			});
 		}
 	}
 }

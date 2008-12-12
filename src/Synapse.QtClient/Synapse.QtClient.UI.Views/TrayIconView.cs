@@ -67,14 +67,14 @@ namespace Synapse.QtClient.UI.Views
 			m_Menu.AddSeparator();
 			m_Menu.AddAction(m_QuitAction);
 			QObject.Connect(m_Menu, Qt.SIGNAL("aboutToShow()"), new NoArgDelegate(menu_aboutToShow));
-			
-			QIcon icon = new QIcon(":resource/tray.png");
+
+			QPixmap pixmap = new QPixmap("resource:/tray.png");
+			QIcon icon = new QIcon(pixmap);
 			m_Icon = new QSystemTrayIcon(icon);
 			m_Icon.SetContextMenu(m_Menu);
 			
 			QObject.Connect(m_Icon, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), 
 			                new OneArgDelegate<QSystemTrayIcon.ActivationReason>(tray_activated));
-
 		}
 
 		public bool IsVisible ()

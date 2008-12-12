@@ -46,12 +46,19 @@ namespace Synapse.Xmpp
 			
 			XmlNode item = items.ChildNodes[0];
 			XmlNode moodItem = item["mood"];
+
+			string mood = null;
+			foreach (XmlNode childNode in moodItem.ChildNodes) {
+				if (childNode.NodeType == XmlNodeType.Element && childNode.Name != "text") {
+					mood = childNode.Name;
+					break;
+				}
+			}
 			
-			if (moodItem.FirstChild != null) {
-				string mood = moodItem.FirstChild.Name;
+			if (mood != null) {
 				string reason = (moodItem["text"].Value == null) ? null : moodItem["text"].Value;
-				
-				m_Account.ActivityFeed.PostItem(new ActivityFeedItem(m_Account, from, "mood", "is feeling " + mood, reason));
+				string action = String.Format("is feeling {0}", mood);
+				m_Account.ActivityFeed.PostItem(new ActivityFeedItem(m_Account, from.ToString(), "mood", action, reason));
 			}
 		}
 

@@ -20,6 +20,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using Synapse.ServiceStack;
 using Synapse.Xmpp;
 using Synapse.UI.Views;
 using jabber;
@@ -43,14 +44,16 @@ namespace Synapse.UI.Controllers
 				
 			m_Account = account;
 			m_Jid = jid;
-
-			InitializeView();
-			base.View.Closed += delegate {
-				if (Closed != null)
-					Closed(this, EventArgs.Empty);
-			};
-			base.View.Show();
-			base.View.TextEntered += HandleTextEntered;
+	
+			Application.InvokeAndBlock(delegate {
+				InitializeView();
+				base.View.Closed += delegate {
+					if (Closed != null)
+						Closed(this, EventArgs.Empty);
+				};
+				base.View.Show();
+				base.View.TextEntered += HandleTextEntered;
+			});
 		}
 		
 		public JID Jid {

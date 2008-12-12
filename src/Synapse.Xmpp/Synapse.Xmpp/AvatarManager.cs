@@ -53,15 +53,9 @@ namespace Synapse.Xmpp
 			if (!Directory.Exists(s_AvatarPath))
 				Directory.CreateDirectory(s_AvatarPath);
 
-			/*
-			using (Stream stream = Assembly.GetEntryAssembly().GetManifestResourceStream("default-avatar.png")) {
-				byte[] imageBuffer = new byte[(int)stream.Length];
-				stream.Read(imageBuffer, 0, (int)stream.Length);
-				s_DefaultAvatarImage = Application.CreateImage(imageBuffer);
-			}
-			*/
-
-			s_DefaultAvatarImage = Application.CreateImage(Path.Combine(Environment.CurrentDirectory, "default-avatar.png"));
+			s_DefaultAvatarImage = Application.CreateImage("resource:/default-avatar.png");
+			if (s_DefaultAvatarImage == null)
+				throw new Exception("Unable to load default avatar!");
 		}
 		
 		public AvatarManager(Account account)
@@ -70,28 +64,27 @@ namespace Synapse.Xmpp
 			m_Account = account;	
 		}
 
-		public static string GetAvatarPath (JID jid)
+		public static string GetAvatarHash (JID jid)
 		{
-			lock (s_AvatarCache) {
+			lock (s_HashCache) {
 				string bare = jid.Bare;
 				if (s_HashCache.ContainsKey(bare)) {
-					string hash = s_HashCache[bare];
-					if (AvatarExists(hash)) {
-						return AvatarFileName(hash);
-					}
+					return s_HashCache[bare];
 				}
 			}
-
-			// FIXME: meh
-			return String.Empty;
+			return "default";
 		}
-		
+
 		public static object GetAvatar (JID jid)
 		{
+			string hash = GetAvatarHash(jid);
+			return GetAvatar(hash);
+		}
+
+		public static object GetAvatar (string hash)
+		{
 			lock (s_AvatarCache) {
-				string bare = jid.Bare;
-				if (s_HashCache.ContainsKey(bare)) {
-					string hash = s_HashCache[bare];
+				if (hash != null) {
 					if (s_AvatarCache.ContainsKey(hash)) {
 						return s_AvatarCache[hash];
 					} else {
@@ -103,7 +96,6 @@ namespace Synapse.Xmpp
 					}
 				}
 			}
-			
 			return s_DefaultAvatarImage;
 		}
 		

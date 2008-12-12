@@ -28,52 +28,44 @@ using Qyoto;
 
 namespace Synapse.QtClient
 {
-	public class ResourceFileEngineHandler : QAbstractFileEngineHandler
+	public class AvatarFileEngineHandler : QAbstractFileEngineHandler
 	{
 		public override QAbstractFileEngine Create (string fileName)
 		{
-			if (!String.IsNullOrEmpty(fileName) && fileName.StartsWith("resource:/"))
-				return new ResourceFileEngine(fileName);
+			if (!String.IsNullOrEmpty(fileName) && fileName.StartsWith("avatar:/"))
+				return new AvatarFileEngine(fileName);
 			else {
 				return null;
 			}
 		}
 	}
 	
-	public class ResourceFileEngine : AbstractSimpleFileEngine
+	public class AvatarFileEngine : AbstractSimpleFileEngine
 	{
-		string m_FileName;
+		string m_AvatarHash;
 		long   m_Pos = 0;
-		Stream m_Stream;
+		byte[] m_Buffer;
 		
-		public ResourceFileEngine (string uri)
+		public AvatarFileEngine (string uri)
 		{
-			// uri begins with "resource:/"
-			m_FileName = uri.Substring(10);
+			// uri begins with "avatar:/"
+			m_AvatarHash = uri.Substring(8);
 
-			if (m_FileName.Contains("/")) {
-				var parts = m_FileName.Split('/');
-				var providerId = parts[0];
-				m_FileName = parts[1];
+			QPixmap pixmap = (QPixmap) Synapse.Xmpp.AvatarManager.GetAvatar(m_AvatarHash);
 
-				var providers = Mono.Addins.AddinManager.GetExtensionNodes("/Synapse/UI/ResourceProviders");
-				foreach (ResourceProviderCodon provider in providers) {
-					if (provider.Id == providerId) {
-						m_Stream = provider.GetResource(m_FileName);
-					}
-				}
-				throw new Exception("Resource not found: " + m_FileName);
-			} else {
-				var asm = Assembly.GetCallingAssembly();
-				m_Stream = asm.GetManifestResourceStream(m_FileName);
-				if (m_Stream == null)
-					throw new Exception("Resource not found: " + m_FileName);
-			}
+			// FIXME: This doesn't seem very efficient...
+			QBuffer buffer = new QBuffer();
+			buffer.Open((uint)QIODevice.OpenModeFlag.WriteOnly);
+			pixmap.Save(buffer, "PNG");
+			buffer.Close();
+
+			m_Buffer = new byte[buffer.Size()];
+			Marshal.Copy(buffer.Data().Data().ToIntPtr(), m_Buffer, 0, m_Buffer.Length);
 		}
 
 		public override long Size ()
 		{
-			return m_Stream.Length;
+			return m_Buffer.Length;
 		}
 
 		public override long Read (Qyoto.Pointer<sbyte> data, long len)
@@ -85,10 +77,8 @@ namespace Synapse.QtClient
 			    return 0;
 			
 			int ilen = Convert.ToInt32(len);
-			byte[] buffer = new byte[ilen];
-			m_Stream.Seek(m_Pos, SeekOrigin.Begin);
-			m_Stream.Read(buffer, 0, ilen);
-			Marshal.Copy(buffer, 0, data.ToIntPtr(), ilen);
+			int ipos = Convert.ToInt32(m_Pos);
+			Marshal.Copy(m_Buffer, ipos, data.ToIntPtr(), ilen);
 			
 			m_Pos += ilen;
 			return ilen;
@@ -107,7 +97,7 @@ namespace Synapse.QtClient
 		
 		public override string fileName (QAbstractFileEngine.FileName file)
 		{
-			return m_FileName;
+			return m_AvatarHash;
 		}
 		
 		public new bool AtEnd ()
@@ -117,7 +107,7 @@ namespace Synapse.QtClient
 
 		public override bool Close ()
 		{
-			m_Stream.Close();
+			m_Buffer = null;
 			return true;
 		}
 	}

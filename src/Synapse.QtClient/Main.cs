@@ -47,6 +47,7 @@ namespace Synapse.QtClient
 
 		QApplication m_App;
 		ResourceFileEngineHandler m_ResourceFileEngineHandler;
+		AvatarFileEngineHandler m_AvatarFileEngineHandler;
 		
 		public Client (string[] args)
 		{	
@@ -59,6 +60,7 @@ namespace Synapse.QtClient
 			InitQtWebKit.InitSmoke();
 
 			m_ResourceFileEngineHandler = new ResourceFileEngineHandler();
+			m_AvatarFileEngineHandler = new AvatarFileEngineHandler();
 			
 			QtTraceListener listener = new QtTraceListener();
 			listener.TraceOutputOptions = TraceOptions.Callstack;

@@ -107,19 +107,14 @@ namespace Synapse.Xmpp
 			htmlBuilder.Append(String.Format("<div class='timestamp'>{0}</div>", m_Timestamp.ToShortTimeString()));
 			
 			if (m_From != null) {
-				string jid = m_From.ToString();
 				string name = null;
 				Item item = m_Account.Roster[m_From.Bare];
+				if (item != null && !String.IsNullOrEmpty(item.Nickname))
+					name = item.Nickname;
+				else
+					name = m_From.User;
 				
-				if (item != null) {
-					name = item.Name;
-				
-				// XXX: This is ass:
-				} else if (m_From.Bare == m_Account.Jid.Bare) {
-					name = m_Account.Jid.User;
-				}
-				
-				htmlBuilder.Append(String.Format("<a href='#' title='{0}' class='jid'>{1}</a> ", jid, name));
+				htmlBuilder.Append(String.Format("<a href='#' title='{0}' class='jid'>{1}</a> ", m_From.ToString(), name));
 			}
 			
 			htmlBuilder.Append(String.Format("<strong>{0}</strong>", m_Action));

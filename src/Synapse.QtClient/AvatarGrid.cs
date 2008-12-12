@@ -571,7 +571,7 @@ namespace Synapse.QtClient
 				m_Grid = grid;
 				base.WindowFlags = (uint)Qt.WindowType.FramelessWindowHint | (uint)Qt.WindowType.ToolTip;
 				base.Resize(260, 95);
-				base.SetStyleSheet("QWidget { background: black; color: white; }");
+				base.SetStyleSheet("background: black; color: white");
 
 				m_GraphicsView = new MyGraphicsView(this);
 				m_GraphicsView.FrameShape = QFrame.Shape.NoFrame;

@@ -55,6 +55,8 @@
     <File name="resources/octy.svg" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/oceanbg.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/handle.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="AbstractSimpleFileEngine.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvatarFileEngine.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
