@@ -15,6 +15,4 @@ install-sh
 missing
 omf.make
 xmldocs.make
-src/Synapse.QtClient/qt-gui/*.cs
-src/Synapse.UI/qt-gui/*.cs
 build
