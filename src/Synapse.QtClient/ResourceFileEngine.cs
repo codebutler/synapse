@@ -88,8 +88,9 @@ namespace Synapse.QtClient
 			byte[] buffer = new byte[ilen];
 			m_Stream.Seek(m_Pos, SeekOrigin.Begin);
 			m_Stream.Read(buffer, 0, ilen);
-			Marshal.Copy(buffer, 0, data.ToIntPtr(), ilen);
-			
+			for (int i = 0; i < ilen; i++) {
+				data[i] = (sbyte) buffer[i];
+ 			}
 			m_Pos += ilen;
 			return ilen;
 		}

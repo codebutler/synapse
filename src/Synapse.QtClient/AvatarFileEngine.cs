@@ -78,8 +78,9 @@ namespace Synapse.QtClient
 			
 			int ilen = Convert.ToInt32(len);
 			int ipos = Convert.ToInt32(m_Pos);
-			Marshal.Copy(m_Buffer, ipos, data.ToIntPtr(), ilen);
-			
+			for (int i = 0; i < ilen; i++) {
+				data[i] = (sbyte) m_Buffer[i];
+ 			}			
 			m_Pos += ilen;
 			return ilen;
 		}
