@@ -73,8 +73,8 @@ REFERENCES =  \
 	System \
 	System.Xml \
 	$(MONO_ADDINS_LIBS) \
-	System.Core \
-	Mono.Posix
+	Mono.Posix \
+	System.Core
 
 DLL_REFERENCES =  \
 	../../contrib/Hyena.dll

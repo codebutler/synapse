@@ -158,7 +158,9 @@ FILES = \
 	ResizableGraphicsPixmapItem.cs \
 	ResourceFileEngine.cs \
 	AbstractSimpleFileEngine.cs \
-	AvatarFileEngine.cs 
+	AvatarFileEngine.cs \
+	ServiceBrowserWindow.cs \
+	qt-gui/ServiceBrowserWindow.cs 
 
 DATA_FILES = 
 
@@ -181,9 +183,9 @@ REFERENCES =  \
 	$(MONO_ADDINS_LIBS) \
 	System \
 	System.Xml \
-	System.Core \
 	$(GTK_SHARP_20_LIBS) \
-	$(QYOTO_LIBS)
+	$(QYOTO_LIBS) \
+	System.Core
 
 DLL_REFERENCES =  \
 	../../contrib/jabber-net.dll \

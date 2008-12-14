@@ -98,7 +98,8 @@ FILES = \
 	Synapse.Xmpp/UserAvatars.cs \
 	Synapse.Xmpp/AvatarManager.cs \
 	Synapse.Xmpp/ChatStates.cs \
-	Synapse.Xmpp/AbstractIqOperation.cs 
+	Synapse.Xmpp/AbstractIqOperation.cs \
+	Synapse.Xmpp/XmppUriQueryInfo.cs 
 
 DATA_FILES = 
 
@@ -111,8 +112,9 @@ REFERENCES =  \
 	System \
 	System.Xml \
 	$(MONO_ADDINS_LIBS) \
-	System.Core \
-	System.Drawing
+	System.Drawing \
+	System.Web \
+	System.Core
 
 DLL_REFERENCES =  \
 	../../contrib/jabber-net.dll

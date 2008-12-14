@@ -129,22 +129,27 @@ FILES = \
 	ResourceProviderCodon.cs \
 	Synapse.UI.Services/ActionService.cs \
 	Synapse.UI.Services/GuiService.cs \
-	ChatWindowManager.cs 
+	ChatWindowManager.cs \
+	Synapse.UI.Views/IServiceBrowserWindowView.cs \
+	Synapse.UI.Controllers/ServiceBrowserWindowController.cs \
+	template4dotnet.cs 
 
 DATA_FILES = 
 
 RESOURCES = \
 	Synapse.UI.addin.xml \
-	resources/profile.html 
+	resources/profile.html \
+	resources/ServiceDiscovery.html 
 
 EXTRAS = \
 	synapse.ui.pc.in 
 
 REFERENCES =  \
 	System \
-	System.Core \
 	$(MONO_ADDINS_LIBS) \
-	System.Xml
+	System.Xml \
+	System.Web \
+	System.Core
 
 DLL_REFERENCES =  \
 	../../contrib/jabber-net.dll \
