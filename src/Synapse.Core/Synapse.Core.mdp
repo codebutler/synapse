@@ -1,16 +1,16 @@
-<Project name="Synapse.Core" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+<Project name="Synapse.Core" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug" assembly="Synapse.Core" />
       <Build debugmode="True" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
-      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Release" assembly="Dragon.Core" />
       <Build debugmode="False" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
-      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
@@ -33,9 +33,9 @@
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/Hyena.dll" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <GtkDesignInfo />
 </Project>

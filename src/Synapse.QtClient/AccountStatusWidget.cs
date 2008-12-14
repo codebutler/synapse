@@ -25,15 +25,19 @@ using System.Text;
 using Qyoto;
 using Synapse.Xmpp;
 using Synapse.UI;
+using Synapse.UI.Controllers;
 using Synapse.UI.Views;
 using Synapse.QtClient.UI.Views;
 
 public partial class AccountStatusWidget : QWidget
 {
-	QMenu      m_PresenceMenu;
 	Account    m_Account;
 	MainWindow m_ParentWindow;
 
+	QMenu   m_AccountMenu;
+	QAction m_ShowBrowserAction;
+
+	QMenu   m_PresenceMenu;
 	QAction m_AvailableAction;
 	QAction m_FreeToChatAction;
 	QAction m_AwayAction;
@@ -54,12 +58,22 @@ public partial class AccountStatusWidget : QWidget
 		m_Account.ConnectionStateChanged += OnAccountStateChanged;
 		m_Account.StatusChanged += OnAccountStateChanged;
 		OnAccountStateChanged(account);
+
+		m_AccountMenu = new QMenu(this);
+		QObject.Connect(m_AccountMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("HandleAccountMenuAboutToShow()"));
+		QObject.Connect(m_AccountMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("HandleAccountMenuTriggered(QAction*)"));
+		m_ShowBrowserAction = new QAction("Show Browser", this);
+		m_AccountMenu.AddAction(m_ShowBrowserAction);
 		
-		m_NameLabel.Text = account.Jid.Bare;
+		var nameLabelBuilder = new StringBuilder();
+		nameLabelBuilder.Append(@"<html><style>a { color: white; text-decoration: none; }</style><body>");
+		nameLabelBuilder.Append(String.Format("<a href=\"#show-account-menu\">{0}</a>", account.Jid.Bare));
+		nameLabelBuilder.Append("</body></html>");
+		m_NameLabel.Text = nameLabelBuilder.ToString();
 
 		m_PresenceMenu = new QMenu(this);
-		QObject.Connect(m_PresenceMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("presenceMenu_aboutToShow()"));
-		QObject.Connect(m_PresenceMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("OnPresenceSelected(QAction*)"));
+		QObject.Connect(m_PresenceMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("HandlePresenceMenuAboutToShow()"));
+		QObject.Connect(m_PresenceMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("HandlePresenceMenuTriggered(QAction*)"));
 
 		QActionGroup group = new QActionGroup(this);
 		group.Exclusive = true;
@@ -120,7 +134,7 @@ public partial class AccountStatusWidget : QWidget
 	}
 
 	[Q_SLOT]
-	private void on_m_StatusLabel_linkActivated(string link)
+	void on_m_StatusLabel_linkActivated(string link)
 	{
 		switch (link) {
 		case "#show-presence-menu":
@@ -130,13 +144,19 @@ public partial class AccountStatusWidget : QWidget
 	}
 
 	[Q_SLOT]
-	private void OnPresenceSelected(QAction action)
+	void on_m_NameLabel_linkActivated(string link)
+	{
+		m_AccountMenu.Popup(m_NameLabel.MapToGlobal(m_NameLabel.Rect.BottomLeft()));
+	}
+
+	[Q_SLOT]
+	void HandlePresenceMenuTriggered(QAction action)
 	{
 		m_ParentWindow.RaisePresenceChanged(m_Account, action.Text, String.Empty);
 	}
 
 	[Q_SLOT]
-	private void presenceMenu_aboutToShow()
+	void HandlePresenceMenuAboutToShow()
 	{
 		if (m_Account.Status != null) {
 			var currentStatus = m_Account.Status.Type;
@@ -163,5 +183,18 @@ public partial class AccountStatusWidget : QWidget
 		} else {
 			m_OfflineAction.Checked = true;
 		}
+	}
+
+	[Q_SLOT]
+	void HandleAccountMenuAboutToShow ()
+	{
+		
+	}
+
+	[Q_SLOT]
+	void HandleAccountMenuTriggered (QAction action)
+	{
+		if (action == m_ShowBrowserAction)
+			new ServiceBrowserWindowController(m_Account);
 	}
 }

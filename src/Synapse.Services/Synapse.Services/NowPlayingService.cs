@@ -30,7 +30,7 @@ using Synapse.ServiceStack;
 
 namespace Synapse.Services
 {
-	public class NowPlayingService : IService, IRequiredService, IInitializeService
+	public class NowPlayingService : IService, IInitializeService
 	{
 		string m_Artist;
 		ushort m_Length;

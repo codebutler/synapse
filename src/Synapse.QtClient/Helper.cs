@@ -73,7 +73,8 @@ namespace Synapse.QtClient
 			if (iconInfo != null) {
 				return new QIcon(iconInfo.Filename);
 			} else {
-				throw new Exception(String.Format("Icon not found: {0} ({1})", name, size));
+				Console.Error.WriteLine(String.Format("Icon not found: {0} ({1})", name, size));
+				return new QIcon();
 			}			
 		}
 	}

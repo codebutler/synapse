@@ -40,8 +40,6 @@ namespace Synapse.UI.Controllers
 				
 				foreach (Account account in m_AccountService.Accounts)
 					HandleAccountAdded(account);
-				
-				View.Show();
 			});
 		}
 

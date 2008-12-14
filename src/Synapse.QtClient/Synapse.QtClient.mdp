@@ -1,4 +1,4 @@
-<Project name="Synapse.QtClient" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+<Project name="Synapse.QtClient" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug" assembly="Synapse" />
@@ -57,6 +57,8 @@
     <File name="resources/handle.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="AbstractSimpleFileEngine.cs" subtype="Code" buildaction="Compile" />
     <File name="AvatarFileEngine.cs" subtype="Code" buildaction="Compile" />
+    <File name="ServiceBrowserWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/ServiceBrowserWindow.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
@@ -67,13 +69,13 @@
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/jabber-net.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <ProjectReference type="Assembly" localcopy="True" refto="../../../../../../usr/lib/cli/kdebindings-4.4/qt-dotnet.dll" />
     <ProjectReference type="Assembly" localcopy="True" refto="../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.dll" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.Gui.dll" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <GtkDesignInfo />
   <QyotoDesignInfo>
@@ -83,9 +85,10 @@
       <QyotoForm UiFileName="RosterWidget.ui" />
       <QyotoForm UiFileName="mainwindow.ui" Namespace="Synapse.QtClient.UI.Views" />
       <QyotoForm UiFileName="ChatWindow.ui" />
-      <QyotoForm UiFileName="DebugWindow.ui" />
+      <QyotoForm UiFileName="DebugWindow.ui" Namespace="Synapse.QtClient.UI.Views" />
       <QyotoForm UiFileName="ProfileWindow.ui" />
       <QyotoForm UiFileName="PreferencesWindow.ui" />
+      <QyotoForm UiFileName="ServiceBrowserWindow.ui" Namespace="Synapse.QtClient" />
     </Forms>
   </QyotoDesignInfo>
 </Project>

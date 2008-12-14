@@ -115,7 +115,7 @@ namespace Synapse.Xmpp
 			
 			m_PubSubManager = new PubSubManager();
 			m_PubSubManager.Stream = m_Client;
-			
+						
 			m_DiscoManager = new DiscoManager();
 			m_DiscoManager.Stream = m_Client;
 			
@@ -128,7 +128,7 @@ namespace Synapse.Xmpp
 
 			m_PresenceManager = new PresenceManager();
 			m_PresenceManager.Stream = m_Client;
-			
+
 			m_AvatarManager = new AvatarManager(this);
 			
 			// XXX: Don't hard-code this.
@@ -195,6 +195,12 @@ namespace Synapse.Xmpp
 				m_CapsManager.AddFeature(featureName);
 		}
 
+		public DiscoManager DiscoManager {
+			get {
+				return m_DiscoManager;
+			}
+		}
+		
 		public ConferenceManager ConferenceManager {
 			get {
 				return m_ConferenceManager;

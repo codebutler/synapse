@@ -1,16 +1,16 @@
-<Project name="Synapse.UI" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+<Project name="Synapse.UI" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug" assembly="Synapse.UI" />
       <Build debugmode="True" target="Library" />
       <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
-      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Release" assembly="Synapse" />
       <Build debugmode="False" target="Library" />
       <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
-      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
@@ -53,6 +53,10 @@
     <File name="Synapse.UI.Services/ActionService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Services/GuiService.cs" subtype="Code" buildaction="Compile" />
     <File name="ChatWindowManager.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Views/IServiceBrowserWindowView.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Controllers/ServiceBrowserWindowController.cs" subtype="Code" buildaction="Compile" />
+    <File name="resources/ServiceDiscovery.html" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="template4dotnet.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -60,10 +64,11 @@
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Xmpp" />
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/jabber-net.dll" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.dll" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </References>
   <GtkDesignInfo />
 </Project>

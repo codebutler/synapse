@@ -40,12 +40,13 @@ namespace Synapse.QtClient.UI.Views
 		QAction m_NewMessageAction;
 		QAction m_JoinMucAction;
 		QAction m_QuitAction;
+		QAction m_ShowDebugWindowAction;
 		
 		public TrayIconView(TrayIconController controller)
 		{
 			m_ShowMainWindowAction = new QAction("Show Synapse", this);
 			m_ShowMainWindowAction.Checkable = true;
-			QObject.Connect(m_ShowMainWindowAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("showMainWindowAction_triggered()"));
+			QObject.Connect(m_ShowMainWindowAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowMainWindowActionTriggered()"));
 
 			m_StatusMenu = new QMenu("Change Status");
 			
@@ -53,11 +54,16 @@ namespace Synapse.QtClient.UI.Views
 			m_NewMessageAction      = new QAction("New Message...", this);
 			m_JoinMucAction         = new QAction("Create/Join Conference...", this);
 			
+			m_ShowDebugWindowAction = new QAction("Debug Window", this);
+			m_ShowDebugWindowAction.Checkable = true;
+			QObject.Connect(m_ShowDebugWindowAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowDebugWindowActionTriggered()"));
+			
 			m_QuitAction = new QAction("Quit", this);
-			QObject.Connect(m_QuitAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("quitAction_triggered()"));
+			QObject.Connect(m_QuitAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleQuitActionTriggered()"));
 			
 			m_Menu = new QMenu();
 			m_Menu.AddAction(m_ShowMainWindowAction);
+			m_Menu.AddAction(m_ShowDebugWindowAction);
 			m_Menu.AddSeparator();
 			m_Menu.AddAction(m_NewMessageAction);
 			m_Menu.AddAction(m_JoinMucAction);
@@ -66,7 +72,7 @@ namespace Synapse.QtClient.UI.Views
 			m_Menu.AddAction(m_ShowPreferencesAction);
 			m_Menu.AddSeparator();
 			m_Menu.AddAction(m_QuitAction);
-			QObject.Connect(m_Menu, Qt.SIGNAL("aboutToShow()"), new NoArgDelegate(menu_aboutToShow));
+			QObject.Connect(m_Menu, Qt.SIGNAL("aboutToShow()"), new NoArgDelegate(HandleMenuAboutToShow));
 
 			QPixmap pixmap = new QPixmap("resource:/tray.png");
 			QIcon icon = new QIcon(pixmap);
@@ -74,7 +80,7 @@ namespace Synapse.QtClient.UI.Views
 			m_Icon.SetContextMenu(m_Menu);
 			
 			QObject.Connect(m_Icon, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), 
-			                new OneArgDelegate<QSystemTrayIcon.ActivationReason>(tray_activated));
+			                new OneArgDelegate<QSystemTrayIcon.ActivationReason>(HandleTrayActivated));
 		}
 
 		public bool IsVisible ()
@@ -99,30 +105,41 @@ namespace Synapse.QtClient.UI.Views
 			m_Icon = null;
 		}
 
-		void menu_aboutToShow ()
+		void HandleMenuAboutToShow ()
 		{
-			var mainWindow = ServiceManager.Get<GuiService>().MainWindow;
-			m_ShowMainWindowAction.Checked = mainWindow.View.IsVisible();
+			var gui = ServiceManager.Get<GuiService>();
+			m_ShowMainWindowAction.Checked = gui.MainWindow.View.IsVisible();
+			m_ShowDebugWindowAction.Checked = gui.DebugWindow.View.IsVisible();
 		}
 
 		[Q_SLOT]
-		void quitAction_triggered ()
+		void HandleQuitActionTriggered ()
 		{
 			Application.Shutdown();
 		}
 
 		[Q_SLOT]
-		void showMainWindowAction_triggered ()
+		void HandleShowMainWindowActionTriggered ()
 		{
-			var mainWindow = ServiceManager.Get<GuiService>().MainWindow;				
+			var mainWindow = ServiceManager.Get<GuiService>().MainWindow;
 			if (m_ShowMainWindowAction.Checked)
 				mainWindow.View.Show();
 			else
 				mainWindow.View.Hide();	
 		}
+
+		[Q_SLOT]
+		void HandleShowDebugWindowActionTriggered ()
+		{
+			var debugWindow = ServiceManager.Get<GuiService>().DebugWindow;
+			if (m_ShowDebugWindowAction.Checked)
+				debugWindow.View.Show();
+			else
+				debugWindow.View.Hide();	
+		}
 		
 		[Q_SLOT]
-		void tray_activated(QSystemTrayIcon.ActivationReason reason)
+		void HandleTrayActivated(QSystemTrayIcon.ActivationReason reason)
 		{
 			if (reason == QSystemTrayIcon.ActivationReason.Trigger) {
 				var mainWindow = ServiceManager.Get<GuiService>().MainWindow;				

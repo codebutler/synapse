@@ -23,6 +23,8 @@ using System;
 using System.Text;
 using System.Globalization;
 using System.Security.Cryptography;
+using System.IO;
+using System.Reflection;
 
 namespace Synapse.Core
 {
@@ -199,6 +201,14 @@ namespace Synapse.Core
 			byte[] bytesOut = sha1.ComputeHash(bytesIn);
 			string strOut = BitConverter.ToString(bytesOut).Replace("-", String.Empty);
 			return strOut.ToLower();
+		}
+
+		public static string ReadResource (string name)
+		{
+			var stream = Assembly.GetCallingAssembly().GetManifestResourceStream(name);
+			using (StreamReader reader = new StreamReader(stream)) {
+				return reader.ReadToEnd();
+			}
 		}
 	}
 }

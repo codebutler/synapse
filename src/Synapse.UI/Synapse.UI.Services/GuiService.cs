@@ -63,6 +63,13 @@ namespace Synapse.UI.Services
 				return m_MainWindow;
 			}
 		}
+
+		public DebugWindowController DebugWindow {
+			get {
+				return m_DebugWindow;
+			}
+		}
+		
 		public void OpenChatWindow(Account account, JID jid)
 		{
 			m_AccountManagers[account].OpenChatWindow(jid, true);
@@ -80,8 +87,6 @@ namespace Synapse.UI.Services
 			}
 			accountService.AccountAdded   += HandleAccountAdded;
 			accountService.AccountRemoved += HandleAccountRemoved;
-
-			//new ChatWindowController(accountService.Accounts[0], new JID("foo@bar.com"));
 		}
 			
 		void HandleAccountAdded(Account account)

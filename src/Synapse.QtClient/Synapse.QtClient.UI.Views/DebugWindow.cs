@@ -27,125 +27,130 @@ using Synapse.UI.Views;
 using Synapse.UI.Controllers;
 using Qyoto;
 
-public partial class DebugWindow : QWidget, IDebugWindowView
+namespace Synapse.QtClient.UI.Views
 {
-	OperationsModel m_Model;
-	Dictionary<Account, QWidget> m_AccountXmlWidgets = new Dictionary<Account, QWidget>();
+	public partial class DebugWindow : QWidget, IDebugWindowView
+	{
+		OperationsModel m_Model;
+		Dictionary<Account, QWidget> m_AccountXmlWidgets = new Dictionary<Account, QWidget>();
+		
+		public DebugWindow (DebugWindowController controller)
+		{
+			SetupUi();
+			m_Model = new OperationsModel();
+			m_OperationsTableView.selectionBehavior = QAbstractItemView.SelectionBehavior.SelectRows;
+			m_OperationsTableView.VerticalHeader().Hide();
+			m_OperationsTableView.SetModel(m_Model);
 	
-	public DebugWindow (DebugWindowController controller)
-	{
-		SetupUi();
-		m_Model = new OperationsModel();
-		m_OperationsTableView.selectionBehavior = QAbstractItemView.SelectionBehavior.SelectRows;
-		m_OperationsTableView.VerticalHeader().Hide();
-		m_OperationsTableView.SetModel(m_Model);
-
-		((QBoxLayout)m_XmlToolBox.Layout()).Spacing = 0;
-	}
-
-	public void AddAccount(Account account)
-	{
-		QTextEdit textEdit = new QTextEdit(this);
-		textEdit.FrameShape = QFrame.Shape.NoFrame;
-		textEdit.ReadOnly = true;
-		
-		QWidget widget = new QWidget();
-		
-		QVBoxLayout layout = new QVBoxLayout(widget);
-		layout.Margin = 0;
-		layout.AddWidget(textEdit);
-		
-		m_XmlToolBox.AddItem(widget, account.Jid);
-
-		m_AccountXmlWidgets.Add(account, widget);
-
-		account.Client.OnWriteText += delegate(object sender, string txt) {
-			Application.Invoke(delegate {
-				textEdit.Append("<b>" + Qt.Escape(txt) + "</b><br/>");
-			});
-		};
-
-		account.Client.OnReadText += delegate(object sender, string txt) {
-			Application.Invoke(delegate {
-				textEdit.Append(Qt.Escape(txt) + "<br/>");
-			});
-		};
-	}
-
-	public void RemoveAccount(Account account)
-	{
-		QWidget widget = m_AccountXmlWidgets[account];
-		m_AccountXmlWidgets.Remove(account);
-		widget.Dispose();
-	}
-
-	[Q_SLOT]
-	void on_clearButton_clicked ()
-	{
-		
-	}
-
-	private class OperationsModel : QAbstractTableModel
-	{
-		OperationService m_Service;
-		
-		string[] m_ColumnNames = new string[] { "Name", "Status", "Started At" };
-
-		public OperationsModel ()
-		{
-			m_Service = ServiceManager.Get<OperationService>();
-			m_Service.OperationAdded   += HandleAccountAddedUpdated;
-			m_Service.OperationUpdated += HandleAccountAddedUpdated;
+			((QBoxLayout)m_XmlToolBox.Layout()).Spacing = 0;
 		}
-		
-		public override QVariant Data (QModelIndex index, int role)
+	
+		public void AddAccount(Account account)
 		{
-			int row = index.Row();
-			int col = index.Column();
-		
-			IOperation operation = m_Service.Operations[row];
+			QTextEdit textEdit = new QTextEdit(this);
+			textEdit.FrameShape = QFrame.Shape.NoFrame;
+			textEdit.ReadOnly = true;
 			
-			if (role == (int)Qt.ItemDataRole.DisplayRole) {
-				if (col == 0)
-					return String.Format("{0}: {1}", operation.Name, operation.Description);
-				else if (col == 1)
-					return operation.Status.ToString();
-				else if (col == 2)
-					return operation.StartedAt.ToShortTimeString();
-			} else if (role == (int)Qt.ItemDataRole.ToolTipRole) {
-				return operation.StackTrace;
+			QWidget widget = new QWidget();
+			
+			QVBoxLayout layout = new QVBoxLayout(widget);
+			layout.Margin = 0;
+			layout.AddWidget(textEdit);
+			
+			m_XmlToolBox.AddItem(widget, account.Jid);
+	
+			m_AccountXmlWidgets.Add(account, widget);
+	
+			account.Client.OnWriteText += delegate(object sender, string txt) {
+				Application.Invoke(delegate {
+					if (enableConsoleCheckBox.Checked)
+						textEdit.Append("<b>" + Qt.Escape(txt) + "</b><br/>");
+				});
+			};
+	
+			account.Client.OnReadText += delegate(object sender, string txt) {
+				Application.Invoke(delegate {
+					if (enableConsoleCheckBox.Checked)
+						textEdit.Append(Qt.Escape(txt) + "<br/>");
+				});
+			};
+		}
+	
+		public void RemoveAccount(Account account)
+		{
+			QWidget widget = m_AccountXmlWidgets[account];
+			m_AccountXmlWidgets.Remove(account);
+			widget.Dispose();
+		}
+	
+		[Q_SLOT]
+		void on_clearConsoleButton_clicked ()
+		{
+			
+		}
+	
+		private class OperationsModel : QAbstractTableModel
+		{
+			OperationService m_Service;
+			
+			string[] m_ColumnNames = new string[] { "Name", "Status", "Started At" };
+	
+			public OperationsModel ()
+			{
+				m_Service = ServiceManager.Get<OperationService>();
+				m_Service.OperationAdded   += HandleAccountAddedUpdated;
+				m_Service.OperationUpdated += HandleAccountAddedUpdated;
 			}
-			return new QVariant();
-		}
-
-		public override int ColumnCount (Qyoto.QModelIndex parent)
-		{
-			return m_ColumnNames.Length;
-		}
-
-		public override int RowCount (Qyoto.QModelIndex parent)
-		{
-			return m_Service.Operations.Count;
-		}
-
-		public override QModelIndex Parent (Qyoto.QModelIndex child)
-		{
-			return null;
-		}
-
-		public override QVariant HeaderData (int section, Qt.Orientation orientation, int role)
-		{
-			if (role == (int)Qt.ItemDataRole.DisplayRole)
-				return m_ColumnNames[section];
-			else
+			
+			public override QVariant Data (QModelIndex index, int role)
+			{
+				int row = index.Row();
+				int col = index.Column();
+			
+				IOperation operation = m_Service.Operations[row];
+				
+				if (role == (int)Qt.ItemDataRole.DisplayRole) {
+					if (col == 0)
+						return String.Format("{0}: {1}", operation.Name, operation.Description);
+					else if (col == 1)
+						return operation.Status.ToString();
+					else if (col == 2)
+						return operation.StartedAt.ToShortTimeString();
+				} else if (role == (int)Qt.ItemDataRole.ToolTipRole) {
+					return operation.StackTrace;
+				}
 				return new QVariant();
+			}
+	
+			public override int ColumnCount (Qyoto.QModelIndex parent)
+			{
+				return m_ColumnNames.Length;
+			}
+	
+			public override int RowCount (Qyoto.QModelIndex parent)
+			{
+				return m_Service.Operations.Count;
+			}
+	
+			public override QModelIndex Parent (Qyoto.QModelIndex child)
+			{
+				return null;
+			}
+	
+			public override QVariant HeaderData (int section, Qt.Orientation orientation, int role)
+			{
+				if (role == (int)Qt.ItemDataRole.DisplayRole)
+					return m_ColumnNames[section];
+				else
+					return new QVariant();
+			}
+	
+			private void HandleAccountAddedUpdated (IOperation operation)
+			{
+				Application.Invoke(delegate {
+					Emit.LayoutChanged();
+				});
+			}			
 		}
-
-		private void HandleAccountAddedUpdated (IOperation operation)
-		{
-			Application.Invoke(delegate {
-				Emit.LayoutChanged();
-			});
-		}			
 	}
 }
