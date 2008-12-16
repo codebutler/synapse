@@ -16,7 +16,7 @@ public partial class AccountStatusWidget : QWidget {
     
     protected QLabel m_AvatarLabel;
     
-    protected QLabel m_NameLabel;
+    protected Synapse.QtClient.Widgets.FadingQLabel m_NameLabel;
     
     protected QLabel m_StatusLabel;
     
@@ -48,9 +48,10 @@ public partial class AccountStatusWidget : QWidget {
         verticalLayout = new QVBoxLayout();
         horizontalLayout.AddLayout(verticalLayout);
         verticalLayout.Spacing = 0;
-        this.m_NameLabel = new QLabel(this);
+        this.m_NameLabel = new Synapse.QtClient.Widgets.FadingQLabel(this);
         this.m_NameLabel.ObjectName = "m_NameLabel";
-        this.m_NameLabel.Text = "&lt;test@localhost&gt;";
+        this.m_NameLabel.Text = "test@localhost";
+        this.m_NameLabel.TextFormat = Qt.TextFormat.PlainText;
         verticalLayout.AddWidget(this.m_NameLabel);
         this.m_StatusLabel = new QLabel(this);
         this.m_StatusLabel.ObjectName = "m_StatusLabel";

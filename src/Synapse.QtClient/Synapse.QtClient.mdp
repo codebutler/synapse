@@ -59,6 +59,7 @@
     <File name="AvatarFileEngine.cs" subtype="Code" buildaction="Compile" />
     <File name="ServiceBrowserWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/ServiceBrowserWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="FadingQLabel.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />

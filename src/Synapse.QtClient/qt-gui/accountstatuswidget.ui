@@ -56,9 +56,12 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QLabel" name="m_NameLabel" >
+      <widget class="Synapse.QtClient.Widgets.FadingQLabel" name="m_NameLabel" >
        <property name="text" >
-        <string>&amp;lt;test@localhost&amp;gt;</string>
+        <string>test@localhost</string>
+       </property>
+       <property name="textFormat" >
+        <enum>Qt::PlainText</enum>
        </property>
       </widget>
      </item>
@@ -86,6 +89,13 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Synapse.QtClient.Widgets.FadingQLabel</class>
+   <extends>QLabel</extends>
+   <header>fadingqlabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../synapse.qrc" />
  </resources>

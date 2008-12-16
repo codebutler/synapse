@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Qyoto;
+using Synapse.Core;
 using Synapse.UI;
 using Synapse.UI.Views;
 using Synapse.UI.Controllers;
@@ -64,19 +65,16 @@ namespace Synapse.QtClient.UI.Views
 			layout.SetContentsMargins(0, 0, 0, 0);
 			contentWidget.SetLayout(layout);
 
+			m_NoAccountsStyleSheet = Util.ReadResource("mainwindow-noaccounts.qss");
+			m_StyleSheet = Util.ReadResource("mainwindow.qss");				
+
+			this.SetStyleSheet(m_StyleSheet);
+			
 			m_RosterWidget = new RosterWidget(this);
 			contentWidget.Layout().AddWidget(m_RosterWidget);
 			
 			m_NoAccountsWidget = new NoAccountsWidget();
 			contentWidget.Layout().AddWidget(m_NoAccountsWidget);
-			
-            Stream stream = Assembly.GetEntryAssembly().GetManifestResourceStream("mainwindow-noaccounts.qss");
-			using (StreamReader reader = new StreamReader(stream))
-				m_NoAccountsStyleSheet = reader.ReadToEnd();
-
-			stream = Assembly.GetEntryAssembly().GetManifestResourceStream("mainwindow.qss");
-			using (StreamReader reader = new StreamReader(stream))
-				m_StyleSheet = reader.ReadToEnd();
 
 			Helper.CenterWidgetOnScreen(this);
 
