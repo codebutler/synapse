@@ -160,7 +160,8 @@ FILES = \
 	AbstractSimpleFileEngine.cs \
 	AvatarFileEngine.cs \
 	ServiceBrowserWindow.cs \
-	qt-gui/ServiceBrowserWindow.cs 
+	qt-gui/ServiceBrowserWindow.cs \
+	FadingQLabel.cs 
 
 DATA_FILES = 
 

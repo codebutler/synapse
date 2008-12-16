@@ -434,8 +434,6 @@ namespace Synapse.QtClient
 		protected override void MouseMoveEvent (Qyoto.QMouseEvent arg1)
 		{
 			base.MouseMoveEvent (arg1);
-
-			Console.WriteLine(arg1.Pos().X() + " " + arg1.Pos().Y());
 			
 			var oldItem = m_HoverItem;
 			
