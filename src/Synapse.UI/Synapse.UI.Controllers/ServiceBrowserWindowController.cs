@@ -107,7 +107,7 @@ namespace Synapse.UI.Controllers
 			template.SetField("NAME", jid);
 			template.SetField("HREF", String.Format("xmpp:{0}?disco", jid));
 			template.SetField("NODE", nodeName);
-
+			
 			template.SelectSection("FEATURES");
 			foreach (var feature in node.FeatureNames) {
 				template.SetField("FEATURE_NAME", feature);
@@ -119,6 +119,15 @@ namespace Synapse.UI.Controllers
 			foreach (DiscoNode item in node.Children) {
 				template.SetField("ITEM_NAME", item.Name);
 				template.SetField("ITEM_URL", String.Format("xmpp:{0}?disco;node={1}", item.JID.ToString(), item.Node));
+				template.AppendSection();
+			}
+			template.DeselectSection();
+			
+			template.SelectSection("IDENTITIES");
+			foreach (var identity in node.GetIdentities()) {
+				template.SetField("IDENTITY_NAME", identity.Name);
+				template.SetField("IDENTITY_CATEGORY", identity.Category);
+				template.SetField("IDENTITY_TYPE", identity.Type);
 				template.AppendSection();
 			}
 			template.DeselectSection();
