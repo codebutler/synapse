@@ -105,7 +105,9 @@ namespace Synapse.QtClient
 	
 				if (focus)
 					m_Tabs.SetCurrentIndex(index);
-	
+
+				view.Show();
+				
 				TabAdded();
 			});
 		}

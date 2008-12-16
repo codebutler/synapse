@@ -51,7 +51,6 @@ namespace Synapse.UI.Controllers
 					if (Closed != null)
 						Closed(this, EventArgs.Empty);
 				};
-				base.View.Show();
 				base.View.TextEntered += HandleTextEntered;
 			});
 		}
