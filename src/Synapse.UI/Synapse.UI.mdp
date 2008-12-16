@@ -57,6 +57,8 @@
     <File name="Synapse.UI.Controllers/ServiceBrowserWindowController.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/ServiceDiscovery.html" subtype="Code" buildaction="EmbedAsResource" />
     <File name="template4dotnet.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Controllers/ChatsWindowController.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Views/IChatsWindowView.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -67,8 +69,8 @@
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.dll" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <GtkDesignInfo />
 </Project>

@@ -132,7 +132,9 @@ FILES = \
 	ChatWindowManager.cs \
 	Synapse.UI.Views/IServiceBrowserWindowView.cs \
 	Synapse.UI.Controllers/ServiceBrowserWindowController.cs \
-	template4dotnet.cs 
+	template4dotnet.cs \
+	Synapse.UI.Controllers/ChatsWindowController.cs \
+	Synapse.UI.Views/IChatsWindowView.cs 
 
 DATA_FILES = 
 

@@ -42,7 +42,6 @@
     <File name="QtTraceListener.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/ChatWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/default-avatar.png" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="ChatWindowContainerWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/newtab.html" subtype="Code" buildaction="EmbedAsResource" />
     <File name="Synapse.QtClient.UI.Views/ProfileWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/ProfileWindow.cs" subtype="Code" buildaction="Compile" />
@@ -60,6 +59,7 @@
     <File name="ServiceBrowserWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/ServiceBrowserWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="FadingQLabel.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.UI.Views/TabbedChatsWindow.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />

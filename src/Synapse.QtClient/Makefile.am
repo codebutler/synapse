@@ -149,7 +149,6 @@ FILES = \
 	Synapse.QtClient.UI.Views/DebugWindow.cs \
 	QtTraceListener.cs \
 	qt-gui/ChatWindow.cs \
-	ChatWindowContainerWindow.cs \
 	Synapse.QtClient.UI.Views/ProfileWindow.cs \
 	qt-gui/ProfileWindow.cs \
 	WindowMover.cs \
@@ -161,7 +160,8 @@ FILES = \
 	AvatarFileEngine.cs \
 	ServiceBrowserWindow.cs \
 	qt-gui/ServiceBrowserWindow.cs \
-	FadingQLabel.cs 
+	FadingQLabel.cs \
+	Synapse.QtClient.UI.Views/TabbedChatsWindow.cs 
 
 DATA_FILES = 
 

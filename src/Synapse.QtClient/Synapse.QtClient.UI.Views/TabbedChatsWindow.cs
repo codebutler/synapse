@@ -26,14 +26,15 @@ using Qyoto;
 using Synapse.ServiceStack;
 using Synapse.UI.Services;
 using Synapse.UI.Controllers;
+using Synapse.UI.Views;
 
 namespace Synapse.QtClient
 {
-	public class ChatWindowContainerWindow : QWidget
+	public class TabbedChatsWindow : QWidget, ITabbedChatsWindowView
 	{
 		QTabWidget m_Tabs;
 		
-		public ChatWindowContainerWindow()
+		public TabbedChatsWindow(TabbedChatsWindowController controller)
 		{
 			this.SetStyleSheet("QTabWidget::pane { border: 0px; }");
 			
@@ -80,51 +81,70 @@ namespace Synapse.QtClient
 			layout.AddWidget(m_Tabs, 1, 0);
 			this.SetLayout(layout);
 
-			var gui = ServiceManager.Get<GuiService>();
-			gui.ChatWindowOpened += HandleChatWindowOpened;
-			gui.ChatWindowClosed += HandleChatWindowClosed;
-
 			QObject.Connect(m_Tabs, Qt.SIGNAL("currentChanged(int)"), this, Qt.SLOT("currentChanged(int)"));
 			
 			this.SetGeometry(0, 0, 445, 370);
 			Helper.CenterWidgetOnScreen(this);
-
-			/*
-			newTab(null);
-			this.Show();
-			*/
 		}
-
-		void HandleChatWindowOpened (AbstractChatWindowController window, bool focus)
+		
+		public void AddChatWindow (AbstractChatWindowController window, bool focus)
 		{
-			Application.Invoke(delegate {
-				var view = (QWidget)window.View;
-				
-				int index = m_Tabs.CurrentIndex + 1;
-				index = m_Tabs.InsertTab(index, view, view.WindowTitle);
-	
-				if (focus)
-					m_Tabs.SetCurrentIndex(index);
+			var view = (QWidget)window.View;
+			
+			int index = m_Tabs.CurrentIndex + 1;
+			index = m_Tabs.InsertTab(index, view, view.WindowIcon, view.WindowTitle);
 
-				view.Show();
-				
-				TabAdded();
-			});
+			if (focus)
+				m_Tabs.SetCurrentIndex(index);
+
+			view.Show();
+			
+			TabAdded();
+
+			window.View.UrgencyHintChanged += HandleChatUrgencyHintChanged;
 		}
 
-		void HandleChatWindowClosed (AbstractChatWindowController window)
+		public void RemoveChatWindow (AbstractChatWindowController window)
 		{
-			Application.Invoke(delegate {
-				int index = m_Tabs.IndexOf((QWidget)window.View);
-				m_Tabs.RemoveTab(index);
-				TabClosed();
-			});
+			int index = m_Tabs.IndexOf((QWidget)window.View);
+			m_Tabs.RemoveTab(index);
+			TabClosed();
+
+			window.View.UrgencyHintChanged -= HandleChatUrgencyHintChanged;
 		}
 
+		public IChatWindowView CurrentChat {
+			get {
+				return m_Tabs.CurrentWidget() as IChatWindowView;
+			}
+		}
+
+		void HandleChatUrgencyHintChanged (object sender, EventArgs args)
+		{
+			bool urgencyHint = false;
+			
+			for (int i = 0; i < m_Tabs.Count; i++) {
+				IChatWindowView chat = m_Tabs.Widget(i) as IChatWindowView;
+				if (chat != null) {
+					if (chat.UrgencyHint) {
+						m_Tabs.SetTabIcon(i, Helper.LoadIcon("dialog-warning", 16));
+						urgencyHint = true;
+					} else {
+						m_Tabs.SetTabIcon(i, ((QWidget)chat).WindowIcon);
+					}
+				}					
+			}
+
+			if (urgencyHint)
+				QApplication.Alert(this);
+		}
+		
 		[Q_SLOT]
 		void currentChanged(int index)
 		{
+			m_Tabs.Widget(index).SetFocus();
 			this.WindowTitle = m_Tabs.TabText(index);
+			this.WindowIcon  = m_Tabs.TabIcon(index);
 		}
 			
 		[Q_SLOT]
@@ -170,6 +190,21 @@ namespace Synapse.QtClient
 			evnt.Accept();
 		}
 
+		protected override void FocusInEvent (Qyoto.QFocusEvent arg1)
+		{
+			base.FocusInEvent (arg1);
+		}
+
+		protected override void ChangeEvent (Qyoto.QEvent arg1)
+		{
+			if (arg1.type() == QEvent.TypeOf.ActivationChange) {
+				if (this.IsActiveWindow) {
+					Console.WriteLine("FOCUS IN !!!");
+					m_Tabs.CurrentWidget().SetFocus();
+				}
+			}
+		}
+		
 		class EmptyTab : QWebView
 		{
 			public EmptyTab ()

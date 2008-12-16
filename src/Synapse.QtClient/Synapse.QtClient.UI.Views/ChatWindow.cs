@@ -21,18 +21,23 @@
 
 using System;
 using Qyoto;
-using Synapse.QtClient;
+using Synapse.ServiceStack;
+using Synapse.UI.Services;
 using Synapse.UI.Views;
 using Synapse.UI.Controllers;
 using Synapse.UI;
 using Synapse.UI.Actions.ExtensionNodes;
+using Synapse.QtClient;
 using jabber.connection;
 using Mono.Addins;
 
-public partial class ChatWindow : IChatWindowView
+public partial class ChatWindow : QWidget, IChatWindowView
 {
 	public event TextEventHandler TextEntered;
 	public event EventHandler Closed;
+	public event EventHandler UrgencyHintChanged;
+	
+	bool m_UrgencyHint = false;
 
 	public ChatWindow (AbstractChatWindowController controller)
 	{
@@ -46,7 +51,8 @@ public partial class ChatWindow : IChatWindowView
 		} else if (controller is ChatWindowController) {
 			var chatController = (ChatWindowController)controller;
 			participantsGrid.Hide();
-			this.WindowTitle = chatController.Jid;
+			this.WindowTitle = chatController.Jid.User; //FIXME: Show nickname from roster?
+			this.WindowIcon = new QIcon(new QPixmap(String.Format("avatar:/{0}", Synapse.Xmpp.AvatarManager.GetAvatarHash(chatController.Jid.Bare))));
 		}
 	
 		KeyPressEater eater = new KeyPressEater(this);
@@ -74,6 +80,19 @@ public partial class ChatWindow : IChatWindowView
 		m_ConversationWidget.LoadTheme("Mockie", "Orange - Icon Left");
 	}
 
+	public bool UrgencyHint {
+		get {
+			return m_UrgencyHint;
+		}
+		internal set {
+			m_UrgencyHint = value;
+			
+			if (UrgencyHintChanged != null) {
+				UrgencyHintChanged(this, EventArgs.Empty);
+			}
+		}
+	}
+
 	bool HandleKeyEvent(QKeyEvent kevent)
 	{
 		if ((kevent.Modifiers() & (uint)Qt.KeyboardModifier.ControlModifier) == 0 && kevent.Key() == (int)Qt.Key.Key_Return || kevent.Key() == (int)Qt.Key.Key_Enter) {
@@ -86,7 +105,6 @@ public partial class ChatWindow : IChatWindowView
 		}
 	}
 
-
 	public void AppendStatus (string status, string message)
 	{
 		m_ConversationWidget.AppendStatus(status, message);
@@ -98,6 +116,10 @@ public partial class ChatWindow : IChatWindowView
 	{
 		m_ConversationWidget.AppendMessage(incoming, next, userIconPath, senderScreenName, sender, senderColor,
 		                                   senderStatusIcon, senderDisplayName, Qt.Escape(message));
+
+		if (!IsActive) {
+			UrgencyHint = true;
+		}
 	}
 
 	protected override void CloseEvent(QCloseEvent evnt)
@@ -105,5 +127,21 @@ public partial class ChatWindow : IChatWindowView
 		if (Closed != null)
 			Closed(this, EventArgs.Empty);
 		evnt.Accept();
+	}
+
+
+	protected override void FocusInEvent (Qyoto.QFocusEvent arg1)
+	{
+		base.FocusInEvent (arg1);
+		
+		textEdit.SetFocus();
+		UrgencyHint = false;
+	}
+
+	bool IsActive {
+		get {
+			var gui = ServiceManager.Get<GuiService>();
+			return (gui.ChatsWindow.View.IsActiveWindow && gui.ChatsWindow.View.CurrentChat == this);
+		}
 	}
 }

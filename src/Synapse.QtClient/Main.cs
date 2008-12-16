@@ -38,8 +38,6 @@ namespace Synapse.QtClient
 	
 	public class Client : Synapse.ServiceStack.Client
 	{
-		ChatWindowContainerWindow m_ChatWindowContainerWindow;
-		
 		public static void Main (string[] args)
 		{
 			new QtClient.Client(args);
@@ -142,9 +140,6 @@ namespace Synapse.QtClient
 				
 			Application.Invoke(delegate {
 				OnStarted();
-
-				// FIXME: This seems out of place here:
-				m_ChatWindowContainerWindow = new ChatWindowContainerWindow();
 			});
 
 			QApplication.Exec();

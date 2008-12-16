@@ -1,6 +1,6 @@
 //
-// IChatWindowView.cs
-// 
+// IChatsWindowView.cs
+//
 // Copyright (C) 2008 Eric Butler
 //
 // Authors:
@@ -20,25 +20,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using Synapse.UI.Controllers;
 
 namespace Synapse.UI.Views
 {
-	public delegate void TextEventHandler (string text);
-	
-	public interface IChatWindowView : IView
+	public interface ITabbedChatsWindowView : IView
 	{
-		event TextEventHandler TextEntered;
-		event EventHandler Closed;
-
-		event EventHandler UrgencyHintChanged;
-
-		bool UrgencyHint {
+		void AddChatWindow (AbstractChatWindowController window, bool focus);
+		void RemoveChatWindow (AbstractChatWindowController window);
+		
+		IChatWindowView CurrentChat {
 			get;
 		}
 
-		void AppendStatus(string status, string message);
-
-		void AppendMessage(bool incoming, bool next, string userIconPath, string senderScreenName, string sender,
-	                       string senderColor, string senderStatusIcon, string senderDisplayName, string message);
+		bool IsActiveWindow {
+			get;
+		}
 	}
 }
