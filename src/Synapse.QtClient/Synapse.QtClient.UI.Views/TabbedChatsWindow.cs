@@ -199,7 +199,6 @@ namespace Synapse.QtClient
 		{
 			if (arg1.type() == QEvent.TypeOf.ActivationChange) {
 				if (this.IsActiveWindow) {
-					Console.WriteLine("FOCUS IN !!!");
 					m_Tabs.CurrentWidget().SetFocus();
 				}
 			}
