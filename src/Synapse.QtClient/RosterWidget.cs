@@ -47,6 +47,7 @@ public partial class RosterWidget : QWidget
 	List<QAction>         m_InviteActions;
 	QAction 			  m_ViewProfileAction;
 	QAction               m_IMAction;
+	QAction               m_ListModeAction;
 	
 	public RosterWidget (MainWindow parent) : base (parent)
 	{
@@ -59,6 +60,10 @@ public partial class RosterWidget : QWidget
 		m_ShowOfflineAction = new QAction("Show Offline Friends", this);
 		m_ShowOfflineAction.Checkable = true;
 		m_RosterMenu.AddAction(m_ShowOfflineAction);
+
+		m_ListModeAction = new QAction("List Mode", this);
+		m_ListModeAction.Checkable = true;
+		m_RosterMenu.AddAction(m_ListModeAction);
 
 		m_InviteActions = new List<QAction>();
 		
@@ -87,6 +92,8 @@ public partial class RosterWidget : QWidget
 		
 		QSizeGrip grip = new QSizeGrip(tabWidget);
 		tabWidget.SetCornerWidget(grip, Qt.Corner.BottomRightCorner);
+
+		tabWidget.ElideMode = Qt.TextElideMode.ElideMiddle;
 		
 		m_ActivityWebView.Page().MainFrame().Load("resource:/feed.html");
 		
@@ -101,7 +108,7 @@ public partial class RosterWidget : QWidget
 		m_MucModel = new BookmarkedMUCsModel();
 		mucTree.SetModel(m_MucModel);
 
-		rosterIconSizeSlider.Value = rosterGrid.IconWidth;
+		rosterIconSizeSlider.Value = rosterGrid.IconSize;
 	}
 
 	public int AccountsCount {
@@ -203,13 +210,15 @@ public partial class RosterWidget : QWidget
 	{
 		if (action == m_ShowOfflineAction) {
 			m_RosterModel.ShowOffline = action.Checked;
+		} else if (action == m_ListModeAction) {
+			rosterGrid.ListMode = action.Checked;
 		}
 	}
 
 	[Q_SLOT]
 	void on_rosterIconSizeSlider_valueChanged (int value)
 	{		
-		rosterGrid.IconWidth = value;
+		rosterGrid.IconSize = value;
 	}
 	#endregion
 }

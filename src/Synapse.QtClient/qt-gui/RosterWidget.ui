@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>295</width>
+    <width>319</width>
     <height>612</height>
    </rect>
   </property>
@@ -49,6 +49,9 @@
          </property>
          <property name="currentIndex" >
           <number>0</number>
+         </property>
+         <property name="usesScrollButtons" >
+          <bool>false</bool>
          </property>
          <widget class="QWidget" name="friendsTab" >
           <attribute name="title" >
@@ -201,7 +204,7 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_2" >
              <property name="spacing" >
-              <number>6</number>
+              <number>12</number>
              </property>
              <property name="margin" >
               <number>6</number>

@@ -40,12 +40,14 @@ namespace Synapse.QtClient
 		List<QTimeLine>       m_FadeTimeLines = new List<QTimeLine>();
 		List<QTimeLine>       m_MoveTimeLines = new List<QTimeLine>();
 		InfoPopup<T>          m_InfoPopup;
-			
+		QTimer                m_TooltipTimer;
+		
 		Dictionary<string, QGraphicsItemGroup> m_Groups = new Dictionary<string, QGraphicsItemGroup>();
 			
 		int m_IconWidth    = 32;
 		int m_HeaderHeight = 16;
-		int m_IconPadding  = 10;
+		
+		bool m_ListMode =  false;
 
 		public event AvatarGridItemEventHandler<T> ItemActivated;
 		
@@ -61,6 +63,11 @@ namespace Synapse.QtClient
 			m_InfoPopup.RightClicked += delegate (QPoint pos) {
 				Emit.CustomContextMenuRequested(this.MapFromGlobal(pos));
 			};
+
+			m_TooltipTimer = new QTimer(this);
+			m_TooltipTimer.SingleShot = true;
+			m_TooltipTimer.Interval = 500;
+			QObject.Connect(m_TooltipTimer, Qt.SIGNAL("timeout()"), this, Qt.SLOT("tooltipTimer_timeout()"));
 		}
 
 		#region Public Properties
@@ -92,7 +99,17 @@ namespace Synapse.QtClient
 			}
 		}
 
-		public int IconWidth {
+		public bool ListMode {
+			get {
+				return m_ListMode;
+			}
+			set {
+				m_ListMode = value;
+				ResizeAndRepositionGroups();
+			}
+		}
+		
+		public int IconSize {
 			get {
 				return m_IconWidth;
 			}
@@ -102,9 +119,9 @@ namespace Synapse.QtClient
 			}
 		}
 
-		public int IconHeight {
+		public int IconPadding {
 			get {
-				return m_IconWidth;
+				return m_IconWidth / 4;
 			}
 		}		
 		#endregion
@@ -234,10 +251,10 @@ namespace Synapse.QtClient
 
 		private void ResizeAndRepositionGroups ()
 		{
-			int iconWidth  = (IconWidth + m_IconPadding);
-			int iconHeight = (IconHeight + m_IconPadding);
+			int iconWidth  = (IconSize + IconPadding);
+			int iconHeight = (IconSize + IconPadding);
 			
-			int y = m_IconPadding;
+			int y = IconPadding;
 
 			int vScroll = this.VerticalScrollBar().Value;
 
@@ -276,21 +293,25 @@ namespace Synapse.QtClient
 						// First two children are known to be these
 						// FIXME: Create a GroupHeaderItem or something and merge these together.
 						QGraphicsSimpleTextItem nameItem = (QGraphicsSimpleTextItem)children[0];
-						nameItem.SetPos(m_IconPadding, y);
+						nameItem.SetPos(IconPadding, y);
 						
 						QRectF nameItemRect = nameItem.BoundingRect();
 						QGraphicsPathItem arrowItem  = (QGraphicsPathItem)children[1];
-						arrowItem.SetPos(m_IconPadding + nameItemRect.Width() + 4, y + (nameItemRect.Height() / 2) - 2);
+						arrowItem.SetPos(IconPadding + nameItemRect.Width() + 4, y + (nameItemRect.Height() / 2) - 2);
 						
-						y += m_HeaderHeight + m_IconPadding;
+						y += m_HeaderHeight + IconPadding;
 	
 						// The rest of the children are items
 						int itemCount = children.Count - 2;
 						if (itemCount > 0) {
-							int perRow = Math.Max((((int)m_Scene.Width() - m_IconPadding) / iconWidth), 1);
+							int perRow = Math.Max((((int)m_Scene.Width() - IconPadding) / iconWidth), 1);
+
+							if (m_ListMode)
+								perRow = 1;
+							
 							int rows = Math.Max(itemCount / perRow, 1);
 	
-							int x       = m_IconPadding;
+							int x       = IconPadding;
 							int row     = 0;
 							int thisRow = 0;
 
@@ -309,7 +330,7 @@ namespace Synapse.QtClient
 									if (thisRow == perRow) {
 										row ++;
 										thisRow = 0;
-										x = m_IconPadding;
+										x = IconPadding;
 										y += iconHeight;
 									}
 
@@ -335,7 +356,7 @@ namespace Synapse.QtClient
 			
 			// Update the scene's height
 			int newWidth = this.Viewport().Width();
-			int newHeight = y + m_IconPadding;
+			int newHeight = y + IconPadding;
 			var currentRect = m_Scene.SceneRect;
 			if (currentRect.Width() != newWidth || currentRect.Height() != newHeight) {
 				m_Scene.SetSceneRect(0, 0, newWidth, newHeight);
@@ -380,8 +401,8 @@ namespace Synapse.QtClient
 					QGraphicsItemGroup group = m_Groups[groupName];
 					group.SetVisible(false);
 	
-					GraphicsRosterItem<T> graphicsItem = new GraphicsRosterItem<T>(this, item, (uint)IconWidth,
-					                                                               (uint)IconHeight, group);
+					GraphicsRosterItem<T> graphicsItem = new GraphicsRosterItem<T>(this, item, (uint)IconSize,
+					                                                               (uint)IconSize, group);
 					graphicsItem.SetVisible(false);
 					group.AddToGroup(graphicsItem);
 				}
@@ -389,6 +410,12 @@ namespace Synapse.QtClient
 				if (resizeAndReposition)
 					ResizeAndRepositionGroups();
 			}			
+		}
+
+		[Q_SLOT]
+		void tooltipTimer_timeout()
+		{			
+			m_InfoPopup.Show();
 		}
 		
 		protected override void ResizeEvent (QResizeEvent evnt)
@@ -407,18 +434,26 @@ namespace Synapse.QtClient
 		protected override void MouseMoveEvent (Qyoto.QMouseEvent arg1)
 		{
 			base.MouseMoveEvent (arg1);
+
+			Console.WriteLine(arg1.Pos().X() + " " + arg1.Pos().Y());
 			
 			var oldItem = m_HoverItem;
 			
 			var item = this.ItemAt(arg1.Pos());
-			if (item is GraphicsRosterItem<T>) {				
+			if (item is GraphicsRosterItem<T>) {
 				m_HoverItem = (GraphicsRosterItem<T>)item;
-				m_HoverItem.Update();				
+				m_HoverItem.Update();
+
+				if (m_InfoPopup.Item != m_HoverItem) {
+					m_TooltipTimer.Stop();
+					m_InfoPopup.Item = m_HoverItem;					
+					m_TooltipTimer.Start();
+				}
 			} else {
+				m_TooltipTimer.Stop();
 				m_HoverItem = null;
+				m_InfoPopup.Item = null;
 			}
-			
-			m_InfoPopup.Item = m_HoverItem;
 
 			if (oldItem != null) {
 				oldItem.Update();
@@ -464,15 +499,13 @@ namespace Synapse.QtClient
 			double        m_Opacity = 1;
 			AvatarGrid<T> m_Grid;
 			T             m_Item;
-			QFont 		  m_Font;    // FIXME: Move this to the grid
-			QFontMetrics  m_Metrics; // (this too)
+			QRectF        m_Rect;
 			
 			public GraphicsRosterItem (AvatarGrid<T> grid, T item, double width, double height, QGraphicsItem parent)
 			{
 				m_Grid    = grid;
 				m_Item    = item;
-				m_Font    = new QFont("Sans", 7);
-				m_Metrics = new QFontMetrics(m_Font);
+				m_Rect = new QRectF(0, 0, 0, 0);
 			}
 
 			public T Item {
@@ -493,35 +526,43 @@ namespace Synapse.QtClient
 
 			public override void Paint (Qyoto.QPainter painter, Qyoto.QStyleOptionGraphicsItem option, Qyoto.QWidget widget)
 			{
-				QRectF boundingRect = BoundingRect();
-				int width  = (int)boundingRect.Width();
-				int height = (int)boundingRect.Height();
+				int iconSize  = m_Grid.IconSize;
 
 				painter.SetOpacity(m_Opacity);
-
-				/*
-				if (IsHover) {
-					// FIXME: Do something prettier here.
-					painter.Save();
-					painter.SetBrush(new QBrush(Qt.GlobalColor.black));
-					painter.DrawRect(0, 0, width, height);
-					painter.Restore();
-				}
-				*/
 				
 				QPixmap pixmap = (QPixmap)m_Grid.Model.GetImage(m_Item);				
 				if (pixmap != null)
-					painter.DrawPixmap(0, 0, width, height, pixmap);
+					painter.DrawPixmap(0, 0, iconSize, iconSize, pixmap);
 				else
-					painter.DrawRect(0, 0, width, height);
+					painter.DrawRect(0, 0, iconSize, iconSize);
+
+				/*
+				if (IsHover) {
+					painter.DrawRect(BoundingRect());
+				}
+				*/
+				
+				if (m_Grid.ListMode) {
+					var rect = BoundingRect();
+					var pen = new QPen();
+					pen.SetBrush(new QBrush(new QColor(Qt.GlobalColor.white)));
+					painter.SetPen(pen);
+
+					int x = iconSize + m_Grid.IconPadding;
+					painter.DrawText(x, 0, (int)rect.Width() - x, (int)rect.Height(), (int)Qt.TextFlag.TextSingleLine, m_Grid.Model.GetName(m_Item));
+				}
 			}
 
 			// FIXME: This constantly crashes...
 			public override QRectF BoundingRect ()
 			{
-				int width  = m_Grid.IconWidth;
-				int height = m_Grid.IconHeight;
-				return new QRectF(0, 0, width, height);
+				if (!m_Grid.ListMode) {
+					m_Rect.SetWidth(m_Grid.IconSize);
+				} else {
+					m_Rect.SetWidth(m_Grid.Viewport().Width() - (m_Grid.IconPadding * 2));
+				}
+				m_Rect.SetHeight(m_Grid.IconSize);
+				return m_Rect;
 			}
 
 			public bool IsHover {
@@ -594,11 +635,14 @@ namespace Synapse.QtClient
 			}
 
 			public GraphicsRosterItem<T> Item {
+				get {
+					return m_Item;
+				}
 				set {
 					m_Item = value;
 					if (m_Item != null) {
 						QPixmap pixmap = (QPixmap)m_Grid.Model.GetImage(m_Item.Item);
-						m_PixmapItem.Rect = new QRect(0, 0, m_Grid.IconWidth, m_Grid.IconHeight);
+						m_PixmapItem.Rect = new QRect(0, 0, m_Grid.IconSize, m_Grid.IconSize);
 						m_PixmapItem.Pixmap = pixmap;
 
 						var text = String.Format(@"<span style='font-size: 9pt; font-weight: bold'>{0}</span>
@@ -616,11 +660,10 @@ namespace Synapse.QtClient
 						int x = point.X();
 						int y = point.Y();
 
-						x -= (60 / 2) - (m_Grid.IconWidth / 2) + 6;
-						y -= (60 / 2) - (m_Grid.IconHeight / 2) + 6;						
+						x -= (60 / 2) - (m_Grid.IconSize / 2) + 6;
+						y -= (60 / 2) - (m_Grid.IconSize / 2) + 6;						
 						
 						this.Move(x, y);
-						this.Show();
 					} else {
 						this.Hide();
 						m_Label.SetText(String.Empty);

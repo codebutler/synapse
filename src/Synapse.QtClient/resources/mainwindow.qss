@@ -47,7 +47,9 @@ QLineEdit {
 	background-color: #2D2D2D;
 }
 
-#friendsTab, #friendsTab QGraphicsView,
+#friendsTab, 
+#friendsTab QGraphicsView,
+#friendsTab QListView,
 #chatroomsTab QTreeView {
 	background-color: #333333;
 }
@@ -70,7 +72,8 @@ QPushButton[flat="false"] {
 QPushButton[flat="true"] {
 	background-color: transparent;
 	border: 1px solid transparent;
-	padding: 0px; /* FIXME: This doesn't seem to work */
+	padding: 0px;
+	min-width: 0px;
 }
 
 QPushButton:hover, 
@@ -163,4 +166,19 @@ QScrollBar::sub-line:vertical {
 QScrollBar::add-page:vertical, 
 QScrollBar::sub-page:vertical {
 	background: none;
+}
+
+QSlider::handle {
+	background: #222222;
+	border: 1px solid #222222;
+	border-radius: 5px;
+	width: 12px;
+}
+
+QSlider::groove {
+	background: #2B2B2B;
+	border: 1px solid #2B2B2B;
+	border-radius: 5px;
+	margin: 3px;
+	height: 12px;
 }

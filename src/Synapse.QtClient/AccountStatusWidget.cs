@@ -65,11 +65,7 @@ public partial class AccountStatusWidget : QWidget
 		m_ShowBrowserAction = new QAction("Show Browser", this);
 		m_AccountMenu.AddAction(m_ShowBrowserAction);
 		
-		var nameLabelBuilder = new StringBuilder();
-		nameLabelBuilder.Append(@"<html><style>a { color: white; text-decoration: none; }</style><body>");
-		nameLabelBuilder.Append(String.Format("<a href=\"#show-account-menu\">{0}</a>", account.Jid.Bare));
-		nameLabelBuilder.Append("</body></html>");
-		m_NameLabel.Text = nameLabelBuilder.ToString();
+		m_NameLabel.Text = account.Jid.Bare;
 
 		m_PresenceMenu = new QMenu(this);
 		QObject.Connect(m_PresenceMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("HandlePresenceMenuAboutToShow()"));

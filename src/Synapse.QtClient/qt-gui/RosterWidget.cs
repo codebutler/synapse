@@ -58,7 +58,7 @@ public partial class RosterWidget : QWidget {
     
     protected void SetupUi() {
         base.ObjectName = "RosterWidget";
-        this.Geometry = new QRect(0, 0, 295, 612);
+        this.Geometry = new QRect(0, 0, 319, 612);
         this.WindowTitle = "RosterWidget";
         QVBoxLayout verticalLayout_6;
         verticalLayout_6 = new QVBoxLayout(this);
@@ -87,6 +87,7 @@ public partial class RosterWidget : QWidget {
         this.tabWidget.tabPosition = QTabWidget.TabPosition.South;
         this.tabWidget.tabShape = QTabWidget.TabShape.Rounded;
         this.tabWidget.CurrentIndex = 0;
+        this.tabWidget.UsesScrollButtons = false;
         verticalLayout_2.AddWidget(this.tabWidget);
         this.friendsTab = new QWidget(this.tabWidget);
         this.friendsTab.ObjectName = "friendsTab";
@@ -169,7 +170,7 @@ public partial class RosterWidget : QWidget {
         QHBoxLayout horizontalLayout_2;
         horizontalLayout_2 = new QHBoxLayout();
         verticalLayout.AddLayout(horizontalLayout_2);
-        horizontalLayout_2.Spacing = 6;
+        horizontalLayout_2.Spacing = 12;
         horizontalLayout_2.Margin = 6;
         QSpacerItem horizontalSpacer;
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
