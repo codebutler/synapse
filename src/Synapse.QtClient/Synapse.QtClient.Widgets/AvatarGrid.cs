@@ -462,9 +462,13 @@ namespace Synapse.QtClient.Widgets
 					m_HoverItem.Update();
 	
 					if (m_InfoPopup.Item != m_HoverItem) {
-						m_TooltipTimer.Stop();
-						m_InfoPopup.Item = m_HoverItem;
-						m_TooltipTimer.Start();
+						if (m_InfoPopup.IsVisible()) {
+							m_InfoPopup.Item = m_HoverItem;
+						} else {
+							m_TooltipTimer.Stop();
+							m_InfoPopup.Item = m_HoverItem;
+							m_TooltipTimer.Start();
+						}
 					}
 				} else {	
 					m_TooltipTimer.Stop();

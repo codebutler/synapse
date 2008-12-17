@@ -94,6 +94,9 @@ namespace Synapse.QtClient.Widgets
 					return m_Item;
 				}
 				set {
+					if (m_Item == value)
+						return;
+					
 					m_Item = value;
 					if (m_Item != null) {
 						QPixmap pixmap = (QPixmap)m_Grid.Model.GetImage(m_Item.Item);
@@ -135,18 +138,14 @@ namespace Synapse.QtClient.Widgets
 				if (arg2.type() == QEvent.TypeOf.HoverMove) {
 					if (MouseMoved != null)
 						MouseMoved(this, EventArgs.Empty);
+					
 				} else if (arg2.type() == QEvent.TypeOf.ContextMenu) {
 					var mouseEvent = (QContextMenuEvent)arg2;
 					this.Hide();
 					if (RightClicked != null) {
 						RightClicked(this.MapToGlobal(mouseEvent.Pos()));
 					}
-					
-				// This one isn't really needed.
-				} else if (arg2.type() == QEvent.TypeOf.HoverLeave) {
-					this.Hide();
-				}
-				
+				}				
 				return base.EventFilter (arg1, arg2);
 			}
 		}

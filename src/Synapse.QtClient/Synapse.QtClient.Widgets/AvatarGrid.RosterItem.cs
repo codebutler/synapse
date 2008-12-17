@@ -58,8 +58,8 @@ namespace Synapse.QtClient.Widgets
 
 			public override void Paint (Qyoto.QPainter painter, Qyoto.QStyleOptionGraphicsItem option, Qyoto.QWidget widget)
 			{
-				int iconSize  = m_Grid.IconSize;
-
+				int iconSize = m_Grid.IconSize;
+				
 				// Parent opacity overrides item opacity.
 				var parentGroup = (RosterItemGroup)base.Group();
 				if (parentGroup.Opacity != 1)
