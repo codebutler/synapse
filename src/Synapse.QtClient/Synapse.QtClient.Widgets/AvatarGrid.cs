@@ -28,15 +28,15 @@ using Synapse.UI;
 using Synapse.Xmpp;
 using jabber.protocol.iq;
 
-namespace Synapse.QtClient
+namespace Synapse.QtClient.Widgets
 {
 	public delegate void AvatarGridItemEventHandler<T> (AvatarGrid<T> grid, T item);
 	
-	public class AvatarGrid<T> : QGraphicsView
+	public partial class AvatarGrid<T> : QGraphicsView
 	{
 		IAvatarGridModel<T>   m_Model;
 		QGraphicsScene        m_Scene;
-		GraphicsRosterItem<T> m_HoverItem;
+		RosterItem<T>         m_HoverItem;
 		List<QTimeLine>       m_FadeTimeLines = new List<QTimeLine>();
 		List<QTimeLine>       m_MoveTimeLines = new List<QTimeLine>();
 		InfoPopup<T>          m_InfoPopup;
@@ -152,8 +152,8 @@ namespace Synapse.QtClient
 				foreach (var pair in m_Groups) {
 					QGraphicsItemGroup group = pair.Value;
 					foreach (QGraphicsItem gitem in group.Children()) {
-						if (gitem is GraphicsRosterItem<T>) {
-							if (((GraphicsRosterItem<T>)gitem).Item.Equals(item)) {
+						if (gitem is RosterItem<T>) {
+							if (((RosterItem<T>)gitem).Item.Equals(item)) {
 								group.RemoveFromGroup(gitem);
 								break;
 							}
@@ -174,8 +174,8 @@ namespace Synapse.QtClient
 		{
 			Application.Invoke(delegate {
 				foreach (QGraphicsItem gitem in m_Scene.Items()) {
-					if (gitem is GraphicsRosterItem<T>) {
-						if (((GraphicsRosterItem<T>)gitem).Item.Equals(item)) {
+					if (gitem is RosterItem<T>) {
+						if (((RosterItem<T>)gitem).Item.Equals(item)) {
 							if (model.IsVisible(item) != gitem.IsVisible()) {
 								ResizeAndRepositionGroups();
 								return;
@@ -276,8 +276,8 @@ namespace Synapse.QtClient
 
 					int visibleChildren = 0;
 					foreach (QGraphicsItem child in children) {
-						if (child is GraphicsRosterItem<T>) {
-							if (m_Model.IsVisible(((GraphicsRosterItem<T>)child).Item)) {
+						if (child is RosterItem<T>) {
+							if (m_Model.IsVisible(((RosterItem<T>)child).Item)) {
 								visibleChildren ++;
 							}
 						}
@@ -311,7 +311,7 @@ namespace Synapse.QtClient
 
 							// Arrange the items
 							for (int n = 0; n < itemCount; n ++) {
-								GraphicsRosterItem<T> item = (GraphicsRosterItem<T>)children[n];
+								RosterItem<T> item = (RosterItem<T>)children[n];
 
 								bool itemVisible = m_Model.IsVisible(item.Item) && group.IsExpanded;
 								if (item.IsVisible() != itemVisible) {
@@ -405,8 +405,8 @@ namespace Synapse.QtClient
 					QGraphicsItemGroup group = m_Groups[groupName];
 					group.SetVisible(false);
 	
-					GraphicsRosterItem<T> graphicsItem = new GraphicsRosterItem<T>(this, item, (uint)IconSize,
-					                                                               (uint)IconSize, group);
+					RosterItem<T> graphicsItem = new RosterItem<T>(this, item, (uint)IconSize,
+					                                               (uint)IconSize, group);
 					graphicsItem.SetVisible(false);
 					group.AddToGroup(graphicsItem);
 				}
@@ -465,8 +465,8 @@ namespace Synapse.QtClient
 				m_HoverItem = null;
 				m_InfoPopup.Item = null;
 			} else {				
-				if (item is GraphicsRosterItem<T>) {
-					m_HoverItem = (GraphicsRosterItem<T>)item;
+				if (item is RosterItem<T>) {
+					m_HoverItem = (RosterItem<T>)item;
 					m_HoverItem.Update();
 	
 					if (m_InfoPopup.Item != m_HoverItem) {
@@ -495,359 +495,6 @@ namespace Synapse.QtClient
 
 			if (oldItem != null && oldItem != m_HoverItem) {
 				oldItem.Update();
-			}
-		}
-
-		class FadeInOutAnimation : QGraphicsItemAnimation
-		{
-			bool m_FadeIn;
-			
-			public FadeInOutAnimation (bool fadeIn, QObject parent) : base (parent)
-			{
-				m_FadeIn = fadeIn;
-			}
-
-			public new void SetItem (QGraphicsItem item)
-			{
-				var fadeItem = (IFadeable)item;
-				if (!fadeItem.IsVisible() && m_FadeIn) {
-					fadeItem.Opacity = 0;
-					fadeItem.SetVisible(true);
-					fadeItem.Update();
-				}
-				
-				base.SetItem(item);
-			}
-			
-			protected override void AfterAnimationStep (double step)
-			{
-				base.AfterAnimationStep (step);
-				
-				var opacity = m_FadeIn ? step : 1 - step;
-
-				var fadeItem = (IFadeable)base.Item();
-				fadeItem.Opacity = opacity;
-				if (step == 1 && !m_FadeIn) {
-					base.Item().SetVisible(false);
-				}
-			}
-		}
-
-		interface IFadeable : IQGraphicsItem
-		{
-			double Opacity {
-				get;
-				set;
-			}
-			
-		}
-
-		class RosterItemGroup : QGraphicsItemGroup, IFadeable
-		{
-			AvatarGrid<T> m_Grid;
-			QFont         m_Font;
-			string        m_GroupName;
-			QRectF        m_Rect;
-			bool          m_Expanded = true;
-			double        m_Opacity = 1;
-			
-			public RosterItemGroup (AvatarGrid<T> grid, string groupName)
-			{
-				m_Grid      = grid;
-				m_GroupName = groupName;
-				
-				m_Font = new QFont(m_Grid.Font);
-				m_Font.SetPointSize(8); // FIXME: Set to m_Grid.HeaderHeight.
-				m_Font.SetBold(true);
-				
-				m_Rect = new QRectF(m_Grid.IconPadding, 0, 0, 0);
-			}
-
-			public double Opacity {
-				get {
-					return m_Opacity;
-				}
-				set {
-					m_Opacity = value;
-					this.Update();
-				}
-			}
-			
-			public bool IsExpanded {
-				get {
-					return m_Expanded;
-				}
-				set {
-					m_Expanded = value;
-					this.Update();
-				}
-			}
-
-			public string Name {
-				get {
-					return m_GroupName;
-				}
-			}
-			
-			public override QRectF BoundingRect ()
-			{
-				m_Rect.SetWidth(m_Grid.Viewport().Width() - (m_Grid.IconPadding * 2));
-				if (IsExpanded)
-					m_Rect.SetHeight(base.ChildrenBoundingRect().Height());
-				else
-					m_Rect.SetHeight(m_Grid.HeaderHeight);							
-				return m_Rect;
-			}
-			
-			public override void Paint (Qyoto.QPainter painter, Qyoto.QStyleOptionGraphicsItem option, Qyoto.QWidget widget)
-			{
-				painter.SetOpacity(m_Opacity);
-
-				// Group Name
-				painter.SetFont(m_Font);
-				painter.SetPen(new QPen(new QColor("#CCC")));
-				painter.DrawText(BoundingRect(), m_GroupName);
-
-				QFontMetrics metrics = new QFontMetrics(m_Font);
-				int textWidth = metrics.Width(m_GroupName);
-
-				// Group expander arrow
-				painter.Save();
-				painter.Translate(m_Grid.IconPadding + textWidth + 4, 5); // FIXME: These numbers probably shouldn't be hard coded.
-				QPainterPath path = new QPainterPath();
-				if (m_Expanded) {
-					path.MoveTo(0, 0);
-					path.LineTo(4, 0);
-					path.LineTo(2, 2);
-					path.LineTo(0, 0);
-				} else {
-					path.MoveTo(2, 0);
-					path.LineTo(2, 4);
-					path.LineTo(0, 2);
-					path.LineTo(2, 0);
-				}
-				painter.SetPen(new QPen((new QColor("#CCC"))));
-				painter.SetBrush(new QBrush(new QColor("#CCC")));				
-				painter.DrawPath(path);
-				painter.Restore();
-
-				//painter.DrawRect(BoundingRect());
-			}
-
-			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
-			{
-				var pos = arg1.Pos();
-				if (pos.Y() < m_Grid.HeaderHeight) {
-					this.IsExpanded = !this.IsExpanded;
-					m_Grid.ResizeAndRepositionGroups();
-				}
-				base.MousePressEvent (arg1);
-			}
-		}
-		
-		class GraphicsRosterItem<T> : QGraphicsItem, IFadeable
-		{
-			double        m_Opacity = 1;
-			AvatarGrid<T> m_Grid;
-			T             m_Item;
-			QRectF        m_Rect;
-			
-			public GraphicsRosterItem (AvatarGrid<T> grid, T item, double width, double height, QGraphicsItem parent)
-			{
-				m_Grid    = grid;
-				m_Item    = item;
-				m_Rect = new QRectF(0, 0, 0, 0);
-			}
-
-			public T Item {
-				get {
-					return m_Item;
-				}
-			}
-
-			public double Opacity {
-				get {
-					return m_Opacity;
-				}
-				set {
-					m_Opacity = value;
-					this.Update();
-				}
-			}
-
-			public override void Paint (Qyoto.QPainter painter, Qyoto.QStyleOptionGraphicsItem option, Qyoto.QWidget widget)
-			{
-				int iconSize  = m_Grid.IconSize;
-
-				// Parent opacity overrides item opacity.
-				var parentGroup = (RosterItemGroup)base.Group();
-				if (parentGroup.Opacity != 1)
-					painter.SetOpacity(parentGroup.Opacity);
-				else
-					painter.SetOpacity(m_Opacity);
-				
-				QPixmap pixmap = (QPixmap)m_Grid.Model.GetImage(m_Item);				
-				if (pixmap != null)
-					painter.DrawPixmap(0, 0, iconSize, iconSize, pixmap);
-				else
-					painter.DrawRect(0, 0, iconSize, iconSize);
-
-				if (IsHover) {
-					painter.DrawRect(BoundingRect());
-				}
-				
-				if (m_Grid.ListMode) {
-					var rect = BoundingRect();
-					var pen = new QPen();
-					pen.SetBrush(new QBrush(new QColor(Qt.GlobalColor.white)));
-					painter.SetPen(pen);
-
-					int x = iconSize + m_Grid.IconPadding;
-					painter.DrawText(x, 0, (int)rect.Width() - x, (int)rect.Height(), (int)Qt.TextFlag.TextSingleLine, m_Grid.Model.GetName(m_Item));
-				}
-			}
-
-			// FIXME: This constantly crashes...
-			public override QRectF BoundingRect ()
-			{
-				if (!m_Grid.ListMode) {
-					m_Rect.SetWidth(m_Grid.IconSize);
-				} else {
-					m_Rect.SetWidth(m_Grid.Viewport().Width() - (m_Grid.IconPadding * 2));
-				}
-				m_Rect.SetHeight(m_Grid.IconSize);
-				return m_Rect;
-			}
-
-			public bool IsHover {
-				get {
-					return (m_Grid.HoverItem != null && m_Grid.HoverItem.Equals(m_Item));
-				}
-			}
-		}
-
-		delegate void QPointEventHandler (QPoint pos);
-		
-		class InfoPopup<T> : QWidget
-		{
-			AvatarGrid<T>                m_Grid;
-			QGraphicsScene               m_Scene;
-			GraphicsRosterItem<T>        m_Item;
-			ResizableGraphicsPixmapItem  m_PixmapItem;
-		 	QLabel                       m_Label;
-			MyGraphicsView               m_GraphicsView;
-
-			public event EventHandler MouseMoved;
-			public event QPointEventHandler RightClicked;
-			
-			public event EventHandler DoubleClicked {
-				add {
-					m_GraphicsView.DoubleClicked += value;
-				}
-				remove {
-					m_GraphicsView.DoubleClicked -= value;
-				}
-			}
-			
-			public InfoPopup (AvatarGrid<T> grid)
-			{
-				m_Grid = grid;
-				base.WindowFlags = (uint)Qt.WindowType.FramelessWindowHint | (uint)Qt.WindowType.ToolTip;
-				base.Resize(260, 95);
-				base.SetStyleSheet("background: black; color: white");
-
-				m_GraphicsView = new MyGraphicsView(this);
-				m_GraphicsView.FrameShape = QFrame.Shape.NoFrame;
-				m_GraphicsView.HorizontalScrollBarPolicy = Qt.ScrollBarPolicy.ScrollBarAlwaysOff;
-				m_GraphicsView.VerticalScrollBarPolicy = Qt.ScrollBarPolicy.ScrollBarAlwaysOff;
-				m_GraphicsView.SetMaximumSize(60, 60);
-				m_GraphicsView.SetMinimumSize(60, 60);
-				
-				m_Scene = new QGraphicsScene(m_GraphicsView);
-
-				m_PixmapItem = new ResizableGraphicsPixmapItem();
-				m_Scene.AddItem(m_PixmapItem);
-				
-				m_GraphicsView.SetScene(m_Scene);
-				
-				m_Label = new QLabel(this);
-				m_Label.Alignment = (uint)Qt.AlignmentFlag.AlignTop | (uint)Qt.AlignmentFlag.AlignLeft;
-				m_Label.TextFormat = Qt.TextFormat.RichText;
-				m_Label.WordWrap = true;
-				m_Label.SizePolicy = new QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding);
-
-				var leftLayout = new QVBoxLayout();
-				leftLayout.AddWidget(m_GraphicsView);
-				leftLayout.AddStretch();
-				
-				var layout = new QHBoxLayout(this);
-				layout.Margin = 6;
-				layout.Spacing = 6;
-				layout.AddLayout(leftLayout);
-				layout.AddWidget(m_Label);
-				
-				this.InstallEventFilter(this);
-			}
-
-			public GraphicsRosterItem<T> Item {
-				get {
-					return m_Item;
-				}
-				set {
-					m_Item = value;
-					if (m_Item != null) {
-						QPixmap pixmap = (QPixmap)m_Grid.Model.GetImage(m_Item.Item);
-						m_PixmapItem.Rect = new QRect(0, 0, m_Grid.IconSize, m_Grid.IconSize);
-						m_PixmapItem.Pixmap = pixmap;
-						m_PixmapItem.Update();
-
-						var text = String.Format(@"<span style='font-size: 9pt; font-weight: bold'>{0}</span>
-						                         <br/><span style='font-size: 7.5pt'>{1}</span>
-						                         <br/><span style='font-size: 7.5pt; color: #666'><b>{2}</b>{3}",
-						                         m_Grid.Model.GetName(m_Item.Item),
-						                         m_Grid.Model.GetJID(m_Item.Item),
-						                         m_Grid.Model.GetPresence(m_Item.Item),
-						                         m_Grid.Model.GetPresenceMessage(m_Item.Item));
-						m_Label.SetText(text);
-						
-						m_Scene.SceneRect = m_Scene.ItemsBoundingRect();
-
-						var itemRect = m_Item.SceneBoundingRect();
-						
-						var point = m_Grid.MapToGlobal(m_Grid.MapFromScene(itemRect.X(), itemRect.Y()));
-						int x = point.X();
-						int y = point.Y();
-
-						x -= (60 / 2) - (m_Grid.IconSize / 2) + 6;
-						y -= (60 / 2) - (m_Grid.IconSize / 2) + 6;						
-						
-						this.Move(x, y);
-					} else {
-						this.Hide();
-						m_Label.SetText(String.Empty);
-						m_PixmapItem.Pixmap = null;
-					}
-				}
-			}
-
-			public bool EventFilter (Qyoto.QObject arg1, Qyoto.QEvent arg2)
-			{
-				if (arg2.type() == QEvent.TypeOf.HoverMove) {
-					if (MouseMoved != null)
-						MouseMoved(this, EventArgs.Empty);
-				} else if (arg2.type() == QEvent.TypeOf.ContextMenu) {
-					var mouseEvent = (QContextMenuEvent)arg2;
-					this.Hide();
-					if (RightClicked != null) {
-						RightClicked(this.MapToGlobal(mouseEvent.Pos()));
-					}
-					
-				// This one isn't really needed.
-				} else if (arg2.type() == QEvent.TypeOf.HoverLeave) {
-					this.Hide();
-				}
-				
-				return base.EventFilter (arg1, arg2);
 			}
 		}
 	}

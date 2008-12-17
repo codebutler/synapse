@@ -24,7 +24,7 @@ public partial class RosterWidget : QWidget {
     
     protected QWidget friendsTab;
     
-    protected Synapse.QtClient.AvatarGrid<Synapse.UI.AccountItemPair> rosterGrid;
+    protected Synapse.QtClient.Widgets.AvatarGrid<Synapse.UI.AccountItemPair> rosterGrid;
     
     protected QLabel statsLabel;
     
@@ -95,7 +95,7 @@ public partial class RosterWidget : QWidget {
         verticalLayout_4 = new QVBoxLayout(this.friendsTab);
         verticalLayout_4.Spacing = 0;
         verticalLayout_4.Margin = 0;
-        this.rosterGrid = new Synapse.QtClient.AvatarGrid<Synapse.UI.AccountItemPair>(this.friendsTab);
+        this.rosterGrid = new Synapse.QtClient.Widgets.AvatarGrid<Synapse.UI.AccountItemPair>(this.friendsTab);
         this.rosterGrid.ObjectName = "rosterGrid";
         this.rosterGrid.FrameShape = QFrame.Shape.NoFrame;
         this.rosterGrid.Alignment = ((global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeading") | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeft")) | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignTop"));

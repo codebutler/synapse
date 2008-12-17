@@ -26,7 +26,7 @@ public partial class ChatWindow : QWidget {
     
     protected QWidget rightContainer;
     
-    protected Synapse.QtClient.AvatarGrid<jabber.connection.RoomParticipant> participantsGrid;
+    protected Synapse.QtClient.Widgets.AvatarGrid<jabber.connection.RoomParticipant> participantsGrid;
     
     protected void SetupUi() {
         base.ObjectName = "ChatWindow";
@@ -67,7 +67,7 @@ public partial class ChatWindow : QWidget {
         QVBoxLayout verticalLayout_2;
         verticalLayout_2 = new QVBoxLayout(this.rightContainer);
         verticalLayout_2.Margin = 0;
-        this.participantsGrid = new Synapse.QtClient.AvatarGrid<jabber.connection.RoomParticipant>(this.rightContainer);
+        this.participantsGrid = new Synapse.QtClient.Widgets.AvatarGrid<jabber.connection.RoomParticipant>(this.rightContainer);
         this.participantsGrid.ObjectName = "participantsGrid";
         this.participantsGrid.FrameShape = QFrame.Shape.NoFrame;
         this.participantsGrid.Alignment = ((global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeading") | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeft")) | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignTop"));

@@ -65,7 +65,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="Synapse.QtClient.AvatarGrid&lt;Synapse.UI.AccountItemPair>" name="rosterGrid" >
+            <widget class="Synapse.QtClient.Widgets.AvatarGrid&lt;Synapse.UI.AccountItemPair>" name="rosterGrid" >
              <property name="frameShape" >
               <enum>QFrame::NoFrame</enum>
              </property>
@@ -361,7 +361,7 @@
    <header>QtWebKit/QWebView</header>
   </customwidget>
   <customwidget>
-   <class>Synapse.QtClient.AvatarGrid&lt;Synapse.UI.AccountItemPair></class>
+   <class>Synapse.QtClient.Widgets.AvatarGrid&lt;Synapse.UI.AccountItemPair></class>
    <extends>QGraphicsView</extends>
    <header>rostergrid.h</header>
   </customwidget>

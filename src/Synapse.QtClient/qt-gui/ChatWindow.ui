@@ -68,7 +68,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="Synapse.QtClient.AvatarGrid&lt;jabber.connection.RoomParticipant>" name="participantsGrid" >
+        <widget class="Synapse.QtClient.Widgets.AvatarGrid&lt;jabber.connection.RoomParticipant>" name="participantsGrid" >
          <property name="frameShape" >
           <enum>QFrame::NoFrame</enum>
          </property>
@@ -88,7 +88,7 @@
    <class>Synapse.QtClient.ConversationWidget</class>
   </customwidget>
   <customwidget>
-   <class>Synapse.QtClient.AvatarGrid&lt;jabber.connection.RoomParticipant></class>
+   <class>Synapse.QtClient.Widgets.AvatarGrid&lt;jabber.connection.RoomParticipant></class>
    <extends>QGraphicsView</extends>
    <header>rostergrid.h</header>
   </customwidget>

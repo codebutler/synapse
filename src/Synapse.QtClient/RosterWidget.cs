@@ -31,6 +31,7 @@ using Synapse.ServiceStack;
 using Synapse.UI;
 using Synapse.QtClient;
 using Synapse.QtClient.UI.Views;
+using Synapse.QtClient.Widgets;
 using jabber;
 using jabber.connection;
 using jabber.protocol.iq;
