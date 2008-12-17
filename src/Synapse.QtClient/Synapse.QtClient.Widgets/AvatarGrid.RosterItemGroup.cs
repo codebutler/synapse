@@ -34,6 +34,7 @@ namespace Synapse.QtClient.Widgets
 			QRectF        m_Rect;
 			bool          m_Expanded = true;
 			double        m_Opacity = 1;
+			int           m_TextWidth;
 			
 			public RosterItemGroup (AvatarGrid<T> grid, string groupName)
 			{
@@ -43,6 +44,9 @@ namespace Synapse.QtClient.Widgets
 				m_Font = new QFont(m_Grid.Font);
 				m_Font.SetPointSize(8); // FIXME: Set to m_Grid.HeaderHeight.
 				m_Font.SetBold(true);
+				
+				QFontMetrics metrics = new QFontMetrics(m_Font);
+				m_TextWidth = metrics.Width(m_GroupName);
 				
 				m_Rect = new QRectF(m_Grid.IconPadding, 0, 0, 0);
 			}
@@ -92,12 +96,9 @@ namespace Synapse.QtClient.Widgets
 				painter.SetPen(new QPen(new QColor("#CCC")));
 				painter.DrawText(BoundingRect(), m_GroupName);
 
-				QFontMetrics metrics = new QFontMetrics(m_Font);
-				int textWidth = metrics.Width(m_GroupName);
-
 				// Group expander arrow
 				painter.Save();
-				painter.Translate(m_Grid.IconPadding + textWidth + 4, 5); // FIXME: These numbers probably shouldn't be hard coded.
+				painter.Translate(m_Grid.IconPadding + m_TextWidth + 4, 5); // FIXME: These numbers probably shouldn't be hard coded.
 				QPainterPath path = new QPainterPath();
 				if (m_Expanded) {
 					path.MoveTo(0, 0);
@@ -114,8 +115,6 @@ namespace Synapse.QtClient.Widgets
 				painter.SetBrush(new QBrush(new QColor("#CCC")));				
 				painter.DrawPath(path);
 				painter.Restore();
-
-				//painter.DrawRect(BoundingRect());
 			}
 
 			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
