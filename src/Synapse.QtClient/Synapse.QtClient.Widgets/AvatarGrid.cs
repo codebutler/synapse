@@ -473,11 +473,12 @@ namespace Synapse.QtClient.Widgets
 					// Allow a buffer around the active item so that the tooltip 
 					// can change items without having to be closed/re-opened.
 					if (m_InfoPopup.Item != null) {
-						var itemPos = this.MapFromScene(m_InfoPopup.Item.X(), m_InfoPopup.Item.Y());
+						var itemRect = m_InfoPopup.Item.SceneBoundingRect();
+						var itemPos = this.MapFromScene(itemRect.X(), itemRect.Y());
 						QRectF rect = new QRectF(itemPos.X() - IconPadding,
 						                         itemPos.Y() - IconPadding,
-						                         m_InfoPopup.Item.BoundingRect().Width() + IconPadding + IconPadding,
-						                         m_InfoPopup.Item.BoundingRect().Height() + IconPadding + IconPadding);
+						                         itemRect.Width() + IconPadding + IconPadding,
+						                         itemRect.Height() + IconPadding + IconPadding);
 						if (!rect.Contains(pos)) {
 							m_InfoPopup.Item = null;
 						}

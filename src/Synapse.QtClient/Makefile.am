@@ -137,7 +137,6 @@ FILES = \
 	RosterWidget.cs \
 	qt-gui/RosterWidget.cs \
 	qt-gui/MainWindow.cs \
-	AvatarGrid.cs \
 	AccountStatusWidget.cs \
 	Synapse.QtClient.UI.Views/ChatWindow.cs \
 	ConversationWidget.cs \
@@ -161,7 +160,12 @@ FILES = \
 	ServiceBrowserWindow.cs \
 	qt-gui/ServiceBrowserWindow.cs \
 	FadingQLabel.cs \
-	Synapse.QtClient.UI.Views/TabbedChatsWindow.cs 
+	Synapse.QtClient.UI.Views/TabbedChatsWindow.cs \
+	Synapse.QtClient.Widgets/AvatarGrid.cs \
+	Synapse.QtClient.Widgets/AvatarGrid.InfoPopup.cs \
+	Synapse.QtClient.Widgets/AvatarGrid.FadeInOutAnimation.cs \
+	Synapse.QtClient.Widgets/AvatarGrid.RosterItemGroup.cs \
+	Synapse.QtClient.Widgets/AvatarGrid.RosterItem.cs 
 
 DATA_FILES = 
 
