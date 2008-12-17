@@ -50,26 +50,25 @@ namespace Synapse.UI.Controllers
 			string from = null;
 			string fromJid = null;
 
-			Application.InvokeAndBlock(delegate {
-			
-				foreach (XmlNode child in msg) {
-					if (child.NamespaceURI == Namespace.ChatStates) {
-						if (child.Name == "active") {
-							base.View.AppendStatus("active", String.Format("{0} is paying attention.", msg.From.User));
-						} else if (child.Name == "composing") {
-							base.View.AppendStatus("composing", String.Format("{0} is typing...", msg.From.User));
-						} else if (child.Name == "paused") {
-							base.View.AppendStatus("paused", String.Format("{0} stopped typing.", msg.From.User));
-						} else if (child.Name == "inactive") {
-							base.View.AppendStatus("inactive", String.Format("{0} is not paying attention.", msg.From.User));
-						} else if (child.Name == "gone") {
-							base.View.AppendStatus("gone", String.Format("{0} has left the conversation.", msg.From.User));
-						}
-						
-						Console.WriteLine("GOT CHAT STATE " + child.Name);
+			foreach (XmlNode child in msg) {
+				if (child.NamespaceURI == Namespace.ChatStates) {
+					if (child.Name == "active") {
+						AppendStatus("active", String.Format("{0} is paying attention.", msg.From.User));
+					} else if (child.Name == "composing") {
+						AppendStatus("composing", String.Format("{0} is typing...", msg.From.User));
+					} else if (child.Name == "paused") {
+						AppendStatus("paused", String.Format("{0} stopped typing.", msg.From.User));
+					} else if (child.Name == "inactive") {
+						AppendStatus("inactive", String.Format("{0} is not paying attention.", msg.From.User));
+					} else if (child.Name == "gone") {
+						AppendStatus("gone", String.Format("{0} has left the conversation.", msg.From.User));
 					}
+					
+					Console.WriteLine("GOT CHAT STATE " + child.Name);
 				}
-	
+			}
+
+			Application.Invoke(delegate {		
 				if (msg.Body != null) {			
 					if (msg.From == null) {
 						from = m_Account.User;
@@ -88,5 +87,14 @@ namespace Synapse.UI.Controllers
 				}
 			});
 		}
+
+		public void AppendStatus (string status, string message)
+		{
+			m_LastMessageJid = null;
+			Application.Invoke(delegate {
+				base.View.AppendStatus(status, message);
+			});
+		}
+
 	}
 }

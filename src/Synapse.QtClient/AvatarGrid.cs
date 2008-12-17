@@ -42,12 +42,11 @@ namespace Synapse.QtClient
 		InfoPopup<T>          m_InfoPopup;
 		QTimer                m_TooltipTimer;
 		
-		Dictionary<string, QGraphicsItemGroup> m_Groups = new Dictionary<string, QGraphicsItemGroup>();
+		Dictionary<string, RosterItemGroup> m_Groups = new Dictionary<string, RosterItemGroup>();
 			
-		int m_IconWidth    = 32;
-		int m_HeaderHeight = 16;
-		
-		bool m_ListMode =  false;
+		int  m_IconWidth    = 32;
+		int  m_HeaderHeight = 16;		
+		bool m_ListMode     = false;
 
 		public event AvatarGridItemEventHandler<T> ItemActivated;
 		
@@ -121,6 +120,12 @@ namespace Synapse.QtClient
 			set {
 				m_IconWidth = value;
 				ResizeAndRepositionGroups();
+			}
+		}
+		
+		public int HeaderHeight {
+			get {
+				return m_HeaderHeight;
 			}
 		}
 
@@ -211,14 +216,10 @@ namespace Synapse.QtClient
 		private void AddGroup (string groupName, bool resizeAndReposition)
 		{
 			if (!m_Groups.ContainsKey(groupName)) {
-				QGraphicsItemGroup group = new QGraphicsItemGroup();
+				RosterItemGroup group = new RosterItemGroup(this, groupName);
 				group.SetVisible(false);
 				m_Scene.AddItem(group);
 				m_Groups.Add(groupName, group);
-
-				// Create group header item
-				var headerItem = new GroupHeaderItem(this, groupName);
-				group.AddToGroup(headerItem);
 
 				if (resizeAndReposition)
 					ResizeAndRepositionGroups();
@@ -227,7 +228,7 @@ namespace Synapse.QtClient
 
 		private void RemoveGroup (string groupName)
 		{
-			QGraphicsItemGroup group = (QGraphicsItemGroup) m_Groups[groupName];
+			RosterItemGroup group = (RosterItemGroup) m_Groups[groupName];
 			m_Scene.RemoveItem(group);
 			m_Groups.Remove(groupName);
 			m_Scene.DestroyItemGroup(group);
@@ -242,7 +243,7 @@ namespace Synapse.QtClient
 			int iconWidth  = (IconSize + IconPadding);
 			int iconHeight = (IconSize + IconPadding);
 			
-			int y = IconPadding;
+			int groupY = IconPadding;
 
 			int vScroll = this.VerticalScrollBar().Value;
 
@@ -257,7 +258,20 @@ namespace Synapse.QtClient
 			moveTimeline.curveShape = QTimeLine.CurveShape.LinearCurve;
 		
 			lock (m_Groups) {
-				foreach (QGraphicsItemGroup group in m_Groups.Values) {
+				foreach (RosterItemGroup group in m_Groups.Values) {
+					if (group.Y() != groupY) {
+						if (!group.IsVisible() || (group.X() == 0 && group.Y() == 0)) {
+							group.SetPos(0, groupY);
+						} else {
+							var groupMoveAnimation = new QGraphicsItemAnimation(moveTimeline);
+							groupMoveAnimation.SetTimeLine(moveTimeline);
+							groupMoveAnimation.SetItem(group);
+							groupMoveAnimation.SetPosAt(1, new QPointF(0, groupY));
+						}
+					}
+					
+					int itemY = 0;
+					
 					var children = group.ChildItems();
 
 					int visibleChildren = 0;
@@ -269,28 +283,20 @@ namespace Synapse.QtClient
 						}
 					}
 
+					bool groupVisibilityChanged = false;
 					bool groupVisible = visibleChildren > 0;
 					if (group.IsVisible() != groupVisible) {
-						// FIXME: Fade in/out
-						group.SetVisible(groupVisible);						
+						// FIXME: This doesn't work correctly. Animation only ends up getting like 2 steps.
+						var groupFadeAnimation = new FadeInOutAnimation(groupVisible, fadeTimeline);
+						groupFadeAnimation.SetTimeLine(fadeTimeline);
+						groupFadeAnimation.SetItem(group);
+						groupVisibilityChanged = true;
 					}
 					
-					if (groupVisible) {
-						// First child is header...
-						GroupHeaderItem headerItem = (GroupHeaderItem)children[0];
-						if (!headerItem.IsVisible() || (headerItem.X() == 0 && headerItem.Y() == 0)) {
-							headerItem.SetPos(IconPadding, y);
-						} else {
-							var groupMoveAnimation = new QGraphicsItemAnimation(moveTimeline);
-							groupMoveAnimation.SetTimeLine(moveTimeline);
-							groupMoveAnimation.SetItem(headerItem);
-							groupMoveAnimation.SetPosAt(1, new QPointF(IconPadding, y));
-						}
+					if (groupVisible) {						
+						itemY += m_HeaderHeight + IconPadding;
 						
-						y += m_HeaderHeight + IconPadding;
-						
-						// The rest of the children are items
-						int itemCount = children.Count - 1;
+						int itemCount = children.Count;
 						if (itemCount > 0) {
 							int perRow = Math.Max((((int)m_Scene.Width() - IconPadding) / iconWidth), 1);
 
@@ -304,14 +310,19 @@ namespace Synapse.QtClient
 							int thisRow = 0;
 
 							// Arrange the items
-							for (int n = 1; n < itemCount + 1; n ++) {
+							for (int n = 0; n < itemCount; n ++) {
 								GraphicsRosterItem<T> item = (GraphicsRosterItem<T>)children[n];
 
-								bool itemVisible = m_Model.IsVisible(item.Item) && headerItem.IsExpanded;
+								bool itemVisible = m_Model.IsVisible(item.Item) && group.IsExpanded;
 								if (item.IsVisible() != itemVisible) {
-									var fadeAnimation = new RosterItemFadeInOutAnimation<T>(itemVisible, fadeTimeline);
-									fadeAnimation.SetTimeLine(fadeTimeline);
-									fadeAnimation.SetItem(item);
+									if (groupVisibilityChanged) {
+										// No need to fade children in this case.
+										item.SetVisible(itemVisible);
+									} else {
+										var fadeAnimation = new FadeInOutAnimation(itemVisible, fadeTimeline);
+										fadeAnimation.SetTimeLine(fadeTimeline);
+										fadeAnimation.SetItem(item);
+									}
 								}
 								if (itemVisible) {
 									// Move down to the next row if needed.
@@ -319,16 +330,18 @@ namespace Synapse.QtClient
 										row ++;
 										thisRow = 0;
 										x = IconPadding;
-										y += iconHeight;
+										itemY += iconHeight;
 									}
 
-									if (!item.IsVisible() || (item.X() == 0 && item.Y() == 0)) {
-										item.SetPos(x, y);
-									} else {
-										var moveAnimation = new QGraphicsItemAnimation(moveTimeline);
-										moveAnimation.SetTimeLine(moveTimeline);
-										moveAnimation.SetItem(item);
-										moveAnimation.SetPosAt(1, new QPointF(x, y));
+									if (item.X() != x || item.Y() != itemY) {
+										if (groupVisibilityChanged || !item.IsVisible() || (item.X() == 0 && item.Y() == 0)) {
+											item.SetPos(x, itemY);
+										} else {
+											var moveAnimation = new QGraphicsItemAnimation(moveTimeline);
+											moveAnimation.SetTimeLine(moveTimeline);
+											moveAnimation.SetItem(item);
+											moveAnimation.SetPosAt(1, new QPointF(x, itemY));
+										}
 									}
 		
 									x += iconWidth;
@@ -337,15 +350,17 @@ namespace Synapse.QtClient
 							}
 
 							if (thisRow > 0)
-								y += iconHeight;
+								itemY += iconHeight;
 						}
 					}
+					
+					groupY += itemY;
 				}
 			}
 			
 			// Update the scene's height
 			int newWidth = this.Viewport().Width();
-			int newHeight = y + IconPadding;
+			int newHeight = groupY + IconPadding;
 			var currentRect = m_Scene.SceneRect;
 			if (currentRect.Width() != newWidth || currentRect.Height() != newHeight) {
 				m_Scene.SetSceneRect(0, 0, newWidth, newHeight);
@@ -420,13 +435,6 @@ namespace Synapse.QtClient
 			if (m_HoverItem != null) {
 				if (ItemActivated != null)
 					ItemActivated(this, m_HoverItem.Item);
-			} else {
-				var item = this.ItemAt(arg1.Pos());
-				if (item is GroupHeaderItem) {
-					var headerItem = ((GroupHeaderItem)item);
-					headerItem.IsExpanded = !headerItem.IsExpanded;
-					ResizeAndRepositionGroups();
-				}
 			}
 		}
 		
@@ -490,22 +498,22 @@ namespace Synapse.QtClient
 			}
 		}
 
-		class RosterItemFadeInOutAnimation<T> : QGraphicsItemAnimation
+		class FadeInOutAnimation : QGraphicsItemAnimation
 		{
 			bool m_FadeIn;
 			
-			public RosterItemFadeInOutAnimation (bool fadeIn, QObject parent) : base (parent)
+			public FadeInOutAnimation (bool fadeIn, QObject parent) : base (parent)
 			{
 				m_FadeIn = fadeIn;
 			}
 
 			public new void SetItem (QGraphicsItem item)
 			{
-				var gitem = (GraphicsRosterItem<T>)item;
-
-				if (!gitem.IsVisible() && m_FadeIn) {
-					gitem.Opacity = 0;
-					gitem.SetVisible(true);
+				var fadeItem = (IFadeable)item;
+				if (!fadeItem.IsVisible() && m_FadeIn) {
+					fadeItem.Opacity = 0;
+					fadeItem.SetVisible(true);
+					fadeItem.Update();
 				}
 				
 				base.SetItem(item);
@@ -514,39 +522,57 @@ namespace Synapse.QtClient
 			protected override void AfterAnimationStep (double step)
 			{
 				base.AfterAnimationStep (step);
-
-				var opacity = m_FadeIn ? step : 1 - step;
 				
-				((GraphicsRosterItem<T>)base.Item()).Opacity = opacity;
+				var opacity = m_FadeIn ? step : 1 - step;
+
+				var fadeItem = (IFadeable)base.Item();
+				fadeItem.Opacity = opacity;
 				if (step == 1 && !m_FadeIn) {
 					base.Item().SetVisible(false);
 				}
 			}
 		}
 
-		class GroupHeaderItem : QGraphicsItem
+		interface IFadeable : IQGraphicsItem
+		{
+			double Opacity {
+				get;
+				set;
+			}
+			
+		}
+
+		class RosterItemGroup : QGraphicsItemGroup, IFadeable
 		{
 			AvatarGrid<T> m_Grid;
 			QFont         m_Font;
 			string        m_GroupName;
 			QRectF        m_Rect;
 			bool          m_Expanded = true;
+			double        m_Opacity = 1;
 			
-			public GroupHeaderItem (AvatarGrid<T> grid, string groupName)
+			public RosterItemGroup (AvatarGrid<T> grid, string groupName)
 			{
 				m_Grid      = grid;
 				m_GroupName = groupName;
 				
 				m_Font = new QFont(m_Grid.Font);
-				m_Font.SetPointSize(8);
+				m_Font.SetPointSize(8); // FIXME: Set to m_Grid.HeaderHeight.
 				m_Font.SetBold(true);
 				
-				QFontMetrics metrics = new QFontMetrics(m_Font);
-				int textHeight = metrics.Height();
-				
-				m_Rect = new QRectF(0, 0, m_Grid.Width(), textHeight);
+				m_Rect = new QRectF(m_Grid.IconPadding, 0, 0, 0);
 			}
 
+			public double Opacity {
+				get {
+					return m_Opacity;
+				}
+				set {
+					m_Opacity = value;
+					this.Update();
+				}
+			}
+			
 			public bool IsExpanded {
 				get {
 					return m_Expanded;
@@ -556,14 +582,27 @@ namespace Synapse.QtClient
 					this.Update();
 				}
 			}
+
+			public string Name {
+				get {
+					return m_GroupName;
+				}
+			}
 			
 			public override QRectF BoundingRect ()
 			{
+				m_Rect.SetWidth(m_Grid.Viewport().Width() - (m_Grid.IconPadding * 2));
+				if (IsExpanded)
+					m_Rect.SetHeight(base.ChildrenBoundingRect().Height());
+				else
+					m_Rect.SetHeight(m_Grid.HeaderHeight);							
 				return m_Rect;
 			}
 			
 			public override void Paint (Qyoto.QPainter painter, Qyoto.QStyleOptionGraphicsItem option, Qyoto.QWidget widget)
 			{
+				painter.SetOpacity(m_Opacity);
+
 				// Group Name
 				painter.SetFont(m_Font);
 				painter.SetPen(new QPen(new QColor("#CCC")));
@@ -574,7 +613,7 @@ namespace Synapse.QtClient
 
 				// Group expander arrow
 				painter.Save();
-				painter.Translate(textWidth + 4, 5); // FIXME: These numbers probably shouldn't be hard coded.
+				painter.Translate(m_Grid.IconPadding + textWidth + 4, 5); // FIXME: These numbers probably shouldn't be hard coded.
 				QPainterPath path = new QPainterPath();
 				if (m_Expanded) {
 					path.MoveTo(0, 0);
@@ -591,10 +630,22 @@ namespace Synapse.QtClient
 				painter.SetBrush(new QBrush(new QColor("#CCC")));				
 				painter.DrawPath(path);
 				painter.Restore();
+
+				//painter.DrawRect(BoundingRect());
+			}
+
+			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
+			{
+				var pos = arg1.Pos();
+				if (pos.Y() < m_Grid.HeaderHeight) {
+					this.IsExpanded = !this.IsExpanded;
+					m_Grid.ResizeAndRepositionGroups();
+				}
+				base.MousePressEvent (arg1);
 			}
 		}
 		
-		class GraphicsRosterItem<T> : QGraphicsItem
+		class GraphicsRosterItem<T> : QGraphicsItem, IFadeable
 		{
 			double        m_Opacity = 1;
 			AvatarGrid<T> m_Grid;
@@ -628,7 +679,12 @@ namespace Synapse.QtClient
 			{
 				int iconSize  = m_Grid.IconSize;
 
-				painter.SetOpacity(m_Opacity);
+				// Parent opacity overrides item opacity.
+				var parentGroup = (RosterItemGroup)base.Group();
+				if (parentGroup.Opacity != 1)
+					painter.SetOpacity(parentGroup.Opacity);
+				else
+					painter.SetOpacity(m_Opacity);
 				
 				QPixmap pixmap = (QPixmap)m_Grid.Model.GetImage(m_Item);				
 				if (pixmap != null)
@@ -755,8 +811,10 @@ namespace Synapse.QtClient
 						m_Label.SetText(text);
 						
 						m_Scene.SceneRect = m_Scene.ItemsBoundingRect();
+
+						var itemRect = m_Item.SceneBoundingRect();
 						
-						var point = m_Grid.MapToGlobal(m_Grid.MapFromScene(m_Item.X(), m_Item.Y()));
+						var point = m_Grid.MapToGlobal(m_Grid.MapFromScene(itemRect.X(), itemRect.Y()));
 						int x = point.X();
 						int y = point.Y();
 
