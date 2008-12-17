@@ -142,10 +142,6 @@ namespace Synapse.Xmpp
 			AddFeature(new UserTune(this));
 			AddFeature(new UserAvatars(this));
 			AddFeature(new ChatStates(this));
-			/*
-			m_Features.Add(typeof(PrivateXmlStorage), new PrivateXmlStorage(this));
-			m_Features.Add(typeof(ServiceDiscovery), new ServiceDiscovery(this));
-			*/
 		}
 
 		void HandleOnDisconnect(object sender)

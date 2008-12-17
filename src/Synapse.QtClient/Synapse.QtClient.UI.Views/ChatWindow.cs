@@ -42,15 +42,16 @@ public partial class ChatWindow : QWidget, IChatWindowView
 	public ChatWindow (AbstractChatWindowController controller)
 	{
 		SetupUi();
-
+		
 		if (controller is MucWindowController) {
 			var mucController = (MucWindowController)controller;
 			participantsGrid.Model = mucController.GridModel;		
 			m_ConversationWidget.ChatName = mucController.Room.JID;
 			this.WindowTitle = mucController.Room.JID;
+			this.WindowIcon = Helper.LoadIcon("internet-group-chat");
 		} else if (controller is ChatWindowController) {
 			var chatController = (ChatWindowController)controller;
-			participantsGrid.Hide();
+			rightContainer.Hide();
 			this.WindowTitle = chatController.Jid.User; //FIXME: Show nickname from roster?
 			this.WindowIcon = new QIcon(new QPixmap(String.Format("avatar:/{0}", Synapse.Xmpp.AvatarManager.GetAvatarHash(chatController.Jid.Bare))));
 		}
@@ -61,6 +62,7 @@ public partial class ChatWindow : QWidget, IChatWindowView
 
 		QToolBar toolbar = new QToolBar(this);
 		toolbar.SetToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly);
+		toolbar.IconSize = new QSize(16, 16);
 		
 		QAction boldAction = new QAction(Helper.LoadIcon("format-text-bold", 16), "Bold", this);
 		toolbar.AddAction(boldAction);

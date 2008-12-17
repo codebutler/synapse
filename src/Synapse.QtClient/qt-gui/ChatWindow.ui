@@ -12,6 +12,9 @@
   <property name="windowTitle" >
    <string>Chat window</string>
   </property>
+  <property name="styleSheet" >
+   <string notr="true" />
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout" >
    <property name="spacing" >
     <number>0</number>
@@ -59,7 +62,7 @@
        </layout>
       </widget>
      </widget>
-     <widget class="QWidget" native="1" name="leftContainer" >
+     <widget class="QWidget" native="1" name="rightContainer" >
       <layout class="QVBoxLayout" name="verticalLayout_2" >
        <property name="margin" >
         <number>0</number>

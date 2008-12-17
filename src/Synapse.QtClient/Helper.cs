@@ -64,6 +64,20 @@ namespace Synapse.QtClient
 			widget.Move((rect.Width() / 2) - (widget.Rect.Width() / 2), (rect.Height() / 2) - (widget.Rect.Height() / 2));
 		}
 
+		public static QIcon LoadIcon (string name)
+		{
+			if (IconTheme.Default == null)
+				throw new InvalidOperationException("No Default IconTheme");
+
+			QIcon icon = new QIcon();
+			int[] sizes = IconTheme.Default.GetIconSizes(name);
+			foreach (int size in sizes) {
+				var iconInfo = IconTheme.Default.LookupIcon(name, size, 0);
+				icon.AddFile(iconInfo.Filename, new QSize(size, size), QIcon.Mode.Normal, QIcon.State.On);
+			}
+			return icon;
+		}
+		
 		public static QIcon LoadIcon (string name, int size)
 		{
 			if (IconTheme.Default == null)

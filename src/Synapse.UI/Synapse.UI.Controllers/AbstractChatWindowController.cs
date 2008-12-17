@@ -55,15 +55,15 @@ namespace Synapse.UI.Controllers
 				foreach (XmlNode child in msg) {
 					if (child.NamespaceURI == Namespace.ChatStates) {
 						if (child.Name == "active") {
-							base.View.AppendStatus("Active??", "message??");
+							base.View.AppendStatus("active", String.Format("{0} is paying attention.", msg.From.User));
 						} else if (child.Name == "composing") {
-							base.View.AppendStatus("composing??", "message??");
+							base.View.AppendStatus("composing", String.Format("{0} is typing...", msg.From.User));
 						} else if (child.Name == "paused") {
-							base.View.AppendStatus("paused??", "message??");
+							base.View.AppendStatus("paused", String.Format("{0} stopped typing.", msg.From.User));
 						} else if (child.Name == "inactive") {
-							base.View.AppendStatus("inactive??", "message??");
+							base.View.AppendStatus("inactive", String.Format("{0} is not paying attention.", msg.From.User));
 						} else if (child.Name == "gone") {
-							base.View.AppendStatus("gone??", "message??");
+							base.View.AppendStatus("gone", String.Format("{0} has left the conversation.", msg.From.User));
 						}
 						
 						Console.WriteLine("GOT CHAT STATE " + child.Name);

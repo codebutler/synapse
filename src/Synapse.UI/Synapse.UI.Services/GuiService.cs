@@ -151,7 +151,7 @@ namespace Synapse.UI.Services
 					m_ChatWindows.Add(jid.Bare, window);
 
 					if (ChatWindowOpened != null)
-						ChatWindowOpened(window, true);
+						ChatWindowOpened(window, focus);
 				} else {
 					window = m_ChatWindows[jid.Bare];
 				}

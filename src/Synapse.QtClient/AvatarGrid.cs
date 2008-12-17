@@ -52,7 +52,7 @@ namespace Synapse.QtClient
 		public event AvatarGridItemEventHandler<T> ItemActivated;
 		
 		public AvatarGrid(QWidget parent) : base(parent)
-		{	
+		{
 			m_Scene = new QGraphicsScene(this);
 			this.SetScene(m_Scene);
 
@@ -63,11 +63,16 @@ namespace Synapse.QtClient
 			m_InfoPopup.RightClicked += delegate (QPoint pos) {
 				Emit.CustomContextMenuRequested(this.MapFromGlobal(pos));
 			};
+			m_InfoPopup.MouseMoved += delegate {
+				UpdateHoverItem();
+			};
 
 			m_TooltipTimer = new QTimer(this);
 			m_TooltipTimer.SingleShot = true;
 			m_TooltipTimer.Interval = 500;
 			QObject.Connect(m_TooltipTimer, Qt.SIGNAL("timeout()"), this, Qt.SLOT("tooltipTimer_timeout()"));
+
+			this.InstallEventFilter(this);
 		}
 
 		#region Public Properties
@@ -414,8 +419,11 @@ namespace Synapse.QtClient
 
 		[Q_SLOT]
 		void tooltipTimer_timeout()
-		{			
-			m_InfoPopup.Show();
+		{
+			UpdateHoverItem();
+			if (m_InfoPopup.Item != null) {
+				m_InfoPopup.Show();
+			}
 		}
 		
 		protected override void ResizeEvent (QResizeEvent evnt)
@@ -434,26 +442,59 @@ namespace Synapse.QtClient
 		protected override void MouseMoveEvent (Qyoto.QMouseEvent arg1)
 		{
 			base.MouseMoveEvent (arg1);
-			
-			var oldItem = m_HoverItem;
-			
-			var item = this.ItemAt(arg1.Pos());
-			if (item is GraphicsRosterItem<T>) {
-				m_HoverItem = (GraphicsRosterItem<T>)item;
-				m_HoverItem.Update();
+			UpdateHoverItem();
+		}
 
-				if (m_InfoPopup.Item != m_HoverItem) {
-					m_TooltipTimer.Stop();
-					m_InfoPopup.Item = m_HoverItem;					
-					m_TooltipTimer.Start();
-				}
-			} else {
-				m_TooltipTimer.Stop();
+		public override bool EventFilter (Qyoto.QObject arg1, Qyoto.QEvent arg2)
+		{
+			if (arg2.type() == QEvent.TypeOf.HoverLeave) {
+				UpdateHoverItem();
+			}
+			return base.EventFilter (arg1, arg2);
+		}
+
+		void UpdateHoverItem()
+		{			
+			var oldItem = m_HoverItem;
+
+			var pos = this.MapFromGlobal(QCursor.Pos());
+			var item = this.ItemAt(pos);
+
+			// Since we map the point to scene coords, we could accidently 
+			// focus items outside the visible viewport.
+			if (!this.Geometry.Contains(pos)) {
 				m_HoverItem = null;
 				m_InfoPopup.Item = null;
+			} else {				
+				if (item is GraphicsRosterItem<T>) {
+					m_HoverItem = (GraphicsRosterItem<T>)item;
+					m_HoverItem.Update();
+	
+					if (m_InfoPopup.Item != m_HoverItem) {
+						m_TooltipTimer.Stop();
+						m_InfoPopup.Item = m_HoverItem;
+						m_TooltipTimer.Start();
+					}
+				} else {	
+					m_TooltipTimer.Stop();
+					m_HoverItem = null;
+					
+					// Allow a buffer around the active item so that the tooltip 
+					// can change items without having to be closed/re-opened.
+					if (m_InfoPopup.Item != null) {
+						var itemPos = this.MapFromScene(m_InfoPopup.Item.X(), m_InfoPopup.Item.Y());
+						QRectF rect = new QRectF(itemPos.X() - IconPadding,
+						                         itemPos.Y() - IconPadding,
+						                         m_InfoPopup.Item.BoundingRect().Width() + IconPadding + IconPadding,
+						                         m_InfoPopup.Item.BoundingRect().Height() + IconPadding + IconPadding);
+						if (!rect.Contains(pos)) {
+							m_InfoPopup.Item = null;
+						}
+					}
+				}
 			}
 
-			if (oldItem != null) {
+			if (oldItem != null && oldItem != m_HoverItem) {
 				oldItem.Update();
 			}
 		}
@@ -534,11 +575,9 @@ namespace Synapse.QtClient
 				else
 					painter.DrawRect(0, 0, iconSize, iconSize);
 
-				/*
 				if (IsHover) {
 					painter.DrawRect(BoundingRect());
 				}
-				*/
 				
 				if (m_Grid.ListMode) {
 					var rect = BoundingRect();
@@ -581,6 +620,7 @@ namespace Synapse.QtClient
 		 	QLabel                       m_Label;
 			MyGraphicsView               m_GraphicsView;
 
+			public event EventHandler MouseMoved;
 			public event QPointEventHandler RightClicked;
 			
 			public event EventHandler DoubleClicked {
@@ -672,20 +712,21 @@ namespace Synapse.QtClient
 
 			public bool EventFilter (Qyoto.QObject arg1, Qyoto.QEvent arg2)
 			{
-				if (arg2.type() == QEvent.TypeOf.HoverLeave) {
-					this.Hide();
-				} else if (arg2.type() == QEvent.TypeOf.HoverMove) {
-					var mouseEvent = (QHoverEvent)arg2;
-					// Beautiful...
-					if (m_Grid.ItemAt(m_Grid.MapFromGlobal(this.MapToGlobal(mouseEvent.Pos()))) != m_Item) {
-						this.Hide();
-					}
+				if (arg2.type() == QEvent.TypeOf.HoverMove) {
+					if (MouseMoved != null)
+						MouseMoved(this, EventArgs.Empty);
 				} else if (arg2.type() == QEvent.TypeOf.ContextMenu) {
 					var mouseEvent = (QContextMenuEvent)arg2;
 					this.Hide();
-					if (RightClicked != null)
+					if (RightClicked != null) {
 						RightClicked(this.MapToGlobal(mouseEvent.Pos()));
+					}
+					
+				// This one isn't really needed.
+				} else if (arg2.type() == QEvent.TypeOf.HoverLeave) {
+					this.Hide();
 				}
+				
 				return base.EventFilter (arg1, arg2);
 			}
 		}

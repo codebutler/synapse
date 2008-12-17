@@ -97,17 +97,6 @@ namespace Synapse.QtClient
 	#endregion
 		
 		#region Public Methods
-
-		/*
-		public void Initialize(string chatName, string sourceName, string destinationName, string destinationDisplayName)
-		{			
-			this.m_ChatName = chatName;
-			this.m_SourceName = sourceName;
-			this.m_DestinationName = destinationName;
-			this.m_DestinationDisplayName = destinationDisplayName;
-		}
-		*/
-
 		public void AppendMessage(bool incoming, bool next, string userIconPath, string senderScreenName, string sender,
 		                          string senderColor, string senderStatusIcon, string senderDisplayName,
 		                          string message)

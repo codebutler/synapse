@@ -24,7 +24,7 @@ public partial class ChatWindow : QWidget {
     
     protected QTextEdit textEdit;
     
-    protected QWidget leftContainer;
+    protected QWidget rightContainer;
     
     protected Synapse.QtClient.AvatarGrid<jabber.connection.RoomParticipant> participantsGrid;
     
@@ -32,6 +32,7 @@ public partial class ChatWindow : QWidget {
         base.ObjectName = "ChatWindow";
         this.Geometry = new QRect(0, 0, 562, 331);
         this.WindowTitle = "Chat window";
+        this.StyleSheet = "";
         QHBoxLayout horizontalLayout;
         horizontalLayout = new QHBoxLayout(this);
         horizontalLayout.Spacing = 0;
@@ -61,17 +62,17 @@ public partial class ChatWindow : QWidget {
         this.textEdit.FrameShape = QFrame.Shape.NoFrame;
         verticalLayout.AddWidget(this.textEdit);
         this.splitter.AddWidget(this.bottomContainer);
-        this.leftContainer = new QWidget(this.splitter_2);
-        this.leftContainer.ObjectName = "leftContainer";
+        this.rightContainer = new QWidget(this.splitter_2);
+        this.rightContainer.ObjectName = "rightContainer";
         QVBoxLayout verticalLayout_2;
-        verticalLayout_2 = new QVBoxLayout(this.leftContainer);
+        verticalLayout_2 = new QVBoxLayout(this.rightContainer);
         verticalLayout_2.Margin = 0;
-        this.participantsGrid = new Synapse.QtClient.AvatarGrid<jabber.connection.RoomParticipant>(this.leftContainer);
+        this.participantsGrid = new Synapse.QtClient.AvatarGrid<jabber.connection.RoomParticipant>(this.rightContainer);
         this.participantsGrid.ObjectName = "participantsGrid";
         this.participantsGrid.FrameShape = QFrame.Shape.NoFrame;
         this.participantsGrid.Alignment = ((global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeading") | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeft")) | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignTop"));
         verticalLayout_2.AddWidget(this.participantsGrid);
-        this.splitter_2.AddWidget(this.leftContainer);
+        this.splitter_2.AddWidget(this.rightContainer);
         QMetaObject.ConnectSlotsByName(this);
     }
 }

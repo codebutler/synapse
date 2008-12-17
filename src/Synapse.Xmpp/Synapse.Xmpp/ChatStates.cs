@@ -27,7 +27,7 @@ namespace Synapse.Xmpp
 	{
 		public ChatStates(Account account)
 		{
-			/* This is all implemented AbstractChatWindowController, for now at least */
+			/* This is all implemented in AbstractChatWindowController, for now at least */
 		}
 
 		public string[] FeatureNames {

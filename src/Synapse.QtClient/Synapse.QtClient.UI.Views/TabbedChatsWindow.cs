@@ -36,7 +36,11 @@ namespace Synapse.QtClient
 		
 		public TabbedChatsWindow(TabbedChatsWindowController controller)
 		{
-			this.SetStyleSheet("QTabWidget::pane { border: 0px; }");
+			// FIXME: This doesn't work very well in most themes...
+			//this.SetStyleSheet("QTabWidget::pane { border: 0px; }");
+
+			// The tab widget messes up this background color.
+			this.SetStyleSheet("QTabWidget > QWidget { background: palette(window); }");
 			
 			m_Tabs = new QTabWidget();
 			m_Tabs.tabPosition = QTabWidget.TabPosition.South;
@@ -70,7 +74,8 @@ namespace Synapse.QtClient
 			trashButton.SetDefaultAction(new QAction(Helper.LoadIcon("trashcan_empty", 16), "Recently Closed Tabs", trashButton));
 			rightButtonsLayout.AddWidget(trashButton);
 
-			rightButtonsLayout.AddWidget(new QSizeGrip(this));
+			// FIXME: This looks bad.
+			//rightButtonsLayout.AddWidget(new QSizeGrip(this));
 
 			QWidget rightButtonsContainer = new QWidget(m_Tabs);
 			rightButtonsContainer.SetLayout(rightButtonsLayout);
@@ -91,13 +96,17 @@ namespace Synapse.QtClient
 		{
 			var view = (QWidget)window.View;
 			
-			int index = m_Tabs.CurrentIndex + 1;
-			index = m_Tabs.InsertTab(index, view, view.WindowIcon, view.WindowTitle);
+			int oldIndex = m_Tabs.CurrentIndex;
+			int newIndex = m_Tabs.InsertTab(oldIndex + 1, view, view.WindowIcon, view.WindowTitle);
 
-			if (focus)
-				m_Tabs.SetCurrentIndex(index);
+			Console.WriteLine(focus);
 
-			view.Show();
+			if (focus) {
+				m_Tabs.SetCurrentIndex(newIndex);
+				view.Show();				
+			} else {
+				m_Tabs.SetCurrentIndex(oldIndex);
+			}
 			
 			TabAdded();
 
@@ -142,16 +151,19 @@ namespace Synapse.QtClient
 		[Q_SLOT]
 		void currentChanged(int index)
 		{
-			m_Tabs.Widget(index).SetFocus();
-			this.WindowTitle = m_Tabs.TabText(index);
-			this.WindowIcon  = m_Tabs.TabIcon(index);
+			if (m_Tabs.Widget(index) != null) {
+				m_Tabs.Widget(index).SetFocus();
+				this.WindowTitle = m_Tabs.TabText(index);
+				this.WindowIcon  = m_Tabs.TabIcon(index);
+			}
 		}
 			
 		[Q_SLOT]
 		void newTab (QAction action)
 		{
+			var tab = new EmptyTab();
 			int index = m_Tabs.CurrentIndex + 1;
-			index = m_Tabs.InsertTab(index, new EmptyTab(), "New Tab");
+			index = m_Tabs.InsertTab(index, tab, tab.WindowIcon, "New Tab");
 			m_Tabs.SetCurrentIndex(index);
 			
 			TabAdded();
@@ -212,6 +224,9 @@ namespace Synapse.QtClient
 				using (StreamReader reader = new StreamReader(asm.GetManifestResourceStream("newtab.html"))) {
 					this.SetHtml(reader.ReadToEnd());
 				}
+
+				// FIXME: Need something better here.
+				this.WindowIcon = Helper.LoadIcon("text-x-generic");
 			}
 		}
 	}
