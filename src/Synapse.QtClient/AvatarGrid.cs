@@ -682,6 +682,7 @@ namespace Synapse.QtClient
 						QPixmap pixmap = (QPixmap)m_Grid.Model.GetImage(m_Item.Item);
 						m_PixmapItem.Rect = new QRect(0, 0, m_Grid.IconSize, m_Grid.IconSize);
 						m_PixmapItem.Pixmap = pixmap;
+						m_PixmapItem.Update();
 
 						var text = String.Format(@"<span style='font-size: 9pt; font-weight: bold'>{0}</span>
 						                         <br/><span style='font-size: 7.5pt'>{1}</span>
