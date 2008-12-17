@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Synapse.Xmpp;
 using Synapse.ServiceStack;
+using Synapse.UI;
 using Synapse.UI.Controllers;
 using jabber;
 using jabber.connection;
@@ -34,9 +35,6 @@ using Synapse.UI.Actions.ExtensionNodes;
 
 namespace Synapse.UI.Services
 {
-	public delegate void ChatWindowOpenEvent (AbstractChatWindowController window, bool focus);
-	public delegate void ChatWindowCloseEvent (AbstractChatWindowController window);
-	
 	public class GuiService : IService, IRequiredService, IInitializeService
 	{
 		MainWindowController  m_MainWindow;
@@ -121,89 +119,6 @@ namespace Synapse.UI.Services
 		{
 			m_AccountManagers[account].Dispose();
 			m_AccountManagers.Remove(account);
-		}
-		
-		class AccountChatWindowManager : IDisposable
-		{
-			Account m_Account;
-			Dictionary<Room, MucWindowController> m_MucWindows;
-			Dictionary<string, ChatWindowController> m_ChatWindows;
-			
-			public event ChatWindowOpenEvent ChatWindowOpened;
-			public event ChatWindowCloseEvent ChatWindowClosed;
-			
-			public AccountChatWindowManager (Account account)
-			{
-				m_MucWindows  = new Dictionary<Room, MucWindowController>();
-				m_ChatWindows = new Dictionary<string, ChatWindowController>();
-				
-				m_Account = account;
-				account.ConferenceManager.OnJoin += HandleOnJoin;
-				account.Client.OnMessage += HandleOnMessage;
-			}
-
-			public ChatWindowController OpenChatWindow (JID jid, bool focus)
-			{
-				ChatWindowController window = null;
-				if (!m_ChatWindows.ContainsKey(jid.Bare)) {
-					window = new ChatWindowController(m_Account, jid);
-					window.Closed += HandleChatWindowClosed;
-					m_ChatWindows.Add(jid.Bare, window);
-
-					if (ChatWindowOpened != null)
-						ChatWindowOpened(window, focus);
-				} else {
-					window = m_ChatWindows[jid.Bare];
-				}
-				return window;
-			}
-
-			public void Dispose ()
-			{
-				if (m_MucWindows.Count > 0)
-					throw new InvalidOperationException();
-				
-				m_Account.ConferenceManager.OnJoin -= HandleOnJoin;
-			}
-
-			void HandleOnMessage (object sender, Message message)
-			{
-				if (message.Type == MessageType.chat) {
-					ChatWindowController window = OpenChatWindow(message.From, false);
-					window.AppendMessage(message);
-				}
-			}
-			
-			void HandleOnJoin(Room room)
-			{
-				if (!m_MucWindows.ContainsKey(room)) {
-					var window = new MucWindowController(m_Account, room);
-					window.Closed += HandleMucWindowClosed;
-					m_MucWindows[room] = window;
-					
-					if (ChatWindowOpened != null)
-						ChatWindowOpened(window, true);
-				}
-			}
-
-			void HandleChatWindowClosed(object sender, EventArgs e)
-			{
-				var window = (ChatWindowController)sender;
-				m_ChatWindows.Remove(window.Jid.Bare);
-
-				if (ChatWindowClosed != null)
-					ChatWindowClosed(window);
-			}
-			
-			void HandleMucWindowClosed(object sender, EventArgs e)
-			{
-				Room room = ((MucWindowController)sender).Room;
-				var window = m_MucWindows[room];
-				m_MucWindows.Remove(room);
-				
-				if (ChatWindowClosed != null)
-					ChatWindowClosed(window);
-			}
 		}
 	}
 }
