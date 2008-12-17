@@ -237,8 +237,27 @@ namespace Synapse.QtClient.Widgets
 		}
 		
 		#endregion
+		
+		protected override void ResizeEvent (QResizeEvent evnt)
+		{
+			ResizeAndRepositionGroups();
+		}
 
-		private void ResizeAndRepositionGroups ()
+		protected override void MouseDoubleClickEvent (Qyoto.QMouseEvent arg1)
+		{
+			if (m_HoverItem != null) {
+				if (ItemActivated != null)
+					ItemActivated(this, m_HoverItem.Item);
+			}
+		}
+		
+		protected override void MouseMoveEvent (Qyoto.QMouseEvent arg1)
+		{
+			base.MouseMoveEvent (arg1);
+			UpdateHoverItem();
+		}
+		
+		void ResizeAndRepositionGroups ()
 		{
 			int iconWidth  = (IconSize + IconPadding);
 			int iconHeight = (IconSize + IconPadding);
@@ -425,33 +444,6 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 		
-		protected override void ResizeEvent (QResizeEvent evnt)
-		{
-			ResizeAndRepositionGroups();
-		}
-
-		protected override void MouseDoubleClickEvent (Qyoto.QMouseEvent arg1)
-		{
-			if (m_HoverItem != null) {
-				if (ItemActivated != null)
-					ItemActivated(this, m_HoverItem.Item);
-			}
-		}
-		
-		protected override void MouseMoveEvent (Qyoto.QMouseEvent arg1)
-		{
-			base.MouseMoveEvent (arg1);
-			UpdateHoverItem();
-		}
-
-		public override bool EventFilter (Qyoto.QObject arg1, Qyoto.QEvent arg2)
-		{
-			if (arg2.type() == QEvent.TypeOf.HoverLeave) {
-				UpdateHoverItem();
-			}
-			return base.EventFilter (arg1, arg2);
-		}
-
 		void UpdateHoverItem()
 		{			
 			var oldItem = m_HoverItem;
