@@ -155,8 +155,8 @@ namespace Synapse.QtClient
 						}
 					}
 
-					// Empty group has two items (name and arrow)
-					if (group.ChildItems().Count == 2) {
+					// Empty group still has a header
+					if (group.ChildItems().Count == 1) {
 						groupsToRemove.Add(pair.Key);
 					}
 				}
@@ -216,26 +216,9 @@ namespace Synapse.QtClient
 				m_Scene.AddItem(group);
 				m_Groups.Add(groupName, group);
 
-				// Group Name
-				QGraphicsSimpleTextItem nameItem = new QGraphicsSimpleTextItem(groupName, group);
-				nameItem.SetBrush(new QBrush(new QColor("#CCC")));
-				nameItem.SetZValue(100);
-				QFont font = nameItem.Font();
-				font.SetPointSize(8);
-				font.SetBold(true);
-				nameItem.SetFont(font);
-				group.AddToGroup(nameItem);
-
-				// Group expander arrow
-				QPainterPath path = new QPainterPath();
-				path.MoveTo(0, 0);
-				path.LineTo(5, 0);
-				path.LineTo(2, 3);
-				path.LineTo(0, 0);
-				QGraphicsPathItem arrowItem = new QGraphicsPathItem(path, group);
-				arrowItem.SetPen(new QPen(Qt.GlobalColor.transparent));
-				arrowItem.SetBrush(new QBrush(new QColor("#CCC")));
-				group.AddToGroup(arrowItem);
+				// Create group header item
+				var headerItem = new GroupHeaderItem(this, groupName);
+				group.AddToGroup(headerItem);
 
 				if (resizeAndReposition)
 					ResizeAndRepositionGroups();
@@ -293,21 +276,21 @@ namespace Synapse.QtClient
 					}
 					
 					if (groupVisible) {
-						//QGraphicsItemAnimation animation;
-						
-						// First two children are known to be these
-						// FIXME: Create a GroupHeaderItem or something and merge these together.
-						QGraphicsSimpleTextItem nameItem = (QGraphicsSimpleTextItem)children[0];
-						nameItem.SetPos(IconPadding, y);
-						
-						QRectF nameItemRect = nameItem.BoundingRect();
-						QGraphicsPathItem arrowItem  = (QGraphicsPathItem)children[1];
-						arrowItem.SetPos(IconPadding + nameItemRect.Width() + 4, y + (nameItemRect.Height() / 2) - 2);
+						// First child is header...
+						GroupHeaderItem headerItem = (GroupHeaderItem)children[0];
+						if (!headerItem.IsVisible() || (headerItem.X() == 0 && headerItem.Y() == 0)) {
+							headerItem.SetPos(IconPadding, y);
+						} else {
+							var groupMoveAnimation = new QGraphicsItemAnimation(moveTimeline);
+							groupMoveAnimation.SetTimeLine(moveTimeline);
+							groupMoveAnimation.SetItem(headerItem);
+							groupMoveAnimation.SetPosAt(1, new QPointF(IconPadding, y));
+						}
 						
 						y += m_HeaderHeight + IconPadding;
-	
+						
 						// The rest of the children are items
-						int itemCount = children.Count - 2;
+						int itemCount = children.Count - 1;
 						if (itemCount > 0) {
 							int perRow = Math.Max((((int)m_Scene.Width() - IconPadding) / iconWidth), 1);
 
@@ -321,10 +304,10 @@ namespace Synapse.QtClient
 							int thisRow = 0;
 
 							// Arrange the items
-							for (int n = 2; n < itemCount + 2; n ++) {
+							for (int n = 1; n < itemCount + 1; n ++) {
 								GraphicsRosterItem<T> item = (GraphicsRosterItem<T>)children[n];
 
-								bool itemVisible = m_Model.IsVisible(item.Item);
+								bool itemVisible = m_Model.IsVisible(item.Item) && headerItem.IsExpanded;
 								if (item.IsVisible() != itemVisible) {
 									var fadeAnimation = new RosterItemFadeInOutAnimation<T>(itemVisible, fadeTimeline);
 									fadeAnimation.SetTimeLine(fadeTimeline);
@@ -352,9 +335,10 @@ namespace Synapse.QtClient
 									thisRow ++;
 								}
 							}
+
+							if (thisRow > 0)
+								y += iconHeight;
 						}
-				
-						y += iconHeight;
 					}
 				}
 			}
@@ -436,6 +420,13 @@ namespace Synapse.QtClient
 			if (m_HoverItem != null) {
 				if (ItemActivated != null)
 					ItemActivated(this, m_HoverItem.Item);
+			} else {
+				var item = this.ItemAt(arg1.Pos());
+				if (item is GroupHeaderItem) {
+					var headerItem = ((GroupHeaderItem)item);
+					headerItem.IsExpanded = !headerItem.IsExpanded;
+					ResizeAndRepositionGroups();
+				}
 			}
 		}
 		
@@ -530,6 +521,76 @@ namespace Synapse.QtClient
 				if (step == 1 && !m_FadeIn) {
 					base.Item().SetVisible(false);
 				}
+			}
+		}
+
+		class GroupHeaderItem : QGraphicsItem
+		{
+			AvatarGrid<T> m_Grid;
+			QFont         m_Font;
+			string        m_GroupName;
+			QRectF        m_Rect;
+			bool          m_Expanded = true;
+			
+			public GroupHeaderItem (AvatarGrid<T> grid, string groupName)
+			{
+				m_Grid      = grid;
+				m_GroupName = groupName;
+				
+				m_Font = new QFont(m_Grid.Font);
+				m_Font.SetPointSize(8);
+				m_Font.SetBold(true);
+				
+				QFontMetrics metrics = new QFontMetrics(m_Font);
+				int textHeight = metrics.Height();
+				
+				m_Rect = new QRectF(0, 0, m_Grid.Width(), textHeight);
+			}
+
+			public bool IsExpanded {
+				get {
+					return m_Expanded;
+				}
+				set {
+					m_Expanded = value;
+					this.Update();
+				}
+			}
+			
+			public override QRectF BoundingRect ()
+			{
+				return m_Rect;
+			}
+			
+			public override void Paint (Qyoto.QPainter painter, Qyoto.QStyleOptionGraphicsItem option, Qyoto.QWidget widget)
+			{
+				// Group Name
+				painter.SetFont(m_Font);
+				painter.SetPen(new QPen(new QColor("#CCC")));
+				painter.DrawText(BoundingRect(), m_GroupName);
+
+				QFontMetrics metrics = new QFontMetrics(m_Font);
+				int textWidth = metrics.Width(m_GroupName);
+
+				// Group expander arrow
+				painter.Save();
+				painter.Translate(textWidth + 4, 5); // FIXME: These numbers probably shouldn't be hard coded.
+				QPainterPath path = new QPainterPath();
+				if (m_Expanded) {
+					path.MoveTo(0, 0);
+					path.LineTo(4, 0);
+					path.LineTo(2, 2);
+					path.LineTo(0, 0);
+				} else {
+					path.MoveTo(2, 0);
+					path.LineTo(2, 4);
+					path.LineTo(0, 2);
+					path.LineTo(2, 0);
+				}
+				painter.SetPen(new QPen((new QColor("#CCC"))));
+				painter.SetBrush(new QBrush(new QColor("#CCC")));				
+				painter.DrawPath(path);
+				painter.Restore();
 			}
 		}
 		
