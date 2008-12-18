@@ -47,9 +47,6 @@ namespace Synapse.UI.Controllers
 			m_Account = account;
 			m_Room = room;
 			
-			room.OnRoomMessage += HandleOnRoomMessage;
-			room.OnSelfMessage += HandleOnSelfMessage;
-
 			m_GridModel = new MucAvatarGridModel(account, room);
 
 			Application.InvokeAndBlock(delegate {
@@ -62,6 +59,31 @@ namespace Synapse.UI.Controllers
 				};
 				base.View.Show();
 			});
+			
+			room.OnRoomMessage += HandleOnRoomMessage;
+			room.OnSelfMessage += HandleOnSelfMessage;
+			room.OnParticipantJoin += HandleOnParticipantJoin;
+			room.OnParticipantLeave += HandleOnParticipantLeave;
+			room.OnSubjectChange += HandleOnSubjectChange;
+			// FIXME: Hook up to other events here...
+
+			HandleOnSubjectChange(null, null);
+		}
+
+		void HandleOnSubjectChange(object sender, Message msg)
+		{
+			// FIXME: Show who set the subject. Handle null subject.
+			AppendStatus(null, String.Format("Subject is now: {0}", m_Room.Subject));
+		}
+
+		void HandleOnParticipantLeave(Room room, RoomParticipant participant)
+		{
+			AppendStatus(null, String.Format("{0} has left the room.", participant.Nick));	
+		}
+
+		void HandleOnParticipantJoin(Room room, RoomParticipant participant)
+		{
+			AppendStatus(null, String.Format("{0} has joined the room.", participant.Nick));
 		}
 
 		public Room Room {

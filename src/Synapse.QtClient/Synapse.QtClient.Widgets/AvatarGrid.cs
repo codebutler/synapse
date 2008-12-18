@@ -155,13 +155,13 @@ namespace Synapse.QtClient.Widgets
 						if (gitem is RosterItem<T>) {
 							if (((RosterItem<T>)gitem).Item.Equals(item)) {
 								group.RemoveFromGroup(gitem);
+								m_Scene.RemoveItem(gitem);
 								break;
 							}
 						}
 					}
 
-					// Empty group still has a header
-					if (group.ChildItems().Count == 1) {
+					if (group.ChildItems().Count == 0) {
 						groupsToRemove.Add(pair.Key);
 					}
 				}
@@ -229,8 +229,11 @@ namespace Synapse.QtClient.Widgets
 		private void RemoveGroup (string groupName)
 		{
 			RosterItemGroup group = (RosterItemGroup) m_Groups[groupName];
-			m_Scene.RemoveItem(group);
 			m_Groups.Remove(groupName);
+
+			foreach (var child in group.Children()) {
+				m_Scene.RemoveItem(child);
+			}
 			m_Scene.DestroyItemGroup(group);
 
 			ResizeAndRepositionGroups();

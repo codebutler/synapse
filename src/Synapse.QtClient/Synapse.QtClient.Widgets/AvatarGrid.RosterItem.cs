@@ -62,6 +62,8 @@ namespace Synapse.QtClient.Widgets
 
 				// Parent opacity overrides item opacity.
 				var parentGroup = (RosterItemGroup)base.Group();
+				if (parentGroup == null) // This happens while the item is being removed.
+					return;				
 				if (parentGroup.Opacity != 1)
 					painter.SetOpacity(parentGroup.Opacity);
 				else

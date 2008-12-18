@@ -95,7 +95,8 @@ namespace Synapse.UI
 		
 		public object GetImage (RoomParticipant participant)
 		{
-			return null;
+			var jid = (!String.IsNullOrEmpty(participant.RealJID)) ? participant.RealJID : participant.NickJID;
+			return AvatarManager.GetAvatar(jid);
 		}
 
 		public bool IsVisible (RoomParticipant participant)

@@ -71,9 +71,13 @@ namespace Synapse.QtClient
 
 			QIcon icon = new QIcon();
 			int[] sizes = IconTheme.Default.GetIconSizes(name);
-			foreach (int size in sizes) {
-				var iconInfo = IconTheme.Default.LookupIcon(name, size, 0);
-				icon.AddFile(iconInfo.Filename, new QSize(size, size), QIcon.Mode.Normal, QIcon.State.On);
+			if (sizes.Length == 0) {
+				Console.WriteLine(String.Format("Icon not found: {0}", name));
+			} else {
+				foreach (int size in sizes) {
+					var iconInfo = IconTheme.Default.LookupIcon(name, size, 0);
+					icon.AddFile(iconInfo.Filename, new QSize(size, size), QIcon.Mode.Normal, QIcon.State.On);
+				}
 			}
 			return icon;
 		}

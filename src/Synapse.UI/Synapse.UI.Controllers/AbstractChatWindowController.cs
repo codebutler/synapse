@@ -48,7 +48,7 @@ namespace Synapse.UI.Controllers
 		{
 			string iconPath = null;
 			string from = null;
-			string fromJid = null;
+			JID fromJid = null;
 
 			foreach (XmlNode child in msg) {
 				if (child.NamespaceURI == Namespace.ChatStates) {
@@ -73,12 +73,25 @@ namespace Synapse.UI.Controllers
 					if (msg.From == null) {
 						from = m_Account.User;
 						fromJid = m_Account.Jid;
-					} else { 	
-						fromJid = msg.From;
-						from = (this is ChatWindowController) ? msg.From.User : msg.From.Resource;
+					} else {
+						// FIXME: Abstract this...
+						if (this is MucWindowController) {
+							var participant = ((MucWindowController)this).Room.Participants[msg.From];
+							if (participant != null) {
+								fromJid = (!String.IsNullOrEmpty(participant.RealJID)) ? participant.RealJID : participant.NickJID;
+								from = participant.Nick;
+							} else {
+								fromJid = msg.From;
+								from = msg.From.Resource;
+							}
+						} else {
+							// FIXME: Use roster nickname.
+							from = msg.From.User;
+							fromJid = msg.From;
+						}
 					}
 
-					iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(fromJid));
+					iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(fromJid.Bare));
 					
 					bool isNext = (m_LastMessageJid == fromJid);
 					base.View.AppendMessage(incoming, isNext, iconPath, String.Empty, from, String.Empty,
