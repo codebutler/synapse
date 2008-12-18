@@ -79,6 +79,7 @@ namespace Synapse.QtClient.Widgets
 			
 			public override QRectF BoundingRect ()
 			{
+				m_Rect.SetLeft(m_Grid.IconPadding);
 				m_Rect.SetWidth(m_Grid.Viewport().Width() - (m_Grid.IconPadding * 2));
 				if (IsExpanded)
 					m_Rect.SetHeight(base.ChildrenBoundingRect().Height());

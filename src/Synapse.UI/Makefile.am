@@ -129,7 +129,7 @@ FILES = \
 	ResourceProviderCodon.cs \
 	Synapse.UI.Services/ActionService.cs \
 	Synapse.UI.Services/GuiService.cs \
-	ChatWindowManager.cs \
+	AccountChatWindowManager.cs \
 	Synapse.UI.Views/IServiceBrowserWindowView.cs \
 	Synapse.UI.Controllers/ServiceBrowserWindowController.cs \
 	template4dotnet.cs \
