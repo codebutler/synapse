@@ -51,6 +51,7 @@ QLineEdit {
 #friendsTab QGraphicsView,
 #friendsTab QListView,
 #chatroomsTab QTreeView {
+	color: #CCC;
 	background-color: #333333;
 }
 

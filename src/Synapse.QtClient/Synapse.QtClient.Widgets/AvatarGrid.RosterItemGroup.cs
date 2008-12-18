@@ -91,9 +91,11 @@ namespace Synapse.QtClient.Widgets
 			{
 				painter.SetOpacity(m_Opacity);
 
+				var color = m_Grid.Palette.Color(QPalette.ColorRole.Text);
+				
 				// Group Name
 				painter.SetFont(m_Font);
-				painter.SetPen(new QPen(new QColor("#CCC")));
+				painter.SetPen(new QPen(color));
 				painter.DrawText(BoundingRect(), m_GroupName);
 
 				// Group expander arrow
@@ -111,8 +113,8 @@ namespace Synapse.QtClient.Widgets
 					path.LineTo(0, 2);
 					path.LineTo(2, 0);
 				}
-				painter.SetPen(new QPen((new QColor("#CCC"))));
-				painter.SetBrush(new QBrush(new QColor("#CCC")));				
+				painter.SetPen(new QPen(color));
+				painter.SetBrush(new QBrush(color));
 				painter.DrawPath(path);
 				painter.Restore();
 			}
