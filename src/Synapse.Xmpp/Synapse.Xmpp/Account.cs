@@ -30,6 +30,8 @@ using jabber.connection;
 using jabber.protocol.client;
 using jabber.protocol;
 using Synapse.Core;
+using Synapse.ServiceStack;
+using Synapse.Services;
 
 namespace Synapse.Xmpp
 {
@@ -43,6 +45,8 @@ namespace Synapse.Xmpp
 		string m_Resource;
 		string m_Password;
 		string m_ConnectServer;
+
+		bool m_NetworkDisconnected = false;
 			
 		AccountConnectionState m_State;
 		ClientStatus           m_Status;
@@ -142,6 +146,18 @@ namespace Synapse.Xmpp
 			AddFeature(new UserTune(this));
 			AddFeature(new UserAvatars(this));
 			AddFeature(new ChatStates(this));
+
+			ServiceManager.Get<NetworkService>().StateChange += HandleNetworkStateChanged;
+		}
+
+		void HandleNetworkStateChanged (NetworkState state)
+		{
+			if ((state == NetworkState.Disconnected || state == NetworkState.Asleep) && ConnectionState != AccountConnectionState.Disconnected) {
+				m_NetworkDisconnected = true;
+				Disconnect();
+			} else if (state == NetworkState.Connected && m_NetworkDisconnected) {
+				Connect();
+			}
 		}
 
 		void HandleOnDisconnect(object sender)
@@ -372,6 +388,8 @@ namespace Synapse.Xmpp
 			if (String.IsNullOrEmpty(m_Password)) {
 				throw new Exception("No password");
 			}
+			
+			m_NetworkDisconnected = false;
 			
 			m_Client.User        = m_User;
 			m_Client.Server      = m_Domain;

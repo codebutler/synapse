@@ -190,7 +190,8 @@ REFERENCES =  \
 	System.Xml \
 	$(GTK_SHARP_20_LIBS) \
 	$(QYOTO_LIBS) \
-	System.Core
+	System.Core \
+	$(NDESK_DBUS_GLIB_10_LIBS)
 
 DLL_REFERENCES =  \
 	../../contrib/jabber-net.dll \

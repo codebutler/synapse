@@ -53,6 +53,8 @@ namespace Synapse.QtClient
 			PlatformHacks.SetProcessName("synapse");
 
 			Gtk.Application.Init();
+
+			NDesk.DBus.BusG.Init();
 			
 			m_App = new QApplication(args);
 			m_App.ApplicationName = "Synapse";
