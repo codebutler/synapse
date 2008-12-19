@@ -26,7 +26,7 @@ namespace Synapse.QtClient.Widgets
 {	
 	public partial class AvatarGrid<T> : QGraphicsView
 	{
-		class RosterItemGroup : QGraphicsItemGroup, IFadeable
+		class RosterItemGroup : QGraphicsItemGroup, IFadableItem
 		{
 			AvatarGrid<T> m_Grid;
 			QFont         m_Font;
@@ -79,6 +79,12 @@ namespace Synapse.QtClient.Widgets
 			
 			public override QRectF BoundingRect ()
 			{
+				// FIXME: We need to animate the change in height when we 
+				// collapse/expand... or at the very least not change height 
+				// until all item animations are complete.
+				// Right now, we don't see any items fade out on collapse 
+				// because the group size changes right away.
+				
 				m_Rect.SetLeft(m_Grid.IconPadding);
 				m_Rect.SetWidth(m_Grid.Viewport().Width() - (m_Grid.IconPadding * 2));
 				if (IsExpanded)

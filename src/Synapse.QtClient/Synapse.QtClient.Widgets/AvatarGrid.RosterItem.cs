@@ -26,7 +26,7 @@ namespace Synapse.QtClient.Widgets
 {	
 	public partial class AvatarGrid<T> : QGraphicsView
 	{
-		class RosterItem<T> : QGraphicsItem, IFadeable
+		class RosterItem<T> : QGraphicsItem, IFadableItem
 		{
 			double        m_Opacity = 1;
 			AvatarGrid<T> m_Grid;

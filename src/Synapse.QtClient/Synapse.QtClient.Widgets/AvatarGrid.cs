@@ -41,6 +41,7 @@ namespace Synapse.QtClient.Widgets
 		List<QTimeLine>       m_MoveTimeLines = new List<QTimeLine>();
 		InfoPopup<T>          m_InfoPopup;
 		QTimer                m_TooltipTimer;
+		Dictionary<IFadableItem, FadeInOutAnimation> m_FadeAnimations;
 		
 		Dictionary<string, RosterItemGroup> m_Groups = new Dictionary<string, RosterItemGroup>();
 			
@@ -72,6 +73,8 @@ namespace Synapse.QtClient.Widgets
 			QObject.Connect(m_TooltipTimer, Qt.SIGNAL("timeout()"), this, Qt.SLOT("tooltipTimer_timeout()"));
 
 			this.InstallEventFilter(this);
+
+			m_FadeAnimations = new Dictionary<IFadableItem, FadeInOutAnimation>();
 		}
 
 		#region Public Properties
@@ -298,10 +301,13 @@ namespace Synapse.QtClient.Widgets
 					bool groupVisibilityChanged = false;
 					bool groupVisible = visibleChildren > 0;
 					if (group.IsVisible() != groupVisible) {
+						if (m_FadeAnimations.ContainsKey(group))
+							CancelFadeAnimation(group);
 						var groupFadeAnimation = new FadeInOutAnimation(groupVisible, fadeTimeline);
 						groupFadeAnimation.SetTimeLine(fadeTimeline);
 						groupFadeAnimation.SetItem(group);
 						groupVisibilityChanged = true;
+						m_FadeAnimations.Add(group, groupFadeAnimation);
 					}
 
 					if (group.Y() != groupY) {
@@ -342,9 +348,12 @@ namespace Synapse.QtClient.Widgets
 										item.Opacity = itemVisible ? 1 : 0;
 										item.SetVisible(itemVisible);
 									} else {
+										if (m_FadeAnimations.ContainsKey(item))
+											CancelFadeAnimation(item);
 										var fadeAnimation = new FadeInOutAnimation(itemVisible, fadeTimeline);
 										fadeAnimation.SetTimeLine(fadeTimeline);
 										fadeAnimation.SetItem(item);
+										m_FadeAnimations.Add(item, fadeAnimation);
 									}
 								}
 								if (itemVisible) {
@@ -396,6 +405,11 @@ namespace Synapse.QtClient.Widgets
 				if (fadeTimeline.Children().Count() > 0)  {
 					QObject.Connect(fadeTimeline, Qt.SIGNAL("finished()"), delegate {
 						m_FadeTimeLines.Remove(fadeTimeline);
+						foreach (var child in fadeTimeline.Children()) {
+							var animation = child as FadeInOutAnimation;
+							if (animation != null)
+								m_FadeAnimations.Remove(((IFadableItem)animation.Item()));
+						}
 					});
 					m_FadeTimeLines.Add(fadeTimeline);
 					fadeTimeline.Start();
@@ -437,6 +451,13 @@ namespace Synapse.QtClient.Widgets
 				if (resizeAndReposition)
 					ResizeAndRepositionGroups();
 			}			
+		}
+
+		void CancelFadeAnimation (IFadableItem item)
+		{
+			var animation = m_FadeAnimations[item];
+			m_FadeAnimations.Remove(item);
+			animation.Dispose();	
 		}
 
 		[Q_SLOT]

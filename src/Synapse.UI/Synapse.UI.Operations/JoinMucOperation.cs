@@ -57,8 +57,10 @@ namespace Synapse.UI.Operations
 			Room room = Account.ConferenceManager.GetRoom(m_Jid);
 			if (!room.IsParticipating)
 				room.Join();
-			else
+			else {
+				base.Status = OperationStatus.Failed;
 				throw new UserException("Already in this room");
+			}
 		}
 
 		public override bool CheckReply (Packet packet)

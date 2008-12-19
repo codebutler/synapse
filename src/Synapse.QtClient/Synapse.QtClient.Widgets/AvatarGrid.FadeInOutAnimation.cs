@@ -37,7 +37,7 @@ namespace Synapse.QtClient.Widgets
 
 			public new void SetItem (QGraphicsItem item)
 			{
-				var fadeItem = (IFadeable)item;
+				var fadeItem = (IFadableItem)item;
 				fadeItem.Opacity = m_FadeIn ? 0 : 1;
 				fadeItem.SetVisible(m_FadeIn);
 				fadeItem.Update();				
@@ -50,21 +50,21 @@ namespace Synapse.QtClient.Widgets
 				
 				var opacity = m_FadeIn ? step : 1 - step;
 
-				var fadeItem = (IFadeable)base.Item();
+				var fadeItem = (IFadableItem)base.Item();
 				fadeItem.Opacity = opacity;
+				
 				if (step == 1 && !m_FadeIn) {
-					base.Item().SetVisible(false);
+					fadeItem.SetVisible(false);
 				}
 			}
 		}
 
-		interface IFadeable : IQGraphicsItem
+		interface IFadableItem : IQGraphicsItem
 		{
 			double Opacity {
 				get;
 				set;
 			}
-			
 		}
 	}
 }
