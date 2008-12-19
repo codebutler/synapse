@@ -24,6 +24,8 @@ public partial class RosterWidget : QWidget {
     
     protected QWidget friendsTab;
     
+    protected QLineEdit friendSearchLineEdit;
+    
     protected Synapse.QtClient.Widgets.AvatarGrid<Synapse.UI.AccountItemPair> rosterGrid;
     
     protected QLabel statsLabel;
@@ -95,6 +97,13 @@ public partial class RosterWidget : QWidget {
         verticalLayout_4 = new QVBoxLayout(this.friendsTab);
         verticalLayout_4.Spacing = 0;
         verticalLayout_4.Margin = 0;
+        QHBoxLayout horizontalLayout_4;
+        horizontalLayout_4 = new QHBoxLayout();
+        verticalLayout_4.AddLayout(horizontalLayout_4);
+        horizontalLayout_4.Margin = 6;
+        this.friendSearchLineEdit = new QLineEdit(this.friendsTab);
+        this.friendSearchLineEdit.ObjectName = "friendSearchLineEdit";
+        horizontalLayout_4.AddWidget(this.friendSearchLineEdit);
         this.rosterGrid = new Synapse.QtClient.Widgets.AvatarGrid<Synapse.UI.AccountItemPair>(this.friendsTab);
         this.rosterGrid.ObjectName = "rosterGrid";
         this.rosterGrid.FrameShape = QFrame.Shape.NoFrame;

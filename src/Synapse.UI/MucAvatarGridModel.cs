@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using Synapse.Core;
 using Synapse.Xmpp;
+using jabber;
 using jabber.connection;
 
 namespace Synapse.UI
@@ -67,6 +68,15 @@ namespace Synapse.UI
 				return false;
 			}
 		}
+
+		public string TextFilter {
+			get {
+				throw new NotImplementedException();
+			}
+			set {
+				throw new NotImplementedException();
+			}
+		}
 		
 		public int GetGroupOrder (string groupName)
 		{
@@ -78,7 +88,7 @@ namespace Synapse.UI
 			return participant.Nick;
 		}
 
-		public string GetJID (RoomParticipant participant)
+		public JID GetJID (RoomParticipant participant)
 		{
 			return String.IsNullOrEmpty(participant.RealJID) ? participant.NickJID : participant.RealJID;
 		}
@@ -106,7 +116,10 @@ namespace Synapse.UI
 		
 		public IEnumerable<string> GetItemGroups(RoomParticipant participant)
 		{
-			return new string [] { participant.Role.ToString() };
+			// FIXME: This is not i18n safe
+			string role = participant.Role.ToString();
+			role = role.Substring(0,1).ToUpper() + role.Substring(1) + "s";			
+			return new string [] { role };
 		}
 		
 		void HandleOnParticipantJoin(Room room, RoomParticipant participant)

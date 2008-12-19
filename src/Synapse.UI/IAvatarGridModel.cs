@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using Synapse.Core;
 using Synapse.Xmpp;
+using jabber;
 
 namespace Synapse.UI
 {
@@ -39,7 +40,7 @@ namespace Synapse.UI
 		int GetGroupOrder(string groupName);
 
 		string GetName(T item);
-		string GetJID(T item);
+		JID    GetJID(T item);
 		string GetPresence(T item);
 		string GetPresenceMessage(T item);		
 		object GetImage(T item);
@@ -48,6 +49,11 @@ namespace Synapse.UI
 
 		bool ModelUpdating { 
 			get; 
+		}
+
+		string TextFilter {
+			get;
+			set;
 		}
 			
 		event ItemEventHandler<T> ItemAdded;

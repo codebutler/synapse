@@ -37,6 +37,11 @@ QLineEdit {
 	border-radius: 5px;
 }
 
+QLineEdit#friendSearchLineEdit {
+	background-color: #4F4F4F;
+	border: 1px solid #4F4F4F;
+}
+
 #activityFrame {
 	background-color: #2D2D2D;
 	border: 1px solid #2D2D2D;

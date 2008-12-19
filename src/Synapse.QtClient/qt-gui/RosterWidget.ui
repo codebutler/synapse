@@ -65,6 +65,16 @@
             <number>0</number>
            </property>
            <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4" >
+             <property name="margin" >
+              <number>6</number>
+             </property>
+             <item>
+              <widget class="QLineEdit" name="friendSearchLineEdit" />
+             </item>
+            </layout>
+           </item>
+           <item>
             <widget class="Synapse.QtClient.Widgets.AvatarGrid&lt;Synapse.UI.AccountItemPair>" name="rosterGrid" >
              <property name="frameShape" >
               <enum>QFrame::NoFrame</enum>

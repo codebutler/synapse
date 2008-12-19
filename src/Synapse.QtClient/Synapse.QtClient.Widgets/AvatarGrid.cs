@@ -265,33 +265,23 @@ namespace Synapse.QtClient.Widgets
 			int iconWidth  = (IconSize + IconPadding);
 			int iconHeight = (IconSize + IconPadding);
 			
-			int groupY = IconPadding;
+			int groupY = 0;
 
 			int vScroll = this.VerticalScrollBar().Value;
 
-			// Stop any existing move animations.
-			m_MoveTimeLines.ForEach(t => t.Stop());
-			m_MoveTimeLines.Clear();
-
-			QTimeLine fadeTimeline = new QTimeLine(500);
-			fadeTimeline.curveShape = QTimeLine.CurveShape.LinearCurve;
-			
-			QTimeLine moveTimeline = new QTimeLine(500);
-			moveTimeline.curveShape = QTimeLine.CurveShape.LinearCurve;
+			// FIXME: This lock is causing a compiler error!
+			//lock (m_Groups) {
+				// Stop any existing move animations.
+				m_MoveTimeLines.ForEach(t => t.Stop());
+				m_MoveTimeLines.Clear();
+	
+				QTimeLine fadeTimeline = new QTimeLine(500);
+				fadeTimeline.curveShape = QTimeLine.CurveShape.LinearCurve;
+				
+				QTimeLine moveTimeline = new QTimeLine(500);
+				moveTimeline.curveShape = QTimeLine.CurveShape.LinearCurve;
 		
-			lock (m_Groups) {
-				foreach (RosterItemGroup group in m_Groups.Values) {
-					if (group.Y() != groupY) {
-						if (!group.IsVisible() || (group.X() == 0 && group.Y() == 0)) {
-							group.SetPos(0, groupY);
-						} else {
-							var groupMoveAnimation = new QGraphicsItemAnimation(moveTimeline);
-							groupMoveAnimation.SetTimeLine(moveTimeline);
-							groupMoveAnimation.SetItem(group);
-							groupMoveAnimation.SetPosAt(1, new QPointF(0, groupY));
-						}
-					}
-					
+				foreach (RosterItemGroup group in m_Groups.Values) {					
 					int itemY = 0;
 					
 					var children = group.ChildItems();
@@ -308,11 +298,21 @@ namespace Synapse.QtClient.Widgets
 					bool groupVisibilityChanged = false;
 					bool groupVisible = visibleChildren > 0;
 					if (group.IsVisible() != groupVisible) {
-						// FIXME: This doesn't work correctly. Animation only ends up getting like 2 steps.
 						var groupFadeAnimation = new FadeInOutAnimation(groupVisible, fadeTimeline);
 						groupFadeAnimation.SetTimeLine(fadeTimeline);
 						groupFadeAnimation.SetItem(group);
 						groupVisibilityChanged = true;
+					}
+
+					if (group.Y() != groupY) {
+						if (groupVisibilityChanged || !group.IsVisible() || (group.X() == 0 && group.Y() == 0)) {
+							group.SetPos(0, groupY);
+						} else {
+							var groupMoveAnimation = new QGraphicsItemAnimation(moveTimeline);
+							groupMoveAnimation.SetTimeLine(moveTimeline);
+							groupMoveAnimation.SetItem(group);
+							groupMoveAnimation.SetPosAt(1, new QPointF(0, groupY));
+						}
 					}
 					
 					if (groupVisible) {						
@@ -339,6 +339,7 @@ namespace Synapse.QtClient.Widgets
 								if (item.IsVisible() != itemVisible) {
 									if (groupVisibilityChanged) {
 										// No need to fade children in this case.
+										item.Opacity = itemVisible ? 1 : 0;
 										item.SetVisible(itemVisible);
 									} else {
 										var fadeAnimation = new FadeInOutAnimation(itemVisible, fadeTimeline);
@@ -378,36 +379,36 @@ namespace Synapse.QtClient.Widgets
 					
 					groupY += itemY;
 				}
-			}
-			
-			// Update the scene's height
-			int newWidth = this.Viewport().Width();
-			int newHeight = groupY + IconPadding;
-			var currentRect = m_Scene.SceneRect;
-			if (currentRect.Width() != newWidth || currentRect.Height() != newHeight) {
-				m_Scene.SetSceneRect(0, 0, newWidth, newHeight);
-			}
-
-			// Restore the scroll position
-			if (this.VerticalScrollBar().Value != vScroll) {
-				this.VerticalScrollBar().SetValue(vScroll);
-			}
-
-			if (fadeTimeline.Children().Count() > 0)  {
-				QObject.Connect(fadeTimeline, Qt.SIGNAL("finished()"), delegate {
-					m_FadeTimeLines.Remove(fadeTimeline);
-				});
-				m_FadeTimeLines.Add(fadeTimeline);
-				fadeTimeline.Start();
-			}
-			
-			if (moveTimeline.Children().Count() > 0)  {
-				QObject.Connect(moveTimeline, Qt.SIGNAL("finished()"), delegate {
-					m_MoveTimeLines.Remove(moveTimeline);
-				});
-				m_MoveTimeLines.Add(moveTimeline);
-				moveTimeline.Start();
-			}
+				
+				// Update the scene's height
+				int newWidth = this.Viewport().Width();
+				int newHeight = groupY + IconPadding;
+				var currentRect = m_Scene.SceneRect;
+				if (currentRect.Width() != newWidth || currentRect.Height() != newHeight) {
+					m_Scene.SetSceneRect(0, 0, newWidth, newHeight);
+				}
+	
+				// Restore the scroll position
+				if (this.VerticalScrollBar().Value != vScroll) {
+					this.VerticalScrollBar().SetValue(vScroll);
+				}
+	
+				if (fadeTimeline.Children().Count() > 0)  {
+					QObject.Connect(fadeTimeline, Qt.SIGNAL("finished()"), delegate {
+						m_FadeTimeLines.Remove(fadeTimeline);
+					});
+					m_FadeTimeLines.Add(fadeTimeline);
+					fadeTimeline.Start();
+				}
+				
+				if (moveTimeline.Children().Count() > 0)  {
+					QObject.Connect(moveTimeline, Qt.SIGNAL("finished()"), delegate {
+						m_MoveTimeLines.Remove(moveTimeline);
+					});
+					m_MoveTimeLines.Add(moveTimeline);
+					moveTimeline.Start();
+				}
+			//}
 		}
 
 		void AddItem (T item, bool resizeAndReposition)

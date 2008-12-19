@@ -41,8 +41,10 @@ namespace Synapse.UI
 		public event EventHandler ItemsChanged;
 
 		AccountService m_AccountService;
-		bool           m_ShowOffline   = false;
-		bool           m_ModelUpdating = false;
+		
+		bool   m_ShowOffline   = false;
+		bool   m_ModelUpdating = false;
+		string m_TextFilter    = null;
 			
 		public RosterAvatarGridModel()
 		{
@@ -64,6 +66,16 @@ namespace Synapse.UI
 			}
 			set {
 				m_ShowOffline = value;
+				OnItemsChanged();
+			}
+		}
+
+		public string TextFilter {
+			get {
+				return m_TextFilter;
+			}
+			set {
+				m_TextFilter = value;
 				OnItemsChanged();
 			}
 		}
@@ -99,9 +111,9 @@ namespace Synapse.UI
 			return !String.IsNullOrEmpty(pair.Item.Nickname) ? pair.Item.Nickname : pair.Item.JID.User;
 		}
 
-		public string GetJID (AccountItemPair pair)
+		public JID GetJID (AccountItemPair pair)
 		{
-			return pair.Item.JID.ToString();
+			return pair.Item.JID;
 		}
 
 		public string GetPresence (AccountItemPair pair)
@@ -116,42 +128,8 @@ namespace Synapse.UI
 		
 		public bool IsVisible (AccountItemPair pair)
 		{
-			return m_ShowOffline ? true : pair.Account.PresenceManager.IsAvailable(pair.Item.JID);
-		}
-		
-		private void OnAccountAdded (Account account)
-		{
-			account.Roster.OnRosterBegin += delegate(object sender) {
-				m_ModelUpdating = true;
-			};
-
-			account.Roster.OnRosterEnd += delegate(object sender) {
-				m_ModelUpdating = false;
-				OnRefreshed();
-			};
-			
-			account.Roster.OnRosterItem += delegate(object sender, Item ri) {
-				OnItemAdded(account, ri);
-			};
-			
-			account.Client.OnPresence += delegate(object sender, Presence pres) {
-				Item item = account.Roster[pres.From.BareJID];
-				if (item != null) {
-					OnItemChanged(account, item);
-				}
-			};
-			
-			account.Client.OnDisconnect += HandleOnDisconnect;
-			
-			account.PresenceManager.OnPrimarySessionChange += delegate(object sender, JID bare) {
-				/*
-				if (account.PresenceManager.IsAvailable(bare)) {
-					if (ItemAdded != null)
-						ItemAdded(this, account, 
-				}
-				*/
-				//Console.WriteLine("Primary !?!?! " + bare + " " + account.PresenceManager.IsAvailable(bare));
-			};
+			bool showOffline = !String.IsNullOrEmpty(m_TextFilter) ? true : m_ShowOffline;
+			return (String.IsNullOrEmpty(m_TextFilter) || MatchesFilter(pair)) && (showOffline ? true : pair.Account.PresenceManager.IsAvailable(pair.Item.JID));
 		}
 
 		protected virtual void OnItemAdded (Account account, Item item)
@@ -187,6 +165,50 @@ namespace Synapse.UI
 			var evnt = ItemsChanged;
 			if (evnt != null)
 				evnt(this, EventArgs.Empty);
+		}
+		
+		void OnAccountAdded (Account account)
+		{
+			account.Roster.OnRosterBegin += delegate(object sender) {
+				m_ModelUpdating = true;
+			};
+
+			account.Roster.OnRosterEnd += delegate(object sender) {
+				m_ModelUpdating = false;
+				OnRefreshed();
+			};
+			
+			account.Roster.OnRosterItem += delegate(object sender, Item ri) {
+				OnItemAdded(account, ri);
+			};
+			
+			account.Client.OnPresence += delegate(object sender, Presence pres) {
+				Item item = account.Roster[pres.From.BareJID];
+				if (item != null) {
+					OnItemChanged(account, item);
+				}
+			};
+			
+			account.Client.OnDisconnect += HandleOnDisconnect;
+			
+			account.PresenceManager.OnPrimarySessionChange += delegate(object sender, JID bare) {
+				/*
+				if (account.PresenceManager.IsAvailable(bare)) {
+					if (ItemAdded != null)
+						ItemAdded(this, account, 
+				}
+				*/
+				//Console.WriteLine("Primary !?!?! " + bare + " " + account.PresenceManager.IsAvailable(bare));
+			};
+		}
+
+		bool MatchesFilter(AccountItemPair pair)
+		{
+			string name = GetName(pair);
+			JID jid = GetJID(pair);
+			bool matchesName = (name != null) ? name.ToLower().Contains(m_TextFilter.ToLower()) : false;
+			bool matchesJid = (jid != null && jid.User != null) ? jid.User.Contains(m_TextFilter.ToLower()) : false;
+			return matchesName || matchesJid;
 		}
 		
 		void HandleOnDisconnect(object sender)

@@ -132,7 +132,7 @@ public partial class RosterWidget : QWidget
 	
 	public void AddActivityFeedItem (Account account, IActivityFeedItem item)
 	{
-		string html = Util.EscapeMessage(item.ToHtml());
+		string html = Util.EscapeJavascript(item.ToHtml());
 		m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(String.Format("{0}(\"{1}\")", "add_item", html));
 	}
 	
@@ -220,6 +220,12 @@ public partial class RosterWidget : QWidget
 	void on_rosterIconSizeSlider_valueChanged (int value)
 	{		
 		rosterGrid.IconSize = value;
+	}
+
+	[Q_SLOT]
+	void on_friendSearchLineEdit_textChanged ()
+	{
+		m_RosterModel.TextFilter = friendSearchLineEdit.Text;
 	}
 	#endregion
 }

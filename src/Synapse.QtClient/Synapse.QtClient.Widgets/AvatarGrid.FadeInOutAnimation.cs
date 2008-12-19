@@ -38,12 +38,9 @@ namespace Synapse.QtClient.Widgets
 			public new void SetItem (QGraphicsItem item)
 			{
 				var fadeItem = (IFadeable)item;
-				if (!fadeItem.IsVisible() && m_FadeIn) {
-					fadeItem.Opacity = 0;
-					fadeItem.SetVisible(true);
-					fadeItem.Update();
-				}
-				
+				fadeItem.Opacity = m_FadeIn ? 0 : 1;
+				fadeItem.SetVisible(m_FadeIn);
+				fadeItem.Update();				
 				base.SetItem(item);
 			}
 			
