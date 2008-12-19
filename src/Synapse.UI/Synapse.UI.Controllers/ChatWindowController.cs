@@ -63,13 +63,15 @@ namespace Synapse.UI.Controllers
 
 		private void HandleTextEntered (string text)
 		{
-			// FIXME: Create an action for this
-			Message message = new Message(m_Account.Client.Document);
-			message.Type = MessageType.chat;
-			message.To = m_Jid;
-			message.Body = text;
-			AppendMessage(false, message);
-			m_Account.Client.Write(message);
+			if (!String.IsNullOrEmpty(text)) {
+				// FIXME: Create an action for this
+				Message message = new Message(m_Account.Client.Document);
+				message.Type = MessageType.chat;
+				message.To = m_Jid;
+				message.Body = text;
+				AppendMessage(false, message);
+				m_Account.Client.Write(message);
+			}
 		}
 	}
 }

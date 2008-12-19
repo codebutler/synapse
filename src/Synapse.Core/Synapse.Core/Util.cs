@@ -30,7 +30,7 @@ namespace Synapse.Core
 {
 	public static class Util
 	{
-		public static string EscapeMessage(string message)
+		public static string EscapeJavascript(string message)
 		{
 			StringBuilder builder = new StringBuilder();
 			foreach (char c in message.ToCharArray()) {
@@ -51,7 +51,12 @@ namespace Synapse.Core
 			}
 			return builder.ToString();
 		}
-			
+
+		public static string EscapeHtml (string text)
+		{
+			return text.Replace("<", "&lt;").Replace(">", "&gt;");
+		}
+		
 		// I can't remember where this code came from, very sorry!
 		public static string Strftime(string format, System.DateTime dt)
         {

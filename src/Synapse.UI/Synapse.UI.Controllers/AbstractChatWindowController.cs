@@ -21,6 +21,7 @@
 
 using System;
 using System.Xml;
+using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Xmpp;
 using Synapse.UI.Views;
@@ -91,11 +92,20 @@ namespace Synapse.UI.Controllers
 						}
 					}
 
+					string body = null;
+					if (!String.IsNullOrEmpty(msg.Html)) {
+						// FIXME: Better sanitize this somehow...
+						body = msg.Html;
+					} else {
+						body = Util.EscapeHtml(msg.Body);
+						body = body.Replace("\n", "<br/>");
+					}
+				
 					iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(fromJid.Bare));
 					
 					bool isNext = (m_LastMessageJid == fromJid);
 					base.View.AppendMessage(incoming, isNext, iconPath, String.Empty, from, String.Empty,
-					                        String.Empty, from, msg.Body);
+					                        String.Empty, from, body);
 					m_LastMessageJid = fromJid;
 				}
 			});

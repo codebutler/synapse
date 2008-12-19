@@ -39,6 +39,11 @@ public partial class ChatWindow : QWidget, IChatWindowView
 	
 	bool m_UrgencyHint = false;
 
+	QAction m_BoldAction;
+	QAction m_UnderlineAction;
+	QAction m_ItalicAction;
+	QAction m_StrikethroughAction;
+	
 	public ChatWindow (AbstractChatWindowController controller)
 	{
 		SetupUi();
@@ -55,24 +60,37 @@ public partial class ChatWindow : QWidget, IChatWindowView
 			this.WindowTitle = chatController.Jid.User; //FIXME: Show nickname from roster?
 			this.WindowIcon = new QIcon(new QPixmap(String.Format("avatar:/{0}", Synapse.Xmpp.AvatarManager.GetAvatarHash(chatController.Jid.Bare))));
 		}
+
+		splitter.SetStretchFactor(1, 0);
+		splitter_2.SetStretchFactor(1, 0);
 	
 		KeyPressEater eater = new KeyPressEater(this);
 		eater.KeyEvent += HandleKeyEvent;
 		textEdit.InstallEventFilter(eater);
 
 		QToolBar toolbar = new QToolBar(this);
-		toolbar.SetToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly);
 		toolbar.IconSize = new QSize(16, 16);
-		
-		QAction boldAction = new QAction(Helper.LoadIcon("format-text-bold", 16), "Bold", this);
-		toolbar.AddAction(boldAction);
-		
-		QAction italicAciton = new QAction(Helper.LoadIcon("format-text-italic", 16), "Italic", this);
-		toolbar.AddAction(italicAciton);
-		
-		QAction underlineAction = new QAction(Helper.LoadIcon("format-text-underline", 16), "Underline", this);
-		toolbar.AddAction(underlineAction);
 
+		m_BoldAction = new QAction(Helper.LoadIcon("format-text-bold", 16), "Bold", this);
+		m_BoldAction.Shortcut = "Ctrl+B";
+		m_BoldAction.Checkable = true;
+		toolbar.AddAction(m_BoldAction);
+		
+		m_ItalicAction = new QAction(Helper.LoadIcon("format-text-italic", 16), "Italic", this);
+		m_ItalicAction.Shortcut = "Ctrl+I";
+		m_ItalicAction.Checkable = true;
+		toolbar.AddAction(m_ItalicAction);
+		
+		m_UnderlineAction = new QAction(Helper.LoadIcon("format-text-underline", 16), "Underline", this);
+		m_UnderlineAction.Shortcut = "Ctrl+U";
+		m_UnderlineAction.Checkable = true;
+		toolbar.AddAction(m_UnderlineAction);
+
+		m_StrikethroughAction = new QAction(Helper.LoadIcon("format-text-strikethrough", 16), "Strikethrough", this);
+		m_StrikethroughAction.Shortcut = "Ctrl+S";
+		m_StrikethroughAction.Checkable = true;
+		toolbar.AddAction(m_StrikethroughAction);
+		
 		foreach (IActionItemCodon node in AddinManager.GetExtensionNodes("/Synapse/UI/ChatWindow/FormattingToolbar")) {
 			toolbar.AddAction((QAction)node.CreateInstance(this));
 		}		
@@ -95,18 +113,6 @@ public partial class ChatWindow : QWidget, IChatWindowView
 		}
 	}
 
-	bool HandleKeyEvent(QKeyEvent kevent)
-	{
-		if ((kevent.Modifiers() & (uint)Qt.KeyboardModifier.ControlModifier) == 0 && kevent.Key() == (int)Qt.Key.Key_Return || kevent.Key() == (int)Qt.Key.Key_Enter) {
-			if (TextEntered != null)
-				TextEntered(textEdit.PlainText);
-			textEdit.Clear();
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public void AppendStatus (string status, string message)
 	{
 		m_ConversationWidget.AppendStatus(status, message);
@@ -116,8 +122,9 @@ public partial class ChatWindow : QWidget, IChatWindowView
 	                          string senderColor, string senderStatusIcon, string senderDisplayName,
 	                          string message)
 	{
+			
 		m_ConversationWidget.AppendMessage(incoming, next, userIconPath, senderScreenName, sender, senderColor,
-		                                   senderStatusIcon, senderDisplayName, Qt.Escape(message));
+		                                   senderStatusIcon, senderDisplayName, message);
 
 		if (!IsActive) {
 			UrgencyHint = true;
@@ -140,6 +147,21 @@ public partial class ChatWindow : QWidget, IChatWindowView
 		UrgencyHint = false;
 	}
 
+	bool HandleKeyEvent(QKeyEvent kevent)
+	{
+		if ((kevent.Modifiers() & (uint)Qt.KeyboardModifier.ControlModifier) == 0 && kevent.Key() == (int)Qt.Key.Key_Return || kevent.Key() == (int)Qt.Key.Key_Enter) {
+			// FIXME: Need to clean this HTML up...
+			// string html = textEdit.Html;
+			string html = textEdit.PlainText;
+			if (TextEntered != null)
+				TextEntered(html);
+			textEdit.Clear();
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	bool IsActive {
 		get {
 			var gui = ServiceManager.Get<GuiService>();

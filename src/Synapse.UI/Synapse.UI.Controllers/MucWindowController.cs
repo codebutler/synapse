@@ -100,7 +100,10 @@ namespace Synapse.UI.Controllers
 		
 		void HandleTextEntered (string text)
 		{
-			m_Room.PublicMessage(text);
+			if (!String.IsNullOrEmpty(text)) {
+				// FIXME: Send this as HTML
+				m_Room.PublicMessage(text);
+			}
 		}
 
 		void HandleOnSelfMessage(object sender, Message msg)

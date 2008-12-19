@@ -121,14 +121,15 @@ namespace Synapse.QtClient
 			DateTime time = DateTime.Now;
 			string html = FormatMessage(template, userIconPath, senderScreenName, sender, senderColor, senderStatusIcon,
 			                            "ltr", senderDisplayName, String.Empty, message, time);
-			html = Util.EscapeMessage(html);
+			html = Util.EscapeJavascript(html);
+			
 			base.Page().MainFrame().EvaluateJavaScript(String.Format("{0}(\"{1}\")", jsMethod, html));
 		}
 		
 		public void AppendStatus(string status, string message)
 		{
 			string html = FormatStatus(this.m_statusHtml, status, message, DateTime.Now);
-			html = Util.EscapeMessage(html);
+			html = Util.EscapeJavascript(html);
 			base.Page().MainFrame().EvaluateJavaScript(String.Format("{0}(\"{1}\")", "appendMessage", html));
 		}
 				
