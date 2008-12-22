@@ -77,16 +77,24 @@ namespace Synapse.UI.Controllers
 			}
 			
 			var info = XmppUriQueryInfo.ParseQuery(uri.Query);
-			if (info.QueryType != "disco")
-				throw new Exception("Unsupported query type");
-			
-			var jid = new JID(uri.AbsolutePath);
-			string node = null;
-			if (info.Parameters.ContainsKey("node"))
-				node = info.Parameters["node"];
-			
-			var discoNode = new jabber.connection.DiscoNode(jid, node);
-			m_Account.DiscoManager.BeginGetFeatures(discoNode, new DiscoNodeHandler(ReceivedFeatures), null);
+
+			string queryType = info.QueryType;
+			// Default to disco.
+			if (String.IsNullOrEmpty(queryType))
+				queryType = "disco";
+
+			switch (queryType) {
+			case "disco":			
+				var jid = new JID(uri.AbsolutePath);
+				string node = null;
+				if (info.Parameters.ContainsKey("node"))
+					node = info.Parameters["node"];				
+				var discoNode = new jabber.connection.DiscoNode(jid, node);
+				m_Account.DiscoManager.BeginGetFeatures(discoNode, new DiscoNodeHandler(ReceivedFeatures), null);
+				break;
+			default:
+				throw new Exception("Unsupported query type: " + queryType);
+			}
 		}
 
 		private void ReceivedFeatures (DiscoManager manager, DiscoNode node, object state)
