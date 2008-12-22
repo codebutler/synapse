@@ -62,6 +62,8 @@ namespace Synapse.QtClient
 		string               m_CustomBackgroundColor = null;
 		
 		static string s_ThemesDirectory = null;
+
+		QMenu m_Menu;
 		#endregion
 		
 		#region Public Static Properties
@@ -93,8 +95,19 @@ namespace Synapse.QtClient
 			}
 			
 			this.m_timeOpened = DateTime.Now;
+			
+			m_Menu = new QMenu(this);
+			// FIXME: Need to selectively show certain actions depending on what's under the cursor.
+			//m_Menu.AddAction(this.PageAction(QWebPage.WebAction.OpenLink));
+			//m_Menu.AddSeparator();
+			m_Menu.AddAction(this.PageAction(QWebPage.WebAction.Copy));
+			//m_Menu.AddAction(this.PageAction(QWebPage.WebAction.CopyLinkToClipboard));
+			//m_Menu.AddAction(this.PageAction(QWebPage.WebAction.CopyImageToClipboard));
+
+			this.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
+			QObject.Connect(this, Qt.SIGNAL("linkClicked(QUrl)"), this, Qt.SLOT("HandleLinkClicked(QUrl)"));
 		}
-	#endregion
+		#endregion
 		
 		#region Public Methods
 		public void AppendMessage(bool incoming, bool next, string userIconPath, string senderScreenName, string sender,
@@ -257,8 +270,20 @@ namespace Synapse.QtClient
 			}
 		}
 #endregion
+
+		protected override void ContextMenuEvent (Qyoto.QContextMenuEvent arg1)
+		{			
+			m_Menu.Popup(arg1.GlobalPos());
+		}
 		
 		#region Private Methods
+		void HandleLinkClicked (QUrl url)
+		{
+			// FIXME: Abstract this out to the Client
+			var info = new System.Diagnostics.ProcessStartInfo("xdg-open", url);
+			System.Diagnostics.Process.Start(info);
+		}
+		
 		private string FormatBaseTemplate(PList themeProperties, string basePath, string mainPath, string variantPath, string headerHtml, string footerHtml)
 		{
 			mainPath = "@import url(\"" + mainPath + "\");";

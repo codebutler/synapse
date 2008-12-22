@@ -98,6 +98,7 @@ namespace Synapse.UI.Controllers
 						body = msg.Html;
 					} else {
 						body = Util.EscapeHtml(msg.Body);
+						//body = Linkify.AddLinks(msg.Body);
 						body = body.Replace("\n", "<br/>");
 					}
 				

@@ -66,6 +66,7 @@ public partial class AccountStatusWidget : QWidget
 		m_AccountMenu.AddAction(m_ShowBrowserAction);
 		
 		m_NameLabel.Text = account.Jid.Bare;
+		m_NameLabel.Clicked += HandleNameClicked;
 
 		m_PresenceMenu = new QMenu(this);
 		QObject.Connect(m_PresenceMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("HandlePresenceMenuAboutToShow()"));
@@ -140,12 +141,6 @@ public partial class AccountStatusWidget : QWidget
 	}
 
 	[Q_SLOT]
-	void on_m_NameLabel_linkActivated(string link)
-	{
-		m_AccountMenu.Popup(m_NameLabel.MapToGlobal(m_NameLabel.Rect.BottomLeft()));
-	}
-
-	[Q_SLOT]
 	void HandlePresenceMenuTriggered(QAction action)
 	{
 		m_ParentWindow.RaisePresenceChanged(m_Account, action.Text, String.Empty);
@@ -192,5 +187,10 @@ public partial class AccountStatusWidget : QWidget
 	{
 		if (action == m_ShowBrowserAction)
 			new ServiceBrowserWindowController(m_Account);
+	}
+
+	void HandleNameClicked(object o, EventArgs args)
+	{
+		m_AccountMenu.Popup(m_NameLabel.MapToGlobal(m_NameLabel.Rect.BottomLeft()));
 	}
 }
