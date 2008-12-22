@@ -110,7 +110,7 @@ namespace Synapse.UI.Controllers
 				}
 			});
 		}
-
+		
 		public void AppendStatus (string status, string message)
 		{
 			m_LastMessageJid = null;
@@ -118,6 +118,5 @@ namespace Synapse.UI.Controllers
 				base.View.AppendStatus(status, message);
 			});
 		}
-
 	}
 }

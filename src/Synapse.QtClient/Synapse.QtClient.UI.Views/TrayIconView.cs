@@ -74,7 +74,7 @@ namespace Synapse.QtClient.UI.Views
 			m_Menu.AddAction(m_QuitAction);
 			QObject.Connect(m_Menu, Qt.SIGNAL("aboutToShow()"), new NoArgDelegate(HandleMenuAboutToShow));
 
-			QPixmap pixmap = new QPixmap("resource:/tray.png");
+			QPixmap pixmap = new QPixmap("resource:/octy-22.png");
 			QIcon icon = new QIcon(pixmap);
 			m_Icon = new QSystemTrayIcon(icon);
 			m_Icon.SetContextMenu(m_Menu);

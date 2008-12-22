@@ -38,6 +38,9 @@ namespace Synapse.QtClient.Widgets
 				m_Grid    = grid;
 				m_Item    = item;
 				m_Rect = new QRectF(0, 0, 0, 0);
+
+				// FIXME: This causes all sorts of problems.
+				// this.SetCacheMode(QGraphicsItem.CacheMode.DeviceCoordinateCache);
 			}
 
 			public T Item {

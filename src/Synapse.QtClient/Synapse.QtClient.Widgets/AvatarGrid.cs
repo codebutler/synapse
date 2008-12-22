@@ -53,6 +53,9 @@ namespace Synapse.QtClient.Widgets
 		
 		public AvatarGrid(QWidget parent) : base(parent)
 		{
+			// FIXME: Need a preference to turn this on/off.
+			// this.SetViewport(new QGLWidget());
+			
 			m_Scene = new QGraphicsScene(this);
 			this.SetScene(m_Scene);
 
@@ -391,7 +394,7 @@ namespace Synapse.QtClient.Widgets
 				
 				// Update the scene's height
 				int newWidth = this.Viewport().Width();
-				int newHeight = groupY + IconPadding;
+				int newHeight = groupY;
 				var currentRect = m_Scene.SceneRect;
 				if (currentRect.Width() != newWidth || currentRect.Height() != newHeight) {
 					m_Scene.SetSceneRect(0, 0, newWidth, newHeight);

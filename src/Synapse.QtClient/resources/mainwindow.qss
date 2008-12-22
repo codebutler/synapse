@@ -18,6 +18,11 @@ QLabel, QLineEdit, QTabBar, QTreeView, QGraphicsView {
 	color: white;
 }
 
+/* FIXME: Above styles are somehow screwing this up. */
+QToolTip {
+	color: black;
+}
+
 QSplitter::handle {
 	background-color: #1A1A1A;
 	image: url(resource:/handle.png);

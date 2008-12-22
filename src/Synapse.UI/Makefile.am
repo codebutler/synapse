@@ -133,8 +133,8 @@ FILES = \
 	Synapse.UI.Views/IServiceBrowserWindowView.cs \
 	Synapse.UI.Controllers/ServiceBrowserWindowController.cs \
 	template4dotnet.cs \
-	Synapse.UI.Controllers/ChatsWindowController.cs \
-	Synapse.UI.Views/IChatsWindowView.cs 
+	Synapse.UI.Controllers/TabbedChatsWindowController.cs \
+	Synapse.UI.Views/ITabbedChatsWindowView.cs 
 
 DATA_FILES = 
 

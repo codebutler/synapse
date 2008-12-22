@@ -24,6 +24,7 @@ using System.Text;
 using System.Collections.Generic;
 using jabber;
 using jabber.protocol.iq;
+using Synapse.Core;
 
 namespace Synapse.Xmpp
 {
@@ -40,7 +41,7 @@ namespace Synapse.Xmpp
 		{
 			m_Account = account;
 			
-			PostItem(new ActivityFeedItem(account, null, null, "Welcome to Synapse!", null));
+			PostItem(new ActivityFeedItem(account, null, null, "Welcome to Synapse!", null, null));
 		}
 		
 		public void PostItem (IActivityFeedItem item)
@@ -79,19 +80,23 @@ namespace Synapse.Xmpp
 		Account  m_Account;
 		JID 	 m_From;
 		DateTime m_Timestamp;
+		string   m_Type;
 		string   m_Action;
+		string   m_ActionItem;
 		string   m_Content;
 		
-		public ActivityFeedItem (Account account, JID from, string type, string action, string content)
+		public ActivityFeedItem (Account account, JID from, string type, string action, string actionItem, string content)
 		{
 			if (action == null)
 				throw new ArgumentNullException("action");
 			
-			m_Account   = account;
-			m_From      = from;
-			m_Action    = action;
-			m_Timestamp = DateTime.Now;
-			m_Content   = content;
+			m_Timestamp  = DateTime.Now;
+			m_Account    = account;
+			m_From       = from;
+			m_Type       = type;
+			m_Action     = Util.EscapeHtml(action);
+			m_ActionItem = Util.EscapeHtml(actionItem); 
+			m_Content    = Util.EscapeHtml(content);
 		}
 		
 		public DateTime Timestamp {
@@ -103,7 +108,15 @@ namespace Synapse.Xmpp
 		public string ToHtml()
 		{
 			StringBuilder htmlBuilder = new StringBuilder();
-			htmlBuilder.Append("<li>");
+
+			string avatarHash = null;
+			if (m_From != null)
+				avatarHash = AvatarManager.GetAvatarHash(m_From);
+			else
+				avatarHash = "octy";
+			
+			htmlBuilder.AppendFormat("<li style=\"background-image: url('avatar:/{0}') !important\">", avatarHash);
+			
 			htmlBuilder.Append(String.Format("<div class='timestamp'>{0}</div>", m_Timestamp.ToShortTimeString()));
 			
 			if (m_From != null) {
@@ -113,14 +126,23 @@ namespace Synapse.Xmpp
 					name = item.Nickname;
 				else
 					name = m_From.User;
+
+				name = Util.EscapeHtml(name);
 				
 				htmlBuilder.Append(String.Format("<a href='#' title='{0}' class='jid'>{1}</a> ", m_From.ToString(), name));
 			}
-			
-			htmlBuilder.Append(String.Format("<strong>{0}</strong>", m_Action));
+
+			if (m_ActionItem != null) {
+				htmlBuilder.Append(String.Format(m_Action, String.Format("<strong>{0}</strong>", m_ActionItem)));
+			} else {
+				htmlBuilder.Append(String.Format("<strong>{0}</strong>", m_Action));
+			}
 			
 			if (m_Content != null) {
+				htmlBuilder.Append(":");
 				htmlBuilder.Append(String.Format("<blockquote>{0}</blockquote>", m_Content));
+			} else if (m_Type != null) {
+				htmlBuilder.Append(".");
 			}
 			
 			htmlBuilder.Append("</li>");

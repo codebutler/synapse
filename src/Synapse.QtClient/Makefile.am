@@ -141,7 +141,6 @@ FILES = \
 	Synapse.QtClient.UI.Views/ChatWindow.cs \
 	ConversationWidget.cs \
 	PList.cs \
-	Helper.cs \
 	qt-gui/DebugWindow.cs \
 	KeyPressEater.cs \
 	BookmarkedMUCsModel.cs \
@@ -155,7 +154,6 @@ FILES = \
 	qt-gui/PreferencesWindow.cs \
 	ResizableGraphicsPixmapItem.cs \
 	ResourceFileEngine.cs \
-	AbstractSimpleFileEngine.cs \
 	AvatarFileEngine.cs \
 	ServiceBrowserWindow.cs \
 	qt-gui/ServiceBrowserWindow.cs \
@@ -165,7 +163,9 @@ FILES = \
 	Synapse.QtClient.Widgets/AvatarGrid.InfoPopup.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.FadeInOutAnimation.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.RosterItemGroup.cs \
-	Synapse.QtClient.Widgets/AvatarGrid.RosterItem.cs 
+	Synapse.QtClient.Widgets/AvatarGrid.RosterItem.cs \
+	Gui.cs \
+	AbstractSimpleFileEngine.cs 
 
 DATA_FILES = 
 
@@ -176,10 +176,11 @@ RESOURCES = \
 	resources/mainwindow-noaccounts.qss \
 	resources/default-avatar.png \
 	resources/newtab.html \
-	resources/tray.png \
 	resources/octy.svg \
 	resources/oceanbg.png \
-	resources/handle.png 
+	resources/handle.png \
+	resources/octy-22.png \
+	resources/octy-32.png 
 
 EXTRAS = \
 	synapse.qtclient.in 
@@ -190,8 +191,8 @@ REFERENCES =  \
 	System.Xml \
 	$(GTK_SHARP_20_LIBS) \
 	$(QYOTO_LIBS) \
-	System.Core \
-	$(NDESK_DBUS_GLIB_10_LIBS)
+	$(NDESK_DBUS_GLIB_10_LIBS) \
+	System.Core
 
 DLL_REFERENCES =  \
 	../../contrib/jabber-net.dll \

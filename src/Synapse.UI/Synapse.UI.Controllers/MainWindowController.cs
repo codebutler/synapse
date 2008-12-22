@@ -38,16 +38,34 @@ namespace Synapse.UI.Controllers
 				
 				View.AddNewAccount   += OnAddNewAccount;
 				View.PresenceChanged += OnPresenceChanged;
+				View.ActivityFeedReady += HandleActivityFeedReady;
 	
 				AccountService accountService = ServiceManager.Get<AccountService>();
-				accountService.AccountAdded   += View.AddAccount;
+				accountService.AccountAdded   += AddAccount;
 				accountService.AccountRemoved += View.RemoveAccount;
 	
 				foreach (Account account in accountService.Accounts)
-					View.AddAccount(account);
+					AddAccount(account);
 
 				View.Show();
 			});
+		}
+
+		void HandleActivityFeedReady(object sender, EventArgs e)
+		{
+			AccountService accountService = ServiceManager.Get<AccountService>();
+			foreach (Account account in accountService.Accounts)
+				account.ActivityFeed.FireQueued();
+		}
+
+		void AddAccount (Account account)
+		{
+			View.AddAccount(account);
+			account.ActivityFeed.NewItem += delegate (Account a, IActivityFeedItem item) {
+				Application.Invoke(delegate {
+					View.AddActivityFeedItem(a, item);
+				});
+			};
 		}
 
 		#region No accounts

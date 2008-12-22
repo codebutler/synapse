@@ -92,47 +92,7 @@ namespace Synapse.UI
 		{
 			if (m_ChatWindows.ContainsKey(presence.From.Bare)) {
 				var window = m_ChatWindows[presence.From.Bare];
-
-				string fromName = presence.From.User; // FIXME: Use roster nickname...
-
-				// FIXME: Abstract this out somewhere else so it can be used in the activity feed too.
-				var builder = new StringBuilder();
-				if (presence.Type == PresenceType.available) {
-					string show = null;
-					switch (presence.Show) {
-					case "away":
-						show = "away";
-						break;
-					case "chat":
-						show = "free to chat";
-						break;
-					case "dnd":
-						show = "do not disturb";
-						break;
-					case "xa":
-						show = "extended away";
-						break;
-					default:
-						// Display this even though we don't know what it is.
-						if (!String.IsNullOrEmpty(presence.Show))
-						    show = presence.Show;
-						break;
-					}			
-					if (show == null)
-						 builder.Append(String.Format("{0} is now available", fromName));
-					else
-						builder.Append(String.Format("{0} is now {1}", fromName, show));
-				} else if (presence.Type == PresenceType.unavailable) {
-					builder.Append(String.Format("{0} is now offline", fromName));
-				}
-
-				if (!String.IsNullOrEmpty(presence.Status)) {
-					builder.Append(": ");
-					builder.Append(presence.Status);
-				}
-				builder.Append(".");
-				
-				window.AppendStatus(presence.Type.ToString(), builder.ToString());
+				window.SetPresence(presence);
 			}
 		}
 			

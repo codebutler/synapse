@@ -41,6 +41,8 @@ namespace Synapse.QtClient.UI.Views
 		string m_StyleSheet;
 		string m_NoAccountsStyleSheet;
 
+		public event EventHandler ActivityFeedReady;
+		
 		public event PresenceChangedEventHandler PresenceChanged;
 		
 		public event DialogValidateEventHandler AddNewAccount
@@ -58,7 +60,7 @@ namespace Synapse.QtClient.UI.Views
 			SetupUi();
 			base.WindowFlags = (uint)Qt.WindowType.FramelessWindowHint;
 
-			QPixmap pixmap = new QPixmap("resource:/tray.png");
+			QPixmap pixmap = new QPixmap("resource:/octy-22.png");
 			base.WindowIcon = new QIcon(pixmap);
 			
 			QVBoxLayout layout = new QVBoxLayout();
@@ -71,12 +73,16 @@ namespace Synapse.QtClient.UI.Views
 			this.SetStyleSheet(m_StyleSheet);
 			
 			m_RosterWidget = new RosterWidget(this);
+			m_RosterWidget.ActivityFeedReady += delegate {
+				if (ActivityFeedReady != null)
+					ActivityFeedReady(this, EventArgs.Empty);
+			};
 			contentWidget.Layout().AddWidget(m_RosterWidget);
 			
 			m_NoAccountsWidget = new NoAccountsWidget();
 			contentWidget.Layout().AddWidget(m_NoAccountsWidget);
 
-			Helper.CenterWidgetOnScreen(this);
+			Gui.CenterWidgetOnScreen(this);
 
 			headerLabel.InstallEventFilter(new WindowMover(this));
 		}
@@ -102,7 +108,6 @@ namespace Synapse.QtClient.UI.Views
 		public void AddAccount(Account account)
 		{
 			m_RosterWidget.AddAccount(account);
-			account.ActivityFeed.NewItem += HandleNewItem;
 			HideShowNoAccountsWidget();
 		}
 
@@ -111,14 +116,12 @@ namespace Synapse.QtClient.UI.Views
 			m_RosterWidget.RemoveAccount(account);
 			HideShowNoAccountsWidget();
 		}
-		
-		void HandleNewItem(Account account, IActivityFeedItem item)
-		{
-			Application.Invoke(delegate {
-				m_RosterWidget.AddActivityFeedItem(account, item);
-			});
-		}
 
+		public void AddActivityFeedItem (Account account, IActivityFeedItem item)
+		{
+			m_RosterWidget.AddActivityFeedItem(account, item);
+		}
+		
 		void HideShowNoAccountsWidget ()
 		{
 			if (m_RosterWidget.AccountsCount > 0) {

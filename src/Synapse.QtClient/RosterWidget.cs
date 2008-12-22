@@ -49,6 +49,8 @@ public partial class RosterWidget : QWidget
 	QAction 			  m_ViewProfileAction;
 	QAction               m_IMAction;
 	QAction               m_ListModeAction;
+
+	public event EventHandler ActivityFeedReady;
 	
 	public RosterWidget (MainWindow parent) : base (parent)
 	{
@@ -97,6 +99,7 @@ public partial class RosterWidget : QWidget
 		tabWidget.ElideMode = Qt.TextElideMode.ElideMiddle;
 		
 		m_ActivityWebView.Page().MainFrame().Load("resource:/feed.html");
+		QObject.Connect(m_ActivityWebView.Page(), Qt.SIGNAL("loadFinished(bool)"), this, Qt.SLOT("activityPage_loadFinished(bool)"));
 		
 		m_ParentWindow = parent;
 		
@@ -141,12 +144,12 @@ public partial class RosterWidget : QWidget
 		// FIXME: Move to controller.
 		Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(pair.Account, pair.Item.JID);	
 	}
-
+	
 	#region Private Slots
 	[Q_SLOT]
 	void on_m_JoinChatButton_clicked()
 	{
-		Account selectedAccount = Helper.ShowAccountSelectMenu(m_JoinChatButton);
+		Account selectedAccount = Gui.ShowAccountSelectMenu(m_JoinChatButton);
 		if (selectedAccount != null) {
 			JID jid = new JID(m_ChatNameEdit.Text);
 			if (!String.IsNullOrEmpty(jid.User) && !String.IsNullOrEmpty(jid.Server)) {
@@ -226,6 +229,13 @@ public partial class RosterWidget : QWidget
 	void on_friendSearchLineEdit_textChanged ()
 	{
 		m_RosterModel.TextFilter = friendSearchLineEdit.Text;
+	}
+
+	[Q_SLOT]
+	void activityPage_loadFinished (bool ok)
+	{
+		if (ActivityFeedReady != null)
+			ActivityFeedReady(this, EventArgs.Empty);
 	}
 	#endregion
 }

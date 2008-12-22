@@ -53,12 +53,12 @@ public partial class ChatWindow : QWidget, IChatWindowView
 			participantsGrid.Model = mucController.GridModel;		
 			m_ConversationWidget.ChatName = mucController.Room.JID;
 			this.WindowTitle = mucController.Room.JID;
-			this.WindowIcon = Helper.LoadIcon("internet-group-chat");
+			this.WindowIcon = Gui.LoadIcon("internet-group-chat");
 		} else if (controller is ChatWindowController) {
 			var chatController = (ChatWindowController)controller;
 			rightContainer.Hide();
 			this.WindowTitle = chatController.Jid.User; //FIXME: Show nickname from roster?
-			this.WindowIcon = new QIcon(new QPixmap(String.Format("avatar:/{0}", Synapse.Xmpp.AvatarManager.GetAvatarHash(chatController.Jid.Bare))));
+			this.WindowIcon = new QIcon(new QPixmap(String.Format("avatar:/{0}", Synapse.Xmpp.AvatarManager.GetAvatarHash(chatController.Jid.Bare))));		
 		}
 
 		splitter.SetStretchFactor(1, 0);
@@ -71,22 +71,22 @@ public partial class ChatWindow : QWidget, IChatWindowView
 		QToolBar toolbar = new QToolBar(this);
 		toolbar.IconSize = new QSize(16, 16);
 
-		m_BoldAction = new QAction(Helper.LoadIcon("format-text-bold", 16), "Bold", this);
+		m_BoldAction = new QAction(Gui.LoadIcon("format-text-bold", 16), "Bold", this);
 		m_BoldAction.Shortcut = "Ctrl+B";
 		m_BoldAction.Checkable = true;
 		toolbar.AddAction(m_BoldAction);
 		
-		m_ItalicAction = new QAction(Helper.LoadIcon("format-text-italic", 16), "Italic", this);
+		m_ItalicAction = new QAction(Gui.LoadIcon("format-text-italic", 16), "Italic", this);
 		m_ItalicAction.Shortcut = "Ctrl+I";
 		m_ItalicAction.Checkable = true;
 		toolbar.AddAction(m_ItalicAction);
 		
-		m_UnderlineAction = new QAction(Helper.LoadIcon("format-text-underline", 16), "Underline", this);
+		m_UnderlineAction = new QAction(Gui.LoadIcon("format-text-underline", 16), "Underline", this);
 		m_UnderlineAction.Shortcut = "Ctrl+U";
 		m_UnderlineAction.Checkable = true;
 		toolbar.AddAction(m_UnderlineAction);
 
-		m_StrikethroughAction = new QAction(Helper.LoadIcon("format-text-strikethrough", 16), "Strikethrough", this);
+		m_StrikethroughAction = new QAction(Gui.LoadIcon("format-text-strikethrough", 16), "Strikethrough", this);
 		m_StrikethroughAction.Shortcut = "Ctrl+S";
 		m_StrikethroughAction.Checkable = true;
 		toolbar.AddAction(m_StrikethroughAction);

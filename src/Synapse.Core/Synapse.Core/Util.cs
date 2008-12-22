@@ -54,27 +54,26 @@ namespace Synapse.Core
 
 		public static string EscapeHtml (string text)
 		{
-			return text.Replace("<", "&lt;").Replace(">", "&gt;");
+			if (!String.IsNullOrEmpty(text))
+				return text.Replace("<", "&lt;").Replace(">", "&gt;");
+			else
+				return text;
 		}
 		
 		// I can't remember where this code came from, very sorry!
 		public static string Strftime(string format, System.DateTime dt)
         {
             bool printFormat = false;
-            System.Text.StringBuilder result = new System.Text.StringBuilder();
+            var result = new StringBuilder();
 
-            foreach (char c in format)
-            {
-                if (!printFormat && c == '%')
-                {
+            foreach (char c in format) {
+                if (!printFormat && c == '%') {
                     printFormat = true;
                     continue;
                 }
 
-                if (printFormat)
-                {
-                    switch (c)
-                    {
+                if (printFormat) {
+                    switch (c) {
                         case 'a':
                             result.Append(dt.ToString("ddd", CultureInfo.InvariantCulture));
                             break;
@@ -101,14 +100,10 @@ namespace Synapse.Core
                             break;
                         case 'j':
                             string day = dt.DayOfYear.ToString(CultureInfo.InvariantCulture);
-                            if (day.Length < 3)
-                            {
-                                if (day.Length == 1)
-                                {
+                            if (day.Length < 3) {
+                                if (day.Length == 1) {
                                     day = "00" + day;
-                                }
-                                else
-                                {
+                                } else {
                                     day = "0" + day;
                                 }
                             }
@@ -130,8 +125,7 @@ namespace Synapse.Core
                             {
                                 System.Globalization.GregorianCalendar cal = new System.Globalization.GregorianCalendar();
                                 int weekOfYear = cal.GetWeekOfYear(dt, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
-                                if (dt.DayOfWeek != DayOfWeek.Sunday)
-                                {
+                                if (dt.DayOfWeek != DayOfWeek.Sunday) {
                                     weekOfYear--;
                                 }
                                 result.Append(weekOfYear.ToString("00", CultureInfo.InvariantCulture));
@@ -141,8 +135,7 @@ namespace Synapse.Core
                             {
                                 System.Globalization.GregorianCalendar cal = new System.Globalization.GregorianCalendar();
                                 int weekOfYear = cal.GetWeekOfYear(dt, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
-                                if (dt.DayOfWeek != DayOfWeek.Sunday)
-                                {
+                                if (dt.DayOfWeek != DayOfWeek.Sunday) {
                                     weekOfYear--;
                                 }
                                 result.Append(weekOfYear.ToString("00", CultureInfo.InvariantCulture));
@@ -178,9 +171,7 @@ namespace Synapse.Core
                             break;
                     }
                     printFormat = false;
-                }
-                else
-                {
+                } else {
                     result.Append(c);
                 }
             }

@@ -28,7 +28,7 @@ using Gtk;
 
 namespace Synapse.QtClient
 {
-	public static class Helper
+	public static class Gui
 	{
 		public static Account ShowAccountSelectMenu (QWidget attachWidget)
 		{

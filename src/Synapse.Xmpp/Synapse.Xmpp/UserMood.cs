@@ -57,8 +57,7 @@ namespace Synapse.Xmpp
 			
 			if (mood != null) {
 				string reason = (moodItem["text"].Value == null) ? null : moodItem["text"].Value;
-				string action = String.Format("is feeling {0}", mood);
-				m_Account.ActivityFeed.PostItem(new ActivityFeedItem(m_Account, from.ToString(), "mood", action, reason));
+				m_Account.ActivityFeed.PostItem(new ActivityFeedItem(m_Account, from.ToString(), "mood", "is feeling {0}", mood, reason));
 			}
 		}
 

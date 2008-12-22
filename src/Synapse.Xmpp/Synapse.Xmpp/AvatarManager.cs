@@ -56,6 +56,8 @@ namespace Synapse.Xmpp
 			s_DefaultAvatarImage = Application.CreateImage("resource:/default-avatar.png");
 			if (s_DefaultAvatarImage == null)
 				throw new Exception("Unable to load default avatar!");
+
+			s_AvatarCache.Add("octy", Application.CreateImage("resource:/octy-32.png"));
 		}
 		
 		public AvatarManager(Account account)
@@ -66,10 +68,12 @@ namespace Synapse.Xmpp
 
 		public static string GetAvatarHash (JID jid)
 		{
-			lock (s_HashCache) {
-				string bare = jid.Bare;
-				if (s_HashCache.ContainsKey(bare)) {
-					return s_HashCache[bare];
+			if (jid != null) {
+				lock (s_HashCache) {
+					string bare = jid.Bare;
+					if (s_HashCache.ContainsKey(bare)) {
+						return s_HashCache[bare];
+					}
 				}
 			}
 			return "default";

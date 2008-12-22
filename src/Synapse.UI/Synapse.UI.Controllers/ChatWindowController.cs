@@ -61,6 +61,19 @@ namespace Synapse.UI.Controllers
 			}
 		}
 
+		public void SetPresence (Presence presence)
+		{
+			string message = null;
+			string fromName = presence.From.User; // FIXME: Use roster nickname...
+			if (!String.IsNullOrEmpty(presence.Status)) {
+				message = String.Format("{0} is now {1}: {2}.", fromName, Helper.GetPresenceDisplay(presence), presence.Status);
+			} else {
+				message = String.Format("{0} is now {1}.", fromName, Helper.GetPresenceDisplay(presence));
+			}
+			// FIXME: What to pass as the first arg?
+			AppendStatus(String.Empty, message);
+		}
+
 		private void HandleTextEntered (string text)
 		{
 			if (!String.IsNullOrEmpty(text)) {

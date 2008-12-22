@@ -47,6 +47,8 @@ namespace Synapse.Xmpp
 		string m_ConnectServer;
 
 		bool m_NetworkDisconnected = false;
+
+		DateTime m_ConnectedAt;
 			
 		AccountConnectionState m_State;
 		ClientStatus           m_Status;
@@ -175,6 +177,8 @@ namespace Synapse.Xmpp
 			} else {
 				Status = new ClientStatus(ClientStatusType.Available, null);
 			}
+
+			m_ConnectedAt = DateTime.Now;
 		}
 
 		void HandleOnError(object sender, Exception ex)
@@ -195,6 +199,13 @@ namespace Synapse.Xmpp
 				m_Status = new ClientStatus(pres.Show, pres.Status);
 				if (StatusChanged != null)
 					StatusChanged(this);
+			}
+
+			// This is my lame way to avoid showing the initial onslaught of presence messages.
+			if ((DateTime.Now - m_ConnectedAt).TotalSeconds > 30) {
+				if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
+					m_ActivityFeed.PostItem(new ActivityFeedItem(this, pres.From, "presence", "is now {0}", Helper.GetPresenceDisplay(pres), pres.Status));
+				}
 			}
 		}
 		

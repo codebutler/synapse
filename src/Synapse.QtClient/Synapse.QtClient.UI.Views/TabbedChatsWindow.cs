@@ -47,7 +47,7 @@ namespace Synapse.QtClient
 
 			QToolButton newTabButton = new QToolButton(m_Tabs);
 			newTabButton.AutoRaise = true;
-			newTabButton.SetDefaultAction(new QAction(Helper.LoadIcon("stock_new-tab", 16), "New Tab", newTabButton));
+			newTabButton.SetDefaultAction(new QAction(Gui.LoadIcon("stock_new-tab", 16), "New Tab", newTabButton));
 			newTabButton.SetToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly);
 			QObject.Connect(newTabButton, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("newTab(QAction*)"));
 			m_Tabs.SetCornerWidget(newTabButton, Qt.Corner.BottomLeftCorner);
@@ -59,7 +59,7 @@ namespace Synapse.QtClient
 			QToolButton closeTabButton = new QToolButton(m_Tabs);
 			closeTabButton.SetToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly);
 			closeTabButton.AutoRaise = true;
-			closeTabButton.SetDefaultAction(new QAction(Helper.LoadIcon("stock_close", 16), "Close Tab", closeTabButton));
+			closeTabButton.SetDefaultAction(new QAction(Gui.LoadIcon("stock_close", 16), "Close Tab", closeTabButton));
 			QObject.Connect(closeTabButton, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("closeTab(QAction*)"));
 			rightButtonsLayout.AddWidget(closeTabButton);
 
@@ -71,7 +71,7 @@ namespace Synapse.QtClient
 			trashButton.AutoRaise = true;
 			trashButton.PopupMode = QToolButton.ToolButtonPopupMode.InstantPopup;
 			trashButton.SetMenu(menu);
-			trashButton.SetDefaultAction(new QAction(Helper.LoadIcon("trashcan_empty", 16), "Recently Closed Tabs", trashButton));
+			trashButton.SetDefaultAction(new QAction(Gui.LoadIcon("trashcan_empty", 16), "Recently Closed Tabs", trashButton));
 			rightButtonsLayout.AddWidget(trashButton);
 
 			// FIXME: This looks bad.
@@ -89,7 +89,7 @@ namespace Synapse.QtClient
 			QObject.Connect(m_Tabs, Qt.SIGNAL("currentChanged(int)"), this, Qt.SLOT("currentChanged(int)"));
 			
 			this.SetGeometry(0, 0, 445, 370);
-			Helper.CenterWidgetOnScreen(this);
+			Gui.CenterWidgetOnScreen(this);
 		}
 		
 		public void AddChatWindow (AbstractChatWindowController window, bool focus)
@@ -136,7 +136,7 @@ namespace Synapse.QtClient
 				IChatWindowView chat = m_Tabs.Widget(i) as IChatWindowView;
 				if (chat != null) {
 					if (chat.UrgencyHint) {
-						m_Tabs.SetTabIcon(i, Helper.LoadIcon("dialog-warning", 16));
+						m_Tabs.SetTabIcon(i, Gui.LoadIcon("dialog-warning", 16));
 						urgencyHint = true;
 					} else {
 						m_Tabs.SetTabIcon(i, ((QWidget)chat).WindowIcon);
@@ -226,7 +226,7 @@ namespace Synapse.QtClient
 				}
 
 				// FIXME: Need something better here.
-				this.WindowIcon = Helper.LoadIcon("text-x-generic");
+				this.WindowIcon = Gui.LoadIcon("text-x-generic");
 			}
 		}
 	}

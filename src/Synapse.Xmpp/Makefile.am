@@ -99,7 +99,8 @@ FILES = \
 	Synapse.Xmpp/AvatarManager.cs \
 	Synapse.Xmpp/ChatStates.cs \
 	Synapse.Xmpp/AbstractIqOperation.cs \
-	Synapse.Xmpp/XmppUriQueryInfo.cs 
+	Synapse.Xmpp/XmppUriQueryInfo.cs \
+	Synapse.Xmpp/Helper.cs 
 
 DATA_FILES = 
 

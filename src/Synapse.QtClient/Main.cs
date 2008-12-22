@@ -124,7 +124,7 @@ namespace Synapse.QtClient
 					action.SetSeparator(true);
 					return action;
 				} else {
-					QAction action = new QAction(Helper.LoadIcon(icon, 16), label, (QObject)parent);
+					QAction action = new QAction(Gui.LoadIcon(icon, 16), label, (QObject)parent);
 					QObject.Connect(action, Qt.SIGNAL("triggered(bool)"), delegate (bool chkd) {
 						ServiceManager.Get<ActionService>().TriggerAction(id, action);
 					});
