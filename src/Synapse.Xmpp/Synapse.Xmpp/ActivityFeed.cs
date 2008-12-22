@@ -115,7 +115,7 @@ namespace Synapse.Xmpp
 			else
 				avatarHash = "octy";
 			
-			htmlBuilder.AppendFormat("<li style=\"background-image: url('avatar:/{0}') !important\">", avatarHash);
+			htmlBuilder.AppendFormat("<div class=\"item\" style=\"background-image: url('avatar:/{0}') !important\">", avatarHash);
 			
 			htmlBuilder.Append(String.Format("<div class='timestamp'>{0}</div>", m_Timestamp.ToShortTimeString()));
 			
@@ -128,8 +128,9 @@ namespace Synapse.Xmpp
 					name = m_From.User;
 
 				name = Util.EscapeHtml(name);
-				
-				htmlBuilder.Append(String.Format("<a href='#' title='{0}' class='jid'>{1}</a> ", m_From.ToString(), name));
+
+				var uri = String.Format("xmpp:{0}?message", m_From.ToString());
+				htmlBuilder.Append(String.Format("<a href='{0}' title='{1}' class='jid'>{2}</a> ", uri, m_From.ToString(), name));
 			}
 
 			if (m_ActionItem != null) {
@@ -141,11 +142,11 @@ namespace Synapse.Xmpp
 			if (m_Content != null) {
 				htmlBuilder.Append(":");
 				htmlBuilder.Append(String.Format("<blockquote>{0}</blockquote>", m_Content));
-			} else if (m_Type != null) {
+			} else if (m_From != null) {
 				htmlBuilder.Append(".");
 			}
 			
-			htmlBuilder.Append("</li>");
+			htmlBuilder.Append("</div>");
 						
 			return htmlBuilder.ToString();
 		}
@@ -175,12 +176,12 @@ namespace Synapse.Xmpp
 		public string ToHtml()
 		{
 			StringBuilder htmlBuilder = new StringBuilder();
-			htmlBuilder.Append("<li>");
+			htmlBuilder.Append("<div class=\"item\">");
 			htmlBuilder.Append(String.Format("<div class='timestamp'>{0}</div>", m_Timestamp.ToShortTimeString()));
 			htmlBuilder.Append(String.Format("Friend Request from <strong>{0}</strong> ({1})", m_Item.JID.ToString(), m_Item.Name));
 			htmlBuilder.Append(String.Format("<blockquote>{0}</blockquote>", m_Message));
 	  		htmlBuilder.Append(String.Format("<div id='actions'><a href='dragon://accept'>Accept</a> or <a href='dragon://deny'>Deny</a></div>"));
-      		htmlBuilder.Append("</li>");
+      		htmlBuilder.Append("</div>");
 			return htmlBuilder.ToString();
 		}
 	}

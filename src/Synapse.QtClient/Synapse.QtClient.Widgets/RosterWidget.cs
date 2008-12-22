@@ -98,7 +98,9 @@ public partial class RosterWidget : QWidget
 
 		tabWidget.ElideMode = Qt.TextElideMode.ElideMiddle;
 		
+		m_ActivityWebView.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
 		m_ActivityWebView.Page().MainFrame().Load("resource:/feed.html");
+		QObject.Connect(m_ActivityWebView, Qt.SIGNAL("linkClicked(QUrl)"), this, Qt.SLOT("HandleActivityLinkClicked(QUrl)"));
 		QObject.Connect(m_ActivityWebView.Page(), Qt.SIGNAL("loadFinished(bool)"), this, Qt.SLOT("activityPage_loadFinished(bool)"));
 		
 		m_ParentWindow = parent;
@@ -142,7 +144,7 @@ public partial class RosterWidget : QWidget
 	void HandleItemActivated (AvatarGrid<AccountItemPair> grid, AccountItemPair pair)
 	{
 		// FIXME: Move to controller.
-		Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(pair.Account, pair.Item.JID);	
+		Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(pair.Account, pair.Item.JID);
 	}
 	
 	#region Private Slots
@@ -236,6 +238,23 @@ public partial class RosterWidget : QWidget
 	{
 		if (ActivityFeedReady != null)
 			ActivityFeedReady(this, EventArgs.Empty);
+	}
+
+	[Q_SLOT]
+	void HandleActivityLinkClicked (QUrl url)
+	{
+		Uri uri = new Uri(url.ToString());
+		JID jid = new JID(uri.AbsolutePath);
+		var query = XmppUriQueryInfo.ParseQuery(uri.Query);
+		switch (query.QueryType) {
+		case "message":
+			// FIXME: Should not ask which account to use, should use whichever account generated the event.
+			var account = Gui.ShowAccountSelectMenu(this);
+			Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(account, jid);
+			break;
+		default:
+			throw new NotSupportedException("Unsupported query type: " + query.QueryType);
+		}
 	}
 	#endregion
 }

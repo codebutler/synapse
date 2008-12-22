@@ -1,5 +1,7 @@
 <html>
   <head>
+    <script type="text/javascript" src="resource:/prototype.js"></script>
+    <script type="text/javascript" src="resource:/effects.js"></script>
     <style type="text/css">
       body {
         background-color: #333333;
@@ -13,16 +15,18 @@
       }
       li {
           list-style-type: none;
+          margin-bottom: 2px;
+          border-bottom: 1px dotted #666;
+      }
+      li:only-child, li:last-child {
+          margin-bottom: 0px !important;
+          border-bottom: 0px !important;
+      }
+      .item {
+          min-height: 32px;
           background: url('avatar:/default.png') no-repeat 0px 4px;
           -webkit-background-size: 32px 32px;
           padding: 2px 2px 2px 40px;
-          margin-bottom: 2px;
-          border-bottom: 1px dotted #666;
-          min-height: 32px;
-      }
-      li:last-child {
-          margin-bottom: 0px !important;
-          border-bottom: 0px !important;
       }
       blockquote {
         margin: 8px 6px;
@@ -46,8 +50,13 @@
     </style>
     <script type="text/javascript">
       function add_item (html) {
-        var itemsList = document.getElementById('items');
-        itemsList.innerHTML += html;
+        var itemsList = $('items');
+        var li = new Element("li");
+        li.update(html);
+        li.hide();
+        
+        Element.insert(itemsList, { top: li });
+        li.appear();
       }
     </script>
   </head>

@@ -128,7 +128,8 @@ namespace Synapse.UI
 		
 		public bool IsVisible (AccountItemPair pair)
 		{
-			bool showOffline = !String.IsNullOrEmpty(m_TextFilter) ? true : m_ShowOffline;
+			//bool showOffline = !String.IsNullOrEmpty(m_TextFilter) ? true : m_ShowOffline;
+			bool showOffline = m_ShowOffline;
 			return (String.IsNullOrEmpty(m_TextFilter) || MatchesFilter(pair)) && (showOffline ? true : pair.Account.PresenceManager.IsAvailable(pair.Item.JID));
 		}
 

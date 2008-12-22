@@ -130,16 +130,12 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(BINARIES)
 FILES = \
 	Main.cs \
 	Synapse.QtClient.UI.Views/MainWindow.cs \
-	NoAccountsWidget.cs \
 	Synapse.QtClient.UI.Views/TrayIconView.cs \
 	qt-gui/NoAccountsWidget.cs \
 	qt-gui/AccountStatusWidget.cs \
-	RosterWidget.cs \
 	qt-gui/RosterWidget.cs \
 	qt-gui/MainWindow.cs \
-	AccountStatusWidget.cs \
 	Synapse.QtClient.UI.Views/ChatWindow.cs \
-	ConversationWidget.cs \
 	PList.cs \
 	qt-gui/DebugWindow.cs \
 	KeyPressEater.cs \
@@ -155,9 +151,7 @@ FILES = \
 	ResizableGraphicsPixmapItem.cs \
 	ResourceFileEngine.cs \
 	AvatarFileEngine.cs \
-	ServiceBrowserWindow.cs \
 	qt-gui/ServiceBrowserWindow.cs \
-	FadingQLabel.cs \
 	Synapse.QtClient.UI.Views/TabbedChatsWindow.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.InfoPopup.cs \
@@ -165,7 +159,13 @@ FILES = \
 	Synapse.QtClient.Widgets/AvatarGrid.RosterItemGroup.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.RosterItem.cs \
 	Gui.cs \
-	AbstractSimpleFileEngine.cs 
+	AbstractSimpleFileEngine.cs \
+	Synapse.QtClient.Widgets/ConversationWidget.cs \
+	Synapse.QtClient.Widgets/FadingQLabel.cs \
+	Synapse.QtClient.Widgets/NoAccountsWidget.cs \
+	Synapse.QtClient.Widgets/AccountStatusWidget.cs \
+	Synapse.QtClient.Widgets/RosterWidget.cs \
+	Synapse.QtClient.UI.Views/ServiceBrowserWindow.cs 
 
 DATA_FILES = 
 
@@ -180,7 +180,9 @@ RESOURCES = \
 	resources/oceanbg.png \
 	resources/handle.png \
 	resources/octy-22.png \
-	resources/octy-32.png 
+	resources/octy-32.png \
+	resources/prototype.js \
+	resources/effects.js 
 
 EXTRAS = \
 	synapse.qtclient.in 
