@@ -135,13 +135,13 @@ namespace Synapse.Xmpp
 				htmlBuilder.Append(String.Format("<a href='{0}' title='{1}' class='jid'>{2}</a> ", uri, m_From.ToString(), name));
 			}
 
-			if (m_ActionItem != null) {
+			if (!String.IsNullOrEmpty(m_ActionItem)) {
 				htmlBuilder.Append(String.Format(m_Action, String.Format("<strong>{0}</strong>", m_ActionItem)));
 			} else {
 				htmlBuilder.Append(String.Format("<strong>{0}</strong>", m_Action));
 			}
 			
-			if (m_Content != null) {
+			if (!String.IsNullOrEmpty(m_Content)) {
 				htmlBuilder.Append(":");
 				htmlBuilder.Append(String.Format("<blockquote>{0}</blockquote>", m_Content));
 			} else if (m_From != null) {

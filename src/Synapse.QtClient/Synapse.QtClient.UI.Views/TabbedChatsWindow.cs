@@ -27,6 +27,7 @@ using Synapse.ServiceStack;
 using Synapse.UI.Services;
 using Synapse.UI.Controllers;
 using Synapse.UI.Views;
+using Mono.Rocks;
 
 namespace Synapse.QtClient
 {
@@ -90,6 +91,8 @@ namespace Synapse.QtClient
 			
 			this.SetGeometry(0, 0, 445, 370);
 			Gui.CenterWidgetOnScreen(this);
+
+			0.UpTo(9).ForEach(i => AddTabSwitchKeyAction(i));
 		}
 		
 		public void AddChatWindow (AbstractChatWindowController window, bool focus)
@@ -146,6 +149,16 @@ namespace Synapse.QtClient
 
 			if (urgencyHint)
 				QApplication.Alert(this);
+		}
+		
+		void AddTabSwitchKeyAction (int num)
+		{
+			QAction action = new QAction(this);
+			action.Shortcut = new QKeySequence("Alt+" + num.ToString());
+			QObject.Connect(action, Qt.SIGNAL("triggered(bool)"), delegate {
+				m_Tabs.CurrentIndex = num - 1;
+			});
+			this.AddAction(action);
 		}
 		
 		[Q_SLOT]

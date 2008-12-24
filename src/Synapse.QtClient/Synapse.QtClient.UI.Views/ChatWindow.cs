@@ -131,6 +131,11 @@ public partial class ChatWindow : QWidget, IChatWindowView
 		}
 	}
 
+	public void SetInputEnabled (bool enabled)
+	{
+		textEdit.Enabled = enabled;
+	}
+
 	protected override void CloseEvent(QCloseEvent evnt)
 	{
 		if (Closed != null)

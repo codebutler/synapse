@@ -57,7 +57,7 @@ namespace Synapse.Core
 			if (!String.IsNullOrEmpty(text))
 				return text.Replace("<", "&lt;").Replace(">", "&gt;");
 			else
-				return text;
+				return String.Empty;
 		}
 		
 		// I can't remember where this code came from, very sorry!

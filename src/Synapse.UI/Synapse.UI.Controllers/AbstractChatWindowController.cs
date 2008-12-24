@@ -68,7 +68,7 @@ namespace Synapse.UI.Controllers
 					}
 				}
 			}
-
+			
 			if (msg.Body != null || msg.Html != null) {			
 				if (msg.From == null) {
 					from = m_Account.User;

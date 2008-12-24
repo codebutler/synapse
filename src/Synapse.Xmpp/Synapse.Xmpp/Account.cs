@@ -69,6 +69,8 @@ namespace Synapse.Xmpp
 		
 		Dictionary<Type, IDiscoverable> m_Features   = new Dictionary<Type, IDiscoverable>();
 		PropertyCollection              m_Properties = new PropertyCollection();
+
+		Dictionary<JID, Presence> m_UserPresenceCache;
 		
 		ActivityFeed m_ActivityFeed;
 		
@@ -92,6 +94,8 @@ namespace Synapse.Xmpp
 			m_Domain   = domain;
 			m_Resource = resource;
 			m_ConnectServer = connectServer;
+
+			m_UserPresenceCache = new Dictionary<JID, Presence>();
 		}
 
 		public static Account FromAccountInfo(AccountInfo info)
@@ -201,6 +205,9 @@ namespace Synapse.Xmpp
 
 		void HandleOnPresence(object sender, Presence pres)
 		{
+			Presence oldPresence =  m_UserPresenceCache.ContainsKey(pres.From) ? m_UserPresenceCache[pres.From] : null;
+			m_UserPresenceCache[pres.From] = pres;
+			
 			if (pres.To == Jid && pres.From == Jid) {
 				m_Status = new ClientStatus(pres.Show, pres.Status);
 				if (StatusChanged != null)
@@ -208,10 +215,11 @@ namespace Synapse.Xmpp
 			}
 
 			// This is my lame way to avoid showing the initial onslaught of presence messages.
-			// FIXME: Don't show if presence hasn't changed. Need to track that somewhere.
 			if ((DateTime.Now - m_ConnectedAt).TotalSeconds > 30) {
-				if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
-					m_ActivityFeed.PostItem(new ActivityFeedItem(this, pres.From, "presence", "is now {0}", Helper.GetPresenceDisplay(pres), pres.Status));
+				if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
+					if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
+						m_ActivityFeed.PostItem(new ActivityFeedItem(this, pres.From, "presence", "is now {0}", Helper.GetPresenceDisplay(pres), pres.Status));
+					}
 				}
 			}
 		}
@@ -415,6 +423,8 @@ namespace Synapse.Xmpp
 
 			if (ConnectionState != AccountConnectionState.Disconnected)
 				throw new InvalidOperationException("Already connected");
+
+			m_UserPresenceCache.Clear();
 			
 			m_NetworkDisconnected = false;
 			

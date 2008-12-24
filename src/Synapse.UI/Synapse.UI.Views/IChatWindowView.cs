@@ -40,5 +40,7 @@ namespace Synapse.UI.Views
 
 		void AppendMessage(bool incoming, bool next, string userIconPath, string senderScreenName, string sender,
 	                       string senderColor, string senderStatusIcon, string senderDisplayName, string message);
+
+		void SetInputEnabled (bool enabled);
 	}
 }

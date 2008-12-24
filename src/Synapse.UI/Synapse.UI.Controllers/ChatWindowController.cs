@@ -44,6 +44,8 @@ namespace Synapse.UI.Controllers
 				
 			m_Account = account;
 			m_Jid = jid;
+			
+			account.ConnectionStateChanged += HandleConnectionStateChanged;
 	
 			Application.InvokeAndBlock(delegate {
 				InitializeView();
@@ -52,6 +54,24 @@ namespace Synapse.UI.Controllers
 						Closed(this, EventArgs.Empty);
 				};
 				base.View.TextEntered += HandleTextEntered;
+
+				if (account.ConnectionState == AccountConnectionState.Disconnected) {
+					base.View.AppendStatus(String.Empty, "You are offline.");
+					base.View.SetInputEnabled(false);
+				}	
+			});
+		}
+
+		void HandleConnectionStateChanged(Account account)
+		{
+			Application.Invoke(delegate {
+				if (account.ConnectionState == AccountConnectionState.Connected) {
+					base.View.AppendStatus(String.Empty, "You are now online.");
+					base.View.SetInputEnabled(true);
+				} else if (account.ConnectionState == AccountConnectionState.Disconnected) {
+					base.View.AppendStatus(String.Empty, "You are now offline.");
+					base.View.SetInputEnabled(false);
+				}
 			});
 		}
 		
