@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Synapse.Xmpp;
 using Synapse.ServiceStack;
+using Synapse.Services;
 using Synapse.UI;
 using Synapse.UI.Controllers;
 using jabber;
@@ -50,7 +51,7 @@ namespace Synapse.UI.Services
 		public void Initialize()
 		{
 			m_AccountManagers = new Dictionary<Account, AccountChatWindowManager>();
-			Application.ClientStarted += OnClientStarted;
+			Application.Client.Started += OnClientStarted;
 		}
 
 		public string ServiceName {
@@ -103,6 +104,8 @@ namespace Synapse.UI.Services
 			
 		void HandleAccountAdded(Account account)
 		{
+			account.Error += HandleAccountError;
+			
 			var manager = new AccountChatWindowManager(account);
 			manager.ChatWindowOpened += HandleChatWindowOpened;
 			manager.ChatWindowClosed += HandleChatWindowClosed;
@@ -119,6 +122,24 @@ namespace Synapse.UI.Services
 		{
 			if (ChatWindowClosed != null)
 				ChatWindowClosed(window);
+		}
+
+		void HandleAccountError(Account account, Exception ex)
+		{
+			var notifications = ServiceManager.Get<NotificationService>();
+			
+			var actions = new NotificationAction[] { 
+				new NotificationAction { 
+					Name     = "details",
+					Label    = "Show Details", 
+					Callback = delegate {
+						string msg = String.Format("An error has occurred with {0}: {1}", account.Jid.ToString(), ex.Message);
+						Application.Client.ShowError(msg, ex.ToString());
+					}
+				}
+			};
+				
+			notifications.Notify(String.Format("An error has occurred with {0}:", account.Jid.ToString()), ex.Message, "error", actions);
 		}
 
 		void HandleAccountRemoved(Account account)

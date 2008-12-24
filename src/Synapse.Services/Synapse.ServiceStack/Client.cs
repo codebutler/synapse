@@ -29,9 +29,15 @@
 //
 
 using System;
+using System.Threading;
+using Synapse.Core;
 
 namespace Synapse.ServiceStack
 {
+	public delegate void InvokeHandler ();
+	public delegate bool TimeoutHandler ();
+	public delegate bool IdleHandler ();
+	
     public abstract class Client : IDisposable
     {
         public event Action<Client> Started;
@@ -53,6 +59,35 @@ namespace Synapse.ServiceStack
             get { return is_started; }
         }
 
+        public virtual void Invoke (InvokeHandler handler)
+        {
+            RunIdle (delegate { handler (); return false; });
+        }
+
+		public virtual void InvokeAndBlock (InvokeHandler handler)
+		{
+			ManualResetEvent mutex = new ManualResetEvent(false);
+			Invoke(delegate {
+				handler();
+				mutex.Set();
+			});
+			mutex.WaitOne();
+		}
+
+        public abstract uint RunIdle (IdleHandler handler);
+        
+        public abstract uint RunTimeout (uint milliseconds, TimeoutHandler handler);
+        
+        public abstract bool IdleTimeoutRemove (uint id);
+		
+		public abstract object CreateImage (byte[] data);
+		
+		public abstract object CreateImage (string fileName);
+
+		public abstract object CreateAction (string id, string label, string icon, object parent);
+
+		public abstract void ShowError (string message, string detail);
+		
         protected void OnStarted ()
         {
             is_started = true;

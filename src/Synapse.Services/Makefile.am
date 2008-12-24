@@ -77,9 +77,9 @@ FILES = \
 	Synapse.ServiceStack/IDBusExportable.cs \
 	Synapse.ServiceStack/Application.cs \
 	Synapse.ServiceStack/Client.cs \
-	Synapse.ServiceStack/DBusConnection.cs \
 	Synapse.ServiceStack/IDBusObjectName.cs \
-	Synapse.ServiceStack/IRegisterOnDemandService.cs 
+	Synapse.ServiceStack/IRegisterOnDemandService.cs \
+	Synapse.ServiceStack/DBusConnection.cs 
 
 DATA_FILES = 
 

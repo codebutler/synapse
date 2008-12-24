@@ -4,13 +4,13 @@
       <Output directory="../../build/Debug" assembly="Synapse.Core" />
       <Build debugmode="True" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
-      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Release" assembly="Dragon.Core" />
       <Build debugmode="False" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
-      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
@@ -21,7 +21,6 @@
     <File name="Synapse.Core/Util.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Core/Serialization.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Core/StringWriterWithEncoding.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Core/ApplicationContext.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Core/PlatformHacks.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Core/XdgBaseDirectorySpec.cs" subtype="Code" buildaction="Compile" />
     <File name="IEnumerable.cs" subtype="Code" buildaction="Compile" />

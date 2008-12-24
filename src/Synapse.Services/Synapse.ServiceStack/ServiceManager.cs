@@ -57,10 +57,14 @@ namespace Synapse.ServiceStack
         
         public static void Initialize ()
         {
-			Application.ClientStarted += OnClientStarted;
+			Application.Client.Started += OnClientStarted;
+		
+            InitializeAddins ();
+            RegisterDefaultServices ();
+            RegisterAddinServices ();
         }
         
-        public static void InitializeAddins ()
+        private static void InitializeAddins ()
         {
 			AddinManager.AddinLoaded += delegate(object sender, AddinEventArgs args) {
 				Console.WriteLine("LOADED ADDIN: " + args.AddinId);	
@@ -70,26 +74,26 @@ namespace Synapse.ServiceStack
 				Console.Error.WriteLine("ADDIN LOAD ERROR: " + args.Message + " " + args.Exception);
 			};
 			
-            AddinManager.Initialize (ApplicationContext.CommandLine.Contains ("uninstalled") 
+            AddinManager.Initialize (Application.CommandLine.Contains ("uninstalled") 
                 ? "." : Paths.ApplicationData);
             
-            IProgressStatus monitor = ApplicationContext.CommandLine.Contains ("debug-addins")
+            IProgressStatus monitor = Application.CommandLine.Contains ("debug-addins")
                 ? new ConsoleProgressStatus (true)
                 : null;
 			
-            if (ApplicationContext.Debugging) {
+            if (Application.Debugging) {
                 AddinManager.Registry.Rebuild (monitor);
             } else {
                 AddinManager.Registry.Update (monitor);
             }
         }
            
-        public static void RegisterAddinServices ()
+        private static void RegisterAddinServices ()
         {
             extension_nodes = AddinManager.GetExtensionNodes ("/Synapse/ServiceManager/Service");
         }
         
-        public static void RegisterDefaultServices ()
+        private static void RegisterDefaultServices ()
         {
 			RegisterService<DBusServiceManager>();
             RegisterService<NotificationService>();
@@ -98,14 +102,6 @@ namespace Synapse.ServiceStack
 			RegisterService<NetworkService>();
         }
         
-        public static void DefaultInitialize ()
-        {
-            Initialize ();
-            InitializeAddins ();
-            RegisterDefaultServices ();
-            RegisterAddinServices ();
-        }
-
         private static void OnClientStarted(Client client)
         {
             DelayedInitialize ();

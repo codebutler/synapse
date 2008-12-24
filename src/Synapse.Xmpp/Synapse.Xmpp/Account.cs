@@ -38,6 +38,7 @@ namespace Synapse.Xmpp
 {
 	public delegate void AccountEventHandler (Account account);
 	public delegate void MessageEventHandler (Account account, Packet packet);
+	public delegate void AccountErrorEventHandler (Account account, Exception ex);
 	
 	public class Account
 	{
@@ -74,6 +75,8 @@ namespace Synapse.Xmpp
 		public event AccountEventHandler Changed; // XXX: is this used?
 		public event AccountEventHandler ConnectionStateChanged;
 		public event AccountEventHandler StatusChanged;
+
+		public event AccountErrorEventHandler Error;
 		
 		public Account (string user, string domain, string resource) : this (user, domain, resource, null)
 		{
@@ -184,9 +187,11 @@ namespace Synapse.Xmpp
 
 		void HandleOnError(object sender, Exception ex)
 		{
-			// FIXME: Pop this up in the UI. Create an ErrorService maybe?
-			Console.Error.WriteLine("THERE WAS AN ERROR !!! " + ex); 
-			ConnectionState = AccountConnectionState.Disconnected; 
+			Console.Error.WriteLine("An error has occurred with: " + Jid.ToString() + ": " + ex);
+			ConnectionState = AccountConnectionState.Disconnected;
+
+			if (Error != null)
+				Error(this, ex);
 		}
 
 		void HandleOnConnect(object sender, StanzaStream stream)
@@ -418,6 +423,7 @@ namespace Synapse.Xmpp
 			m_Client.Resource    = m_Resource;
 			m_Client.NetworkHost = m_ConnectServer;
 			m_Client.Password    = m_Password;
+			
 			ConnectionState = AccountConnectionState.Connecting;
 
 			// FIXME: Calling this in a separate thread so DNS doesn't block the UI.

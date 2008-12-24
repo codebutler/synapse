@@ -54,7 +54,6 @@ FILES = \
 	Synapse.Core/Util.cs \
 	Synapse.Core/Serialization.cs \
 	Synapse.Core/StringWriterWithEncoding.cs \
-	Synapse.Core/ApplicationContext.cs \
 	Synapse.Core/PlatformHacks.cs \
 	Synapse.Core/XdgBaseDirectorySpec.cs \
 	IEnumerable.cs \

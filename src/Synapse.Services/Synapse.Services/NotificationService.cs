@@ -2,6 +2,7 @@
 //
 // Authors:
 //   Christian Hergert <chris@dronelabs.com>
+//   Eric Butler <eric@extremeboredom.net>
 //
 // Copyright (C) 2008 Christian Hergert
 //
@@ -54,14 +55,14 @@ namespace Synapse.Services
 			Notify (summary, body, String.Empty);
 		}
 		
-		public void Notify (string summary, string body, string iconName)
+		public void Notify (string summary, string body, string iconName, params NotificationAction[] actions)
 		{
-			Notify (summary, body, iconName, null);
+			Notify (summary, body, iconName, null, actions);
 		}
 		
-		public void Notify (string summary, string body, string iconName, Widget widget)
+		public void Notify (string summary, string body, string iconName, Widget widget, params NotificationAction[] actions)
 		{
-			Notify (summary, body, iconName, widget, 0, false, m_DefaultPositionFunc);
+			Notify (summary, body, iconName, widget, 0, false, m_DefaultPositionFunc, actions);
 		}
 		
 		public void Notify (string summary,
@@ -70,7 +71,8 @@ namespace Synapse.Services
 		                    Widget widget,
 		                    int    timeout,
 		                    bool   critical,
-		                    NotificationPositionFunc func)
+		                    NotificationPositionFunc func,
+		                    params NotificationAction[] actions)
 		{
 			Notification notif;
 			int x, y;
@@ -91,6 +93,9 @@ namespace Synapse.Services
 			
 			if (timeout > 0)
 				notif.Timeout = timeout;
+
+			foreach (var action in actions)
+				notif.AddAction(action.Name, action.Label, delegate { action.Callback(this, EventArgs.Empty); });
 			
 			notif.Show ();
 		}
@@ -98,5 +103,12 @@ namespace Synapse.Services
 		string IService.ServiceName {
 			get { return "NotificationService"; }
 		}
+	}
+
+	public class NotificationAction
+	{
+		public string Name { get; set; }
+		public string Label { get; set; }
+		public EventHandler Callback { get; set; }
 	}
 }

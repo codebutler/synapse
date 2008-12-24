@@ -65,25 +65,16 @@ namespace Synapse.QtClient
 			m_ResourceFileEngineHandler = new ResourceFileEngineHandler();
 			m_AvatarFileEngineHandler = new AvatarFileEngineHandler();
 			
-			QtTraceListener listener = new QtTraceListener();
-			listener.TraceOutputOptions = TraceOptions.Callstack;
-			Debug.Listeners.Add(listener);
-			Debug.Listeners.Add(new ConsoleTraceListener());
-			Debug.WriteLine("Debug Mode On");
-			
-			Application.Initialize();
-			
-			Application.IdleHandler = delegate (IdleHandler callback) {
-				if (Thread.CurrentThread.ManagedThreadId != 1) {
-					QCoreApplication.Invoke(delegate {
-						callback();
-					});
-				} else {
-					callback();
-				}
-				return 0;
-			};
+			Application.Initialize(this);
 
+			if (Application.Debugging) {			
+				QtTraceListener listener = new QtTraceListener();
+				listener.TraceOutputOptions = TraceOptions.Callstack;
+				Debug.Listeners.Add(listener);
+				Debug.Listeners.Add(new ConsoleTraceListener());
+				Debug.WriteLine("Debug Mode On");
+			}
+			
 			AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs e) {
 				Console.Error.WriteLine("UNHANDLED EXCEPTION: " + e.ExceptionObject);
 				/*
@@ -109,38 +100,15 @@ namespace Synapse.QtClient
 			
 			ServiceManager.RegisterService<GuiService>();
 			ServiceManager.RegisterService<ActionService>();
-
-			Application.FileImageCreatorHandler = delegate (string fileName) {
-				return (object) new QPixmap(fileName);
-			};
-
-			Application.DataImageCreatorHandler = delegate (byte[] data) {
-				throw new NotImplementedException();
-			};
-
-			Application.ActionCreatorHandler += delegate (string id, string label, string icon, object parent) {
-				if (id == null) {
-					QAction action = new QAction(null);
-					action.SetSeparator(true);
-					return action;
-				} else {
-					QAction action = new QAction(Gui.LoadIcon(icon, 16), label, (QObject)parent);
-					QObject.Connect(action, Qt.SIGNAL("triggered(bool)"), delegate (bool chkd) {
-						ServiceManager.Get<ActionService>().TriggerAction(id, action);
-					});
-					return action;
-				}
-			};
 			
 			QWebSettings.GlobalSettings().SetAttribute(QWebSettings.WebAttribute.DeveloperExtrasEnabled, true);
 			
 			string themesDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "themes");
 			ConversationWidget.ThemesDirectory = themesDirectory;
 			
-			Application.PushClient(this);
 			Application.Run();
 				
-			Application.Invoke(delegate {
+			Application.Client.Invoke(delegate {
 				OnStarted();
 			});
 
@@ -151,6 +119,61 @@ namespace Synapse.QtClient
 			get { return "qtclient"; }
 		}
 
+		public override uint RunIdle (IdleHandler handler)
+		{
+			if (Thread.CurrentThread.ManagedThreadId != 1) {
+				QCoreApplication.Invoke(delegate {
+					handler();
+				});
+			} else {
+				handler();
+			}
+			return 0;
+		}
+
+		public override uint RunTimeout (uint milliseconds, Synapse.ServiceStack.TimeoutHandler handler)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		public override bool IdleTimeoutRemove (uint id)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		public override object CreateImage (string fileName)
+		{
+			return (object) new QPixmap(fileName);
+		}
+
+		public override object CreateImage (byte[] data)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override object CreateAction (string id, string label, string icon, object parent)
+		{
+			if (id == null) {
+				QAction action = new QAction(null);
+				action.SetSeparator(true);
+				return action;
+			} else {
+				QAction action = new QAction(Gui.LoadIcon(icon, 16), label, (QObject)parent);
+				QObject.Connect(action, Qt.SIGNAL("triggered(bool)"), delegate (bool chkd) {
+					ServiceManager.Get<ActionService>().TriggerAction(id, action);
+				});
+				return action;
+			}
+		}
+
+		public override void ShowError (string message, string detail)
+		{
+			// FIXME: detail should be behind a 'More Information' expander.
+			this.InvokeAndBlock(delegate {
+				QMessageBox.Critical(null, "Synapse Error", message + "\n\n" + detail);
+			});
+		}
+			
 		public override void Dispose ()
 		{
 			QCoreApplication.Quit();

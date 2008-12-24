@@ -47,7 +47,7 @@ namespace Synapse.ServiceStack
     
         static DBusConnection ()
         {
-            enabled = !ApplicationContext.CommandLine.Contains ("disable-dbus");
+            enabled = !Application.CommandLine.Contains ("disable-dbus");
         }
                     
         private static List<string> active_connections = new List<string> (); 

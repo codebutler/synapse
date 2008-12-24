@@ -5,13 +5,13 @@
       <Build debugmode="True" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
       <EnvironmentVariables />
-      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Release" assembly="Dragon.Services" />
       <Build debugmode="False" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
-      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
@@ -31,10 +31,10 @@
     <File name="Synapse.ServiceStack/IDBusExportable.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/Application.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/Client.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/DBusConnection.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/IDBusObjectName.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/IRegisterOnDemandService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="Synapse.ServiceStack/DBusConnection.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
