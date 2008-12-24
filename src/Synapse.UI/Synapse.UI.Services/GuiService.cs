@@ -126,20 +126,25 @@ namespace Synapse.UI.Services
 
 		void HandleAccountError(Account account, Exception ex)
 		{
-			var notifications = ServiceManager.Get<NotificationService>();
+			string title = String.Format("An error has occurred with {0}:", account.Jid.ToString());
+			ShowError(title, ex);
+		}
+
+		void ShowError (string title, Exception ex)
+		{
+			// FIXME: Show something in the main window because the notification times out.
 			
+			var notifications = ServiceManager.Get<NotificationService>();			
 			var actions = new NotificationAction[] { 
 				new NotificationAction { 
 					Name     = "details",
 					Label    = "Show Details", 
 					Callback = delegate {
-						string msg = String.Format("An error has occurred with {0}: {1}", account.Jid.ToString(), ex.Message);
-						Application.Client.ShowError(msg, ex.ToString());
+						Application.Client.ShowErrorWindow(title, ex);
 					}
 				}
-			};
-				
-			notifications.Notify(String.Format("An error has occurred with {0}:", account.Jid.ToString()), ex.Message, "error", actions);
+			};				
+			notifications.Notify(title, ex.Message, "error", actions);
 		}
 
 		void HandleAccountRemoved(Account account)

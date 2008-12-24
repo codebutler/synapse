@@ -166,11 +166,11 @@ namespace Synapse.QtClient
 			}
 		}
 
-		public override void ShowError (string message, string detail)
+		public override void ShowErrorWindow (string errorTitle, Exception error)
 		{
-			// FIXME: detail should be behind a 'More Information' expander.
 			this.InvokeAndBlock(delegate {
-				QMessageBox.Critical(null, "Synapse Error", message + "\n\n" + detail);
+				ErrorDialog dialog = new ErrorDialog(errorTitle, error);
+				dialog.Show();
 			});
 		}
 			
