@@ -25,6 +25,7 @@ using Synapse.Core.ExtensionMethods;
 using Synapse.Services;
 using System.Text;
 using jabber;
+using jabber.protocol.iq;
 using Synapse.Core;
 using Synapse.ServiceStack;
 
@@ -45,9 +46,8 @@ namespace Synapse.Xmpp
 			ServiceManager.Get<NowPlayingService>().TrackChanged += TrackChanged;
 		}
 		
-		private void ReceivedTune (JID from, string node, XmlNode items)
+		private void ReceivedTune (JID from, string node, PubSubItem item)
 		{
-			XmlNode item = items.ChildNodes[0];
 			XmlNode tune = item["tune"];
 			if (tune["artist"] != null && tune["title"] != null) {
 				string artist = tune["artist"].InnerText;

@@ -105,7 +105,7 @@ namespace Synapse.QtClient
 			//m_Menu.AddAction(this.PageAction(QWebPage.WebAction.CopyImageToClipboard));
 
 			this.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
-			QObject.Connect(this, Qt.SIGNAL("linkClicked(QUrl)"), this, Qt.SLOT("HandleLinkClicked(QUrl)"));
+			QObject.Connect(this, Qt.SIGNAL("linkClicked(QUrl)"), new OneArgDelegate<QUrl>(HandleLinkClicked));
 		}
 		#endregion
 		

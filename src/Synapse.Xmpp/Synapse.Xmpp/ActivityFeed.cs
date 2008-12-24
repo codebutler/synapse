@@ -124,8 +124,10 @@ namespace Synapse.Xmpp
 				Item item = m_Account.Roster[m_From.Bare];
 				if (item != null && !String.IsNullOrEmpty(item.Nickname))
 					name = item.Nickname;
-				else
+				else if (!String.IsNullOrEmpty(m_From.User))
 					name = m_From.User;
+				else
+					name = m_From.ToString();
 
 				name = Util.EscapeHtml(name);
 

@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Threading;
 using jabber;
 using jabber.client;
 using jabber.connection;
@@ -202,6 +203,7 @@ namespace Synapse.Xmpp
 			}
 
 			// This is my lame way to avoid showing the initial onslaught of presence messages.
+			// FIXME: Don't show if presence hasn't changed. Need to track that somewhere.
 			if ((DateTime.Now - m_ConnectedAt).TotalSeconds > 30) {
 				if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
 					m_ActivityFeed.PostItem(new ActivityFeedItem(this, pres.From, "presence", "is now {0}", Helper.GetPresenceDisplay(pres), pres.Status));
@@ -239,6 +241,12 @@ namespace Synapse.Xmpp
 		public PresenceManager PresenceManager {
 			get {
 				return m_PresenceManager;
+			}
+		}
+
+		public PubSubManager PubSubManager {
+			get {
+				return m_PubSubManager;
 			}
 		}
 		
@@ -399,6 +407,9 @@ namespace Synapse.Xmpp
 			if (String.IsNullOrEmpty(m_Password)) {
 				throw new Exception("No password");
 			}
+
+			if (ConnectionState != AccountConnectionState.Disconnected)
+				throw new InvalidOperationException("Already connected");
 			
 			m_NetworkDisconnected = false;
 			
@@ -409,7 +420,11 @@ namespace Synapse.Xmpp
 			m_Client.Password    = m_Password;
 			ConnectionState = AccountConnectionState.Connecting;
 
-			m_Client.Connect();
+			// FIXME: Calling this in a separate thread so DNS doesn't block the UI.
+			// This should be fixed inside jabber-net.
+			new Thread(delegate () {
+				m_Client.Connect();
+			}).Start();
 		}
 		
 		public void Send (Packet message)

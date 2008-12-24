@@ -77,6 +77,12 @@ namespace Synapse.UI.Services
 		
 		public void OpenChatWindow(Account account, JID jid)
 		{
+			if (account == null)
+				throw new ArgumentNullException("account");
+
+			if (jid == null)
+				throw new ArgumentNullException("jid");
+			
 			m_AccountManagers[account].OpenChatWindow(jid, true);
 		}
 		

@@ -22,6 +22,7 @@
 using System;
 using System.Xml;
 using jabber;
+using jabber.protocol.iq;
 
 namespace Synapse.Xmpp
 {	
@@ -39,12 +40,8 @@ namespace Synapse.Xmpp
 		}
 		
 		// XXX: This method is crap
-		private void ReceivedMood (JID from, string node, XmlNode items)
+		private void ReceivedMood (JID from, string node, PubSubItem item)
 		{
-			if (items.ChildNodes.Count == 0)
-				return;
-			
-			XmlNode item = items.ChildNodes[0];
 			XmlNode moodItem = item["mood"];
 
 			string mood = null;

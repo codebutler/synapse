@@ -24,6 +24,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using jabber;
+using jabber.protocol.iq;
 
 namespace Synapse.Xmpp
 {	
@@ -67,12 +68,8 @@ namespace Synapse.Xmpp
 			}
 		}
 
-		private void ReceivedMicroblog (JID from, string node, XmlNode items)
+		private void ReceivedMicroblog (JID from, string node, PubSubItem item)
 		{
-			if (items.ChildNodes.Count == 0)
-				return;
-			
-			XmlNode item = items.ChildNodes[0];
 			XmlNode entry = item["entry"];
 			string title = entry["title"].InnerText;
 			m_Account.ActivityFeed.PostItem(new ActivityFeedItem(m_Account, from, "microblog", "shouts", null, title));

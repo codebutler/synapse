@@ -27,11 +27,12 @@ using jabber;
 using jabber.protocol;
 using jabber.protocol.iq;
 using jabber.protocol.client;
+using jabber.connection;
 using System.Xml;
 
 namespace Synapse.Xmpp
 {
-	public delegate void PubsubHandler (JID from, string node, XmlNode items);
+	public delegate void PubsubHandler (JID from, string node, PubSubItem item);
 	
 	public class PersonalEventing : IDiscoverable
 	{
@@ -41,27 +42,14 @@ namespace Synapse.Xmpp
 		public PersonalEventing(Account account)
 		{
 			m_Account = account;
-			account.Client.OnMessage += OnMessage;
 		}
 		
 		public void RegisterHandler (string node, PubsubHandler handler)
 		{
-			m_Handlers.Add(node, handler);
-		}
-		
-		private void OnMessage (object sender, Message message)
-		{
-			if (message.FirstChild.Name == "event" &&
-			    message.FirstChild.Attributes["xmlns"].Value == Namespace.PubSubEvent &&
-			    message.FirstChild.FirstChild.Name == "items")
-			{
-				string node = message.FirstChild.FirstChild.Attributes["node"].Value;
-				if (m_Handlers.ContainsKey(node)) {
-					XmlNode items = message.FirstChild.FirstChild;
-					PubsubHandler handler = m_Handlers[node];
-					handler(message.From, node, items);
-				}
-			}
+			// FIXME: What's the purpose of this maxItems arg?
+			m_Account.PubSubManager.AddNodeHandler(node, delegate (PubSubNode n, PubSubItem item) {
+				handler(n.Jid, n.Node, item);
+			}, null, 1000);
 		}
 		
 		public void Publish (string node, System.Xml.XmlElement items)

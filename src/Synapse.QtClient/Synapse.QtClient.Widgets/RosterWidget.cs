@@ -250,7 +250,8 @@ public partial class RosterWidget : QWidget
 		case "message":
 			// FIXME: Should not ask which account to use, should use whichever account generated the event.
 			var account = Gui.ShowAccountSelectMenu(this);
-			Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(account, jid);
+			if (account != null)
+				Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(account, jid);
 			break;
 		default:
 			throw new NotSupportedException("Unsupported query type: " + query.QueryType);

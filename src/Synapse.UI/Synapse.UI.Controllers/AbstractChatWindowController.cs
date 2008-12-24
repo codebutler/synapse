@@ -63,53 +63,53 @@ namespace Synapse.UI.Controllers
 						AppendStatus("inactive", String.Format("{0} is not paying attention.", msg.From.User));
 					} else if (child.Name == "gone") {
 						AppendStatus("gone", String.Format("{0} has left the conversation.", msg.From.User));
+					} else {
+						Console.WriteLine(String.Format("Unknown chatstate from {0}: {1}", msg.From, child.Name));
 					}
-					
-					Console.WriteLine("GOT CHAT STATE " + child.Name);
 				}
 			}
 
-			Application.Invoke(delegate {		
-				if (msg.Body != null) {			
-					if (msg.From == null) {
-						from = m_Account.User;
-						fromJid = m_Account.Jid;
-					} else {
-						// FIXME: Abstract this...
-						if (this is MucWindowController) {
-							var participant = ((MucWindowController)this).Room.Participants[msg.From];
-							if (participant != null) {
-								fromJid = (!String.IsNullOrEmpty(participant.RealJID)) ? participant.RealJID : participant.NickJID;
-								from = participant.Nick;
-							} else {
-								fromJid = msg.From;
-								from = msg.From.Resource;
-							}
+			if (msg.Body != null || msg.Html != null) {			
+				if (msg.From == null) {
+					from = m_Account.User;
+					fromJid = m_Account.Jid;
+				} else {
+					// FIXME: Abstract this...
+					if (this is MucWindowController) {
+						var participant = ((MucWindowController)this).Room.Participants[msg.From];
+						if (participant != null) {
+							fromJid = (!String.IsNullOrEmpty(participant.RealJID)) ? participant.RealJID : participant.NickJID;
+							from = participant.Nick;
 						} else {
-							// FIXME: Use roster nickname.
-							from = msg.From.User;
 							fromJid = msg.From;
+							from = msg.From.Resource;
 						}
-					}
-
-					string body = null;
-					if (!String.IsNullOrEmpty(msg.Html)) {
-						// FIXME: Better sanitize this somehow...
-						body = msg.Html;
 					} else {
-						body = Util.EscapeHtml(msg.Body);
-						//body = Linkify.AddLinks(msg.Body);
-						body = body.Replace("\n", "<br/>");
+						// FIXME: Use roster nickname.
+						from = msg.From.User;
+						fromJid = msg.From;
 					}
-				
-					iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(fromJid.Bare));
-					
+				}
+
+				string body = null;
+				if (!String.IsNullOrEmpty(msg.Html)) {
+					// FIXME: Better sanitize this somehow...
+					body = msg.Html;
+				} else {
+					body = Util.EscapeHtml(msg.Body);
+					//body = Linkify.AddLinks(msg.Body);
+					body = body.Replace("\n", "<br/>");
+				}
+			
+				iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(fromJid.Bare));
+			
+				Application.Invoke(delegate {	
 					bool isNext = (m_LastMessageJid == fromJid);
 					base.View.AppendMessage(incoming, isNext, iconPath, String.Empty, from, String.Empty,
 					                        String.Empty, from, body);
 					m_LastMessageJid = fromJid;
-				}
-			});
+				});
+			}
 		}
 		
 		public void AppendStatus (string status, string message)
