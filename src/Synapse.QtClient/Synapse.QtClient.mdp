@@ -4,7 +4,9 @@
       <Output directory="../../build/Debug" assembly="Synapse" />
       <Build debugmode="True" target="Exe" />
       <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
-      <EnvironmentVariables />
+      <EnvironmentVariables>
+        <Variable name="SYNAPSE_DEBUG" value="1" />
+      </EnvironmentVariables>
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="True" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">

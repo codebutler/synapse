@@ -20,6 +20,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Text;
 using Qyoto;
 
 namespace Synapse.QtClient.Widgets
@@ -104,14 +105,21 @@ namespace Synapse.QtClient.Widgets
 						m_PixmapItem.Pixmap = pixmap;
 						m_PixmapItem.Update();
 
-						var text = String.Format(@"<span style='font-size: 9pt; font-weight: bold'>{0}</span>
-						                         <br/><span style='font-size: 7.5pt'>{1}</span>
-						                         <br/><span style='font-size: 7.5pt; color: #666'><b>{2}</b>{3}",
-						                         m_Grid.Model.GetName(m_Item.Item),
-						                         m_Grid.Model.GetJID(m_Item.Item),
-						                         m_Grid.Model.GetPresence(m_Item.Item),
-						                         m_Grid.Model.GetPresenceMessage(m_Item.Item));
-						m_Label.SetText(text);
+						var builder = new StringBuilder();
+						builder.AppendFormat(@"<span style='font-size: 9pt; font-weight: bold'>{0}</span>",
+					                         m_Grid.Model.GetName(m_Item.Item));
+						                                              
+ 						builder.AppendFormat(@"<br/><span style='font-size: 7.5pt'>{0}</span>",
+					                         m_Grid.Model.GetJID(m_Item.Item));
+
+						string presenceInfo = m_Grid.Model.GetPresenceInfo(m_Item.Item);
+						if (!String.IsNullOrEmpty(presenceInfo)) {
+							builder.Append("<br/><span style='font-size: 7.5pt'>");
+							builder.Append(presenceInfo.Replace("\n", "<br/>"));
+							builder.Append("</span>");
+						}
+						
+						m_Label.SetText(builder.ToString());
 						
 						m_Scene.SceneRect = m_Scene.ItemsBoundingRect();
 

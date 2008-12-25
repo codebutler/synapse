@@ -107,7 +107,7 @@ namespace Synapse.UI.Controllers
 					// FIXME: Would be better to set CSS white-space: pre.
 					body = body.Replace("\n", "<br/>");
 					body = body.Replace(" " , "&nbsp;");
-					body = body.Replace("\t", "&tab;");
+					body = body.Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
 				}
 			
 				iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(fromJid.Bare));

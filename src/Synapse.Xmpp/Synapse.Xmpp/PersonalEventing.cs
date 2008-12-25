@@ -52,7 +52,7 @@ namespace Synapse.Xmpp
 			}, null, 1000);
 		}
 		
-		public void Publish (string node, System.Xml.XmlElement items)
+		public void Publish (string node, XmlElement item)
 		{
 			IQ iq = new IQ(m_Account.Client.Document);
 			iq.Type = IQType.set;
@@ -60,7 +60,7 @@ namespace Synapse.Xmpp
 			pubsub.SetAttribute("xmlns", "http://jabber.org/protocol/pubsub");
 			Publish publish = new Publish(m_Account.Client.Document);
 			publish.SetAttribute("node", node);
-			publish.AddChild(items);
+			publish.AddChild(item);
 			pubsub.AddChild(publish);
 			iq.AddChild(pubsub);
 

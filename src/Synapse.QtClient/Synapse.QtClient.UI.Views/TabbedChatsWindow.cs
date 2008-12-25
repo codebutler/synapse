@@ -102,8 +102,6 @@ namespace Synapse.QtClient
 			int oldIndex = m_Tabs.CurrentIndex;
 			int newIndex = m_Tabs.InsertTab(oldIndex + 1, view, view.WindowIcon, view.WindowTitle);
 
-			Console.WriteLine(focus);
-
 			if (focus) {
 				m_Tabs.SetCurrentIndex(newIndex);
 				view.Show();				

@@ -124,14 +124,19 @@ namespace Synapse.QtClient.Widgets
 				painter.SetBrush(new QBrush(color));
 				painter.DrawPath(path);
 				painter.Restore();
+
+				//painter.SetPen(new QPen(new QColor("red")));
+				//painter.DrawRect(BoundingRect());
 			}
 
 			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
 			{
-				var pos = arg1.Pos();
-				if (pos.Y() < m_Grid.HeaderHeight) {
-					this.IsExpanded = !this.IsExpanded;
-					m_Grid.ResizeAndRepositionGroups();
+				if (arg1.Button() == Qt.MouseButton.LeftButton) {
+					var pos = arg1.Pos();
+					if (pos.Y() < m_Grid.HeaderHeight) {
+						this.IsExpanded = !this.IsExpanded;
+						m_Grid.ResizeAndRepositionGroups();
+					}
 				}
 				base.MousePressEvent (arg1);
 			}

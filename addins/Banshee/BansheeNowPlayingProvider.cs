@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using Synapse.ServiceStack;
 using Synapse.Services;
 using NDesk.DBus;
+using org.freedesktop.DBus;
 using Banshee.MediaEngine;
 
 namespace Synapse.Addins.BansheeAddin
@@ -38,11 +39,18 @@ namespace Synapse.Addins.BansheeAddin
 		public BansheeNowPlayingProvider()
 		{
 			Bus sessionBus = Bus.Session;
-			m_Banshee = sessionBus.GetObject<Banshee.MediaEngine.IPlayerEngineService>("org.bansheeproject.Banshee",
-																					   new ObjectPath("/org/bansheeproject/Banshee/PlayerEngine"));
-			m_Banshee.EventChanged += HandleEventChanged;
 
-			UpdateTrackInfo();
+			// FIXME: We check that the name exists because otherwise calling 
+			// GetObject() will start banshee, but this won't work if Banshee 
+			// is started after Synapse. What's the equivilent of the pydbus 
+			// bus.add_signal_receiver() method?
+			if (sessionBus.NameHasOwner("org.bansheeproject.Banshee")) {
+				m_Banshee = sessionBus.GetObject<IPlayerEngineService>("org.bansheeproject.Banshee",
+															           new ObjectPath("/org/bansheeproject/Banshee/PlayerEngine"));
+				m_Banshee.EventChanged += HandleEventChanged;
+
+				UpdateTrackInfo();
+			}
 		}
 
 		public bool IsPlaying {

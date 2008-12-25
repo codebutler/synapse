@@ -120,6 +120,8 @@ namespace Synapse.Xmpp
 			m_Client.OnError        += HandleOnError;
 			m_Client.OnPresence 	+= HandleOnPresence;
 			m_Client.OnInvalidCertificate += delegate { return true; }; // XXX:
+
+			m_Client.OnStreamInit += HandleOnStreamInit;
 			
 			m_Roster = new RosterManager();
 			m_Roster.Stream = m_Client;
@@ -159,6 +161,11 @@ namespace Synapse.Xmpp
 			AddFeature(new ChatStates(this));
 
 			ServiceManager.Get<NetworkService>().StateChange += HandleNetworkStateChanged;
+		}
+
+		void HandleOnStreamInit(object sender, ElementStream stream)
+		{
+			stream.AddType("tune", "http://jabber.org/protocol/tune", typeof(UserTune.Tune));
 		}
 
 		void HandleNetworkStateChanged (NetworkState state)

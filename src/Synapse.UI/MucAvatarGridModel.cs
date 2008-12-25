@@ -93,20 +93,15 @@ namespace Synapse.UI
 			return String.IsNullOrEmpty(participant.RealJID) ? participant.NickJID : participant.RealJID;
 		}
 
-		public string GetPresence (RoomParticipant participant)
-		{
-			return String.Empty;
-		}
-
-		public string GetPresenceMessage (RoomParticipant participant)
-		{
-			return String.Empty;
-		}
-		
 		public object GetImage (RoomParticipant participant)
 		{
 			var jid = (!String.IsNullOrEmpty(participant.RealJID)) ? participant.RealJID : participant.NickJID;
 			return AvatarManager.GetAvatar(jid);
+		}
+
+		public string GetPresenceInfo (RoomParticipant participant)
+		{
+			return String.Empty;
 		}
 
 		public bool IsVisible (RoomParticipant participant)

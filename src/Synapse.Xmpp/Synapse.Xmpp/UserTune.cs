@@ -21,10 +21,12 @@
 
 using System;
 using System.Xml;
+using System.Collections.Generic;
 using Synapse.Core.ExtensionMethods;
 using Synapse.Services;
 using System.Text;
 using jabber;
+using jabber.protocol;
 using jabber.protocol.iq;
 using Synapse.Core;
 using Synapse.ServiceStack;
@@ -34,6 +36,9 @@ namespace Synapse.Xmpp
 	public class UserTune : IDiscoverable
 	{
 		Account m_Account;
+
+		// FIXME: I'd much rather extend the roster Item class and store this there.
+		Dictionary<string, Tune> m_FriendTunes = new Dictionary<string, Tune>();
 		
 		public UserTune(Account account)
 		{
@@ -45,19 +50,28 @@ namespace Synapse.Xmpp
 			
 			ServiceManager.Get<NowPlayingService>().TrackChanged += TrackChanged;
 		}
+
+		public Tune this [string bareJid] {
+			get {
+				if (m_FriendTunes.ContainsKey(bareJid))
+					return m_FriendTunes[bareJid];
+				else
+					return null;
+			}
+		}
 		
 		private void ReceivedTune (JID from, string node, PubSubItem item)
 		{
-			XmlNode tune = item["tune"];
-			if (tune["artist"] != null && tune["title"] != null) {
-				string artist = tune["artist"].InnerText;
-				string title  = tune["title"].InnerText;
-				string uri    = tune["uri"].InnerText;
-
+			Console.WriteLine("RECEIVED TUNE:");
+			Console.WriteLine(item);
+			Tune tune = (Tune)item["tune"];
+			m_FriendTunes[from.Bare] = tune;
+			if (!String.IsNullOrEmpty(tune.Artist) && !String.IsNullOrEmpty(tune.Title)) {
 				// Only show in feed if we know this is a recent event.
 				if (tune["timestamp"] != null && DateTime.Now.Subtract(DateTime.Parse(tune["timestamp"].InnerText)).TotalSeconds <= 60) {
 					Application.Invoke(delegate {
-						var feedItem = new ActivityFeedItem(m_Account, from, "music", "is now {0}", "listening to", String.Format("{0} - {1}", artist, title), uri);
+						var feedItem = new ActivityFeedItem(m_Account, from, "music", "is now {0}", "listening to", 
+						                                    String.Format("{0} - {1}", tune.Artist, tune.Title), tune.Uri);
 						m_Account.ActivityFeed.PostItem(feedItem);
 					});
 				}
@@ -70,49 +84,23 @@ namespace Synapse.Xmpp
 			
 			XmlDocument doc = m_Account.Client.Document;
 			
-			XmlElement itemElement = doc.CreateElement("item");
+			PubSubItem itemElement = new PubSubItem(doc);
+			itemElement.SetAttribute("id", "current");
 			doc.AppendChild(itemElement);
-			
-			XmlElement tuneElement = doc.CreateElement("tune");
-			tuneElement.SetAttribute("xmlns", "http://jabber.org/protocol/tune");
-			itemElement.AppendChild(tuneElement);
 
-			XmlElement timestampElement = doc.CreateElement("timestamp");
-			timestampElement.SetAttribute("xmlns", "http://synapse.im/protocol/timestamp");
-			timestampElement.InnerText = DateTime.Now.ToUniversalTime().ToString("o");
-			tuneElement.AppendChild(timestampElement);
-			
-			// FIXME:
+			Tune tune = new Tune(doc);
+			itemElement.AppendChild(tune);
+
 			if (nowPlaying.IsPlaying) {
-				XmlElement artistElement = doc.CreateElement("artist");
-				artistElement.InnerText = nowPlaying.CurrentTrackArtist;
-				tuneElement.AppendChild(artistElement);
-				
-				XmlElement lengthElement = doc.CreateElement("length");
-				lengthElement.InnerText = nowPlaying.CurrentTrackLength;
-				tuneElement.AppendChild(lengthElement);
-				
-				XmlElement ratingElement = doc.CreateElement("rating");
-				ratingElement.InnerText = nowPlaying.CurrentTrackRating;
-				tuneElement.AppendChild(ratingElement);
-				
-				XmlElement sourceElement = doc.CreateElement("source");
-				sourceElement.InnerText = nowPlaying.CurrentTrackSource;
-				tuneElement.AppendChild(sourceElement);
-				
-				XmlElement titleElement = doc.CreateElement("title");
-				titleElement.InnerText = nowPlaying.CurrentTrackTitle;
-				tuneElement.AppendChild(titleElement);
-				
-				XmlElement trackElement = doc.CreateElement("track");
-				trackElement.InnerText = nowPlaying.CurrentTrackNumber;
-				tuneElement.AppendChild(trackElement);
-				
-				XmlElement uriElement = doc.CreateElement("uri");
-				uriElement.InnerText = nowPlaying.CurrentTrackUri;
-				tuneElement.AppendChild(uriElement);
+				tune.Artist = nowPlaying.CurrentTrackArtist;
+				tune.Length = nowPlaying.CurrentTrackLength;
+				tune.Rating = nowPlaying.CurrentTrackRating;
+				tune.Source = nowPlaying.CurrentTrackSource;
+				tune.Title  = nowPlaying.CurrentTrackTitle;
+				tune.Track  = nowPlaying.CurrentTrackNumber;
+				tune.Uri    = nowPlaying.CurrentTrackUri;				
 			}
-		              
+		    
 			m_Account.GetFeature<PersonalEventing>().Publish("http://jabber.org/protocol/tune", itemElement);
 		}
 		
@@ -122,6 +110,85 @@ namespace Synapse.Xmpp
 					"http://jabber.org/protocol/tune",
 					"http://jabber.org/protocol/tune+notify"
 				};
+			}
+		}
+
+		public class Tune : Element
+		{
+			public Tune (XmlDocument doc) : base ("tune", "http://jabber.org/protocol/tune", doc)
+			{
+				// FIXME: Abstract this, I suspect I'll be using it many places.
+				XmlElement timestampElement = new Element("timestamp", "http://synapse.im/protocol/timestamp", doc);
+				timestampElement.InnerText = DateTime.Now.ToUniversalTime().ToString("o");
+				this.AppendChild(timestampElement);
+			}
+
+			public Tune (string prefix, XmlQualifiedName qname, XmlDocument doc) :
+					base (qname.Name, doc)
+			{
+			}
+				
+			public string Artist {
+				get {
+					return GetElem("artist");
+				}
+				set {
+					SetElem("artist", value);
+				}
+			}
+
+			public string Length {
+				get {
+					return GetElem("length");
+				}
+				set {
+					SetElem("length", value);
+				}
+			}
+
+			public string Rating {
+				get {
+					return GetElem("rating");
+				}
+				set {
+					SetElem("rating", value);
+				}
+			}
+
+			public string Source {
+				get {
+					return GetElem("source");
+				}
+				set {
+					SetElem("source", value);
+				}
+			}
+
+			public string Title {
+				get {
+					return GetElem("title");
+				}
+				set {
+					SetElem("title", value);
+				}
+			}
+
+			public string Track {
+				get {
+					return GetElem("track");
+				}
+				set {
+					SetElem("track", value);
+				}
+			}
+
+			public string Uri {
+				get {
+					return GetElem("uri");
+				}
+				set {
+					SetElem("uri", value);
+				}
 			}
 		}
 	}

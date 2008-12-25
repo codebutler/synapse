@@ -41,10 +41,9 @@ namespace Synapse.UI
 
 		string GetName(T item);
 		JID    GetJID(T item);
-		string GetPresence(T item);
-		string GetPresenceMessage(T item);		
 		object GetImage(T item);
-
+		string GetPresenceInfo(T item);
+		
 		bool IsVisible(T item);
 
 		bool ModelUpdating { 

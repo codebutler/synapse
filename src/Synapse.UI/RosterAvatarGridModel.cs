@@ -23,6 +23,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Xmpp;
@@ -116,21 +117,37 @@ namespace Synapse.UI
 			return pair.Item.JID;
 		}
 
-		public string GetPresence (AccountItemPair pair)
-		{
-			return String.Empty;
-		}
-
-		public string GetPresenceMessage (AccountItemPair pair)
-		{
-			return String.Empty;
-		}
-		
 		public bool IsVisible (AccountItemPair pair)
 		{
 			//bool showOffline = !String.IsNullOrEmpty(m_TextFilter) ? true : m_ShowOffline;
 			bool showOffline = m_ShowOffline;
 			return (String.IsNullOrEmpty(m_TextFilter) || MatchesFilter(pair)) && (showOffline ? true : pair.Account.PresenceManager.IsAvailable(pair.Item.JID));
+		}
+
+		public string GetPresenceInfo (AccountItemPair pair)
+		{
+			var builder = new StringBuilder();
+			var presences = pair.Account.PresenceManager.GetAll(pair.Item.JID);
+			if (presences.Length == 1) {
+				var presence = presences[0];
+				builder.AppendFormat("\n");
+				builder.Append(Helper.GetPresenceDisplay(presence));
+				if (!String.IsNullOrEmpty(presence.Status)) {
+					builder.Append(" - ");
+				    builder.Append(presence.Status);
+				}	
+			} else if (presences.Length > 1) {
+				foreach (var presence in presences) {
+					builder.AppendFormat("\n{0}: {1}",
+					                     presence.From.Resource,
+					                     Helper.GetPresenceDisplay(presence));
+					if (!String.IsNullOrEmpty(presence.Status)) {
+						builder.Append(" - ");
+					    builder.Append(presence.Status);
+					}
+				}
+			}
+			return builder.ToString();
 		}
 
 		protected virtual void OnItemAdded (Account account, Item item)
