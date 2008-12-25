@@ -52,7 +52,13 @@ namespace Synapse.Xmpp
 			if (tune["artist"] != null && tune["title"] != null) {
 				string artist = tune["artist"].InnerText;
 				string title = tune["title"].InnerText;
-				m_Account.ActivityFeed.PostItem(new MusicActivityFeedItem(m_Account, from, artist, title));
+
+				// Only show in feed if we know this is a recent event.
+				if (tune["timestamp"] != null && DateTime.Now.Subtract(DateTime.Parse(tune["timestamp"].InnerText)).TotalSeconds <= 60) {
+					Application.Invoke(delegate {
+						m_Account.ActivityFeed.PostItem(new ActivityFeedItem(m_Account, from, "music", "is now {0}", "listening to", String.Format("{0} - {1}", artist, title)));
+					});
+				}
 			}
 		}
 		
@@ -68,34 +74,42 @@ namespace Synapse.Xmpp
 			XmlElement tuneElement = doc.CreateElement("tune");
 			tuneElement.SetAttribute("xmlns", "http://jabber.org/protocol/tune");
 			itemElement.AppendChild(tuneElement);
+
+			XmlElement timestampElement = doc.CreateElement("timestamp");
+			timestampElement.SetAttribute("xmlns", "http://synapse.im/protocol/timestamp");
+			timestampElement.InnerText = DateTime.Now.ToUniversalTime().ToString("o");
+			tuneElement.AppendChild(timestampElement);
 			
-			XmlElement artistElement = doc.CreateElement("artist");
-			artistElement.InnerText = nowPlaying.CurrentTrackArtist;
-			tuneElement.AppendChild(artistElement);
-			
-			XmlElement lengthElement = doc.CreateElement("length");
-			lengthElement.InnerText = nowPlaying.CurrentTrackLength.ToString();
-			tuneElement.AppendChild(lengthElement);
-			
-			XmlElement ratingElement = doc.CreateElement("rating");
-			ratingElement.InnerText = nowPlaying.CurrentTrackRating.ToString();
-			tuneElement.AppendChild(ratingElement);
-			
-			XmlElement sourceElement = doc.CreateElement("source");
-			sourceElement.InnerText = nowPlaying.CurrentTrackSource;
-			tuneElement.AppendChild(sourceElement);
-			
-			XmlElement titleElement = doc.CreateElement("title");
-			titleElement.InnerText = nowPlaying.CurrentTrackTitle;
-			tuneElement.AppendChild(titleElement);
-			
-			XmlElement trackElement = doc.CreateElement("track");
-			trackElement.InnerText = nowPlaying.CurrentTrackNumber;
-			tuneElement.AppendChild(trackElement);
-			
-			XmlElement uriElement = doc.CreateElement("uri");
-			uriElement.InnerText = nowPlaying.CurrentTrackUri;
-			tuneElement.AppendChild(uriElement);
+			// FIXME:
+			if (nowPlaying.IsPlaying) {
+				XmlElement artistElement = doc.CreateElement("artist");
+				artistElement.InnerText = nowPlaying.CurrentTrackArtist;
+				tuneElement.AppendChild(artistElement);
+				
+				XmlElement lengthElement = doc.CreateElement("length");
+				lengthElement.InnerText = nowPlaying.CurrentTrackLength;
+				tuneElement.AppendChild(lengthElement);
+				
+				XmlElement ratingElement = doc.CreateElement("rating");
+				ratingElement.InnerText = nowPlaying.CurrentTrackRating;
+				tuneElement.AppendChild(ratingElement);
+				
+				XmlElement sourceElement = doc.CreateElement("source");
+				sourceElement.InnerText = nowPlaying.CurrentTrackSource;
+				tuneElement.AppendChild(sourceElement);
+				
+				XmlElement titleElement = doc.CreateElement("title");
+				titleElement.InnerText = nowPlaying.CurrentTrackTitle;
+				tuneElement.AppendChild(titleElement);
+				
+				XmlElement trackElement = doc.CreateElement("track");
+				trackElement.InnerText = nowPlaying.CurrentTrackNumber;
+				tuneElement.AppendChild(trackElement);
+				
+				XmlElement uriElement = doc.CreateElement("uri");
+				uriElement.InnerText = nowPlaying.CurrentTrackUri;
+				tuneElement.AppendChild(uriElement);
+			}
 		              
 			m_Account.GetFeature<PersonalEventing>().Publish("http://jabber.org/protocol/tune", itemElement);
 		}
@@ -106,42 +120,6 @@ namespace Synapse.Xmpp
 					"http://jabber.org/protocol/tune",
 					"http://jabber.org/protocol/tune+notify"
 				};
-			}
-		}
-			
-			
-		public class MusicActivityFeedItem : IActivityFeedItem
-		{
-			Account  m_Account;
-			DateTime m_Timestamp;
-			JID      m_From;
-			string   m_Artist;
-			string   m_Title;
-			
-			public MusicActivityFeedItem (Account account, JID from, string artist, string title)
-			{
-				m_Account   = account;
-				m_From      = from;
-				m_Artist    = artist;
-				m_Title     = title;
-				m_Timestamp = DateTime.Now;
-			}
-			
-			public DateTime Timestamp {
-				get {
-					return m_Timestamp;
-				}
-			}
-			
-			public string ToHtml()
-			{
-				StringBuilder htmlBuilder = new StringBuilder();
-				htmlBuilder.Append("<li>");
-				htmlBuilder.Append(String.Format("<div class='timestamp'>{0}</div>", m_Timestamp.ToShortTimeString()));
-				htmlBuilder.Append(String.Format("<a href='#' class='jid' title='{0}'>{1}</a> is now <strong>listening to</strong>:", m_From.ToString(), m_From.User));
-				htmlBuilder.Append(String.Format("<blockquote class='music'>{0} - {1}</blockquote>", m_Artist, m_Title));
-	      		htmlBuilder.Append("</li>");
-				return htmlBuilder.ToString();
 			}
 		}
 	}

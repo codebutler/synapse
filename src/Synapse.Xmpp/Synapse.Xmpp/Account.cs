@@ -30,6 +30,7 @@ using jabber.client;
 using jabber.connection;
 using jabber.protocol.client;
 using jabber.protocol;
+using jabber.protocol.iq;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Services;
@@ -193,7 +194,6 @@ namespace Synapse.Xmpp
 		{
 			Console.Error.WriteLine("An error has occurred with: " + Jid.ToString() + ": " + ex);
 			ConnectionState = AccountConnectionState.Disconnected;
-
 			if (Error != null)
 				Error(this, ex);
 		}
@@ -337,6 +337,17 @@ namespace Synapse.Xmpp
 			}
 		}
 
+		public string GetDisplayName(JID jid)
+		{
+			Item item = this.Roster[jid.Bare];
+			if (item != null && !String.IsNullOrEmpty(item.Nickname))
+				return item.Nickname;
+			else if (!String.IsNullOrEmpty(jid.User))
+				return jid.User;
+			else
+				return jid.ToString();
+		}
+
 		public RosterManager Roster {
 			get {
 				return this.m_Roster;
@@ -435,7 +446,7 @@ namespace Synapse.Xmpp
 			m_Client.Password    = m_Password;
 			
 			ConnectionState = AccountConnectionState.Connecting;
-
+			
 			// FIXME: Calling this in a separate thread so DNS doesn't block the UI.
 			// This should be fixed inside jabber-net.
 			new Thread(delegate () {

@@ -9,4 +9,8 @@
 	<ExtensionPoint path="/Synapse/ServiceManager/Service">
 		<ExtensionNode name="Service" />
 	</ExtensionPoint>
+
+	<ExtensionPoint path="/Synapse/Services/NowPlaying/Providers">
+		<ExtensionNode name="NowPlayingProvider" />
+	</ExtensionPoint>
 </Addin>

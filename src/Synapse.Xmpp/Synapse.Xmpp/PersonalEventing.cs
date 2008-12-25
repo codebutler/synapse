@@ -63,7 +63,11 @@ namespace Synapse.Xmpp
 			publish.AddChild(items);
 			pubsub.AddChild(publish);
 			iq.AddChild(pubsub);
-			m_Account.Send(iq);
+
+			if (m_Account.ConnectionState == AccountConnectionState.Connected)
+				m_Account.Send(iq);
+			//else
+				// FIXME: Queue and send on connect.
 		}
 		
 		public string[] FeatureNames {

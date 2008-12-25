@@ -120,15 +120,7 @@ namespace Synapse.Xmpp
 			htmlBuilder.Append(String.Format("<div class='timestamp'>{0}</div>", m_Timestamp.ToShortTimeString()));
 			
 			if (m_From != null) {
-				string name = null;
-				Item item = m_Account.Roster[m_From.Bare];
-				if (item != null && !String.IsNullOrEmpty(item.Nickname))
-					name = item.Nickname;
-				else if (!String.IsNullOrEmpty(m_From.User))
-					name = m_From.User;
-				else
-					name = m_From.ToString();
-
+				string name = m_Account.GetDisplayName(m_From);
 				name = Util.EscapeHtml(name);
 
 				var uri = String.Format("xmpp:{0}?message", m_From.ToString());
@@ -143,7 +135,7 @@ namespace Synapse.Xmpp
 			
 			if (!String.IsNullOrEmpty(m_Content)) {
 				htmlBuilder.Append(":");
-				htmlBuilder.Append(String.Format("<blockquote>{0}</blockquote>", m_Content));
+				htmlBuilder.Append(String.Format("<blockquote class=\"{0}\">{1}</blockquote>", m_Type, m_Content));
 			} else if (m_From != null) {
 				htmlBuilder.Append(".");
 			}

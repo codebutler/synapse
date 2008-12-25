@@ -27,38 +27,45 @@ using NDesk.DBus;
 using Synapse.Core;
 using org.freedesktop.DBus;
 using Synapse.ServiceStack;
+using Mono.Addins;
 
 namespace Synapse.Services
 {
 	public class NowPlayingService : IService, IInitializeService
 	{
+		bool   m_IsPlaying;
 		string m_Artist;
-		ushort m_Length;
-		int    m_Rating;
+		string m_Length;
+		string m_Rating;
 		string m_Source;
 		string m_Title;
 		string m_Track;
 		string m_Uri;
-		
-		List<org.freedesktop.IMediaPlayer> m_Players
-			= new List<org.freedesktop.IMediaPlayer>();
+
+		List<INowPlayingProvider> m_Providers = new List<INowPlayingProvider>();
 		
 		public event EventHandler TrackChanged;
 		
 		#region Public Properties
+		public bool IsPlaying {
+			get {
+				return m_IsPlaying;
+			}
+		}
+		
 		public string CurrentTrackArtist {
 			get {
 				return m_Artist;
 			}
 		}
 		
-		public ushort CurrentTrackLength {
+		public string CurrentTrackLength {
 			get {
 				return m_Length;
 			}
 		}
 		
-		public int CurrentTrackRating {
+		public string CurrentTrackRating {
 			get {
 				return m_Rating;
 			}
@@ -93,59 +100,65 @@ namespace Synapse.Services
 		{
 			Bus sessionBus = Bus.Session;
 			IBus bus = sessionBus.GetObject<IBus>("org.freedesktop.DBus", new ObjectPath("/org/freedesktop/DBus"));
-			foreach (string name in bus.ListNames()) {
-				if (name.StartsWith("org.mpris.")) {
-					org.freedesktop.IMediaPlayer player = sessionBus.GetObject<org.freedesktop.IMediaPlayer>(name, new ObjectPath("/Player"));
-					m_Players.Add(player);
-					player.TrackChange += player_TrackChange;
-				}
-			}
-		}
-		
-		private void player_TrackChange (IDictionary<string,object> stuffs)
-		{
-			m_Artist = null;
-			m_Length = 0;
-			m_Rating = -1;
-			m_Source = null;
-			m_Title  = null;
-			m_Track  = null;
-			m_Uri    = null;
 
-			foreach (var pair in stuffs) {
-				Console.WriteLine(pair.Key + " == " + pair.Value);
-				switch (pair.Key) {
-					case "artist":
-						m_Artist = pair.Value.ToString();
-						break;
-					case "length":
-						m_Length = (ushort)(UInt64.Parse(pair.Value.ToString()) / 60000);
-						break;
-					case "title":
-						m_Title = pair.Value.ToString();
-						break;
-					case "album":
-						m_Source = pair.Value.ToString();
-						break;
+			AddinManager.AddExtensionNodeHandler("/Synapse/Services/NowPlaying/Providers", OnExtensionChanged);
+		}
+
+		void OnExtensionChanged (object o, ExtensionNodeEventArgs args)
+		{
+			TypeExtensionNode node = (TypeExtensionNode)args.ExtensionNode;
+			INowPlayingProvider provider = (INowPlayingProvider)node.CreateInstance();
+			provider.TrackChanged += HandleTrackChanged;
+			m_Providers.Add(provider);
+
+			HandleTrackChanged(provider, EventArgs.Empty);
+		}
+
+		void HandleTrackChanged(object sender, EventArgs e)
+		{
+			INowPlayingProvider provider = (INowPlayingProvider)sender;
+			m_IsPlaying = provider.IsPlaying;
+			if (provider.IsPlaying) {
+				if (m_Artist != provider.Artist || m_Title != provider.Title) {
+					m_Artist = provider.Artist;
+					m_Length = provider.Length;
+					m_Rating = provider.Rating;
+					m_Source = provider.Source;
+					m_Title  = provider.Title;
+					m_Track  = provider.Track;
+					m_Uri    = provider.Uri;
+				} else {
+					return;
 				}
+			} else {
+				m_Artist = null;
+				m_Length = null;
+				m_Rating = null;
+				m_Source = null;
+				m_Title  = null;
+				m_Track  = null;
+				m_Uri    = null;
 			}
-			
+
 			if (TrackChanged != null)
 				TrackChanged(this, EventArgs.Empty);
 		}
-
+		
 		string IService.ServiceName {
 			get { return "NowPlayingService"; }
 		}
 	}
-}
 
-namespace org.freedesktop
-{
-	public delegate void TrackChangeEventHandler(IDictionary<string,object> stuffs);
-	[Interface("org.freedesktop.MediaPlayer")]
-	public interface IMediaPlayer
+	public interface INowPlayingProvider
 	{
-		event TrackChangeEventHandler TrackChange;
-	}	
+		event EventHandler TrackChanged;
+		bool IsPlaying { get; }
+		string Artist { get; }
+		string Length { get; }
+		string Rating { get; }
+		string Source { get; }
+		string Title { get; }
+		string Track { get; }
+		string Uri { get; }
+	}
 }
