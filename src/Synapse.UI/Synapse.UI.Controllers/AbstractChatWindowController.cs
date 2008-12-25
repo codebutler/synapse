@@ -39,6 +39,12 @@ namespace Synapse.UI.Controllers
 		
 		public abstract event EventHandler Closed;
 
+		public Account Account {
+			get {
+				return m_Account;
+			}
+		}
+
 		// FIXME: I don't really like this method being here.
 		public void AppendMessage (Message msg)
 		{
@@ -50,47 +56,46 @@ namespace Synapse.UI.Controllers
 			string iconPath = null;
 			string from = null;
 			JID fromJid = null;
-
+			
+			if (msg.From == null) {
+				from = m_Account.User;
+				fromJid = m_Account.Jid;
+			} else {
+				if (this is MucWindowController) {
+					// FIXME: Abstract this...
+					var participant = ((MucWindowController)this).Room.Participants[msg.From];
+					if (participant != null) {
+						fromJid = (!String.IsNullOrEmpty(participant.RealJID)) ? participant.RealJID : participant.NickJID;
+						from = participant.Nick;
+					} else {
+						fromJid = msg.From;
+						from = msg.From.Resource;
+					}
+				} else {
+					from = m_Account.GetDisplayName(msg.From);
+					fromJid = msg.From;
+				}
+			}
+			
 			foreach (XmlNode child in msg) {
 				if (child.NamespaceURI == Namespace.ChatStates) {
 					if (child.Name == "active") {
-						AppendStatus("active", String.Format("{0} is paying attention.", msg.From.User));
+						AppendStatus("active", String.Format("{0} is paying attention.", from));
 					} else if (child.Name == "composing") {
-						AppendStatus("composing", String.Format("{0} is typing...", msg.From.User));
+						AppendStatus("composing", String.Format("{0} is typing...", from));
 					} else if (child.Name == "paused") {
-						AppendStatus("paused", String.Format("{0} stopped typing.", msg.From.User));
+						AppendStatus("paused", String.Format("{0} stopped typing.", from));
 					} else if (child.Name == "inactive") {
-						AppendStatus("inactive", String.Format("{0} is not paying attention.", msg.From.User));
+						AppendStatus("inactive", String.Format("{0} is not paying attention.", from));
 					} else if (child.Name == "gone") {
-						AppendStatus("gone", String.Format("{0} has left the conversation.", msg.From.User));
+						AppendStatus("gone", String.Format("{0} has left the conversation.", from));
 					} else {
-						Console.WriteLine(String.Format("Unknown chatstate from {0}: {1}", msg.From, child.Name));
+						Console.WriteLine(String.Format("Unknown chatstate from {0}: {1}", from, child.Name));
 					}
 				}
 			}
 			
 			if (msg.Body != null || msg.Html != null) {			
-				if (msg.From == null) {
-					from = m_Account.User;
-					fromJid = m_Account.Jid;
-				} else {
-					// FIXME: Abstract this...
-					if (this is MucWindowController) {
-						var participant = ((MucWindowController)this).Room.Participants[msg.From];
-						if (participant != null) {
-							fromJid = (!String.IsNullOrEmpty(participant.RealJID)) ? participant.RealJID : participant.NickJID;
-							from = participant.Nick;
-						} else {
-							fromJid = msg.From;
-							from = msg.From.Resource;
-						}
-					} else {
-						// FIXME: Use roster nickname.
-						from = msg.From.User;
-						fromJid = msg.From;
-					}
-				}
-
 				string body = null;
 				if (!String.IsNullOrEmpty(msg.Html)) {
 					// FIXME: Better sanitize this somehow...
@@ -98,7 +103,11 @@ namespace Synapse.UI.Controllers
 				} else {
 					body = Util.EscapeHtml(msg.Body);
 					//body = Linkify.AddLinks(msg.Body);
+
+					// FIXME: Would be better to set CSS white-space: pre.
 					body = body.Replace("\n", "<br/>");
+					body = body.Replace(" " , "&nbsp;");
+					body = body.Replace("\t", "&tab;");
 				}
 			
 				iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(fromJid.Bare));

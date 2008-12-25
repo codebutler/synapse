@@ -481,7 +481,7 @@ namespace Synapse.QtClient.Widgets
 
 			// Since we map the point to scene coords, we could accidently 
 			// focus items outside the visible viewport.
-			if (!this.Geometry.Contains(pos)) {
+			if (!this.Viewport().Geometry.Contains(pos) || !this.IsVisible()) {
 				m_HoverItem = null;
 				m_InfoPopup.Item = null;
 			} else {				

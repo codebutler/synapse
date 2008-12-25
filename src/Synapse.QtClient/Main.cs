@@ -1,9 +1,10 @@
+//
 // Main.cs
+//
+// Copyright (C) 2008 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
-//
-// Copyright (c) 2008 Eric Butler
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,7 +24,6 @@ using System.Diagnostics;
 using System.Threading;
 
 using Hyena;
-using Mono.Addins;
 
 using Synapse.ServiceStack;
 using Synapse.Core;
@@ -113,6 +113,12 @@ namespace Synapse.QtClient
 			});
 
 			QApplication.Exec();
+		}
+
+		public QApplication QApp {
+			get {
+				return m_App;
+			}
 		}
 		
 		public override string ClientId {

@@ -57,7 +57,7 @@ public partial class ChatWindow : QWidget, IChatWindowView
 		} else if (controller is ChatWindowController) {
 			var chatController = (ChatWindowController)controller;
 			rightContainer.Hide();
-			this.WindowTitle = chatController.Jid.User; //FIXME: Show nickname from roster?
+			this.WindowTitle = chatController.Account.GetDisplayName(chatController.Jid);
 			this.WindowIcon = new QIcon(new QPixmap(String.Format("avatar:/{0}", Synapse.Xmpp.AvatarManager.GetAvatarHash(chatController.Jid.Bare))));		
 		}
 

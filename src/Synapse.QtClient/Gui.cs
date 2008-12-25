@@ -64,6 +64,12 @@ namespace Synapse.QtClient
 			widget.Move((rect.Width() / 2) - (widget.Rect.Width() / 2), (rect.Height() / 2) - (widget.Rect.Height() / 2));
 		}
 
+		public static QApplication QApp {
+			get {
+				return ((Synapse.QtClient.Client)Synapse.ServiceStack.Application.Client).QApp;
+			}
+		}
+
 		public static QIcon LoadIcon (string name)
 		{
 			if (IconTheme.Default == null)

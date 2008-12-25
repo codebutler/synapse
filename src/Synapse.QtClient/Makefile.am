@@ -174,7 +174,9 @@ FILES = \
 	Synapse.QtClient.UI.Views/ServiceBrowserWindow.cs \
 	gtk-gui/generated.cs \
 	ErrorDialog.cs \
-	gtk-gui/Synapse.QtClient.ErrorDialog.cs 
+	gtk-gui/Synapse.QtClient.ErrorDialog.cs \
+	Synapse.QtClient.UI.Views/EditGroupsWindow.cs \
+	qt-gui/EditGroupsWindow.cs 
 
 DATA_FILES = 
 
@@ -192,7 +194,9 @@ RESOURCES = \
 	resources/octy-32.png \
 	resources/prototype.js \
 	resources/effects.js \
-	gtk-gui/gui.stetic 
+	gtk-gui/gui.stetic \
+	resources/friend-muclist.html \
+	resources/music-16.png 
 
 EXTRAS = \
 	synapse.qtclient.in 

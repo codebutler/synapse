@@ -1,4 +1,4 @@
-<Addin     id        = "Banshee"
+<Addin id        = "Banshee"
 	   namespace = "Synapse"
 	   name      = ""
 	   author    = "Eric Butler"

@@ -108,7 +108,7 @@ namespace Synapse.UI
 
 		public string GetName (AccountItemPair pair)
 		{
-			return !String.IsNullOrEmpty(pair.Item.Nickname) ? pair.Item.Nickname : pair.Item.JID.User;
+			return pair.Account.GetDisplayName(pair.Item.JID);
 		}
 
 		public JID GetJID (AccountItemPair pair)

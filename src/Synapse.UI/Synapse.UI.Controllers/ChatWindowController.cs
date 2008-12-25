@@ -84,7 +84,7 @@ namespace Synapse.UI.Controllers
 		public void SetPresence (Presence presence)
 		{
 			string message = null;
-			string fromName = presence.From.User; // FIXME: Use roster nickname...
+			string fromName = m_Account.GetDisplayName(presence.From);
 			if (!String.IsNullOrEmpty(presence.Status)) {
 				message = String.Format("{0} is now {1}: {2}.", fromName, Helper.GetPresenceDisplay(presence), presence.Status);
 			} else {

@@ -3,8 +3,8 @@ EXTRA_DIST =  expansions.m4 contrib/Hyena.Gui.dll contrib/Mono.Rocks.dll ../../.
 
 #Warning: This is an automatically generated file, do not edit!
 if ENABLE_DEBUG
- SUBDIRS =  src/Synapse.Core src/Synapse.Services src/Synapse.Xmpp src/Synapse.UI src/Synapse.QtClient addins/PasteBox
+ SUBDIRS =  src/Synapse.Core src/Synapse.Services src/Synapse.Xmpp src/Synapse.UI src/Synapse.QtClient addins
 endif
 if ENABLE_RELEASE
- SUBDIRS =  src/Synapse.Core src/Synapse.Services src/Synapse.Xmpp src/Synapse.UI src/Synapse.QtClient addins/PasteBox
+ SUBDIRS =  src/Synapse.Core src/Synapse.Services src/Synapse.Xmpp src/Synapse.UI src/Synapse.QtClient addins
 endif
