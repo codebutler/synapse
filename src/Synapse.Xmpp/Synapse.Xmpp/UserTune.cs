@@ -51,12 +51,14 @@ namespace Synapse.Xmpp
 			XmlNode tune = item["tune"];
 			if (tune["artist"] != null && tune["title"] != null) {
 				string artist = tune["artist"].InnerText;
-				string title = tune["title"].InnerText;
+				string title  = tune["title"].InnerText;
+				string uri    = tune["uri"].InnerText;
 
 				// Only show in feed if we know this is a recent event.
 				if (tune["timestamp"] != null && DateTime.Now.Subtract(DateTime.Parse(tune["timestamp"].InnerText)).TotalSeconds <= 60) {
 					Application.Invoke(delegate {
-						m_Account.ActivityFeed.PostItem(new ActivityFeedItem(m_Account, from, "music", "is now {0}", "listening to", String.Format("{0} - {1}", artist, title)));
+						var feedItem = new ActivityFeedItem(m_Account, from, "music", "is now {0}", "listening to", String.Format("{0} - {1}", artist, title), uri);
+						m_Account.ActivityFeed.PostItem(feedItem);
 					});
 				}
 			}

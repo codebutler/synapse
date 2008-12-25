@@ -279,9 +279,7 @@ namespace Synapse.QtClient
 		#region Private Methods
 		void HandleLinkClicked (QUrl url)
 		{
-			// FIXME: Abstract this out to the Client
-			var info = new System.Diagnostics.ProcessStartInfo("xdg-open", url);
-			System.Diagnostics.Process.Start(info);
+			Gui.Open(url);
 		}
 		
 		private string FormatBaseTemplate(PList themeProperties, string basePath, string mainPath, string variantPath, string headerHtml, string footerHtml)

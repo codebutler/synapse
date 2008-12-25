@@ -6,18 +6,18 @@ EXTRA_DIST =
 if ENABLE_DEBUG
 ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
-ASSEMBLY = ../../../build/Debug/BansheeNowPlayingProvider.dll
+ASSEMBLY = ../../build/Debug/BansheeNowPlayingProvider.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.Core.dll \
 	../../build/Debug/Synapse.Services.dll
-BUILD_DIR = ../../../build/Debug
+BUILD_DIR = ../../build/Debug
 
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
 SYNAPSE_SERVICES_DLL_SOURCE=../../build/Debug/Synapse.Services.dll
 SYNAPSE_SERVICES_DLL=$(BUILD_DIR)/Synapse.Services.dll
-BANSHEENOWPLAYINGPROVIDER_DLL_MDB_SOURCE=../../../build/Debug/BansheeNowPlayingProvider.dll.mdb
+BANSHEENOWPLAYINGPROVIDER_DLL_MDB_SOURCE=../../build/Debug/BansheeNowPlayingProvider.dll.mdb
 BANSHEENOWPLAYINGPROVIDER_DLL_MDB=$(BUILD_DIR)/BansheeNowPlayingProvider.dll.mdb
 SYNAPSE_SERVICES_DLL_MDB_SOURCE=../../build/Debug/Synapse.Services.dll.mdb
 SYNAPSE_SERVICES_DLL_MDB=$(BUILD_DIR)/Synapse.Services.dll.mdb
@@ -103,13 +103,9 @@ HYENA_DLL = $(BUILD_DIR)/Hyena.dll
 BANSHEE_PC = $(BUILD_DIR)/banshee.pc
 
 $(eval $(call emit-deploy-target,HYENA_DLL))
-$(eval $(call emit-deploy-target,SYNAPSE_SERVICES_DLL))
 $(eval $(call emit-deploy-wrapper,BANSHEE_PC,banshee.pc))
-$(eval $(call emit-deploy-target,SYNAPSE_SERVICES_DLL_MDB))
-$(eval $(call emit-deploy-target,SYNAPSE_CORE_DLL))
 $(eval $(call emit-deploy-target,DRAGON_SERVICES_DLL))
 $(eval $(call emit-deploy-target,DRAGON_CORE_DLL))
-$(eval $(call emit-deploy-target,SYNAPSE_CORE_DLL_MDB))
 
 
 $(eval $(call emit_resgen_targets))

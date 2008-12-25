@@ -4,4 +4,12 @@
 	   author    = "Eric Butler"
 	   copyright = "GPLv3"
 	   version   = "0.1">
+
+	<Dependencies>
+		<Addin id="Services" version="1.0" />
+	</Dependencies>
+
+	<Extension path="/Synapse/Services/NowPlaying/Providers">
+		<NowPlayingProvider class="Synapse.Addins.BansheeAddin.BansheeNowPlayingProvider"/>
+	</Extension>
 </Addin>

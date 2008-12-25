@@ -84,8 +84,14 @@ namespace Synapse.Xmpp
 		string   m_Action;
 		string   m_ActionItem;
 		string   m_Content;
+		Uri      m_ContentUrl;
 		
 		public ActivityFeedItem (Account account, JID from, string type, string action, string actionItem, string content)
+			: this (account, from, type, action, actionItem, content, null)
+		{
+		}
+		
+		public ActivityFeedItem (Account account, JID from, string type, string action, string actionItem, string content, string contentUrl)
 		{
 			if (action == null)
 				throw new ArgumentNullException("action");
@@ -97,6 +103,15 @@ namespace Synapse.Xmpp
 			m_Action     = Util.EscapeHtml(action);
 			m_ActionItem = Util.EscapeHtml(actionItem); 
 			m_Content    = Util.EscapeHtml(content);
+
+			if (!String.IsNullOrEmpty(contentUrl)) {
+				try {
+					m_ContentUrl = new Uri(contentUrl);
+					// Anything else would be scary.
+					if (m_ContentUrl.Scheme != "http" && m_ContentUrl.Scheme != "https")
+						m_ContentUrl = null;
+				} catch {}
+			}
 		}
 		
 		public DateTime Timestamp {
@@ -135,7 +150,10 @@ namespace Synapse.Xmpp
 			
 			if (!String.IsNullOrEmpty(m_Content)) {
 				htmlBuilder.Append(":");
-				htmlBuilder.Append(String.Format("<blockquote class=\"{0}\">{1}</blockquote>", m_Type, m_Content));
+				if (m_ContentUrl != null)
+					htmlBuilder.Append(String.Format("<blockquote class=\"{0}\"><a title=\"{1}\" href=\"{1}\">{2}</a></blockquote>", m_Type, m_ContentUrl.ToString(), m_Content));
+				else
+					htmlBuilder.Append(String.Format("<blockquote class=\"{0}\">{1}</blockquote>", m_Type, m_Content));
 			} else if (m_From != null) {
 				htmlBuilder.Append(".");
 			}
