@@ -59,6 +59,8 @@
     <File name="template4dotnet.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Controllers/TabbedChatsWindowController.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Views/ITabbedChatsWindowView.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Views/IEditGroupsWindowView.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Controllers/EditGroupsController.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

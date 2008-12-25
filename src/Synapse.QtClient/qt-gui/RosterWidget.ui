@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>319</width>
-    <height>612</height>
+    <height>773</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -48,7 +48,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex" >
-          <number>0</number>
+          <number>1</number>
          </property>
          <property name="usesScrollButtons" >
           <bool>false</bool>
@@ -152,47 +152,211 @@
             <number>0</number>
            </property>
            <item>
-            <layout class="QGridLayout" name="gridLayout" >
+            <layout class="QHBoxLayout" name="horizontalLayout_5" >
+             <property name="spacing" >
+              <number>12</number>
+             </property>
              <property name="margin" >
               <number>6</number>
              </property>
-             <property name="spacing" >
-              <number>6</number>
-             </property>
-             <item row="0" column="0" colspan="2" >
-              <widget class="QLabel" name="label" >
+             <item>
+              <spacer name="horizontalSpacer1" >
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0" >
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="m_ShoutButton_2" >
+               <property name="styleSheet" >
+                <string notr="true" />
+               </property>
                <property name="text" >
-                <string>Join Conference Room:</string>
+                <string>Quick Join</string>
+               </property>
+               <property name="icon" >
+                <iconset>
+                 <normaloff>../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png</normaloff>../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png</iconset>
+               </property>
+               <property name="checkable" >
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive" >
+                <bool>false</bool>
+               </property>
+               <property name="flat" >
+                <bool>true</bool>
                </property>
               </widget>
              </item>
-             <item row="1" column="0" >
-              <widget class="QLineEdit" name="m_ChatNameEdit" >
-               <property name="maxLength" >
-                <number>150</number>
+             <item>
+              <widget class="QPushButton" name="m_PostLinkButton_2" >
+               <property name="text" >
+                <string>Browse</string>
+               </property>
+               <property name="icon" >
+                <iconset>
+                 <normaloff>../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png</normaloff>../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png</iconset>
+               </property>
+               <property name="checkable" >
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive" >
+                <bool>false</bool>
+               </property>
+               <property name="flat" >
+                <bool>true</bool>
                </property>
               </widget>
              </item>
-             <item row="1" column="1" >
-              <widget class="QPushButton" name="m_JoinChatButton" >
-               <property name="text" >
-                <string>Join</string>
+             <item>
+              <spacer name="horizontalSpacer_21" >
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
                </property>
-              </widget>
+               <property name="sizeHint" stdset="0" >
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </item>
            <item>
-            <widget class="QTreeView" name="mucTree" >
-             <property name="frameShape" >
-              <enum>QFrame::NoFrame</enum>
+            <widget class="QWidget" native="1" name="quickJoinMucContainer" >
+             <layout class="QGridLayout" name="gridLayout_2" >
+              <property name="leftMargin" >
+               <number>6</number>
+              </property>
+              <property name="topMargin" >
+               <number>0</number>
+              </property>
+              <property name="rightMargin" >
+               <number>6</number>
+              </property>
+              <property name="bottomMargin" >
+               <number>6</number>
+              </property>
+              <property name="horizontalSpacing" >
+               <number>6</number>
+              </property>
+              <property name="verticalSpacing" >
+               <number>0</number>
+              </property>
+              <item row="0" column="0" >
+               <widget class="QLabel" name="label" >
+                <property name="text" >
+                 <string>Join Conference Room:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" >
+               <widget class="QLineEdit" name="m_ChatNameEdit" >
+                <property name="maxLength" >
+                 <number>150</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1" >
+               <widget class="QPushButton" name="m_JoinChatButton" >
+                <property name="text" >
+                 <string>Join</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+             <zorder>label</zorder>
+             <zorder>m_ChatNameEdit</zorder>
+             <zorder>m_JoinChatButton</zorder>
+             <zorder>splitter_2</zorder>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSplitter" name="splitter_2" >
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
              </property>
-             <property name="animated" >
-              <bool>true</bool>
-             </property>
-             <property name="headerHidden" >
-              <bool>true</bool>
-             </property>
+             <widget class="QWidget" native="1" name="widget_3" >
+              <layout class="QVBoxLayout" name="verticalLayout_7" >
+               <property name="spacing" >
+                <number>6</number>
+               </property>
+               <property name="margin" >
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="label_4" >
+                 <property name="text" >
+                  <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Friends&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QWebView" name="friendMucListWebView" >
+                 <property name="url" >
+                  <url>
+                   <string>about:blank</string>
+                  </url>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" native="1" name="widget_2" >
+              <layout class="QVBoxLayout" name="verticalLayout_5" >
+               <property name="spacing" >
+                <number>6</number>
+               </property>
+               <property name="leftMargin" >
+                <number>0</number>
+               </property>
+               <property name="topMargin" >
+                <number>6</number>
+               </property>
+               <property name="rightMargin" >
+                <number>0</number>
+               </property>
+               <property name="bottomMargin" >
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="label_3" >
+                 <property name="text" >
+                  <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Bookmarks&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QTreeView" name="mucTree" >
+                 <property name="frameShape" >
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="animated" >
+                  <bool>true</bool>
+                 </property>
+                 <property name="headerHidden" >
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </widget>
            </item>
           </layout>
@@ -385,28 +549,28 @@
    <slot>setShown(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>53</x>
-     <y>22</y>
+     <x>73</x>
+     <y>43</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>292</x>
-     <y>77</y>
+     <x>294</x>
+     <y>80</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>m_ChatNameEdit</sender>
-   <signal>returnPressed()</signal>
-   <receiver>m_JoinChatButton</receiver>
-   <slot>click()</slot>
+   <sender>m_ShoutButton_2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>quickJoinMucContainer</receiver>
+   <slot>setShown(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>103</x>
-     <y>43</y>
+     <x>125</x>
+     <y>34</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>103</x>
-     <y>43</y>
+     <x>220</x>
+     <y>75</y>
     </hint>
    </hints>
   </connection>

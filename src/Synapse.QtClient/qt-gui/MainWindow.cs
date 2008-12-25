@@ -19,7 +19,15 @@ namespace Synapse.QtClient.UI.Views {
         
         protected QLabel headerLabel;
         
+        protected QStackedWidget stackedWidget;
+        
+        protected QWidget page;
+        
         protected QWidget contentWidget;
+        
+        protected QWidget page_2;
+        
+        protected QWidget lightboxWidget;
         
         protected void SetupUi() {
             base.ObjectName = "MainWindow";
@@ -47,7 +55,16 @@ namespace Synapse.QtClient.UI.Views {
             this.headerLabel.Alignment = global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignCenter");
             this.headerLabel.Margin = 3;
             verticalLayout_2.AddWidget(this.headerLabel);
-            this.contentWidget = new QWidget(this.containerWidget);
+            this.stackedWidget = new QStackedWidget(this.containerWidget);
+            this.stackedWidget.ObjectName = "stackedWidget";
+            verticalLayout_2.AddWidget(this.stackedWidget);
+            this.page = new QWidget(this.stackedWidget);
+            this.page.ObjectName = "page";
+            QHBoxLayout horizontalLayout;
+            horizontalLayout = new QHBoxLayout(this.page);
+            horizontalLayout.Spacing = 0;
+            horizontalLayout.Margin = 0;
+            this.contentWidget = new QWidget(this.page);
             this.contentWidget.ObjectName = "contentWidget";
             QSizePolicy contentWidget_sizePolicy;
             contentWidget_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding);
@@ -55,7 +72,20 @@ namespace Synapse.QtClient.UI.Views {
             contentWidget_sizePolicy.SetHorizontalStretch(0);
             contentWidget_sizePolicy.SetHeightForWidth(this.contentWidget.SizePolicy.HasHeightForWidth());
             this.contentWidget.SizePolicy = contentWidget_sizePolicy;
-            verticalLayout_2.AddWidget(this.contentWidget);
+            horizontalLayout.AddWidget(this.contentWidget);
+            this.stackedWidget.AddWidget(this.page);
+            this.page_2 = new QWidget(this.stackedWidget);
+            this.page_2.ObjectName = "page_2";
+            QHBoxLayout horizontalLayout_2;
+            horizontalLayout_2 = new QHBoxLayout(this.page_2);
+            horizontalLayout_2.Spacing = 0;
+            horizontalLayout_2.Margin = 0;
+            this.lightboxWidget = new QWidget(this.page_2);
+            this.lightboxWidget.ObjectName = "lightboxWidget";
+            QHBoxLayout horizontalLayout_3;
+            horizontalLayout_3 = new QHBoxLayout(this.lightboxWidget);
+            horizontalLayout_2.AddWidget(this.lightboxWidget);
+            this.stackedWidget.AddWidget(this.page_2);
             verticalLayout.AddWidget(this.containerWidget);
             QMetaObject.ConnectSlotsByName(this);
         }

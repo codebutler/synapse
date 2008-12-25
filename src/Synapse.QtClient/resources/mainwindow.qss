@@ -193,3 +193,7 @@ QSlider::groove {
 	margin: 3px;
 	height: 12px;
 }
+
+QWidget#lightboxWidget {
+	background: rgba(0, 0, 0, 210);
+}

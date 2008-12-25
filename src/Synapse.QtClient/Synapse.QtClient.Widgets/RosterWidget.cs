@@ -29,6 +29,7 @@ using Synapse.Xmpp;
 using Synapse.UI.Operations;
 using Synapse.ServiceStack;
 using Synapse.UI;
+using Synapse.UI.Controllers;
 using Synapse.QtClient;
 using Synapse.QtClient.UI.Views;
 using Synapse.QtClient.Widgets;
@@ -49,6 +50,7 @@ public partial class RosterWidget : QWidget
 	QAction 			  m_ViewProfileAction;
 	QAction               m_IMAction;
 	QAction               m_ListModeAction;
+	QAction               m_EditGroupsAction;
 
 	public event EventHandler ActivityFeedReady;
 	
@@ -86,7 +88,10 @@ public partial class RosterWidget : QWidget
 		m_RosterItemMenu.AddMenu(m_InviteMenu);
 		m_RosterItemMenu.AddAction("View History");
 		m_RosterItemMenu.AddSeparator();
-		m_RosterItemMenu.AddAction("Edit Tags");
+
+		m_EditGroupsAction = new QAction("Edit Groups", m_RosterItemMenu);
+		m_RosterItemMenu.AddAction(m_EditGroupsAction);
+		
 		m_RosterItemMenu.AddAction("Remove");
 
 		m_RosterModel = new RosterAvatarGridModel();
@@ -104,7 +109,10 @@ public partial class RosterWidget : QWidget
 		QObject.Connect(m_ActivityWebView.Page(), Qt.SIGNAL("loadFinished(bool)"), this, Qt.SLOT("activityPage_loadFinished(bool)"));
 		
 		m_ParentWindow = parent;
-		
+
+		friendMucListWebView.Page().MainFrame().Load("resource:/friend-muclist.html");
+
+		quickJoinMucContainer.Hide();
 		shoutContainer.Hide();
 
 		QVBoxLayout layout = new QVBoxLayout(m_AccountsContainer);
@@ -153,13 +161,17 @@ public partial class RosterWidget : QWidget
 	{
 		Account selectedAccount = Gui.ShowAccountSelectMenu(m_JoinChatButton);
 		if (selectedAccount != null) {
-			JID jid = new JID(m_ChatNameEdit.Text);
-			if (!String.IsNullOrEmpty(jid.User) && !String.IsNullOrEmpty(jid.Server)) {
-				ServiceManager.Get<OperationService>().Start(new JoinMucOperation(selectedAccount, jid));
+			JID jid = null;
+			if (JID.TryParse(m_ChatNameEdit.Text, out jid)) {
+				if (!String.IsNullOrEmpty(jid.User) && !String.IsNullOrEmpty(jid.Server)) {
+					ServiceManager.Get<OperationService>().Start(new JoinMucOperation(selectedAccount, jid));
+				} else {
+					QMessageBox.Critical(null, "Synapse", "Invalid JID");
+				}
+				m_ChatNameEdit.Text = String.Empty;
 			} else {
-				QMessageBox.Critical(null, "Synapse", "Invalid JID");
+				QMessageBox.Critical(this.TopLevelWidget(), "Synapse Error", "Invalid conference room");
 			}
-			m_ChatNameEdit.Text = String.Empty;
 		}
 	}
 
@@ -201,6 +213,12 @@ public partial class RosterWidget : QWidget
 	[Q_SLOT]
 	void rosterItemMenu_triggered (QAction action)
 	{
+		// FIXME: Actions should be handled in the controller.
+		
+		// FIXME: Don't use HoverItem, store MousePressItem separately.
+		if (rosterGrid.HoverItem == null)
+			return;
+		
 		if (action == m_ViewProfileAction) {
 			ServiceManager.Get<OperationService>().Start(new RequestVCardOperation(rosterGrid.HoverItem.Account, rosterGrid.HoverItem.Item.JID));
 		} else if (action == m_IMAction) {
@@ -208,6 +226,8 @@ public partial class RosterWidget : QWidget
 		} else if (m_InviteActions.Contains(action)) {
 			// FIXME
 			Console.WriteLine("Send Invitation!!");
+		} else if (action == m_EditGroupsAction) {
+			var c = new EditGroupsWindowController(rosterGrid.HoverItem.Account, rosterGrid.HoverItem.Item);
 		}
 	}
 	
@@ -223,7 +243,7 @@ public partial class RosterWidget : QWidget
 
 	[Q_SLOT]
 	void on_rosterIconSizeSlider_valueChanged (int value)
-	{		
+	{
 		rosterGrid.IconSize = value;
 	}
 

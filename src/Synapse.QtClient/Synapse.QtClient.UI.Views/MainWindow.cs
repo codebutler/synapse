@@ -60,6 +60,7 @@ namespace Synapse.QtClient.UI.Views
 			SetupUi();
 			base.WindowFlags = (uint)Qt.WindowType.FramelessWindowHint;
 
+			// FIXME: Add a global "Application Icon" somewhere that contains multiple sizes.
 			QPixmap pixmap = new QPixmap("resource:/octy-22.png");
 			base.WindowIcon = new QIcon(pixmap);
 			
@@ -85,6 +86,9 @@ namespace Synapse.QtClient.UI.Views
 			Gui.CenterWidgetOnScreen(this);
 
 			headerLabel.InstallEventFilter(new WindowMover(this));
+
+			((QStackedLayout)stackedWidget.Layout()).stackingMode = QStackedLayout.StackingMode.StackAll;
+			stackedWidget.Widget(1).Hide();
 		}
 		
 		public new void Show ()
@@ -93,6 +97,39 @@ namespace Synapse.QtClient.UI.Views
 			base.Show();
 		}
 
+		QWidget lightboxChild = null;
+
+		public void ShowLightbox (QWidget widget)
+		{
+			if (lightboxChild != null)
+				throw new InvalidOperationException("Lightbox is already visible");
+
+			var layout = (QBoxLayout)lightboxWidget.Layout();
+			lightboxChild = widget;
+			layout.AddWidget(widget);
+			
+			stackedWidget.Widget(0).Enabled = false;
+			
+			lightboxWidget.Show();
+			stackedWidget.CurrentIndex = 1;
+		}
+		
+		public void HideLightbox ()
+		{
+			if (lightboxChild == null)
+				throw new InvalidOperationException("Lightbox is already hidden");
+		
+			var layout = (QBoxLayout)lightboxWidget.Layout();
+			layout.RemoveWidget(lightboxChild);
+			lightboxChild.Dispose();
+			lightboxChild = null;
+			
+			stackedWidget.Widget(0).Enabled = true;
+			
+			lightboxWidget.Hide();
+			stackedWidget.CurrentIndex = 0;
+		}
+		
 		public string Login {
 			get {
 				return m_NoAccountsWidget.Login;

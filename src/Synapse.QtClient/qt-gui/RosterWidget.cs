@@ -34,11 +34,29 @@ public partial class RosterWidget : QWidget {
     
     protected QWidget chatroomsTab;
     
+    protected QPushButton m_ShoutButton_2;
+    
+    protected QPushButton m_PostLinkButton_2;
+    
+    protected QWidget quickJoinMucContainer;
+    
     protected QLabel label;
     
     protected QLineEdit m_ChatNameEdit;
     
     protected QPushButton m_JoinChatButton;
+    
+    protected QSplitter splitter_2;
+    
+    protected QWidget widget_3;
+    
+    protected QLabel label_4;
+    
+    protected QWebView friendMucListWebView;
+    
+    protected QWidget widget_2;
+    
+    protected QLabel label_3;
     
     protected QTreeView mucTree;
     
@@ -60,7 +78,7 @@ public partial class RosterWidget : QWidget {
     
     protected void SetupUi() {
         base.ObjectName = "RosterWidget";
-        this.Geometry = new QRect(0, 0, 319, 612);
+        this.Geometry = new QRect(0, 0, 319, 773);
         this.WindowTitle = "RosterWidget";
         QVBoxLayout verticalLayout_6;
         verticalLayout_6 = new QVBoxLayout(this);
@@ -88,7 +106,7 @@ public partial class RosterWidget : QWidget {
         this.tabWidget.ObjectName = "tabWidget";
         this.tabWidget.tabPosition = QTabWidget.TabPosition.South;
         this.tabWidget.tabShape = QTabWidget.TabShape.Rounded;
-        this.tabWidget.CurrentIndex = 0;
+        this.tabWidget.CurrentIndex = 1;
         this.tabWidget.UsesScrollButtons = false;
         verticalLayout_2.AddWidget(this.tabWidget);
         this.friendsTab = new QWidget(this.tabWidget);
@@ -145,29 +163,90 @@ public partial class RosterWidget : QWidget {
         verticalLayout_3 = new QVBoxLayout(this.chatroomsTab);
         verticalLayout_3.Spacing = 0;
         verticalLayout_3.Margin = 0;
-        QGridLayout gridLayout;
-        gridLayout = new QGridLayout();
-        verticalLayout_3.AddLayout(gridLayout);
-        gridLayout.Margin = 6;
-        gridLayout.Spacing = 6;
-        this.label = new QLabel(this.chatroomsTab);
+        QHBoxLayout horizontalLayout_5;
+        horizontalLayout_5 = new QHBoxLayout();
+        verticalLayout_3.AddLayout(horizontalLayout_5);
+        horizontalLayout_5.Spacing = 12;
+        horizontalLayout_5.Margin = 6;
+        QSpacerItem horizontalSpacer1;
+        horizontalSpacer1 = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        horizontalLayout_5.AddItem(horizontalSpacer1);
+        this.m_ShoutButton_2 = new QPushButton(this.chatroomsTab);
+        this.m_ShoutButton_2.ObjectName = "m_ShoutButton_2";
+        this.m_ShoutButton_2.StyleSheet = "";
+        this.m_ShoutButton_2.Text = "Quick Join";
+        this.m_ShoutButton_2.icon = new QIcon("../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png");
+        this.m_ShoutButton_2.Checkable = true;
+        this.m_ShoutButton_2.AutoExclusive = false;
+        this.m_ShoutButton_2.Flat = true;
+        horizontalLayout_5.AddWidget(this.m_ShoutButton_2);
+        this.m_PostLinkButton_2 = new QPushButton(this.chatroomsTab);
+        this.m_PostLinkButton_2.ObjectName = "m_PostLinkButton_2";
+        this.m_PostLinkButton_2.Text = "Browse";
+        this.m_PostLinkButton_2.icon = new QIcon("../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png");
+        this.m_PostLinkButton_2.Checkable = true;
+        this.m_PostLinkButton_2.AutoExclusive = false;
+        this.m_PostLinkButton_2.Flat = true;
+        horizontalLayout_5.AddWidget(this.m_PostLinkButton_2);
+        QSpacerItem horizontalSpacer_21;
+        horizontalSpacer_21 = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        horizontalLayout_5.AddItem(horizontalSpacer_21);
+        this.quickJoinMucContainer = new QWidget(this.chatroomsTab);
+        this.quickJoinMucContainer.ObjectName = "quickJoinMucContainer";
+        QGridLayout gridLayout_2;
+        gridLayout_2 = new QGridLayout(this.quickJoinMucContainer);
+        gridLayout_2.HorizontalSpacing = 6;
+        gridLayout_2.VerticalSpacing = 0;
+        gridLayout_2.SetContentsMargins(6, 0, 6, 6);
+        this.label = new QLabel(this.quickJoinMucContainer);
         this.label.ObjectName = "label";
         this.label.Text = "Join Conference Room:";
-        gridLayout.AddWidget(this.label, 0, 0, 1, 1);
-        this.m_ChatNameEdit = new QLineEdit(this.chatroomsTab);
+        gridLayout_2.AddWidget(this.label, 0, 0, 1, 1);
+        this.m_ChatNameEdit = new QLineEdit(this.quickJoinMucContainer);
         this.m_ChatNameEdit.ObjectName = "m_ChatNameEdit";
         this.m_ChatNameEdit.MaxLength = 150;
-        gridLayout.AddWidget(this.m_ChatNameEdit, 1, 0, 1, 1);
-        this.m_JoinChatButton = new QPushButton(this.chatroomsTab);
+        gridLayout_2.AddWidget(this.m_ChatNameEdit, 1, 0, 1, 1);
+        this.m_JoinChatButton = new QPushButton(this.quickJoinMucContainer);
         this.m_JoinChatButton.ObjectName = "m_JoinChatButton";
         this.m_JoinChatButton.Text = "Join";
-        gridLayout.AddWidget(this.m_JoinChatButton, 1, 1, 1, 1);
-        this.mucTree = new QTreeView(this.chatroomsTab);
+        gridLayout_2.AddWidget(this.m_JoinChatButton, 1, 1, 1, 1);
+        verticalLayout_3.AddWidget(this.quickJoinMucContainer);
+        this.splitter_2 = new QSplitter(this.chatroomsTab);
+        this.splitter_2.ObjectName = "splitter_2";
+        this.splitter_2.Orientation = Qt.Orientation.Vertical;
+        verticalLayout_3.AddWidget(this.splitter_2);
+        this.widget_3 = new QWidget(this.splitter_2);
+        this.widget_3.ObjectName = "widget_3";
+        QVBoxLayout verticalLayout_7;
+        verticalLayout_7 = new QVBoxLayout(this.widget_3);
+        verticalLayout_7.Spacing = 6;
+        verticalLayout_7.Margin = 0;
+        this.label_4 = new QLabel(this.widget_3);
+        this.label_4.ObjectName = "label_4";
+        this.label_4.Text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Friends</span></p></body></html>";
+        verticalLayout_7.AddWidget(this.label_4);
+        this.friendMucListWebView = new QWebView(this.widget_3);
+        this.friendMucListWebView.ObjectName = "friendMucListWebView";
+        this.friendMucListWebView.Url = new QUrl("about:blank");
+        verticalLayout_7.AddWidget(this.friendMucListWebView);
+        this.splitter_2.AddWidget(this.widget_3);
+        this.widget_2 = new QWidget(this.splitter_2);
+        this.widget_2.ObjectName = "widget_2";
+        QVBoxLayout verticalLayout_5;
+        verticalLayout_5 = new QVBoxLayout(this.widget_2);
+        verticalLayout_5.Spacing = 6;
+        verticalLayout_5.SetContentsMargins(0, 6, 0, 0);
+        this.label_3 = new QLabel(this.widget_2);
+        this.label_3.ObjectName = "label_3";
+        this.label_3.Text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Bookmarks</span></p></body></html>";
+        verticalLayout_5.AddWidget(this.label_3);
+        this.mucTree = new QTreeView(this.widget_2);
         this.mucTree.ObjectName = "mucTree";
         this.mucTree.FrameShape = QFrame.Shape.NoFrame;
         this.mucTree.Animated = true;
         this.mucTree.HeaderHidden = true;
-        verticalLayout_3.AddWidget(this.mucTree);
+        verticalLayout_5.AddWidget(this.mucTree);
+        this.splitter_2.AddWidget(this.widget_2);
         this.tabWidget.AddTab(this.chatroomsTab, "Conferences");
         this.activityTab = new QWidget(this.tabWidget);
         this.activityTab.ObjectName = "activityTab";
@@ -234,7 +313,7 @@ public partial class RosterWidget : QWidget {
         this.tabWidget.AddTab(this.activityTab, "Activity");
         this.splitter.AddWidget(this.widget);
         QObject.Connect(m_ShoutButton, Qt.SIGNAL("toggled(bool)"), shoutContainer, Qt.SLOT("setShown(bool)"));
-        QObject.Connect(m_ChatNameEdit, Qt.SIGNAL("returnPressed()"), m_JoinChatButton, Qt.SLOT("click()"));
+        QObject.Connect(m_ShoutButton_2, Qt.SIGNAL("toggled(bool)"), quickJoinMucContainer, Qt.SLOT("setShown(bool)"));
         QMetaObject.ConnectSlotsByName(this);
     }
 }
