@@ -92,7 +92,22 @@ namespace Synapse.QtClient
 			this.SetGeometry(0, 0, 445, 370);
 			Gui.CenterWidgetOnScreen(this);
 
-			0.UpTo(9).ForEach(i => AddTabSwitchKeyAction(i));
+			var closeShortcuts = new [] { "Ctrl+w", "Esc" };
+			closeShortcuts.ForEach(shortcut => {
+				QAction closeAction = new QAction(this);
+				QObject.Connect(closeAction, Qt.SIGNAL("triggered(bool)"), this, Qt.SLOT("closeAction_triggered(bool)"));
+				closeAction.Shortcut = new QKeySequence(shortcut);
+				this.AddAction(closeAction);
+			});
+
+			0.UpTo(9).ForEach(num => {
+				QAction action = new QAction(this);
+				action.Shortcut = new QKeySequence("Alt+" + num.ToString());
+				QObject.Connect(action, Qt.SIGNAL("triggered(bool)"), delegate {
+					m_Tabs.CurrentIndex = num - 1;
+				});
+				this.AddAction(action);
+			});
 		}
 		
 		public void AddChatWindow (AbstractChatWindowController window, bool focus)
@@ -149,16 +164,6 @@ namespace Synapse.QtClient
 				QApplication.Alert(this);
 		}
 		
-		void AddTabSwitchKeyAction (int num)
-		{
-			QAction action = new QAction(this);
-			action.Shortcut = new QKeySequence("Alt+" + num.ToString());
-			QObject.Connect(action, Qt.SIGNAL("triggered(bool)"), delegate {
-				m_Tabs.CurrentIndex = num - 1;
-			});
-			this.AddAction(action);
-		}
-		
 		[Q_SLOT]
 		void currentChanged(int index)
 		{
@@ -192,6 +197,12 @@ namespace Synapse.QtClient
 			}
 		}
 
+		[Q_SLOT]
+		void closeAction_triggered (bool chkd)
+		{
+			closeTab(null);
+		}
+		 
 		void TabAdded ()
 		{
 			if (!this.IsVisible())

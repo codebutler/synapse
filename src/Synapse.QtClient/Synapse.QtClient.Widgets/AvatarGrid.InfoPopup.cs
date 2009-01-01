@@ -54,7 +54,7 @@ namespace Synapse.QtClient.Widgets
 			{
 				m_Grid = grid;
 				base.WindowFlags = (uint)Qt.WindowType.FramelessWindowHint | (uint)Qt.WindowType.ToolTip;
-				base.Resize(260, 95);
+				base.SetMinimumSize(260, 95);
 				base.SetStyleSheet("background: black; color: white");
 
 				m_GraphicsView = new MyGraphicsView(this);

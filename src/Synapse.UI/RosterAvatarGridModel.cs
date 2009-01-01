@@ -23,6 +23,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Synapse.Core;
 using Synapse.ServiceStack;
@@ -131,7 +132,7 @@ namespace Synapse.UI
 			if (presences.Length == 1) {
 				var presence = presences[0];
 				builder.AppendFormat("\n");
-				builder.Append(Helper.GetPresenceDisplay(presence));
+				builder.Append(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Helper.GetPresenceDisplay(presence)));
 				if (!String.IsNullOrEmpty(presence.Status)) {
 					builder.Append(" - ");
 				    builder.Append(presence.Status);
