@@ -75,8 +75,6 @@ namespace Synapse.QtClient.Widgets
 			m_TooltipTimer.Interval = 500;
 			QObject.Connect(m_TooltipTimer, Qt.SIGNAL("timeout()"), this, Qt.SLOT("tooltipTimer_timeout()"));
 
-			this.InstallEventFilter(this);
-
 			m_FadeAnimations = new Dictionary<IFadableItem, FadeInOutAnimation>();
 		}
 

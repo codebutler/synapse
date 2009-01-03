@@ -49,6 +49,9 @@ namespace Synapse.QtClient.Widgets
 				m_TextWidth = metrics.Width(m_GroupName);
 				
 				m_Rect = new QRectF(m_Grid.IconPadding, 0, 0, 0);
+
+				base.SetHandlesChildEvents(false);
+				base.SetAcceptHoverEvents(true);
 			}
 
 			public double Opacity {
@@ -129,16 +132,38 @@ namespace Synapse.QtClient.Widgets
 				//painter.DrawRect(BoundingRect());
 			}
 
-			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
+			protected override void MouseReleaseEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
 			{
 				if (arg1.Button() == Qt.MouseButton.LeftButton) {
 					var pos = arg1.Pos();
-					if (pos.Y() < m_Grid.HeaderHeight) {
+					var pos1 = arg1.ButtonDownPos(Qt.MouseButton.LeftButton);
+					if (pos.Y() < m_Grid.HeaderHeight && pos1.Equals(pos)) {
 						this.IsExpanded = !this.IsExpanded;
 						m_Grid.ResizeAndRepositionGroups();
 					}
 				}
-				base.MousePressEvent (arg1);
+			}
+
+			// Nothing works without this.
+			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
+			{
+			}
+
+			protected override void MouseMoveEvent (Qyoto.QGraphicsSceneMouseEvent evnt)
+			{
+				Console.WriteLine("Group Mouse Move");
+				
+				var app = ((QApplication)QApplication.Instance());
+				if (new QLineF(evnt.ScreenPos(), evnt.ButtonDownScreenPos(Qt.MouseButton.LeftButton))
+				.Length() < app.StartDragDistance) {
+					return;
+				}
+	
+				QDrag drag = new QDrag(evnt.Widget());
+				QMimeData mime = new QMimeData();
+				drag.SetMimeData(mime);
+	
+				drag.Exec();
 			}
 		}
 	}
