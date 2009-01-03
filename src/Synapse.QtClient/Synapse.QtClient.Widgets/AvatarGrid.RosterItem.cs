@@ -97,7 +97,7 @@ namespace Synapse.QtClient.Widgets
 
 			// FIXME: This constantly crashes...
 			public override QRectF BoundingRect ()
-			{
+			{				
 				if (!m_Grid.ListMode) {
 					m_Rect.SetWidth(m_Grid.IconSize);
 				} else {
@@ -136,6 +136,19 @@ namespace Synapse.QtClient.Widgets
 	
 				SetCursor(new QCursor(Qt.CursorShape.OpenHandCursor));
 			}
+
+			public void BeginFade(bool fadeIn)
+			{
+				// FIXME: Start an animation.
+				this.Opacity = fadeIn ? 1 : 0;
+				this.SetVisible(fadeIn);
+			}
+
+			public void BeginMove(QPointF pos)
+			{
+				// FIXME: Start an animation.
+				this.SetPos(pos);
+			}			
 		}
 	}
 }

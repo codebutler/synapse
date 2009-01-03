@@ -34,20 +34,18 @@ namespace Synapse.QtClient.Widgets
 	
 	public partial class AvatarGrid<T> : QGraphicsView
 	{
-		IAvatarGridModel<T>   m_Model;
-		QGraphicsScene        m_Scene;
-		RosterItem<T>         m_HoverItem;
-		List<QTimeLine>       m_FadeTimeLines = new List<QTimeLine>();
-		List<QTimeLine>       m_MoveTimeLines = new List<QTimeLine>();
-		InfoPopup<T>          m_InfoPopup;
-		QTimer                m_TooltipTimer;
-		Dictionary<IFadableItem, FadeInOutAnimation> m_FadeAnimations;
+		IAvatarGridModel<T>  m_Model;
+		QGraphicsScene       m_Scene;
+		RosterItem<T>        m_HoverItem;
+		InfoPopup<T>         m_InfoPopup;
+		QTimer               m_TooltipTimer;
 		
 		Dictionary<string, RosterItemGroup> m_Groups = new Dictionary<string, RosterItemGroup>();
 			
 		int  m_IconWidth    = 32;
 		int  m_HeaderHeight = 16;		
 		bool m_ListMode     = false;
+		string m_LastTextFilter = null;
 
 		public event AvatarGridItemEventHandler<T> ItemActivated;
 		
@@ -75,7 +73,7 @@ namespace Synapse.QtClient.Widgets
 			m_TooltipTimer.Interval = 500;
 			QObject.Connect(m_TooltipTimer, Qt.SIGNAL("timeout()"), this, Qt.SLOT("tooltipTimer_timeout()"));
 
-			m_FadeAnimations = new Dictionary<IFadableItem, FadeInOutAnimation>();
+			this.InstallEventFilter(this);
 		}
 
 		#region Public Properties
@@ -270,21 +268,11 @@ namespace Synapse.QtClient.Widgets
 			int iconHeight = (IconSize + IconPadding);
 			
 			int groupY = 0;
-
 			int vScroll = this.VerticalScrollBar().Value;
 
-			// FIXME: This lock is causing a compiler error!
-			//lock (m_Groups) {
-				// Stop any existing move animations.
-				m_MoveTimeLines.ForEach(t => t.Stop());
-				m_MoveTimeLines.Clear();
-	
-				QTimeLine fadeTimeline = new QTimeLine(500);
-				fadeTimeline.curveShape = QTimeLine.CurveShape.LinearCurve;
-				
-				QTimeLine moveTimeline = new QTimeLine(500);
-				moveTimeline.curveShape = QTimeLine.CurveShape.LinearCurve;
-		
+			bool filterChanged = (m_LastTextFilter != m_Model.TextFilter);
+			
+			lock (m_Groups) {
 				foreach (RosterItemGroup group in m_Groups.Values) {					
 					int itemY = 0;
 					
@@ -302,23 +290,18 @@ namespace Synapse.QtClient.Widgets
 					bool groupVisibilityChanged = false;
 					bool groupVisible = visibleChildren > 0;
 					if (group.IsVisible() != groupVisible) {
-						if (m_FadeAnimations.ContainsKey(group))
-							CancelFadeAnimation(group);
-						var groupFadeAnimation = new FadeInOutAnimation(groupVisible, fadeTimeline);
-						groupFadeAnimation.SetTimeLine(fadeTimeline);
-						groupFadeAnimation.SetItem(group);
-						groupVisibilityChanged = true;
-						m_FadeAnimations.Add(group, groupFadeAnimation);
+						if (filterChanged) {
+							group.SetVisible(groupVisible);
+						} else {
+							group.BeginFade(groupVisible);
+						}
 					}
 
 					if (group.Y() != groupY) {
-						if (groupVisibilityChanged || !group.IsVisible() || (group.X() == 0 && group.Y() == 0)) {
+						if (groupVisibilityChanged || !group.IsVisible() || (group.X() == 0 && group.Y() == 0) || filterChanged) {
 							group.SetPos(0, groupY);
 						} else {
-							var groupMoveAnimation = new QGraphicsItemAnimation(moveTimeline);
-							groupMoveAnimation.SetTimeLine(moveTimeline);
-							groupMoveAnimation.SetItem(group);
-							groupMoveAnimation.SetPosAt(1, new QPointF(0, groupY));
+							group.BeginMove(new QPointF(0, groupY));
 						}
 					}
 					
@@ -328,12 +311,10 @@ namespace Synapse.QtClient.Widgets
 						int itemCount = children.Count;
 						if (itemCount > 0) {
 							int perRow = Math.Max((((int)m_Scene.Width() - IconPadding) / iconWidth), 1);
-
 							if (m_ListMode)
-								perRow = 1;
+								perRow = 1;							
 							
 							int rows = Math.Max(itemCount / perRow, 1);
-	
 							int x       = IconPadding;
 							int row     = 0;
 							int thisRow = 0;
@@ -349,12 +330,7 @@ namespace Synapse.QtClient.Widgets
 										item.Opacity = itemVisible ? 1 : 0;
 										item.SetVisible(itemVisible);
 									} else {
-										if (m_FadeAnimations.ContainsKey(item))
-											CancelFadeAnimation(item);
-										var fadeAnimation = new FadeInOutAnimation(itemVisible, fadeTimeline);
-										fadeAnimation.SetTimeLine(fadeTimeline);
-										fadeAnimation.SetItem(item);
-										m_FadeAnimations.Add(item, fadeAnimation);
+										item.BeginFade(itemVisible);
 									}
 								}
 								if (itemVisible) {
@@ -367,13 +343,10 @@ namespace Synapse.QtClient.Widgets
 									}
 
 									if (item.X() != x || item.Y() != itemY) {
-										if (groupVisibilityChanged || !item.IsVisible() || (item.X() == 0 && item.Y() == 0)) {
+										if (groupVisibilityChanged || !item.IsVisible() || (item.X() == 0 && item.Y() == 0) || filterChanged) {
 											item.SetPos(x, itemY);
 										} else {
-											var moveAnimation = new QGraphicsItemAnimation(moveTimeline);
-											moveAnimation.SetTimeLine(moveTimeline);
-											moveAnimation.SetItem(item);
-											moveAnimation.SetPosAt(1, new QPointF(x, itemY));
+											item.BeginMove(new QPointF(x, itemY));
 										}
 									}
 		
@@ -384,7 +357,13 @@ namespace Synapse.QtClient.Widgets
 
 							if (thisRow > 0)
 								itemY += iconHeight;
+
+							group.RowCount = row + 1;
+						} else {
+							group.RowCount = 0;
 						}
+					} else {
+						group.RowCount = 0;
 					}
 					
 					groupY += itemY;
@@ -402,28 +381,9 @@ namespace Synapse.QtClient.Widgets
 				if (this.VerticalScrollBar().Value != vScroll) {
 					this.VerticalScrollBar().SetValue(vScroll);
 				}
-	
-				if (fadeTimeline.Children().Count() > 0)  {
-					QObject.Connect(fadeTimeline, Qt.SIGNAL("finished()"), delegate {
-						m_FadeTimeLines.Remove(fadeTimeline);
-						foreach (var child in fadeTimeline.Children()) {
-							var animation = child as FadeInOutAnimation;
-							if (animation != null)
-								m_FadeAnimations.Remove(((IFadableItem)animation.Item()));
-						}
-					});
-					m_FadeTimeLines.Add(fadeTimeline);
-					fadeTimeline.Start();
-				}
-				
-				if (moveTimeline.Children().Count() > 0)  {
-					QObject.Connect(moveTimeline, Qt.SIGNAL("finished()"), delegate {
-						m_MoveTimeLines.Remove(moveTimeline);
-					});
-					m_MoveTimeLines.Add(moveTimeline);
-					moveTimeline.Start();
-				}
-			//}
+			}
+			
+			m_LastTextFilter = m_Model.TextFilter;
 		}
 
 		void AddItem (T item, bool resizeAndReposition)
@@ -452,13 +412,6 @@ namespace Synapse.QtClient.Widgets
 				if (resizeAndReposition)
 					ResizeAndRepositionGroups();
 			}			
-		}
-
-		void CancelFadeAnimation (IFadableItem item)
-		{
-			var animation = m_FadeAnimations[item];
-			m_FadeAnimations.Remove(item);
-			animation.Dispose();	
 		}
 
 		[Q_SLOT]

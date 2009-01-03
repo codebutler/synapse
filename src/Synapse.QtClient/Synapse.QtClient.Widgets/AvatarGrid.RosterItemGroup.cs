@@ -35,6 +35,7 @@ namespace Synapse.QtClient.Widgets
 			bool          m_Expanded = true;
 			double        m_Opacity = 1;
 			int           m_TextWidth;
+			int           m_RowCount;
 			
 			public RosterItemGroup (AvatarGrid<T> grid, string groupName)
 			{
@@ -80,6 +81,28 @@ namespace Synapse.QtClient.Widgets
 				}
 			}
 			
+			public int RowCount {
+				get {
+					return m_RowCount;
+				}
+				set {
+					m_RowCount = value;
+				}
+			}
+			
+			public void BeginFade(bool fadeIn)
+			{
+				// FIXME: Start an animation.
+				this.Opacity = fadeIn ? 1 : 0;
+				this.SetVisible(fadeIn);
+			}
+
+			public void BeginMove(QPointF pos)
+			{
+				// FIXME: Start an animation.
+				this.SetPos(pos);
+			}			
+			
 			public override QRectF BoundingRect ()
 			{
 				// FIXME: We need to animate the change in height when we 
@@ -87,11 +110,11 @@ namespace Synapse.QtClient.Widgets
 				// until all item animations are complete.
 				// Right now, we don't see any items fade out on collapse 
 				// because the group size changes right away.
-				
+
 				m_Rect.SetLeft(m_Grid.IconPadding);
 				m_Rect.SetWidth(m_Grid.Viewport().Width() - (m_Grid.IconPadding * 2));
 				if (IsExpanded)
-					m_Rect.SetHeight(base.ChildrenBoundingRect().Height());
+					m_Rect.SetHeight(m_RowCount * (m_Grid.IconSize + m_Grid.IconPadding));
 				else
 					m_Rect.SetHeight(m_Grid.HeaderHeight);							
 				return m_Rect;
