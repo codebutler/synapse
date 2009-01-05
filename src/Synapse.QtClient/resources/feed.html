@@ -57,15 +57,17 @@
 			};
 
 			function ActivityFeedItem (id, accountJid, avatarUrl, fromJid, fromName, type, actionItem, content) {
-				this.id					= id;
-				this.accountJid	= accountJid;
-				this.avatarUrl	 = avatarUrl;
-				this.type				= type;
-				this.actionItem	= actionItem;
-				this.content		 = content;
-				this.from				= [];
-				this.timestamp	 = new Date();
-				this.addFrom(fromJid, fromName);
+				this.id           = id;
+				this.accountJid   = accountJid;
+				this.avatarUrl    = avatarUrl;
+				this.type         = type;
+				this.actionItem	  = actionItem;
+				this.content      = content;
+				this.from         = [];
+				this.timestamp    = new Date();
+
+				if (fromJid != null)
+					this.addFrom(fromJid, fromName);
 			}
 
 			ActivityFeedItem.prototype.addFrom = function (fromJid, fromName) {
@@ -89,6 +91,7 @@
 
 				var html = '<div class="item" style="background-image: url(\'{0}\') !important">'.format(this.avatarUrl);
 				html += '<div class="timestamp">{0}</div>'.format(this.timestamp.toLocaleTimeString());
+				
 				if (this.from.length > 1) {
 					if (this.from.length < 5) {
 						var feedItem = this;
@@ -133,6 +136,8 @@
 					} else {
 						html += template.pluarAction.format(this.actionItem);
 					}
+				} else if (this.from.length == 0) {
+					html += template.pluarAction.format(this.actionItem);
 				}
 				if (!this.content.blank()) {
 					html += '<blockquote class="{0}">{1}</blockquote>'.format(this.type, this.content);
@@ -159,30 +164,46 @@
 					};
 				},
 				addItem: function (accountJid, type, avatarUrl, fromJid, fromName, actionItem, content) {
-					if (this.templates[type] == null) {
-						alert("Unknown Template: " + type);
-						return;
-					}
-
-					if (this.items.length > 0 && this.items[this.items.length - 1].canMerge(type, actionItem, content)) {
-						this.items[this.items.length - 1].addFrom(fromJid, fromName);
-					} else {
-						var id = "item-{0}".format(this.items.length + 1);
-						var item = new ActivityFeedItem(id, accountJid, avatarUrl, fromJid, fromName, type, actionItem, content);
-						this.items.push(item);
-
-						var itemsList = $('items');
-						var li = new Element('li', { id: id });
-						li.hide();
-						Element.insert(itemsList, { top: li });
-
-						item.updateHtml();
-
-						li.appear();
+					try {
+						if (this.templates[type] == null) {
+							alert("Unknown Template: " + type);
+							return;
+						}
+	
+						var mergeItem = null;
+						for (var x = 0; x < this.items.length; x++) {
+							var thisItem = this.items[x];
+							if ((new Date() - thisItem.timestamp) > 60000)
+								break;
+							if (thisItem.canMerge(type, actionItem, content)) {
+								mergeItem = thisItem;
+								break;
+							}
+						}
+	
+						if (mergeItem != null) {
+							mergeItem.addFrom(fromJid, fromName);
+						} else {
+							var id = "item-{0}".format(this.items.length + 1);
+							var item = new ActivityFeedItem(id, accountJid, avatarUrl, fromJid, fromName, type, actionItem, content);
+							this.items.push(item);
+	
+							var itemsList = $('items');
+							var li = new Element('li', { id: id });
+							li.hide();
+							Element.insert(itemsList, { top: li });
+	
+							item.updateHtml();
+	
+							li.appear();
+						}
+					} catch (e) {
+						alert("addItem failed: " + e);
 					}
 				}
 			};
 
+			ActivityFeed.addTemplate("synapse", "<strong>{0}</strong>", "<strong>{0}</strong>");
 			ActivityFeed.addTemplate("presence", "is now <strong>{0}</strong>.", "are now <strong>{0}</strong>.");
 			ActivityFeed.addTemplate("presencem", "is now <strong>{0}</strong>:", "are now <strong>{0}</strong>:");
 			ActivityFeed.addTemplate("tune", "is <strong>listening to</strong>:", "are <strong>listening to</strong>:");

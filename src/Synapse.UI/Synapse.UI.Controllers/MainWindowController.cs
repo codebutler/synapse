@@ -72,19 +72,18 @@ namespace Synapse.UI.Controllers
 		private DialogValidationResult OnAddNewAccount()
 		{
 			DialogValidationResult result = new DialogValidationResult();
-
+			JID jid = null;
+			
 			if (String.IsNullOrEmpty(View.Login))
 				result.Errors.Add("Login", "may not be empty");
-			//else
-			//	if (JID.IsValid(View.Login)
-			//		result.Errors.Add("Login", "is not valid Jabber ID");
+			else
+				if (!JID.TryParse(View.Login, out jid))
+					result.Errors.Add("Login", "is not valid Jabber ID");
 			
 			if (String.IsNullOrEmpty(View.Password))
 				result.Errors.Add("Password", "may not be empty");
 			
 			if (result.IsValid) {
-				JID jid = new JID(View.Login);
-				
 				Account account = new Account(jid.User, jid.Server, "Synapse");
 				account.Password = View.Password;
 				AccountService service = ServiceManager.Get<AccountService>();

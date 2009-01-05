@@ -41,7 +41,7 @@ namespace Synapse.Xmpp
 		{
 			m_Account = account;
 			
-			//PostItem(new ActivityFeedItem(account, null, "app", "Welcome to Synapse!", null, null));
+			PostItem(new ActivityFeedItem(account, null, "synapse", "Welcome to Synapse!", null));
 		}
 		
 		public void PostItem (ActivityFeedItem item)
@@ -85,9 +85,6 @@ namespace Synapse.Xmpp
 			if (type == null)
 				throw new ArgumentNullException("type");
 			
-			if (actionItem == null)
-				throw new ArgumentNullException("actionItem");
-			
 			m_Account    = account;
 			m_From       = from;
 			m_Type       = type;
@@ -112,7 +109,7 @@ namespace Synapse.Xmpp
 
 		public string FromJid {
 			get {
-				return m_From.ToString();
+				return (m_From == null) ? null : m_From.ToString();
 			}
 		}
 

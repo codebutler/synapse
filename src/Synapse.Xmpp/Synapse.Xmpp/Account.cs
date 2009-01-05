@@ -223,7 +223,7 @@ namespace Synapse.Xmpp
 
 			if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
 				if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
-					m_ActivityFeed.PostItem(new ActivityFeedItem(this, pres.From, "presence", "is now {0}", Helper.GetPresenceDisplay(pres), pres.Status));
+					m_ActivityFeed.PostItem(new ActivityFeedItem(this, pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status));
 				}
 			}
 		}
