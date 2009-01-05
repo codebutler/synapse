@@ -50,6 +50,9 @@ namespace Synapse.QtClient.Widgets
 				m_TextWidth = metrics.Width(m_GroupName);
 				
 				m_Rect = new QRectF(m_Grid.IconPadding, 0, 0, 0);
+
+				base.SetHandlesChildEvents(false);
+				base.SetAcceptHoverEvents(true);
 			}
 
 			public double Opacity {
@@ -64,7 +67,7 @@ namespace Synapse.QtClient.Widgets
 			
 			public bool IsExpanded {
 				get {
-					return m_Expanded;
+					return m_Grid.AllGroupsCollapsed ? false : m_Expanded;
 				}
 				set {
 					m_Expanded = value;
@@ -132,7 +135,7 @@ namespace Synapse.QtClient.Widgets
 				painter.Save();
 				painter.Translate(m_Grid.IconPadding + m_TextWidth + 4, 5); // FIXME: These numbers probably shouldn't be hard coded.
 				QPainterPath path = new QPainterPath();
-				if (m_Expanded) {
+				if (IsExpanded) {
 					path.MoveTo(0, 0);
 					path.LineTo(4, 0);
 					path.LineTo(2, 2);
@@ -152,16 +155,61 @@ namespace Synapse.QtClient.Widgets
 				//painter.DrawRect(BoundingRect());
 			}
 
-			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
+			protected override void MouseReleaseEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
 			{
 				if (arg1.Button() == Qt.MouseButton.LeftButton) {
 					var pos = arg1.Pos();
-					if (pos.Y() < m_Grid.HeaderHeight) {
+					var pos1 = arg1.ButtonDownPos(Qt.MouseButton.LeftButton);
+					if (pos.Y() < m_Grid.HeaderHeight && pos1.Equals(pos)) {
 						this.IsExpanded = !this.IsExpanded;
 						m_Grid.ResizeAndRepositionGroups();
 					}
 				}
-				base.MousePressEvent (arg1);
+			}
+
+			// Nothing works without this.
+			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
+			{
+			}
+
+			protected override void MouseMoveEvent (Qyoto.QGraphicsSceneMouseEvent evnt)
+			{
+				var app = ((QApplication)QApplication.Instance());
+				if (new QLineF(evnt.ScreenPos(), evnt.ButtonDownScreenPos(Qt.MouseButton.LeftButton))
+				.Length() < app.StartDragDistance) {
+					return;
+				}
+
+				QDrag drag = new QDrag(evnt.Widget());
+				drag.SetHotSpot(evnt.Pos().ToPoint());
+				
+				var mime = new RosterItemGroupMimeData(this);
+				drag.SetMimeData(mime);
+
+				var pixmap = new QPixmap((int)BoundingRect().Width(), m_Grid.HeaderHeight);
+				pixmap.Fill(m_Grid.Palette.Color(QPalette.ColorRole.Base));
+				var painter = new QPainter(pixmap);
+				Paint(painter, null, null);
+				painter.End();
+				drag.SetPixmap(pixmap);
+	
+				drag.Exec();
+			}
+		}
+
+		class RosterItemGroupMimeData : QMimeData
+		{
+			RosterItemGroup m_Group;
+			
+			public RosterItemGroupMimeData (RosterItemGroup group)
+			{
+				m_Group = group;
+			}
+
+			public RosterItemGroup Group {
+				get {
+					return m_Group;
+				}
 			}
 		}
 	}

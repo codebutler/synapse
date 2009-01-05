@@ -35,12 +35,14 @@ namespace Synapse.QtClient.Widgets
 			
 			public RosterItem (AvatarGrid<T> grid, T item, double width, double height, QGraphicsItem parent)
 			{
-				m_Grid    = grid;
-				m_Item    = item;
+				m_Grid = grid;
+				m_Item = item;
 				m_Rect = new QRectF(0, 0, 0, 0);
 
 				// FIXME: This causes all sorts of problems.
 				// this.SetCacheMode(QGraphicsItem.CacheMode.DeviceCoordinateCache);
+
+				base.SetAcceptHoverEvents(true);
 			}
 
 			public T Item {
@@ -109,6 +111,30 @@ namespace Synapse.QtClient.Widgets
 				get {
 					return (m_Grid.HoverItem != null && m_Grid.HoverItem.Equals(m_Item));
 				}
+			}
+
+			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
+			{
+				Console.WriteLine("item mouse press");
+			}
+	
+			protected override void MouseMoveEvent (Qyoto.QGraphicsSceneMouseEvent evnt)
+			{
+				Console.WriteLine("Item Mouse Move");
+				
+				var app = ((QApplication)QApplication.Instance());
+				if (new QLineF(evnt.ScreenPos(), evnt.ButtonDownScreenPos(Qt.MouseButton.LeftButton))
+				.Length() < app.StartDragDistance) {
+					return;
+				}
+	
+				QDrag drag = new QDrag(evnt.Widget());
+				QMimeData mime = new QMimeData();
+				drag.SetMimeData(mime);
+	
+				drag.Exec((uint)Qt.DropAction.MoveAction | (uint)Qt.DropAction.CopyAction | (uint)Qt.DropAction.IgnoreAction);
+	
+				SetCursor(new QCursor(Qt.CursorShape.OpenHandCursor));
 			}
 
 			public void BeginFade(bool fadeIn)
