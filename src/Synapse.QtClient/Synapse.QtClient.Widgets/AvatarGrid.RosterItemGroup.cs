@@ -67,7 +67,7 @@ namespace Synapse.QtClient.Widgets
 			
 			public bool IsExpanded {
 				get {
-					return m_Expanded;
+					return m_Grid.AllGroupsCollapsed ? false : m_Expanded;
 				}
 				set {
 					m_Expanded = value;
@@ -135,7 +135,7 @@ namespace Synapse.QtClient.Widgets
 				painter.Save();
 				painter.Translate(m_Grid.IconPadding + m_TextWidth + 4, 5); // FIXME: These numbers probably shouldn't be hard coded.
 				QPainterPath path = new QPainterPath();
-				if (m_Expanded) {
+				if (IsExpanded) {
 					path.MoveTo(0, 0);
 					path.LineTo(4, 0);
 					path.LineTo(2, 2);
@@ -174,19 +174,42 @@ namespace Synapse.QtClient.Widgets
 
 			protected override void MouseMoveEvent (Qyoto.QGraphicsSceneMouseEvent evnt)
 			{
-				Console.WriteLine("Group Mouse Move");
-				
 				var app = ((QApplication)QApplication.Instance());
 				if (new QLineF(evnt.ScreenPos(), evnt.ButtonDownScreenPos(Qt.MouseButton.LeftButton))
 				.Length() < app.StartDragDistance) {
 					return;
 				}
-	
+
 				QDrag drag = new QDrag(evnt.Widget());
-				QMimeData mime = new QMimeData();
+				drag.SetHotSpot(evnt.Pos().ToPoint());
+				
+				var mime = new RosterItemGroupMimeData(this);
 				drag.SetMimeData(mime);
+
+				var pixmap = new QPixmap((int)BoundingRect().Width(), m_Grid.HeaderHeight);
+				pixmap.Fill(m_Grid.Palette.Color(QPalette.ColorRole.Base));
+				var painter = new QPainter(pixmap);
+				Paint(painter, null, null);
+				painter.End();
+				drag.SetPixmap(pixmap);
 	
 				drag.Exec();
+			}
+		}
+
+		class RosterItemGroupMimeData : QMimeData
+		{
+			RosterItemGroup m_Group;
+			
+			public RosterItemGroupMimeData (RosterItemGroup group)
+			{
+				m_Group = group;
+			}
+
+			public RosterItemGroup Group {
+				get {
+					return m_Group;
+				}
 			}
 		}
 	}

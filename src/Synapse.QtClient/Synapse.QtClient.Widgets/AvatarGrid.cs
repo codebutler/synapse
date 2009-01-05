@@ -41,12 +41,14 @@ namespace Synapse.QtClient.Widgets
 		QTimer               m_TooltipTimer;
 		
 		Dictionary<string, RosterItemGroup> m_Groups = new Dictionary<string, RosterItemGroup>();
-			
+		
 		int  m_IconWidth    = 32;
 		int  m_HeaderHeight = 16;		
 		bool m_ListMode     = false;
 		string m_LastTextFilter = null;
 
+		bool m_AllGroupsCollapsed = false;
+		
 		public event AvatarGridItemEventHandler<T> ItemActivated;
 		
 		public AvatarGrid(QWidget parent) : base(parent)
@@ -54,7 +56,7 @@ namespace Synapse.QtClient.Widgets
 			// FIXME: Need a preference to turn this on/off.
 			// this.SetViewport(new QGLWidget());
 			
-			m_Scene = new QGraphicsScene(this);
+			m_Scene = new Scene(this);
 			this.SetScene(m_Scene);
 
 			m_InfoPopup = new InfoPopup<T>(this);
@@ -73,7 +75,7 @@ namespace Synapse.QtClient.Widgets
 			m_TooltipTimer.Interval = 500;
 			QObject.Connect(m_TooltipTimer, Qt.SIGNAL("timeout()"), this, Qt.SLOT("tooltipTimer_timeout()"));
 
-			this.InstallEventFilter(this);
+			this.AcceptDrops = true;
 		}
 
 		#region Public Properties
@@ -84,6 +86,7 @@ namespace Synapse.QtClient.Widgets
 					throw new InvalidOperationException("Model has already been set");
 
 				m_Model = value;
+				
 				m_Model.ItemAdded   += model_ItemAdded;
 				m_Model.ItemRemoved += model_ItemRemoved;
 				m_Model.ItemChanged += model_ItemChanged;
@@ -193,7 +196,12 @@ namespace Synapse.QtClient.Widgets
 		private void model_Refreshed (object o, EventArgs args)
 		{
 			Application.Invoke(delegate {
-				m_Scene.Clear();
+				Console.WriteLine("Model Refreshed");
+				
+				foreach (var item in m_Scene.Items()) {
+					if (item is RosterItemGroup)
+						m_Scene.RemoveItem(item);
+				}
 				m_Groups.Clear();
 				
 				foreach (var item in m_Model.Items) {
@@ -201,6 +209,8 @@ namespace Synapse.QtClient.Widgets
 				}
 				
 				ResizeAndRepositionGroups();
+
+				Console.WriteLine("End Model Refreshed");
 			});
 		}
 
@@ -240,7 +250,12 @@ namespace Synapse.QtClient.Widgets
 
 			ResizeAndRepositionGroups();
 		}
-		
+
+		IEnumerable<RosterItemGroup> SortedGroups {
+			get {
+				return m_Groups.Values.OrderBy(g => m_Model.GetGroupOrder(g.Name));
+			}
+		}
 		#endregion
 		
 		protected override void ResizeEvent (QResizeEvent evnt)
@@ -255,11 +270,28 @@ namespace Synapse.QtClient.Widgets
 					ItemActivated(this, m_HoverItem.Item);
 			}
 		}
+
+		protected override void MouseReleaseEvent (Qyoto.QMouseEvent arg1)
+		{
+			base.MouseReleaseEvent(arg1);
+		}
 		
 		protected override void MouseMoveEvent (Qyoto.QMouseEvent arg1)
 		{
-			base.MouseMoveEvent (arg1);
+			base.MouseMoveEvent(arg1);
 			UpdateHoverItem();
+		}
+
+		bool AllGroupsCollapsed {
+			get {
+				return m_AllGroupsCollapsed;
+			}
+			set {
+				if (m_AllGroupsCollapsed != value) {
+					m_AllGroupsCollapsed = value;
+					ResizeAndRepositionGroups();
+				}
+			}
 		}
 		
 		void ResizeAndRepositionGroups ()
@@ -273,7 +305,7 @@ namespace Synapse.QtClient.Widgets
 			bool filterChanged = (m_LastTextFilter != m_Model.TextFilter);
 			
 			lock (m_Groups) {
-				foreach (RosterItemGroup group in m_Groups.Values) {					
+				foreach (RosterItemGroup group in this.SortedGroups) {
 					int itemY = 0;
 					
 					var children = group.ChildItems();
@@ -418,7 +450,7 @@ namespace Synapse.QtClient.Widgets
 		void tooltipTimer_timeout()
 		{
 			UpdateHoverItem();
-			if (m_InfoPopup.Item != null) {
+			if (m_InfoPopup.Item != null && this.TopLevelWidget().IsActiveWindow) {
 				m_InfoPopup.Show();
 			}
 		}

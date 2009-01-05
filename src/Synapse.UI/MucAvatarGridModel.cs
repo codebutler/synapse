@@ -83,6 +83,10 @@ namespace Synapse.UI
 			return 0;
 		}
 
+		public void SetGroupOrder (string groupName, int groupOrder)
+		{
+		}
+			
 		public string GetName (RoomParticipant participant)
 		{
 			return participant.Nick;

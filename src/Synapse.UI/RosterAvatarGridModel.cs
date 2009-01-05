@@ -47,7 +47,8 @@ namespace Synapse.UI
 		bool   m_ShowOffline   = false;
 		bool   m_ModelUpdating = false;
 		string m_TextFilter    = null;
-			
+		Dictionary<string, int> m_GroupIndexes = new Dictionary<string, int>();
+		
 		public RosterAvatarGridModel()
 		{
 			m_AccountService = ServiceManager.Get<AccountService>();
@@ -56,6 +57,7 @@ namespace Synapse.UI
 				OnAccountAdded(account);
 		}
 
+		#region Public Properties
 		public bool ModelUpdating {
 			get {
 				return m_ModelUpdating;
@@ -92,15 +94,27 @@ namespace Synapse.UI
 				}
 			}
 		}
-		
+		#endregion
+
+		#region Public Methods
 		public IEnumerable<string> GetItemGroups(AccountItemPair pair)
 		{
 			return pair.Item.GetGroups().Select(g => g.GroupName);
 		}
-
+		
 		public int GetGroupOrder (string groupName)
 		{
-			return 0;
+			if (!m_GroupIndexes.ContainsKey(groupName)) {
+				int num = m_GroupIndexes.Count > 0 ? (m_GroupIndexes.Values.Max() + 1) : 1;
+				m_GroupIndexes[groupName] = num;
+			}
+			
+			return m_GroupIndexes[groupName];			
+		}
+
+		public void SetGroupOrder (string groupName, int groupOrder)
+		{
+			m_GroupIndexes[groupName] = groupOrder;
 		}
 
 		public object GetImage (AccountItemPair pair)
@@ -150,7 +164,9 @@ namespace Synapse.UI
 			}
 			return builder.ToString();
 		}
+		#endregion
 
+		#region Protected Methods
 		protected virtual void OnItemAdded (Account account, Item item)
 		{
 			var evnt = ItemAdded;
@@ -185,7 +201,9 @@ namespace Synapse.UI
 			if (evnt != null)
 				evnt(this, EventArgs.Empty);
 		}
-		
+		#endregion
+
+		#region Private Methods
 		void OnAccountAdded (Account account)
 		{
 			account.Roster.OnRosterBegin += delegate(object sender) {
@@ -234,6 +252,7 @@ namespace Synapse.UI
 		{
 			OnRefreshed();
 		}
+		#endregion
 	}
 	
 	public class AccountItemPair : Pair<Account, Item>

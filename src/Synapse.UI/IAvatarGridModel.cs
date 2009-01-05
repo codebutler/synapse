@@ -36,9 +36,10 @@ namespace Synapse.UI
 		}
 
 		IEnumerable<string> GetItemGroups(T item);
-		
-		int GetGroupOrder(string groupName);
 
+		int GetGroupOrder(string groupName);
+		void SetGroupOrder(string groupName, int order);
+		
 		string GetName(T item);
 		JID    GetJID(T item);
 		object GetImage(T item);

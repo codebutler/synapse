@@ -132,7 +132,7 @@ namespace Synapse.QtClient.Widgets
 				QMimeData mime = new QMimeData();
 				drag.SetMimeData(mime);
 	
-				drag.Exec();
+				drag.Exec((uint)Qt.DropAction.MoveAction | (uint)Qt.DropAction.CopyAction | (uint)Qt.DropAction.IgnoreAction);
 	
 				SetCursor(new QCursor(Qt.CursorShape.OpenHandCursor));
 			}
