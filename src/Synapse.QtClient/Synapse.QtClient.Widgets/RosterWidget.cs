@@ -263,22 +263,27 @@ public partial class RosterWidget : QWidget
 	[Q_SLOT]
 	void HandleActivityLinkClicked (QUrl url)
 	{
-		Uri uri = new Uri(url.ToString());
-		if (uri.Scheme == "http" || uri.Scheme == "https") {
-			Gui.Open(uri.ToString());
-		} else {
-			JID jid = new JID(uri.AbsolutePath);
-			var query = XmppUriQueryInfo.ParseQuery(uri.Query);
-			switch (query.QueryType) {
-			case "message":
-				// FIXME: Should not ask which account to use, should use whichever account generated the event.
-				var account = Gui.ShowAccountSelectMenu(this);
-				if (account != null)
-					Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(account, jid);
-				break;
-			default:
-				throw new NotSupportedException("Unsupported query type: " + query.QueryType);
+		try {
+			Uri uri = new Uri(url.ToString());
+			if (uri.Scheme == "http" || uri.Scheme == "https") {
+				Gui.Open(uri.ToString());
+			} else {
+				JID jid = new JID(uri.AbsolutePath);
+				var query = XmppUriQueryInfo.ParseQuery(uri.Query);
+				switch (query.QueryType) {
+				case "message":
+					// FIXME: Should not ask which account to use, should use whichever account generated the event.
+					var account = Gui.ShowAccountSelectMenu(this);
+					if (account != null)
+						Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(account, jid);
+					break;
+				default:
+					throw new NotSupportedException("Unsupported query type: " + query.QueryType);
+				}
 			}
+		} catch (Exception ex) {
+			Console.Error.WriteLine(ex);
+			QMessageBox.Critical(null, "Synapse Error", ex.Message);
 		}
 	}
 	#endregion

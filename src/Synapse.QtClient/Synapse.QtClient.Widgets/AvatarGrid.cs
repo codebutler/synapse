@@ -270,6 +270,8 @@ namespace Synapse.QtClient.Widgets
 			int groupY = 0;
 			int vScroll = this.VerticalScrollBar().Value;
 
+			int newWidth = this.Viewport().Width();
+			
 			bool filterChanged = (m_LastTextFilter != m_Model.TextFilter);
 			
 			lock (m_Groups) {
@@ -310,7 +312,7 @@ namespace Synapse.QtClient.Widgets
 						
 						int itemCount = children.Count;
 						if (itemCount > 0) {
-							int perRow = Math.Max((((int)m_Scene.Width() - IconPadding) / iconWidth), 1);
+							int perRow = Math.Max((((int)newWidth - IconPadding) / iconWidth), 1);
 							if (m_ListMode)
 								perRow = 1;							
 							
@@ -370,7 +372,6 @@ namespace Synapse.QtClient.Widgets
 				}
 				
 				// Update the scene's height
-				int newWidth = this.Viewport().Width();
 				int newHeight = groupY;
 				var currentRect = m_Scene.SceneRect;
 				if (currentRect.Width() != newWidth || currentRect.Height() != newHeight) {

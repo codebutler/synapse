@@ -54,7 +54,8 @@ namespace Synapse.QtClient
 
 			Gtk.Application.Init();
 
-			NDesk.DBus.BusG.Init();
+			// FIXME: This is seriously unstable.
+			//NDesk.DBus.BusG.Init();
 			
 			m_App = new QApplication(args);
 			m_App.ApplicationName = "Synapse";

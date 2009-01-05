@@ -39,6 +39,8 @@ namespace Synapse.Xmpp
 							return "do not disturb";
 						case "xa":
 							return "extended away";
+						case "subscribed":
+							return "subscribed";
 						default:
 							return presence.Show;
 					}

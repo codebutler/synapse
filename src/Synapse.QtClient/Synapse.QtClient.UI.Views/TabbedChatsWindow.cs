@@ -108,6 +108,25 @@ namespace Synapse.QtClient
 				});
 				this.AddAction(action);
 			});
+
+			QAction nextTabAction = new QAction(this);
+			nextTabAction.Shortcut = new QKeySequence(QKeySequence.StandardKey.NextChild);
+			QObject.Connect(nextTabAction, Qt.SIGNAL("triggered(bool)"), delegate {
+				if (m_Tabs.CurrentIndex == m_Tabs.Count - 1)
+					m_Tabs.CurrentIndex = 0;
+				else
+					m_Tabs.CurrentIndex += 1;
+			});
+			this.AddAction(nextTabAction);
+			
+			QAction prevTabAction = new QAction(this);
+			prevTabAction.Shortcut = new QKeySequence(QKeySequence.StandardKey.PreviousChild);
+			QObject.Connect(prevTabAction, Qt.SIGNAL("triggered(bool)"), delegate {
+				if (m_Tabs.CurrentIndex == 0)
+					m_Tabs.CurrentIndex = m_Tabs.Count - 1;
+				else
+					m_Tabs.CurrentIndex -= 1;
+			});
 		}
 		
 		public void AddChatWindow (AbstractChatWindowController window, bool focus)
