@@ -102,12 +102,8 @@ namespace Synapse.UI.Controllers
 					body = msg.Html;
 				} else {
 					body = Util.EscapeHtml(msg.Body);
-					//body = Linkify.AddLinks(msg.Body);
-
-					// FIXME: Would be better to set CSS white-space: pre.
-					body = body.Replace("\n", "<br/>");
-					body = body.Replace(" " , "&nbsp;");
-					body = body.Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+					body = Util.Linkify(body);
+					body = "<span style=\"white-space: pre\">" + body + "</span>";
 				}
 			
 				iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(fromJid.Bare));

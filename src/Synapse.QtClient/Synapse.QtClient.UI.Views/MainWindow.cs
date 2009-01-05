@@ -154,7 +154,7 @@ namespace Synapse.QtClient.UI.Views
 			HideShowNoAccountsWidget();
 		}
 
-		public void AddActivityFeedItem (Account account, IActivityFeedItem item)
+		public void AddActivityFeedItem (Account account, ActivityFeedItem item)
 		{
 			m_RosterWidget.AddActivityFeedItem(account, item);
 		}

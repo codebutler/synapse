@@ -143,10 +143,11 @@ public partial class RosterWidget : QWidget
 		throw new NotImplementedException();
 	}
 	
-	public void AddActivityFeedItem (Account account, IActivityFeedItem item)
+	public void AddActivityFeedItem (Account account, ActivityFeedItem item)
 	{
-		string html = Util.EscapeJavascript(item.ToHtml());
-		m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(String.Format("{0}(\"{1}\")", "add_item", html));
+		string js = Util.CreateJavascriptCall("ActivityFeed.addItem", item.Account.Jid, item.Type, item.AvatarUrl, 
+		                                      item.FromJid, item.FromName, item.ActionItem, item.Content);
+		m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
 	}
 	
 	void HandleItemActivated (AvatarGrid<AccountItemPair> grid, AccountItemPair pair)

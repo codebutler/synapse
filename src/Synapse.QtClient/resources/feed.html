@@ -1,66 +1,197 @@
 <html>
-  <head>
-    <script type="text/javascript" src="resource:/prototype.js"></script>
-    <script type="text/javascript" src="resource:/effects.js"></script>
-    <style type="text/css">
-      body {
-        background-color: #333333;
-        color: #BFBFBC;
-        margin: 2px;
-        font-size: small;
-      }
-      ul {
-            padding-left: 0px;
-            margin: 0px;
-      }
-      li {
-          list-style-type: none;
-          margin-bottom: 2px;
-          border-bottom: 1px dotted #666;
-      }
-      li:only-child, li:last-child {
-          margin-bottom: 0px !important;
-          border-bottom: 0px !important;
-      }
-      .item {
-          min-height: 32px;
-          background: url('avatar:/default.png') no-repeat 0px 4px;
-          -webkit-background-size: 32px 32px;
-          padding: 2px 2px 2px 40px;
-      }
-      blockquote {
-        margin: 8px 6px;
-        color: #CCCCC9;
-        padding-left: 25px;
-        overflow: hidden;
-      }
-      div.timestamp {
-          float: right;
-          font-size: xx-small;
-      }
-      a {
-        color: #6A6A6A;
-      }
-      .music {
-          background: url('resource:/music-16.png') no-repeat;
-      }
-      div#actions {
-        text-align: right;
-      }
-    </style>
-    <script type="text/javascript">
-      function add_item (html) {
-        var itemsList = $('items');
-        var li = new Element("li");
-        li.update(html);
-        li.hide();
-        
-        Element.insert(itemsList, { top: li });
-        li.appear();
-      }
-    </script>
-  </head>
-  <body>
-    <ul id="items"></ul>
-  </body>
+	<head>
+		<script type="text/javascript" src="resource:/prototype.js"></script>
+		<script type="text/javascript" src="resource:/effects.js"></script>
+		<style type="text/css">
+			body {
+				background-color: #333333;
+				color: #BFBFBC;
+				margin: 2px;
+				font-size: small;
+			}
+			ul {
+						padding-left: 0px;
+						margin: 0px;
+			}
+			li {
+					list-style-type: none;
+					margin-bottom: 2px;
+					border-bottom: 1px dotted #666;
+			}
+			li:only-child, li:last-child {
+					margin-bottom: 0px !important;
+					border-bottom: 0px !important;
+			}
+			.item {
+					min-height: 32px;
+					background: url('avatar:/default.png') no-repeat 0px 4px;
+					-webkit-background-size: 32px 32px;
+					padding: 2px 2px 2px 40px;
+			}
+			blockquote {
+				margin: 8px 6px;
+				color: #CCCCC9;
+				padding-left: 25px;
+				overflow: hidden;
+			}
+			div.timestamp {
+					float: right;
+					font-size: xx-small;
+			}
+			a {
+				color: #6A6A6A;
+			}
+			.music {
+					background: url('resource:/music-16.png') no-repeat;
+			}
+			div#actions {
+				text-align: right;
+			}
+		</style>
+		<script type="text/javascript">
+			// http://snipplr.com/view/8984/sprintf-in-javascript-string-format/
+			String.prototype.format = function() {
+				var pattern = /\{\d+\}/g;
+				var args = arguments;
+				return this.replace(pattern, function(capture){ return args[capture.match(/\d+/)]; });
+			};
+
+			function ActivityFeedItem (id, accountJid, avatarUrl, fromJid, fromName, type, actionItem, content) {
+				this.id					= id;
+				this.accountJid	= accountJid;
+				this.avatarUrl	 = avatarUrl;
+				this.type				= type;
+				this.actionItem	= actionItem;
+				this.content		 = content;
+				this.from				= [];
+				this.timestamp	 = new Date();
+				this.addFrom(fromJid, fromName);
+			}
+
+			ActivityFeedItem.prototype.addFrom = function (fromJid, fromName) {
+				var existing = this.from.find(function (fromInfo) {
+					return fromInfo.fromJid == fromJid
+				});
+				if (existing == null) {
+					this.from.push({
+						fromJid: fromJid,
+						fromName: fromName
+					});
+					this.updateHtml();
+				}
+			};
+
+			ActivityFeedItem.prototype.updateHtml = function () {
+				if ($(this.id) == null)
+					return;
+
+				var template = ActivityFeed.templates[this.type];
+
+				var html = '<div class="item" style="background-image: url(\'{0}\') !important">'.format(this.avatarUrl);
+				html += '<div class="timestamp">{0}</div>'.format(this.timestamp.toLocaleTimeString());
+				if (this.from.length > 1) {
+					if (this.from.length < 5) {
+						var feedItem = this;
+						html += this.from.map(function(fromInfo) {
+							var fromUrl = 'xmpp:{0}?message'.format(fromInfo.fromJid)
+							var fromName = (fromInfo.fromJid == feedItem.accountJid) ? "You" : fromInfo.fromName;
+							return '<a href="{0}" title="{1}">{2}</a>'.format(fromUrl, fromInfo.fromJid, fromName);
+						}).join(", ") + ' ';
+					} else {
+						var feedItem = this;
+						var youFrom = this.from.find(function(fromInfo) {
+							return fromInfo.fromJid == feedItem.accountJid
+						});
+						if (youFrom != null) {
+							var otherFroms = this.from.findAll(function (fromInfo) {
+								return fromInfo.fromJid != feedItem.accountJid;
+							});
+							var otherFromNames = otherFroms.map(function (fromInfo) {
+								return "{0} ({1})".format(fromInfo.fromName, fromInfo.fromJid);
+							}).join(", ");
+							var youFromUrl = 'xmpp:{0}?message'.format(youFrom.fromJid);
+							html += '<a href="{0}" title="{1}">You</a> &amp; <a href="#" title="{2}">{3}</a> friends '.format(
+								youFromUrl,
+								youFrom.fromJid,
+								otherFromNames,
+								otherFroms.length);
+						} else {
+							var fromNames = this.from.map(function (fromInfo) {
+								return "{0} ({1})".format(fromInfo.fromName, fromInfo.fromJid);
+							}).join(", ");
+							html += '<a href="#" title="{0}">{1}</a> friends '.format(fromNames, this.from.length);
+						}
+					}
+					html += template.pluarAction.format(this.actionItem);
+				} else if (this.from.length == 1) {
+					var fromJid = this.from[0].fromJid;
+					var fromName = (fromJid == this.accountJid) ? "You" : this.from[0].fromName;
+					var fromUrl = 'xmpp:{0}?message'.format(fromJid)
+					html += '<a href="{0}" title="{1}">{2}</a> '.format(fromUrl, fromJid, fromName);
+					if (fromJid != this.accountJid) {
+						html += template.singularAction.format(this.actionItem);
+					} else {
+						html += template.pluarAction.format(this.actionItem);
+					}
+				}
+				if (!this.content.blank()) {
+					html += '<blockquote class="{0}">{1}</blockquote>'.format(this.type, this.content);
+				}
+				html += "</div>";
+
+				$(this.id).update(html);
+			};
+
+			ActivityFeedItem.prototype.canMerge = function (otherType, otherActionItem, otherContent) {
+				return (otherType == this.type &&
+								otherActionItem == this.actionItem &&
+					otherContent == this.content && 
+					(new Date() - this.timestamp) < 60000);
+			};
+
+			var ActivityFeed = {
+				templates: {},
+				items: [],
+				addTemplate: function (type, singularAction, pluarAction) {
+					this.templates[type] = {
+						singularAction: singularAction,
+							 pluarAction: pluarAction
+					};
+				},
+				addItem: function (accountJid, type, avatarUrl, fromJid, fromName, actionItem, content) {
+					if (this.templates[type] == null) {
+						alert("Unknown Template: " + type);
+						return;
+					}
+
+					if (this.items.length > 0 && this.items[this.items.length - 1].canMerge(type, actionItem, content)) {
+						this.items[this.items.length - 1].addFrom(fromJid, fromName);
+					} else {
+						var id = "item-{0}".format(this.items.length + 1);
+						var item = new ActivityFeedItem(id, accountJid, avatarUrl, fromJid, fromName, type, actionItem, content);
+						this.items.push(item);
+
+						var itemsList = $('items');
+						var li = new Element('li', { id: id });
+						li.hide();
+						Element.insert(itemsList, { top: li });
+
+						item.updateHtml();
+
+						li.appear();
+					}
+				}
+			};
+
+			ActivityFeed.addTemplate("presence", "is now <strong>{0}</strong>.", "are now <strong>{0}</strong>.");
+			ActivityFeed.addTemplate("presencem", "is now <strong>{0}</strong>:", "are now <strong>{0}</strong>:");
+			ActivityFeed.addTemplate("tune", "is <strong>listening to</strong>:", "are <strong>listening to</strong>:");
+			ActivityFeed.addTemplate("microblog", "<strong>shouts</strong>:", "<strong>shout</strong>:");
+			ActivityFeed.addTemplate("mood", "is feeling <strong>{0}</strong>.", "are feeling <strong>{0}</strong>.");
+			ActivityFeed.addTemplate("moodm", "is feeling <strong>{0}</strong>:", "are feeling <strong>{0}</strong>:");
+		</script>
+	</head>
+	<body>
+		<ul id="items"></ul>
+	</body>
 </html>

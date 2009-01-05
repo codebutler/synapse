@@ -221,12 +221,9 @@ namespace Synapse.Xmpp
 					StatusChanged(this);
 			}
 
-			// This is my lame way to avoid showing the initial onslaught of presence messages.
-			if ((DateTime.Now - m_ConnectedAt).TotalSeconds > 30) {
-				if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
-					if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
-						m_ActivityFeed.PostItem(new ActivityFeedItem(this, pres.From, "presence", "is now {0}", Helper.GetPresenceDisplay(pres), pres.Status));
-					}
+			if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
+				if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
+					m_ActivityFeed.PostItem(new ActivityFeedItem(this, pres.From, "presence", "is now {0}", Helper.GetPresenceDisplay(pres), pres.Status));
 				}
 			}
 		}

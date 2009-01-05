@@ -31,7 +31,7 @@ namespace Synapse.UI.Views
 		string Password { get; }
 		event DialogValidateEventHandler AddNewAccount;
 
-		void AddActivityFeedItem (Account account, IActivityFeedItem item);
+		void AddActivityFeedItem (Account account, ActivityFeedItem item);
 		event EventHandler ActivityFeedReady;
 		
 		void AddAccount(Account account);

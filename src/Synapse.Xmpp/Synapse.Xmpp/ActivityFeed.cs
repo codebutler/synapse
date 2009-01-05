@@ -28,12 +28,12 @@ using Synapse.Core;
 
 namespace Synapse.Xmpp
 {
-	public delegate void ActivityFeedItemEventHandler (Account account, IActivityFeedItem item);
+	public delegate void ActivityFeedItemEventHandler (Account account, ActivityFeedItem item);
 	
 	public class ActivityFeed
 	{	
 		Account                  m_Account;	
-		Queue<IActivityFeedItem> m_Queue = new Queue<IActivityFeedItem>();
+		Queue<ActivityFeedItem> m_Queue = new Queue<ActivityFeedItem>();
 		
 		public event ActivityFeedItemEventHandler NewItem;
 		
@@ -41,10 +41,10 @@ namespace Synapse.Xmpp
 		{
 			m_Account = account;
 			
-			PostItem(new ActivityFeedItem(account, null, null, "Welcome to Synapse!", null, null));
+			//PostItem(new ActivityFeedItem(account, null, "app", "Welcome to Synapse!", null, null));
 		}
 		
-		public void PostItem (IActivityFeedItem item)
+		public void PostItem (ActivityFeedItem item)
 		{
 			if (NewItem == null) {
 				lock (m_Queue)
@@ -66,42 +66,32 @@ namespace Synapse.Xmpp
 		}
 	}
 	
-	public interface IActivityFeedItem
-	{
-		string ToHtml();
-		DateTime Timestamp {
-			get;
-		}
-	}
-	
-	// XXX: Rename this to "GenericActivityFeedItem" or something.
-	public class ActivityFeedItem : IActivityFeedItem
+	public class ActivityFeedItem
 	{
 		Account  m_Account;
 		JID 	 m_From;
-		DateTime m_Timestamp;
 		string   m_Type;
-		string   m_Action;
 		string   m_ActionItem;
 		string   m_Content;
 		Uri      m_ContentUrl;
 		
-		public ActivityFeedItem (Account account, JID from, string type, string action, string actionItem, string content)
-			: this (account, from, type, action, actionItem, content, null)
+		public ActivityFeedItem (Account account, JID from, string type, string actionItem, string content)
+			: this (account, from, type, actionItem, content, null)
 		{
 		}
 		
-		public ActivityFeedItem (Account account, JID from, string type, string action, string actionItem, string content, string contentUrl)
+		public ActivityFeedItem (Account account, JID from, string type, string actionItem, string content, string contentUrl)
 		{
-			if (action == null)
-				throw new ArgumentNullException("action");
+			if (type == null)
+				throw new ArgumentNullException("type");
 			
-			m_Timestamp  = DateTime.Now;
+			if (actionItem == null)
+				throw new ArgumentNullException("actionItem");
+			
 			m_Account    = account;
 			m_From       = from;
 			m_Type       = type;
-			m_Action     = Util.EscapeHtml(action);
-			m_ActionItem = Util.EscapeHtml(actionItem); 
+			m_ActionItem = Util.EscapeHtml(actionItem);
 			m_Content    = Util.EscapeHtml(content);
 
 			if (!String.IsNullOrEmpty(contentUrl)) {
@@ -113,88 +103,54 @@ namespace Synapse.Xmpp
 				} catch {}
 			}
 		}
-		
-		public DateTime Timestamp {
+
+		public Account Account {
 			get {
-				return m_Timestamp;
+				return m_Account;
 			}
 		}
-		
-		public string ToHtml()
-		{
-			StringBuilder htmlBuilder = new StringBuilder();
 
-			string avatarHash = null;
-			if (m_From != null)
-				avatarHash = AvatarManager.GetAvatarHash(m_From);
-			else
-				avatarHash = "octy";
-			
-			htmlBuilder.AppendFormat("<div class=\"item\" style=\"background-image: url('avatar:/{0}') !important\">", avatarHash);
-			
-			htmlBuilder.Append(String.Format("<div class='timestamp'>{0}</div>", m_Timestamp.ToShortTimeString()));
-			
-			if (m_From != null) {
-				string name = m_Account.GetDisplayName(m_From);
-				name = Util.EscapeHtml(name);
-
-				var uri = String.Format("xmpp:{0}?message", m_From.ToString());
-				htmlBuilder.Append(String.Format("<a href='{0}' title='{1}' class='jid'>{2}</a> ", uri, m_From.ToString(), name));
-			}
-
-			if (!String.IsNullOrEmpty(m_ActionItem)) {
-				htmlBuilder.Append(String.Format(m_Action, String.Format("<strong>{0}</strong>", m_ActionItem)));
-			} else {
-				htmlBuilder.Append(String.Format("<strong>{0}</strong>", m_Action));
-			}
-			
-			if (!String.IsNullOrEmpty(m_Content)) {
-				htmlBuilder.Append(":");
-				if (m_ContentUrl != null)
-					htmlBuilder.Append(String.Format("<blockquote class=\"{0}\"><a title=\"{1}\" href=\"{1}\">{2}</a></blockquote>", m_Type, m_ContentUrl.ToString(), m_Content));
-				else
-					htmlBuilder.Append(String.Format("<blockquote class=\"{0}\">{1}</blockquote>", m_Type, m_Content));
-			} else if (m_From != null) {
-				htmlBuilder.Append(".");
-			}
-			
-			htmlBuilder.Append("</div>");
-						
-			return htmlBuilder.ToString();
-		}
-	}
-	
-	public class FriendRequestActivityFeedItem : IActivityFeedItem
-	{
-		Account    m_Account;
-		DateTime   m_Timestamp;
-		Item m_Item;
-		string     m_Message;
-		
-		public FriendRequestActivityFeedItem (Account account, Item item, string message)
-		{
-			m_Account   = account;
-			m_Item      = item;
-			m_Message   = message;
-			m_Timestamp = DateTime.Now;
-		}
-		
-		public DateTime Timestamp {
+		public string FromJid {
 			get {
-				return m_Timestamp;
+				return m_From.ToString();
 			}
 		}
-		
-		public string ToHtml()
-		{
-			StringBuilder htmlBuilder = new StringBuilder();
-			htmlBuilder.Append("<div class=\"item\">");
-			htmlBuilder.Append(String.Format("<div class='timestamp'>{0}</div>", m_Timestamp.ToShortTimeString()));
-			htmlBuilder.Append(String.Format("Friend Request from <strong>{0}</strong> ({1})", m_Item.JID.ToString(), m_Item.Name));
-			htmlBuilder.Append(String.Format("<blockquote>{0}</blockquote>", m_Message));
-	  		htmlBuilder.Append(String.Format("<div id='actions'><a href='dragon://accept'>Accept</a> or <a href='dragon://deny'>Deny</a></div>"));
-      		htmlBuilder.Append("</div>");
-			return htmlBuilder.ToString();
+
+		public string FromName {
+			get {
+				return (m_From == null) ? null : m_Account.GetDisplayName(m_From);
+			}
+		}
+
+		public string AvatarUrl {
+			get {
+				string avatarHash = (m_From != null) ? AvatarManager.GetAvatarHash(m_From) : "octy";
+				return "avatar:/" + avatarHash;
+			}
+		}
+
+		public string Type {
+			get {
+				return m_Type;
+			}
+		}
+
+		public string ActionItem {
+			get {
+				return m_ActionItem;
+			}
+		}
+
+		public string Content {
+			get {
+				return m_Content;
+			}
+		}
+
+		public Uri ContentUrl {
+			get {
+				return m_ContentUrl;
+			}
 		}
 	}
 }

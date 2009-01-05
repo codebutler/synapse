@@ -20,7 +20,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.IO;
@@ -30,6 +32,27 @@ namespace Synapse.Core
 {
 	public static class Util
 	{
+		public static string CreateJavascriptCall (string methodName, params string[] args)
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.Append(methodName);
+			builder.Append("(");
+			for (int x = 0; x < args.Length; x++) {
+				if (args[x] != null) {
+					builder.Append("\"");
+					builder.Append(EscapeJavascript(args[x]));
+					builder.Append("\"");
+				} else {
+					builder.Append("null");
+				}
+				if (x < args.Length - 1) {
+					builder.Append(", ");
+				}
+			}
+			builder.Append(")");
+			return builder.ToString();
+		}
+		
 		public static string EscapeJavascript(string message)
 		{
 			StringBuilder builder = new StringBuilder();
@@ -206,5 +229,53 @@ namespace Synapse.Core
 				return reader.ReadToEnd();
 			}
 		}
+
+		public static string Linkify (string text)
+		{
+			Regex rx = new Regex(WEB_URL_PATTERN, RegexOptions.IgnoreCase);
+            return rx.Replace(text, "<a href=\"$0\">$0</a>");
+		}
+		
+        private const string WEB_URL_PATTERN = "((?:(https?)://(?:(?:[a-zA-Z0-9\\$\\-_\\.\\+!\\*'\\(\\)"
+                                                    + ",;\\?&=]|(?:%[a-fA-F0-9]{2}))+(?::(?:[a-zA-Z0-9\\$\\-_"
+                                                    + "\\.\\+!\\*'\\(\\),;\\?&=]|(?:%[a-fA-F0-9]{2}))+)?@)?)?"
+                                                    + "((?:(?:[a-zA-Z0-9][a-zA-Z0-9\\-]*\\.)+"   // named host
+                                                    + "(?:"   // plus top level domain
+                                                    + "(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])"
+                                                    + "|(?:biz|b[abdefghijmnorstvwyz])"
+                                                    + "|(?:cat|com|coop|c[acdfghiklmnoruvxyz])"
+                                                    + "|d[ejkmoz]"
+                                                    + "|(?:edu|e[cegrstu])"
+                                                    + "|f[ijkmor]"
+                                                    + "|(?:gov|g[abdefghilmnpqrstuwy])"
+                                                    + "|h[kmnrtu]"
+                                                    + "|(?:info|int|i[delmnoqrst])"
+                                                    + "|(?:jobs|j[emop])"
+                                                    + "|k[eghimnrwyz]"
+                                                    + "|l[abcikrstuvy]"
+                                                    + "|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])"
+                                                    + "|(?:name|net|n[acefgilopruz])"
+                                                    + "|(?:org|om)"
+                                                    + "|(?:pro|p[aefghklmnrstwy])"
+                                                    + "|qa"
+                                                    + "|r[eouw]"
+                                                    + "|s[abcdeghijklmnortuvyz]"
+                                                    + "|(?:tel|travel|t[cdfghjklmnoprtvwz])"
+                                                    + "|u[agkmsyz]"
+                                                    + "|v[aceginu]"
+                                                    + "|w[fs]"
+                                                    + "|y[etu]"
+                                                    + "|z[amw]))"
+                                                    + "|(?:(?:25[0-5]|2[0-4]" // or ip address
+                                                    + "[0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\\.(?:25[0-5]|2[0-4][0-9]"
+                                                    + "|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(?:25[0-5]|2[0-4][0-9]|[0-1]"
+                                                    + "[0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}"
+                                                    + "|[1-9][0-9]|[0-9])))"
+                                                    + "(?::\\d{1,5})?)" // plus option port number
+                                                    + "(/(?:(?:[a-zA-Z0-9;/\\?:@&=#~"  // plus option query params
+                                                    + "\\-\\.\\+!\\*'\\(\\),_])|(?:%[a-fA-F0-9]{2}))*)?";
+			
+													// FIXME: This prevents a trailing "/" from matching. 
+                                                    // + "\\b"; // and finally, a word boundary  this is to stop foo.sure from matching as foo.su
 	}
 }

@@ -61,7 +61,7 @@ namespace Synapse.UI.Controllers
 		void AddAccount (Account account)
 		{
 			View.AddAccount(account);
-			account.ActivityFeed.NewItem += delegate (Account a, IActivityFeedItem item) {
+			account.ActivityFeed.NewItem += delegate (Account a, ActivityFeedItem item) {
 				Application.Invoke(delegate {
 					View.AddActivityFeedItem(a, item);
 				});
