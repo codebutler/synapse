@@ -10,24 +10,22 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>PreferencesWindow</string>
+   <string>Synapse Preferences</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
+   <property name="margin" >
+    <number>6</number>
+   </property>
    <item>
     <widget class="QTabWidget" name="tabWidget" >
      <property name="currentIndex" >
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
       <attribute name="title" >
-       <string>General</string>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="tab_2" >
-      <attribute name="title" >
        <string>Accounts</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_2" >
+      <layout class="QVBoxLayout" name="verticalLayout_2" >
        <property name="spacing" >
         <number>0</number>
        </property>
@@ -35,97 +33,69 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QSplitter" name="splitter" >
+        <widget class="QListView" name="listView" >
+         <property name="frameShape" >
+          <enum>QFrame::NoFrame</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line" >
          <property name="orientation" >
           <enum>Qt::Horizontal</enum>
          </property>
-         <widget class="QWidget" native="1" name="widget" >
-          <layout class="QVBoxLayout" name="verticalLayout_2" >
-           <property name="margin" >
-            <number>6</number>
-           </property>
-           <item>
-            <widget class="QListWidget" name="listWidget" />
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout" >
-             <property name="bottomMargin" >
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QPushButton" name="pushButton" >
-               <property name="sizePolicy" >
-                <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize" >
-                <size>
-                 <width>16</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize" >
-                <size>
-                 <width>32</width>
-                 <height>32</height>
-                </size>
-               </property>
-               <property name="text" >
-                <string>+</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_2" >
-               <property name="maximumSize" >
-                <size>
-                 <width>32</width>
-                 <height>32</height>
-                </size>
-               </property>
-               <property name="text" >
-                <string>-</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer" >
-               <property name="orientation" >
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType" >
-                <enum>QSizePolicy::MinimumExpanding</enum>
-               </property>
-               <property name="sizeHint" stdset="0" >
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" native="1" name="widget_2" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" native="1" name="widget" >
+         <layout class="QHBoxLayout" name="horizontalLayout" >
+          <property name="margin" >
+           <number>6</number>
           </property>
-         </widget>
+          <item>
+           <widget class="QPushButton" name="pushButton" >
+            <property name="text" >
+             <string>Add Account</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_2" >
+            <property name="text" >
+             <string>Edit Account</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer" >
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0" >
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2" >
+      <attribute name="title" >
+       <string>General</string>
+      </attribute>
      </widget>
     </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
      <property name="standardButtons" >
       <set>QDialogButtonBox::Close</set>
      </property>

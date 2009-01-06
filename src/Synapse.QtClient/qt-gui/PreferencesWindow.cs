@@ -18,89 +18,70 @@ public partial class PreferencesWindow : QWidget {
     
     protected QWidget tab;
     
-    protected QWidget tab_2;
+    protected QListView listView;
     
-    protected QSplitter splitter;
+    protected QFrame line;
     
     protected QWidget widget;
-    
-    protected QListWidget listWidget;
     
     protected QPushButton pushButton;
     
     protected QPushButton pushButton_2;
     
-    protected QWidget widget_2;
+    protected QWidget tab_2;
     
     protected QDialogButtonBox buttonBox;
     
     protected void SetupUi() {
         base.ObjectName = "PreferencesWindow";
         this.Geometry = new QRect(0, 0, 400, 302);
-        this.WindowTitle = "PreferencesWindow";
+        this.WindowTitle = "Synapse Preferences";
         QVBoxLayout verticalLayout;
         verticalLayout = new QVBoxLayout(this);
+        verticalLayout.Margin = 6;
         this.tabWidget = new QTabWidget(this);
         this.tabWidget.ObjectName = "tabWidget";
-        this.tabWidget.CurrentIndex = 1;
+        this.tabWidget.CurrentIndex = 0;
         verticalLayout.AddWidget(this.tabWidget);
         this.tab = new QWidget(this.tabWidget);
         this.tab.ObjectName = "tab";
-        this.tabWidget.AddTab(this.tab, "General");
-        this.tab_2 = new QWidget(this.tabWidget);
-        this.tab_2.ObjectName = "tab_2";
-        QHBoxLayout horizontalLayout_2;
-        horizontalLayout_2 = new QHBoxLayout(this.tab_2);
-        horizontalLayout_2.Spacing = 0;
-        horizontalLayout_2.Margin = 0;
-        this.splitter = new QSplitter(this.tab_2);
-        this.splitter.ObjectName = "splitter";
-        this.splitter.Orientation = Qt.Orientation.Horizontal;
-        horizontalLayout_2.AddWidget(this.splitter);
-        this.widget = new QWidget(this.splitter);
-        this.widget.ObjectName = "widget";
         QVBoxLayout verticalLayout_2;
-        verticalLayout_2 = new QVBoxLayout(this.widget);
-        verticalLayout_2.Margin = 6;
-        this.listWidget = new QListWidget(this.widget);
-        this.listWidget.ObjectName = "listWidget";
-        verticalLayout_2.AddWidget(this.listWidget);
+        verticalLayout_2 = new QVBoxLayout(this.tab);
+        verticalLayout_2.Spacing = 0;
+        verticalLayout_2.Margin = 0;
+        this.listView = new QListView(this.tab);
+        this.listView.ObjectName = "listView";
+        this.listView.FrameShape = QFrame.Shape.NoFrame;
+        verticalLayout_2.AddWidget(this.listView);
+        this.line = new QFrame(this.tab);
+        this.line.ObjectName = "line";
+        this.line.FrameShape = QFrame.Shape.HLine;
+        this.line.FrameShadow = QFrame.Shadow.Sunken;
+        verticalLayout_2.AddWidget(this.line);
+        this.widget = new QWidget(this.tab);
+        this.widget.ObjectName = "widget";
         QHBoxLayout horizontalLayout;
-        horizontalLayout = new QHBoxLayout();
-        verticalLayout_2.AddLayout(horizontalLayout);
+        horizontalLayout = new QHBoxLayout(this.widget);
+        horizontalLayout.Margin = 6;
         this.pushButton = new QPushButton(this.widget);
         this.pushButton.ObjectName = "pushButton";
-        QSizePolicy pushButton_sizePolicy;
-        pushButton_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed);
-        pushButton_sizePolicy.SetVerticalStretch(0);
-        pushButton_sizePolicy.SetHorizontalStretch(0);
-        pushButton_sizePolicy.SetHeightForWidth(this.pushButton.SizePolicy.HasHeightForWidth());
-        this.pushButton.SizePolicy = pushButton_sizePolicy;
-        this.pushButton.MinimumSize = new QSize(16, 0);
-        this.pushButton.MaximumSize = new QSize(32, 32);
-        this.pushButton.Text = "+";
+        this.pushButton.Text = "Add Account";
         horizontalLayout.AddWidget(this.pushButton);
         this.pushButton_2 = new QPushButton(this.widget);
         this.pushButton_2.ObjectName = "pushButton_2";
-        this.pushButton_2.MaximumSize = new QSize(32, 32);
-        this.pushButton_2.Text = "-";
+        this.pushButton_2.Text = "Edit Account";
         horizontalLayout.AddWidget(this.pushButton_2);
         QSpacerItem horizontalSpacer;
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
         horizontalLayout.AddItem(horizontalSpacer);
-        this.splitter.AddWidget(this.widget);
-        this.widget_2 = new QWidget(this.splitter);
-        this.widget_2.ObjectName = "widget_2";
-        QSizePolicy widget_2_sizePolicy;
-        widget_2_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred);
-        widget_2_sizePolicy.SetVerticalStretch(0);
-        widget_2_sizePolicy.SetHorizontalStretch(0);
-        widget_2_sizePolicy.SetHeightForWidth(this.widget_2.SizePolicy.HasHeightForWidth());
-        this.widget_2.SizePolicy = widget_2_sizePolicy;
-        this.splitter.AddWidget(this.widget_2);
-        this.tabWidget.AddTab(this.tab_2, "Accounts");
+        verticalLayout_2.AddWidget(this.widget);
+        this.tabWidget.AddTab(this.tab, "Accounts");
+        this.tab_2 = new QWidget(this.tabWidget);
+        this.tab_2.ObjectName = "tab_2";
+        this.tabWidget.AddTab(this.tab_2, "General");
         this.buttonBox = new QDialogButtonBox(this);
         this.buttonBox.ObjectName = "buttonBox";
+        this.buttonBox.Orientation = Qt.Orientation.Horizontal;
         this.buttonBox.StandardButtons = global::Qyoto.Qyoto.GetCPPEnumValue("QDialogButtonBox", "Close");
         verticalLayout.AddWidget(this.buttonBox);
         QMetaObject.ConnectSlotsByName(this);

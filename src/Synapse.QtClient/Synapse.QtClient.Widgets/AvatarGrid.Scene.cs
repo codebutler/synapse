@@ -75,13 +75,15 @@ namespace Synapse.QtClient.Widgets
 			protected override void DropEvent (Qyoto.QGraphicsSceneDragDropEvent arg1)
 			{
 				if (arg1.MimeData() is RosterItemGroupMimeData) {
-					m_GroupDropIndicatorItem.SetVisible(false);
-					m_Grid.AllGroupsCollapsed = false;
 					var mime = (RosterItemGroupMimeData)arg1.MimeData();
 					if (mime.Group != m_GroupDropBeforeGroup) {
 						m_Grid.Model.SetGroupOrder(mime.Group.Name, m_Grid.Model.GetGroupOrder(m_GroupDropBeforeGroup.Name) - 1);
 						m_Grid.ResizeAndRepositionGroups();
 					}
+					
+					m_GroupDropIndicatorItem.SetVisible(false);
+
+					m_Grid.AllGroupsCollapsed = false;
 				}
 			}
 			

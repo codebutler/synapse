@@ -32,7 +32,7 @@ namespace Synapse.Xmpp
 	
 	public class ActivityFeed
 	{	
-		Account                  m_Account;	
+		Account                 m_Account;	
 		Queue<ActivityFeedItem> m_Queue = new Queue<ActivityFeedItem>();
 		
 		public event ActivityFeedItemEventHandler NewItem;
@@ -41,11 +41,17 @@ namespace Synapse.Xmpp
 		{
 			m_Account = account;
 			
-			PostItem(new ActivityFeedItem(account, null, "synapse", "Welcome to Synapse!", null));
+			PostItem(null, "synapse", "Welcome to Synapse!", null);
+		}
+
+		public void PostItem (JID from, string type, string actionItem, string content)
+		{
+			PostItem(from, type, actionItem, content, null);
 		}
 		
-		public void PostItem (ActivityFeedItem item)
+		public void PostItem (JID from, string type, string actionItem, string content, string contentUrl)
 		{
+			var item = new ActivityFeedItem(m_Account, from, type, actionItem, content, contentUrl);
 			if (NewItem == null) {
 				lock (m_Queue)
 					m_Queue.Enqueue(item);

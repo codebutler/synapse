@@ -41,6 +41,7 @@ namespace Synapse.QtClient.Widgets
 		QTimer               m_TooltipTimer;
 		
 		Dictionary<string, RosterItemGroup> m_Groups = new Dictionary<string, RosterItemGroup>();
+		List<RosterItem<T>> m_Items = new List<RosterItem<T>>();
 		
 		int  m_IconWidth    = 32;
 		int  m_HeaderHeight = 16;		
@@ -153,24 +154,17 @@ namespace Synapse.QtClient.Widgets
 		private void model_ItemRemoved (IAvatarGridModel<T> model, T item)
 		{
 			Application.Invoke(delegate {
-				List<string> groupsToRemove = new List<string>();
 				foreach (var pair in m_Groups) {
 					QGraphicsItemGroup group = pair.Value;
 					foreach (QGraphicsItem gitem in group.Children()) {
 						if (gitem is RosterItem<T>) {
 							if (((RosterItem<T>)gitem).Item.Equals(item)) {
-								group.RemoveFromGroup(gitem);
-								m_Scene.RemoveItem(gitem);
+								RemoveItem((RosterItem<T>)gitem);
 								break;
 							}
 						}
 					}
-
-					if (group.ChildItems().Count == 0) {
-						groupsToRemove.Add(pair.Key);
-					}
 				}
-				groupsToRemove.ForEach(k => RemoveGroup(k));
 				ResizeAndRepositionGroups();
 			});
 		}
@@ -200,7 +194,7 @@ namespace Synapse.QtClient.Widgets
 				
 				foreach (var item in m_Scene.Items()) {
 					if (item is RosterItemGroup)
-						m_Scene.RemoveItem(item);
+						RemoveGroup((RosterItemGroup)item);
 				}
 				m_Groups.Clear();
 				
@@ -241,10 +235,16 @@ namespace Synapse.QtClient.Widgets
 		private void RemoveGroup (string groupName)
 		{
 			RosterItemGroup group = (RosterItemGroup) m_Groups[groupName];
-			m_Groups.Remove(groupName);
+			RemoveGroup(group);
+		}
+
+		void RemoveGroup (RosterItemGroup group)
+		{
+			m_Groups.Remove(group.Name);
 
 			foreach (var child in group.Children()) {
-				m_Scene.RemoveItem(child);
+				if (child is RosterItem<T>)
+					RemoveItem((RosterItem<T>)child);
 			}
 			m_Scene.DestroyItemGroup(group);
 
@@ -438,6 +438,7 @@ namespace Synapse.QtClient.Widgets
 	
 					RosterItem<T> graphicsItem = new RosterItem<T>(this, item, (uint)IconSize,
 					                                               (uint)IconSize, group);
+					m_Items.Add(graphicsItem);
 					graphicsItem.SetVisible(false);
 					group.AddToGroup(graphicsItem);
 				}
@@ -446,6 +447,19 @@ namespace Synapse.QtClient.Widgets
 					ResizeAndRepositionGroups();
 			}			
 		}
+
+		void RemoveItem (RosterItem<T> item)
+		{
+			var group = (RosterItemGroup)item.ParentItem();
+			group.RemoveFromGroup(item);
+			m_Scene.RemoveItem(item);
+			m_Items.Remove(item);
+
+			// FIXME: stuck in a loop
+			//if (group.ChildItems().Count == 0) {
+			//	RemoveGroup(group);
+			//}
+		}		
 
 		[Q_SLOT]
 		void tooltipTimer_timeout()

@@ -71,7 +71,7 @@ namespace Synapse.UI
 
 		public string TextFilter {
 			get {
-				throw new NotImplementedException();
+				return null;
 			}
 			set {
 				throw new NotImplementedException();

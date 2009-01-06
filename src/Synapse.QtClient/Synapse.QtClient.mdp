@@ -79,6 +79,7 @@
     <File name="resources/friend-muclist.html" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/music-16.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="Synapse.QtClient.Widgets/AvatarGrid.Scene.cs" subtype="Code" buildaction="Compile" />
+    <File name="EditAccountDialog.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
@@ -115,6 +116,7 @@
       <QyotoForm UiFileName="PreferencesWindow.ui" />
       <QyotoForm UiFileName="ServiceBrowserWindow.ui" Namespace="Synapse.QtClient" />
       <QyotoForm UiFileName="EditGroupsWindow.ui" />
+      <QyotoForm UiFileName="EditAccountDialog.ui" />
     </Forms>
   </QyotoDesignInfo>
 </Project>

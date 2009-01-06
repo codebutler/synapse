@@ -48,6 +48,7 @@ namespace Synapse.Xmpp
 		string m_Resource;
 		string m_Password;
 		string m_ConnectServer;
+		bool   m_AutoConnect;
 
 		bool m_NetworkDisconnected = false;
 
@@ -103,6 +104,7 @@ namespace Synapse.Xmpp
 		{
 			Account account = new Account(info.User, info.Domain, info.Resource, info.ConnectServer);
 			account.Password = info.Password;
+			account.AutoConnect = info.AutoConnect;
 			return account;
 		}
 		
@@ -223,7 +225,7 @@ namespace Synapse.Xmpp
 
 			if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
 				if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
-					m_ActivityFeed.PostItem(new ActivityFeedItem(this, pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status));
+					m_ActivityFeed.PostItem(pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status);
 				}
 			}
 		}
@@ -264,6 +266,15 @@ namespace Synapse.Xmpp
 		public PubSubManager PubSubManager {
 			get {
 				return m_PubSubManager;
+			}
+		}
+
+		public bool AutoConnect {
+			get {
+				return m_AutoConnect;
+			}
+			set {
+				m_AutoConnect = value;
 			}
 		}
 		
@@ -495,6 +506,7 @@ namespace Synapse.Xmpp
 			info.Resource = m_Resource;
 			info.Password = m_Password;
 			info.ConnectServer = m_ConnectServer;
+			info.AutoConnect = m_AutoConnect;
 			return info;
 		}
 		

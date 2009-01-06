@@ -60,7 +60,7 @@ namespace Synapse.Xmpp
 				
 				if (config != null) {
 					foreach (AccountInfo info in config.Accounts) {
-						AddAccount(Account.FromAccountInfo(info));
+						AddAccount(Account.FromAccountInfo(info), false);
 					}
 				}
 			}
@@ -72,6 +72,11 @@ namespace Synapse.Xmpp
 		
 		public void AddAccount (Account account)
 		{
+			AddAccount(account, true);
+		}
+		
+		public void AddAccount (Account account, bool save)
+		{
 			lock (m_Accounts) {
 				m_Accounts.Add(account);
 			
@@ -79,7 +84,11 @@ namespace Synapse.Xmpp
 					AccountAdded(account);
 				}
 
-				SaveAccounts();
+				if (account.AutoConnect)
+					account.Connect();
+
+				if (save)
+					SaveAccounts();
 			}
 		}
 		
@@ -167,6 +176,10 @@ namespace Synapse.Xmpp
 		}
 
 		public string ConnectServer {
+			get; set;
+		}
+
+		public bool AutoConnect {
 			get; set;
 		}
 	}

@@ -33,7 +33,7 @@ namespace Synapse.QtClient.Widgets
 			T             m_Item;
 			QRectF        m_Rect;
 			
-			public RosterItem (AvatarGrid<T> grid, T item, double width, double height, QGraphicsItem parent)
+			public RosterItem (AvatarGrid<T> grid, T item, double width, double height, QGraphicsItem parent) : base (parent)
 			{
 				m_Grid = grid;
 				m_Item = item;

@@ -113,7 +113,7 @@
 								return "{0} ({1})".format(fromInfo.fromName, fromInfo.fromJid);
 							}).join(", ");
 							var youFromUrl = 'xmpp:{0}?message'.format(youFrom.fromJid);
-							html += '<a href="{0}" title="{1}">You</a> &amp; <a href="#" title="{2}">{3}</a> friends '.format(
+							html += '<a href="{0}" title="{1}">You</a> &amp; <a href="#" title="{2}">{3} friends</a> '.format(
 								youFromUrl,
 								youFrom.fromJid,
 								otherFromNames,
@@ -155,6 +155,7 @@
 			};
 
 			var ActivityFeed = {
+				loaded: false,
 				templates: {},
 				items: [],
 				addTemplate: function (type, singularAction, pluarAction) {
@@ -165,6 +166,10 @@
 				},
 				addItem: function (accountJid, type, avatarUrl, fromJid, fromName, actionItem, content) {
 					try {
+						if (this.loaded == false) {
+							alert("Not yet finished loading!");
+						}
+						
 						if (this.templates[type] == null) {
 							alert("Unknown Template: " + type);
 							return;
@@ -210,6 +215,9 @@
 			ActivityFeed.addTemplate("microblog", "<strong>shouts</strong>:", "<strong>shout</strong>:");
 			ActivityFeed.addTemplate("mood", "is feeling <strong>{0}</strong>.", "are feeling <strong>{0}</strong>.");
 			ActivityFeed.addTemplate("moodm", "is feeling <strong>{0}</strong>:", "are feeling <strong>{0}</strong>:");
+			ActivityFeed.addTemplate("invite", "invites you to join <strong>{0}</strong>.", "invites you to join <strong>{0}</strong>.");
+			ActivityFeed.addTemplate("invitem", "invites you to join <strong>{0}</strong>:", "invites you to join <strong>{0}</strong>:");
+			ActivityFeed.loaded = true;
 		</script>
 	</head>
 	<body>
