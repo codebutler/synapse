@@ -54,15 +54,33 @@ namespace Synapse.Services
 		{
 			Notify (summary, body, String.Empty);
 		}
-		
+
 		public void Notify (string summary, string body, string iconName, params NotificationAction[] actions)
 		{
-			Notify (summary, body, iconName, null, actions);
+			Notify (summary, body, iconName, null, null, actions);
+		}		
+		
+		public void Notify (string summary, string body, string iconName, object actionObject, params NotificationAction[] actions)
+		{
+			Notify (summary, body, iconName, null, actionObject, actions);
 		}
 		
-		public void Notify (string summary, string body, string iconName, Widget widget, params NotificationAction[] actions)
+		public void Notify (string summary, string body, string iconName, Widget widget, object actionObject, params NotificationAction[] actions)
 		{
-			Notify (summary, body, iconName, widget, 0, false, m_DefaultPositionFunc, actions);
+			Notify (summary, body, iconName, widget, 0, false, m_DefaultPositionFunc, actionObject, actions);
+		}
+
+		
+		public void Notify (string summary,
+		                    string body,
+		                    string iconName,
+		                    Widget widget,
+		                    int    timeout,
+		                    bool   critical,
+		                    NotificationPositionFunc func,
+		                    params NotificationAction[] actions)
+		{
+			Notify (summary, body, iconName, widget, 0, false, m_DefaultPositionFunc, null, actions);
 		}
 		
 		public void Notify (string summary,
@@ -72,6 +90,7 @@ namespace Synapse.Services
 		                    int    timeout,
 		                    bool   critical,
 		                    NotificationPositionFunc func,
+		                    object actionObject,
 		                    params NotificationAction[] actions)
 		{
 			Notification notif;
@@ -95,7 +114,11 @@ namespace Synapse.Services
 				notif.Timeout = timeout;
 
 			foreach (var action in actions)
-				notif.AddAction(action.Name, action.Label, delegate { action.Callback(this, EventArgs.Empty); });
+				notif.AddAction(action.Name, action.Label, delegate {
+					if (action.Callback != null) {
+						action.Callback(actionObject, EventArgs.Empty);
+					}
+				});
 			
 			notif.Show ();
 		}

@@ -53,10 +53,15 @@ public partial class RosterWidget : QWidget
 	QAction               m_EditGroupsAction;
 
 	public event EventHandler ActivityFeedReady;
+
+	// Map the JS element ID to the ActivityFeedItem
+	Dictionary<string, ActivityFeedItem> m_ActivityFeedItems;
 	
 	public RosterWidget (MainWindow parent) : base (parent)
 	{
 		SetupUi();
+
+		m_ActivityFeedItems = new Dictionary<string, ActivityFeedItem>();
 
 		rosterGrid.ContextMenuPolicy = Qt.ContextMenuPolicy.CustomContextMenu;
 		m_RosterMenu = new QMenu(this);
@@ -104,9 +109,9 @@ public partial class RosterWidget : QWidget
 		tabWidget.ElideMode = Qt.TextElideMode.ElideMiddle;
 		
 		m_ActivityWebView.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
-		m_ActivityWebView.Page().MainFrame().Load("resource:/feed.html");
 		QObject.Connect(m_ActivityWebView, Qt.SIGNAL("linkClicked(QUrl)"), this, Qt.SLOT("HandleActivityLinkClicked(QUrl)"));
 		QObject.Connect(m_ActivityWebView.Page(), Qt.SIGNAL("loadFinished(bool)"), this, Qt.SLOT("activityPage_loadFinished(bool)"));
+		m_ActivityWebView.Page().MainFrame().Load("resource:/feed.html");
 		
 		m_ParentWindow = parent;
 
@@ -145,9 +150,12 @@ public partial class RosterWidget : QWidget
 	
 	public void AddActivityFeedItem (Account account, ActivityFeedItem item)
 	{
-		string js = Util.CreateJavascriptCall("ActivityFeed.addItem", item.Account.Jid, item.Type, item.AvatarUrl, 
+		string js = Util.CreateJavascriptCall("ActivityFeed.addItem", item.Account.Jid.Bare, item.Type, item.AvatarUrl, 
 		                                      item.FromJid, item.FromName, item.ActionItem, item.Content);
-		m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
+		var result = m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
+		if (!result.IsNull()) {
+			m_ActivityFeedItems.Add(result.ToString(), item);
+		}
 	}
 	
 	void HandleItemActivated (AvatarGrid<AccountItemPair> grid, AccountItemPair pair)
@@ -257,6 +265,28 @@ public partial class RosterWidget : QWidget
 	[Q_SLOT]
 	void activityPage_loadFinished (bool ok)
 	{
+		if (m_ActivityWebView.Url.ToString() != "resource:/feed.html")
+			return;
+		
+		if (!ok)
+			throw new Exception("Failed to load activity feed html!");
+
+		// FIXME: This is very strange.
+		while (m_ActivityWebView.Page().MainFrame().EvaluateJavaScript("ActivityFeed.loaded").ToBool() != true) {
+			Console.WriteLine("Failed to load activity feed, trying again!");
+			m_ActivityWebView.Page().MainFrame().Load("resource:/feed.html");
+			return;
+		}
+		
+		foreach (var template in Synapse.Xmpp.ActivityFeed.Templates.Values) {
+			string js = Util.CreateJavascriptCall("ActivityFeed.addTemplate", template.Name, template.SingularText,
+			                                      template.PluralText, template.Actions);
+			var ret = m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
+			if (ret.IsNull() || !ret.ToBool()) {
+				throw new Exception("Failed to add template!\n" + js);
+			}
+		}
+		
 		if (ActivityFeedReady != null)
 			ActivityFeedReady(this, EventArgs.Empty);
 	}
@@ -269,17 +299,23 @@ public partial class RosterWidget : QWidget
 			if (uri.Scheme == "http" || uri.Scheme == "https") {
 				Gui.Open(uri.ToString());
 			} else {
-				JID jid = new JID(uri.AbsolutePath);
-				var query = XmppUriQueryInfo.ParseQuery(uri.Query);
-				switch (query.QueryType) {
-				case "message":
-					// FIXME: Should not ask which account to use, should use whichever account generated the event.
-					var account = Gui.ShowAccountSelectMenu(this);
-					if (account != null)
-						Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(account, jid);
-					break;
-				default:
-					throw new NotSupportedException("Unsupported query type: " + query.QueryType);
+				if (uri.Scheme == "xmpp") {
+					JID jid = new JID(uri.AbsolutePath);
+					var query = XmppUriQueryInfo.ParseQuery(uri.Query);
+					switch (query.QueryType) {
+					case "message":
+						// FIXME: Should not ask which account to use, should use whichever account generated the event.
+						var account = Gui.ShowAccountSelectMenu(this);
+						if (account != null)
+							Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(account, jid);
+						break;
+					default:
+						throw new NotSupportedException("Unsupported query type: " + query.QueryType);
+					}
+				} else if (uri.Scheme == "activity-item") {
+					string itemId = uri.AbsolutePath;
+					string action = uri.Query.Substring(1);
+					m_ActivityFeedItems[itemId].TriggerAction(action);
 				}
 			}
 		} catch (Exception ex) {

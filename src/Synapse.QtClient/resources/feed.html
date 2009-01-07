@@ -125,23 +125,35 @@
 							html += '<a href="#" title="{0}">{1}</a> friends '.format(fromNames, this.from.length);
 						}
 					}
-					html += template.pluarAction.format(this.actionItem);
+					html += template.pluralText.format(this.actionItem);
 				} else if (this.from.length == 1) {
 					var fromJid = this.from[0].fromJid;
 					var fromName = (fromJid == this.accountJid) ? "You" : this.from[0].fromName;
 					var fromUrl = 'xmpp:{0}?message'.format(fromJid)
 					html += '<a href="{0}" title="{1}">{2}</a> '.format(fromUrl, fromJid, fromName);
 					if (fromJid != this.accountJid) {
-						html += template.singularAction.format(this.actionItem);
+						html += template.singularText.format(this.actionItem);
 					} else {
-						html += template.pluarAction.format(this.actionItem);
+						html += template.pluralText.format(this.actionItem);
 					}
 				} else if (this.from.length == 0) {
-					html += template.pluarAction.format(this.actionItem);
+					html += template.pluralText.format(this.actionItem);
 				}
 				if (!this.content.blank()) {
+					html += ":";
 					html += '<blockquote class="{0}">{1}</blockquote>'.format(this.type, this.content);
+				} else {
+					html += ".";
 				}
+
+				if (template.actions != null) {
+					html += "<p>";
+					for (var x = 0; x < template.actions.length; x++) {
+						html += '<a href="activity-item:{0}?{1}">{2}</a>'.format(this.id, template.actions[0]['Name'], template.actions[0]['Label']);
+					}
+					html += "</p>";
+				}
+
 				html += "</div>";
 
 				$(this.id).update(html);
@@ -149,26 +161,30 @@
 
 			ActivityFeedItem.prototype.canMerge = function (otherType, otherActionItem, otherContent) {
 				return (otherType == this.type &&
-								otherActionItem == this.actionItem &&
-					otherContent == this.content && 
-					(new Date() - this.timestamp) < 60000);
+				        otherActionItem == this.actionItem &&
+				        otherContent == this.content && 
+				        (new Date() - this.timestamp) < 60000);
 			};
 
 			var ActivityFeed = {
 				loaded: false,
 				templates: {},
 				items: [],
-				addTemplate: function (type, singularAction, pluarAction) {
-					this.templates[type] = {
-						singularAction: singularAction,
-							 pluarAction: pluarAction
-					};
+				addTemplate: function (type, singularText, pluralText, actions) {
+					try {
+						this.templates[type] = {
+							singularText: singularText.format('<strong>{0}</strong>'),
+							pluralText: pluralText.format('<strong>{0}</strong>'),
+							actions: actions
+						};
+						return true;
+					} catch (e) {
+						alert(e);
+						return false;
+					}
 				},
 				addItem: function (accountJid, type, avatarUrl, fromJid, fromName, actionItem, content) {
 					try {
-						if (this.loaded == false) {
-							alert("Not yet finished loading!");
-						}
 						
 						if (this.templates[type] == null) {
 							alert("Unknown Template: " + type);
@@ -188,6 +204,7 @@
 	
 						if (mergeItem != null) {
 							mergeItem.addFrom(fromJid, fromName);
+							return null;
 						} else {
 							var id = "item-{0}".format(this.items.length + 1);
 							var item = new ActivityFeedItem(id, accountJid, avatarUrl, fromJid, fromName, type, actionItem, content);
@@ -201,26 +218,20 @@
 							item.updateHtml();
 	
 							li.appear();
-						}
+							
+							return id;
+						}						
 					} catch (e) {
 						alert("addItem failed: " + e);
 					}
 				}
 			};
-
-			ActivityFeed.addTemplate("synapse", "<strong>{0}</strong>", "<strong>{0}</strong>");
-			ActivityFeed.addTemplate("presence", "is now <strong>{0}</strong>.", "are now <strong>{0}</strong>.");
-			ActivityFeed.addTemplate("presencem", "is now <strong>{0}</strong>:", "are now <strong>{0}</strong>:");
-			ActivityFeed.addTemplate("tune", "is <strong>listening to</strong>:", "are <strong>listening to</strong>:");
-			ActivityFeed.addTemplate("microblog", "<strong>shouts</strong>:", "<strong>shout</strong>:");
-			ActivityFeed.addTemplate("mood", "is feeling <strong>{0}</strong>.", "are feeling <strong>{0}</strong>.");
-			ActivityFeed.addTemplate("moodm", "is feeling <strong>{0}</strong>:", "are feeling <strong>{0}</strong>:");
-			ActivityFeed.addTemplate("invite", "invites you to join <strong>{0}</strong>.", "invites you to join <strong>{0}</strong>.");
-			ActivityFeed.addTemplate("invitem", "invites you to join <strong>{0}</strong>:", "invites you to join <strong>{0}</strong>:");
-			ActivityFeed.loaded = true;
 		</script>
 	</head>
 	<body>
 		<ul id="items"></ul>
 	</body>
+	<script type="text/javascript">
+		ActivityFeed.loaded = true;
+	</script>
 </html>

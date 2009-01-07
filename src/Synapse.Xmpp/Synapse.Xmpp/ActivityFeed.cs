@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using jabber;
 using jabber.protocol.iq;
 using Synapse.Core;
+using Synapse.ServiceStack;
+using Synapse.Services;
 
 namespace Synapse.Xmpp
 {
@@ -40,8 +42,10 @@ namespace Synapse.Xmpp
 		public ActivityFeed(Account account)
 		{
 			m_Account = account;
-			
-			PostItem(null, "synapse", "Welcome to Synapse!", null);
+
+			Application.Client.Started +=  delegate {
+				PostItem(null, "synapse", "Welcome to Synapse!", null);
+			};
 		}
 
 		public void PostItem (JID from, string type, string actionItem, string content)
@@ -58,6 +62,23 @@ namespace Synapse.Xmpp
 			} else {
 				NewItem(m_Account, item);
 			}
+			
+			var template = ActivityFeed.Templates[type];
+			if (template.DesktopNotify) {
+				var text = new StringBuilder();
+				text.Append(m_Account.GetDisplayName(from));
+				text.Append(" ");
+				text.AppendFormat(template.SingularText, actionItem);
+				
+				var n = ServiceManager.Get<NotificationService>();
+				if (String.IsNullOrEmpty(content)) {
+					text.Append(".");
+					n.Notify(text.ToString(), String.Empty, String.Empty, item, template.Actions);
+				} else {
+					text.Append(":");
+					n.Notify(text.ToString(), content, String.Empty, item, template.Actions);
+				}
+			}
 		}
 		
 		public void FireQueued () 
@@ -68,6 +89,75 @@ namespace Synapse.Xmpp
 			lock (m_Queue) {
 				while (m_Queue.Count > 0)
 					NewItem(m_Account, m_Queue.Dequeue());
+			}
+		}
+
+		// FIXME: Not super excited about all this being here:
+
+		static Dictionary<string, ActivityFeedItemTemplate> s_Templates = new Dictionary<string, ActivityFeedItemTemplate>();
+		
+		public static IDictionary<string, ActivityFeedItemTemplate> Templates {
+			get {
+				return new ReadOnlyDictionary<string, ActivityFeedItemTemplate>(s_Templates);
+			}
+		}
+
+		public static void AddTemplate (string name, string singularText, string pluralText)
+		{
+			AddTemplate(name, singularText, pluralText, false, null);
+		}
+		
+		public static void AddTemplate (string name, string singularText, string pluralText, bool desktopNotify, NotificationAction[] actions)
+		{
+			s_Templates.Add(name, new ActivityFeedItemTemplate(name, singularText, pluralText, desktopNotify, actions));
+		}
+	}
+
+	public class ActivityFeedItemTemplate
+	{
+		string m_Name;
+		string m_SingularText;
+		string m_PlularText;
+		bool   m_DesktopNotify;
+		NotificationAction[] m_Actions;
+
+		public ActivityFeedItemTemplate (string name, string singularText, string pluarText, bool desktopNotify, 
+		                                 NotificationAction[] actions)
+		{
+			m_Name = name;
+			m_SingularText = singularText;
+			m_PlularText = pluarText;
+			m_DesktopNotify = desktopNotify;
+			m_Actions = actions;
+		}
+
+		public string Name {
+			get {
+				return m_Name;
+			}
+		}
+
+		public string SingularText {
+			get {
+				return m_SingularText;
+			}
+		}
+		
+		public string PluralText {
+			get {
+				return m_PlularText;
+			}
+		}
+		
+		public bool DesktopNotify {
+			get {
+				return m_DesktopNotify;
+			}
+		}
+		
+		public NotificationAction[] Actions {
+			get {
+				return m_Actions;
 			}
 		}
 	}
@@ -154,6 +244,18 @@ namespace Synapse.Xmpp
 			get {
 				return m_ContentUrl;
 			}
+		}
+
+		public void TriggerAction (string actionName)
+		{
+			var template = ActivityFeed.Templates[m_Type];
+			foreach (var action in template.Actions) {
+				if (action.Name == actionName) {
+					action.Callback(this, EventArgs.Empty);
+					return;
+				}
+			}
+			throw new Exception("Action not found: " + actionName);
 		}
 	}
 }

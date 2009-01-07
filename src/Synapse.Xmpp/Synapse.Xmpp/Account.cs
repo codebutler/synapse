@@ -140,6 +140,7 @@ namespace Synapse.Xmpp
 			
 			m_ConferenceManager = new ConferenceManager();
 			m_ConferenceManager.Stream = m_Client;
+			m_ConferenceManager.OnInvite += HandleOnInvite;
 
 			m_BookmarkManager = new BookmarkManager();
 			m_BookmarkManager.Stream = m_Client;
@@ -163,6 +164,12 @@ namespace Synapse.Xmpp
 			AddFeature(new ChatStates(this));
 
 			ServiceManager.Get<NetworkService>().StateChange += HandleNetworkStateChanged;
+		}
+
+		void HandleOnInvite(object sender, Message msg)
+		{
+			var invite = (Invite)msg.X.FirstChild;
+			m_ActivityFeed.PostItem(invite.From, "invite", msg.From, invite.Reason);
 		}
 
 		void HandleOnStreamInit(object sender, ElementStream stream)

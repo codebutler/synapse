@@ -27,21 +27,26 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.IO;
 using System.Reflection;
+using System.Web.Script.Serialization;
 
 namespace Synapse.Core
 {
 	public static class Util
 	{
-		public static string CreateJavascriptCall (string methodName, params string[] args)
+		public static string CreateJavascriptCall (string methodName, params object[] args)
 		{
 			StringBuilder builder = new StringBuilder();
 			builder.Append(methodName);
 			builder.Append("(");
 			for (int x = 0; x < args.Length; x++) {
 				if (args[x] != null) {
-					builder.Append("\"");
-					builder.Append(EscapeJavascript(args[x]));
-					builder.Append("\"");
+					if (args[x] is string) {
+						builder.Append("\"");
+						builder.Append(EscapeJavascript((string)args[x]));
+						builder.Append("\"");
+					} else {
+						builder.Append(new JavaScriptSerializer().Serialize(args[x]));
+					}
 				} else {
 					builder.Append("null");
 				}
