@@ -70,7 +70,7 @@ namespace Synapse.Xmpp
 				// Only show in feed if we know this is a recent event.
 				if (tune["timestamp"] != null && DateTime.Now.Subtract(DateTime.Parse(tune["timestamp"].InnerText)).TotalSeconds <= 60) {
 					Application.Invoke(delegate {
-						m_Account.ActivityFeed.PostItem(from, "music", null, String.Format("{0} - {1}", tune.Artist, tune.Title), tune.Uri);
+						m_Account.PostActivityFeedItem(from, "music", null, String.Format("{0} - {1}", tune.Artist, tune.Title), tune.Uri);
 					});
 				}
 			}

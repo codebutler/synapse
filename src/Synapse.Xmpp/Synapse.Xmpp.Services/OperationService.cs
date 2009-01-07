@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using Synapse.ServiceStack;
 using jabber.protocol;
 
-namespace Synapse.Xmpp
+namespace Synapse.Xmpp.Services
 {
 	public delegate void OperationEventHandler (IOperation Operation);
 	

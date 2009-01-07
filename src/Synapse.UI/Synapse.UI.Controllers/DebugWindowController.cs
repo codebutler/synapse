@@ -22,6 +22,7 @@
 using System;
 using Synapse.ServiceStack;
 using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 using Synapse.UI.Views;
 
 namespace Synapse.UI.Controllers

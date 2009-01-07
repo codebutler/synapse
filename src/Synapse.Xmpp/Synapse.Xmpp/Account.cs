@@ -34,6 +34,7 @@ using jabber.protocol.iq;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Services;
+using Synapse.Xmpp.Services;
 
 namespace Synapse.Xmpp
 {
@@ -74,8 +75,6 @@ namespace Synapse.Xmpp
 
 		Dictionary<JID, Presence> m_UserPresenceCache;
 		
-		ActivityFeed m_ActivityFeed;
-		
 		public event AccountEventHandler Changed; // XXX: is this used?
 		public event AccountEventHandler ConnectionStateChanged;
 		public event AccountEventHandler StatusChanged;
@@ -109,9 +108,7 @@ namespace Synapse.Xmpp
 		}
 		
 		private Account ()
-		{
-			m_ActivityFeed = new ActivityFeed(this);
-			
+		{			
 			m_Client = new JabberClient();
 			m_Client.AutoPresence = false;
 			m_Client.AutoRoster = true;
@@ -169,7 +166,7 @@ namespace Synapse.Xmpp
 		void HandleOnInvite(object sender, Message msg)
 		{
 			var invite = (Invite)msg.X.FirstChild;
-			m_ActivityFeed.PostItem(invite.From, "invite", msg.From, invite.Reason);
+			PostActivityFeedItem(invite.From, "invite", msg.From, invite.Reason);
 		}
 
 		void HandleOnStreamInit(object sender, ElementStream stream)
@@ -232,7 +229,7 @@ namespace Synapse.Xmpp
 
 			if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
 				if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
-					m_ActivityFeed.PostItem(pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status);
+					PostActivityFeedItem(pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status);
 				}
 			}
 		}
@@ -376,12 +373,6 @@ namespace Synapse.Xmpp
 			}
 		}
 		
-		public ActivityFeed ActivityFeed {
-			get {
-				return m_ActivityFeed;
-			}
-		}
-		
 		public T GetFeature<T>()
 		{
 			return (T)m_Features[typeof(T)];
@@ -515,6 +506,17 @@ namespace Synapse.Xmpp
 			info.ConnectServer = m_ConnectServer;
 			info.AutoConnect = m_AutoConnect;
 			return info;
+		}
+
+		public void PostActivityFeedItem (JID from, string type, string actionItem, string content)
+		{
+			PostActivityFeedItem(from, type, actionItem, content, null);
+		}
+		
+		public void PostActivityFeedItem (JID from, string type, string actionItem, string content, string contentUrl)
+		{
+			var s = ServiceManager.Get<ActivityFeedService>();
+			s.PostItem(this, from, type, actionItem, content, contentUrl);
 		}
 		
 		protected virtual void OnStateChanged ()

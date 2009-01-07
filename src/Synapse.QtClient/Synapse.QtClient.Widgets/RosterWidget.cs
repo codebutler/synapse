@@ -26,6 +26,7 @@ using System.IO;
 using Qyoto;
 using Synapse.Core;
 using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 using Synapse.UI.Operations;
 using Synapse.ServiceStack;
 using Synapse.UI;
@@ -51,8 +52,6 @@ public partial class RosterWidget : QWidget
 	QAction               m_IMAction;
 	QAction               m_ListModeAction;
 	QAction               m_EditGroupsAction;
-
-	public event EventHandler ActivityFeedReady;
 
 	// Map the JS element ID to the ActivityFeedItem
 	Dictionary<string, ActivityFeedItem> m_ActivityFeedItems;
@@ -148,14 +147,17 @@ public partial class RosterWidget : QWidget
 		throw new NotImplementedException();
 	}
 	
-	public void AddActivityFeedItem (Account account, ActivityFeedItem item)
+	public void AddActivityFeedItem (ActivityFeedItem item)
 	{
-		string js = Util.CreateJavascriptCall("ActivityFeed.addItem", item.Account.Jid.Bare, item.Type, item.AvatarUrl, 
-		                                      item.FromJid, item.FromName, item.ActionItem, item.Content);
-		var result = m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
-		if (!result.IsNull()) {
-			m_ActivityFeedItems.Add(result.ToString(), item);
-		}
+		Application.Invoke(delegate {
+			string accountJid = (item.Account != null) ? item.Account.Jid.Bare : null;
+			string js = Util.CreateJavascriptCall("ActivityFeed.addItem", accountJid, item.Type, item.AvatarUrl, 
+		                                      	item.FromJid, item.FromName, item.ActionItem, item.Content);
+			var result = m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
+			if (!result.IsNull()) {
+				m_ActivityFeedItems.Add(result.ToString(), item);
+			}
+		});
 	}
 	
 	void HandleItemActivated (AvatarGrid<AccountItemPair> grid, AccountItemPair pair)
@@ -277,8 +279,9 @@ public partial class RosterWidget : QWidget
 			m_ActivityWebView.Page().MainFrame().Load("resource:/feed.html");
 			return;
 		}
-		
-		foreach (var template in Synapse.Xmpp.ActivityFeed.Templates.Values) {
+
+		var feedService = ServiceManager.Get<ActivityFeedService>();
+		foreach (var template in feedService.Templates.Values) {
 			string js = Util.CreateJavascriptCall("ActivityFeed.addTemplate", template.Name, template.SingularText,
 			                                      template.PluralText, template.Actions);
 			var ret = m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
@@ -287,8 +290,8 @@ public partial class RosterWidget : QWidget
 			}
 		}
 		
-		if (ActivityFeedReady != null)
-			ActivityFeedReady(this, EventArgs.Empty);
+		feedService.NewItem += AddActivityFeedItem;
+		feedService.FireQueued();
 	}
 
 	[Q_SLOT]

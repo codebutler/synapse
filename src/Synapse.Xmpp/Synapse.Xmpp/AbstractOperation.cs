@@ -21,6 +21,7 @@
 
 using System;
 using jabber.protocol;
+using Synapse.Xmpp.Services;
 
 namespace Synapse.Xmpp
 {

@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using Synapse.ServiceStack;
 using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 using Qyoto;
 using Gtk;
 

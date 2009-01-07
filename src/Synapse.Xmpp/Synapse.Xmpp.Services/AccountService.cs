@@ -34,7 +34,7 @@ using Synapse.Xmpp;
 
 using jabber;
 
-namespace Synapse.Xmpp
+namespace Synapse.Xmpp.Services
 {
 	public class AccountService : IRequiredService, IInitializeService
 	{

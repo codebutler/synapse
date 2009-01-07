@@ -15,7 +15,6 @@
   </Configurations>
   <Contents>
     <File name="Synapse.Xmpp/Account.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp/ActivityFeed.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/IDiscoverable.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/Namespace.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/PersonalEventing.cs" subtype="Code" buildaction="Compile" />
@@ -24,8 +23,6 @@
     <File name="Synapse.Xmpp/UserTune.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/ClientStatus.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/IOperation.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp/AccountService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp/OperationService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/AbstractOperation.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/UserAvatars.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/AvatarManager.cs" subtype="Code" buildaction="Compile" />
@@ -33,6 +30,10 @@
     <File name="Synapse.Xmpp/AbstractIqOperation.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/XmppUriQueryInfo.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/Helper.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp.Services" subtype="Directory" buildaction="Compile" />
+    <File name="Synapse.Xmpp.Services/ActivityFeedService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp.Services/AccountService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp.Services/OperationService.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

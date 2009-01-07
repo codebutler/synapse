@@ -40,8 +40,6 @@ namespace Synapse.QtClient.UI.Views
 
 		string m_StyleSheet;
 		string m_NoAccountsStyleSheet;
-
-		public event EventHandler ActivityFeedReady;
 		
 		public event PresenceChangedEventHandler PresenceChanged;
 		
@@ -74,10 +72,6 @@ namespace Synapse.QtClient.UI.Views
 			this.SetStyleSheet(m_StyleSheet);
 			
 			m_RosterWidget = new RosterWidget(this);
-			m_RosterWidget.ActivityFeedReady += delegate {
-				if (ActivityFeedReady != null)
-					ActivityFeedReady(this, EventArgs.Empty);
-			};
 			contentWidget.Layout().AddWidget(m_RosterWidget);
 			
 			m_NoAccountsWidget = new NoAccountsWidget();
@@ -152,11 +146,6 @@ namespace Synapse.QtClient.UI.Views
 		{
 			m_RosterWidget.RemoveAccount(account);
 			HideShowNoAccountsWidget();
-		}
-
-		public void AddActivityFeedItem (Account account, ActivityFeedItem item)
-		{
-			m_RosterWidget.AddActivityFeedItem(account, item);
 		}
 		
 		void HideShowNoAccountsWidget ()

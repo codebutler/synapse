@@ -24,6 +24,7 @@ using Synapse.UI.Views;
 using Synapse.ServiceStack;
 using Synapse.Services;
 using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 using jabber;
 using jabber.protocol.client;
 
@@ -38,7 +39,6 @@ namespace Synapse.UI.Controllers
 				
 				View.AddNewAccount   += OnAddNewAccount;
 				View.PresenceChanged += OnPresenceChanged;
-				View.ActivityFeedReady += HandleActivityFeedReady;
 	
 				AccountService accountService = ServiceManager.Get<AccountService>();
 				accountService.AccountAdded   += AddAccount;
@@ -51,21 +51,9 @@ namespace Synapse.UI.Controllers
 			});
 		}
 
-		void HandleActivityFeedReady(object sender, EventArgs e)
-		{
-			AccountService accountService = ServiceManager.Get<AccountService>();
-			foreach (Account account in accountService.Accounts)
-				account.ActivityFeed.FireQueued();
-		}
-
 		void AddAccount (Account account)
 		{
 			View.AddAccount(account);
-			account.ActivityFeed.NewItem += delegate (Account a, ActivityFeedItem item) {
-				Application.Invoke(delegate {
-					View.AddActivityFeedItem(a, item);
-				});
-			};
 		}
 
 		#region No accounts

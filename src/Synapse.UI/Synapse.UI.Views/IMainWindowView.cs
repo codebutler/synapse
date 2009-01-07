@@ -21,6 +21,7 @@
 
 using System;
 using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 
 namespace Synapse.UI.Views
 {
@@ -31,9 +32,6 @@ namespace Synapse.UI.Views
 		string Password { get; }
 		event DialogValidateEventHandler AddNewAccount;
 
-		void AddActivityFeedItem (Account account, ActivityFeedItem item);
-		event EventHandler ActivityFeedReady;
-		
 		void AddAccount(Account account);
 		void RemoveAccount(Account account);
 		event PresenceChangedEventHandler PresenceChanged;

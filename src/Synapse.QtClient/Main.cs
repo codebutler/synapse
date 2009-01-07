@@ -28,6 +28,8 @@ using Hyena;
 using Synapse.ServiceStack;
 using Synapse.Core;
 using Synapse.UI.Services;
+using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 
 using Qyoto;
 using QtWebKit;
@@ -96,8 +98,9 @@ namespace Synapse.QtClient
 			};
 			
 			// XXX: I dont like this being here.
-			ServiceManager.RegisterService<Synapse.Xmpp.AccountService>();
-			ServiceManager.RegisterService<Synapse.Xmpp.OperationService>();
+			ServiceManager.RegisterService<Synapse.Xmpp.Services.AccountService>();
+			ServiceManager.RegisterService<Synapse.Xmpp.Services.OperationService>();
+			ServiceManager.RegisterService<Synapse.Xmpp.Services.ActivityFeedService>();
 			
 			ServiceManager.RegisterService<GuiService>();
 			ServiceManager.RegisterService<ActionService>();

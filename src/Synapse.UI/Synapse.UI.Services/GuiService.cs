@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 using Synapse.ServiceStack;
 using Synapse.Services;
 using Synapse.UI;
@@ -54,12 +55,7 @@ namespace Synapse.UI.Services
 			m_AccountManagers = new Dictionary<Account, AccountChatWindowManager>();
 			Application.Client.Started += OnClientStarted;
 
-			ActivityFeed.AddTemplate("synapse", "{0}", "{0}");
-			ActivityFeed.AddTemplate("presence", "is now {0}", "are now {0}");
-			ActivityFeed.AddTemplate("music", "is listening to", "are listening to");
-			ActivityFeed.AddTemplate("microblog", "shouts", "shout");
-			ActivityFeed.AddTemplate("mood", "is feeling {0}", "are feeling {0}");
-			var joinMucAction = new NotificationAction() { 
+			var joinMucAction = new NotificationAction() {
 				Name = "join", 
 				Label = "Join",
 				Callback = delegate (object o, EventArgs args) {
@@ -67,7 +63,7 @@ namespace Synapse.UI.Services
 					ServiceManager.Get<OperationService>().Start(new JoinMucOperation(feedItem.Account, feedItem.ActionItem));
 				}
 			};
-			ActivityFeed.AddTemplate("invite", "invites you to join {0}", "invites you to join {0}", true, new [] { joinMucAction });		
+			ServiceManager.Get<ActivityFeedService>().AddTemplate("invite", "invites you to join {0}", "invites you to join {0}", true, new [] { joinMucAction });
 		}
 
 		public string ServiceName {

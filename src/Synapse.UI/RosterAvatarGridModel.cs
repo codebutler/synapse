@@ -28,6 +28,7 @@ using System.Text;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 using jabber;
 using jabber.protocol.iq;
 using jabber.protocol.client;

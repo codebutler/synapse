@@ -72,7 +72,7 @@ namespace Synapse.Xmpp
 		{
 			XmlNode entry = item["entry"];
 			string title = entry["title"].InnerText;
-			m_Account.ActivityFeed.PostItem(from, "microblog", null, title);
+			m_Account.PostActivityFeedItem(from, "microblog", null, title);
 		}
 	}
 }

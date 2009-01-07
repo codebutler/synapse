@@ -25,6 +25,7 @@ using Qyoto;
 using Synapse.ServiceStack;
 using Synapse.Services;
 using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 using jabber.protocol.iq;
 using jabber.client;
 

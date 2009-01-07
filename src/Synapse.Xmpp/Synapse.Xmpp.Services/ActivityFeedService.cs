@@ -1,7 +1,7 @@
 //
-// ActivityFeed.cs
-//
-// Copyright (C) 2008 Eric Butler
+// ActivityFeedService.cs
+// 
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -20,53 +20,74 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Text;
 using System.Collections.Generic;
-using jabber;
-using jabber.protocol.iq;
+using System.Text;
 using Synapse.Core;
+using Synapse.Xmpp;
 using Synapse.ServiceStack;
 using Synapse.Services;
+using jabber;
 
-namespace Synapse.Xmpp
+namespace Synapse.Xmpp.Services
 {
-	public delegate void ActivityFeedItemEventHandler (Account account, ActivityFeedItem item);
-	
-	public class ActivityFeed
-	{	
-		Account                 m_Account;	
+	public class ActivityFeedService : IService, IRequiredService, IInitializeService
+	{
+		public delegate void ActivityFeedItemEventHandler (ActivityFeedItem item);
+
 		Queue<ActivityFeedItem> m_Queue = new Queue<ActivityFeedItem>();
 		
 		public event ActivityFeedItemEventHandler NewItem;
 		
-		public ActivityFeed(Account account)
+		public void Initialize ()
 		{
-			m_Account = account;
-
+			AddTemplate("synapse", "{0}", "{0}");
+			AddTemplate("presence", "is now {0}", "are now {0}");
+			AddTemplate("music", "is listening to", "are listening to");
+			AddTemplate("microblog", "shouts", "shout");
+			AddTemplate("mood", "is feeling {0}", "are feeling {0}");
+			
 			Application.Client.Started +=  delegate {
-				PostItem(null, "synapse", "Welcome to Synapse!", null);
+				PostItem(null, null, "synapse", "Welcome to Synapse!", null);
 			};
 		}
 
-		public void PostItem (JID from, string type, string actionItem, string content)
+		Dictionary<string, ActivityFeedItemTemplate> m_Templates = new Dictionary<string, ActivityFeedItemTemplate>();
+		
+		public IDictionary<string, ActivityFeedItemTemplate> Templates {
+			get {
+				return new ReadOnlyDictionary<string, ActivityFeedItemTemplate>(m_Templates);
+			}
+		}
+
+		public void AddTemplate (string name, string singularText, string pluralText)
 		{
-			PostItem(from, type, actionItem, content, null);
+			AddTemplate(name, singularText, pluralText, false, null);
 		}
 		
-		public void PostItem (JID from, string type, string actionItem, string content, string contentUrl)
+		public void AddTemplate (string name, string singularText, string pluralText, bool desktopNotify, NotificationAction[] actions)
 		{
-			var item = new ActivityFeedItem(m_Account, from, type, actionItem, content, contentUrl);
+			m_Templates.Add(name, new ActivityFeedItemTemplate(name, singularText, pluralText, desktopNotify, actions));
+		}
+		
+		public void PostItem (Account account, JID from, string type, string actionItem, string content)
+		{
+			PostItem(account, from, type, actionItem, content, null);
+		}
+		
+		public void PostItem (Account account, JID from, string type, string actionItem, string content, string contentUrl)
+		{
+			var item = new ActivityFeedItem(account, from, type, actionItem, content, contentUrl);
 			if (NewItem == null) {
 				lock (m_Queue)
 					m_Queue.Enqueue(item);
 			} else {
-				NewItem(m_Account, item);
+				NewItem(item);
 			}
 			
-			var template = ActivityFeed.Templates[type];
+			var template = m_Templates[type];
 			if (template.DesktopNotify) {
 				var text = new StringBuilder();
-				text.Append(m_Account.GetDisplayName(from));
+				text.Append(account.GetDisplayName(from));
 				text.Append(" ");
 				text.AppendFormat(template.SingularText, actionItem);
 				
@@ -79,8 +100,8 @@ namespace Synapse.Xmpp
 					n.Notify(text.ToString(), content, String.Empty, item, template.Actions);
 				}
 			}
-		}
-		
+		}		
+			
 		public void FireQueued () 
 		{
 			if (NewItem == null) {
@@ -88,28 +109,12 @@ namespace Synapse.Xmpp
 			}
 			lock (m_Queue) {
 				while (m_Queue.Count > 0)
-					NewItem(m_Account, m_Queue.Dequeue());
+					NewItem(m_Queue.Dequeue());
 			}
 		}
 
-		// FIXME: Not super excited about all this being here:
-
-		static Dictionary<string, ActivityFeedItemTemplate> s_Templates = new Dictionary<string, ActivityFeedItemTemplate>();
-		
-		public static IDictionary<string, ActivityFeedItemTemplate> Templates {
-			get {
-				return new ReadOnlyDictionary<string, ActivityFeedItemTemplate>(s_Templates);
-			}
-		}
-
-		public static void AddTemplate (string name, string singularText, string pluralText)
-		{
-			AddTemplate(name, singularText, pluralText, false, null);
-		}
-		
-		public static void AddTemplate (string name, string singularText, string pluralText, bool desktopNotify, NotificationAction[] actions)
-		{
-			s_Templates.Add(name, new ActivityFeedItemTemplate(name, singularText, pluralText, desktopNotify, actions));
+		public string ServiceName {
+			get { return "ActivityFeedService"; }
 		}
 	}
 
@@ -248,7 +253,7 @@ namespace Synapse.Xmpp
 
 		public void TriggerAction (string actionName)
 		{
-			var template = ActivityFeed.Templates[m_Type];
+			var template = ServiceManager.Get<ActivityFeedService>().Templates[m_Type];
 			foreach (var action in template.Actions) {
 				if (action.Name == actionName) {
 					action.Callback(this, EventArgs.Empty);
