@@ -55,13 +55,13 @@ public partial class RosterWidget : QWidget
 	QAction               m_EditGroupsAction;
 
 	// Map the JS element ID to the ActivityFeedItem
-	Dictionary<string, ActivityFeedItem> m_ActivityFeedItems;
+	Dictionary<string, IActivityFeedItem> m_ActivityFeedItems;
 	
 	public RosterWidget (MainWindow parent) : base (parent)
 	{
 		SetupUi();
 
-		m_ActivityFeedItems = new Dictionary<string, ActivityFeedItem>();
+		m_ActivityFeedItems = new Dictionary<string, IActivityFeedItem>();
 
 		rosterGrid.ContextMenuPolicy = Qt.ContextMenuPolicy.CustomContextMenu;
 		m_RosterMenu = new QMenu(this);
@@ -116,10 +116,14 @@ public partial class RosterWidget : QWidget
 			});
 			this.AddAction(action);
 		});
-		
+
+		var jsWindowObject = new JSDebugObject(this);
 		m_ActivityWebView.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
 		QObject.Connect(m_ActivityWebView, Qt.SIGNAL("linkClicked(QUrl)"), this, Qt.SLOT("HandleActivityLinkClicked(QUrl)"));
 		QObject.Connect(m_ActivityWebView.Page(), Qt.SIGNAL("loadFinished(bool)"), this, Qt.SLOT("activityPage_loadFinished(bool)"));
+		QObject.Connect(m_ActivityWebView.Page().MainFrame(), Qt.SIGNAL("javaScriptWindowObjectCleared()"), delegate {
+			m_ActivityWebView.Page().MainFrame().AddToJavaScriptWindowObject("Synapse", jsWindowObject);
+		});
 		m_ActivityWebView.Page().MainFrame().Load("resource:/feed.html");
 		
 		m_ParentWindow = parent;
@@ -134,11 +138,9 @@ public partial class RosterWidget : QWidget
 		});
 		
 		QObject.Connect(shoutLineEdit, Qt.SIGNAL("returnPressed()"), delegate {
-			var accountService = ServiceManager.Get<AccountService>();
-			foreach (var account in accountService.Accounts) {
-				account.GetFeature<Microblogging>().Post(shoutLineEdit.Text);
-				shoutLineEdit.Clear();
-			}
+			var service = ServiceManager.Get<ActivityFeedService>();
+			service.Shout(shoutLineEdit.Text);
+			shoutLineEdit.Clear();
 		});
 
 		QVBoxLayout layout = new QVBoxLayout(m_AccountsContainer);
@@ -169,12 +171,14 @@ public partial class RosterWidget : QWidget
 		throw new NotImplementedException();
 	}
 	
-	public void AddActivityFeedItem (ActivityFeedItem item)
+	public void AddActivityFeedItem (IActivityFeedItem item)
 	{
 		Application.Invoke(delegate {
-			string accountJid = (item.Account != null) ? item.Account.Jid.Bare : null;
+			string accountJid = (item is XmppActivityFeedItem && ((XmppActivityFeedItem)item).Account != null) ? ((XmppActivityFeedItem)item).Account.Jid.Bare : null;
+			string fromJid = (item is XmppActivityFeedItem) ? ((XmppActivityFeedItem)item).FromJid : null;
+			string content = Util.Linkify(item.Content);
 			string js = Util.CreateJavascriptCall("ActivityFeed.addItem", accountJid, item.Type, item.AvatarUrl, 
-		                                      	item.FromJid, item.FromName, item.ActionItem, item.Content);
+		                                      	fromJid, item.FromName, item.FromUrl, item.ActionItem, content);
 			var result = m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
 			if (!result.IsNull()) {
 				m_ActivityFeedItems.Add(result.ToString(), item);

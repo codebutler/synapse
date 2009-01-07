@@ -56,7 +56,7 @@
 				return this.replace(pattern, function(capture){ return args[capture.match(/\d+/)]; });
 			};
 
-			function ActivityFeedItem (id, accountJid, avatarUrl, fromJid, fromName, type, actionItem, content) {
+			function ActivityFeedItem (id, accountJid, avatarUrl, fromJid, fromName, fromUrl, type, actionItem, content) {
 				this.id           = id;
 				this.accountJid   = accountJid;
 				this.avatarUrl    = avatarUrl;
@@ -66,18 +66,19 @@
 				this.from         = [];
 				this.timestamp    = new Date();
 
-				if (fromJid != null)
-					this.addFrom(fromJid, fromName);
+				if (fromJid != null || fromUrl != null)
+					this.addFrom(fromJid, fromName, fromUrl);
 			}
 
-			ActivityFeedItem.prototype.addFrom = function (fromJid, fromName) {
+			ActivityFeedItem.prototype.addFrom = function (fromJid, fromName, fromUrl) {
 				var existing = this.from.find(function (fromInfo) {
 					return fromInfo.fromJid == fromJid
 				});
 				if (existing == null) {
 					this.from.push({
 						fromJid: fromJid,
-						fromName: fromName
+						fromName: fromName,
+						fromUrl: fromUrl
 					});
 					this.updateHtml();
 				}
@@ -96,7 +97,7 @@
 					if (this.from.length < 5) {
 						var feedItem = this;
 						html += this.from.map(function(fromInfo) {
-							var fromUrl = 'xmpp:{0}?message'.format(fromInfo.fromJid)
+							var fromUrl = 'xmpp:{0}?message'.format(fromInfo.fromJid);
 							var fromName = (fromInfo.fromJid == feedItem.accountJid) ? "You" : fromInfo.fromName;
 							return '<a href="{0}" title="{1}">{2}</a>'.format(fromUrl, fromInfo.fromJid, fromName);
 						}).join(", ") + ' ';
@@ -128,10 +129,11 @@
 					html += template.pluralText.format(this.actionItem);
 				} else if (this.from.length == 1) {
 					var fromJid = this.from[0].fromJid;
-					var fromName = (fromJid == this.accountJid) ? "You" : this.from[0].fromName;
-					var fromUrl = 'xmpp:{0}?message'.format(fromJid)
-					html += '<a href="{0}" title="{1}">{2}</a> '.format(fromUrl, fromJid, fromName);
-					if (fromJid != this.accountJid) {
+					var fromName = (fromJid != null && fromJid == this.accountJid) ? "You" : this.from[0].fromName;
+					var fromUrl = (fromJid == null) ? this.from[0].fromUrl : 'xmpp:{0}?message'.format(fromJid);
+					var fromTitle = (fromJid == null) ? fromUrl : fromJid;
+					html += '<a href="{0}" title="{1}">{2}</a> '.format(fromUrl, fromTitle, fromName);
+					if (fromJid == null || fromJid != this.accountJid) {
 						html += template.singularText.format(this.actionItem);
 					} else {
 						html += template.pluralText.format(this.actionItem);
@@ -140,10 +142,12 @@
 					html += template.pluralText.format(this.actionItem);
 				}
 				if (!this.content.blank()) {
-					html += ":";
+					if (this.from.length > 0)
+						html += ":";
 					html += '<blockquote class="{0}">{1}</blockquote>'.format(this.type, this.content);
 				} else {
-					html += ".";
+					if (this.from.length > 0)
+						html += ".";
 				}
 
 				if (template.actions != null) {
@@ -183,7 +187,7 @@
 						return false;
 					}
 				},
-				addItem: function (accountJid, type, avatarUrl, fromJid, fromName, actionItem, content) {
+				addItem: function (accountJid, type, avatarUrl, fromJid, fromName, fromUrl, actionItem, content) {
 					try {
 						
 						if (this.templates[type] == null) {
@@ -192,10 +196,11 @@
 						}
 	
 						var mergeItem = null;
-						for (var x = 0; x < this.items.length; x++) {
+						for (var x = this.items.length - 1; x >= 0; x--) {
 							var thisItem = this.items[x];
-							if ((new Date() - thisItem.timestamp) > 60000)
+							if ((new Date() - thisItem.timestamp) > 60000) {
 								break;
+							}
 							if (thisItem.canMerge(type, actionItem, content)) {
 								mergeItem = thisItem;
 								break;
@@ -203,11 +208,11 @@
 						}
 	
 						if (mergeItem != null) {
-							mergeItem.addFrom(fromJid, fromName);
+							mergeItem.addFrom(fromJid, fromName, fromUrl);
 							return null;
 						} else {
 							var id = "item-{0}".format(this.items.length + 1);
-							var item = new ActivityFeedItem(id, accountJid, avatarUrl, fromJid, fromName, type, actionItem, content);
+							var item = new ActivityFeedItem(id, accountJid, avatarUrl, fromJid, fromName, fromUrl, type, actionItem, content);
 							this.items.push(item);
 	
 							var itemsList = $('items');

@@ -27,14 +27,16 @@ using Synapse.Xmpp;
 using Synapse.ServiceStack;
 using Synapse.Services;
 using jabber;
+using Mono.Addins;
 
 namespace Synapse.Xmpp.Services
 {
 	public class ActivityFeedService : IService, IRequiredService, IInitializeService
 	{
-		public delegate void ActivityFeedItemEventHandler (ActivityFeedItem item);
+		public delegate void ActivityFeedItemEventHandler (IActivityFeedItem item);
 
-		Queue<ActivityFeedItem> m_Queue = new Queue<ActivityFeedItem>();
+		List<IShoutHandler> m_ShoutHandlers = new List<IShoutHandler>();
+		Queue<IActivityFeedItem> m_Queue = new Queue<IActivityFeedItem>();
 		
 		public event ActivityFeedItemEventHandler NewItem;
 		
@@ -49,6 +51,24 @@ namespace Synapse.Xmpp.Services
 			Application.Client.Started +=  delegate {
 				PostItem(null, null, "synapse", "Welcome to Synapse!", null);
 			};
+
+			var nodes = AddinManager.GetExtensionNodes("/Synapse/Xmpp/ActivityFeed/ShoutHandlers");
+			foreach (var node in nodes) {
+				IShoutHandler handler = (IShoutHandler) ((TypeExtensionNode)node).CreateInstance();
+				m_ShoutHandlers.Add(handler);
+			}
+		}
+
+		public void Shout (string message)
+		{
+			var accountService = ServiceManager.Get<AccountService>();
+			foreach (var account in accountService.Accounts) {
+				account.GetFeature<Microblogging>().Post(message);
+			}
+
+			foreach (var handler in m_ShoutHandlers) {
+				handler.Shout(message);
+			}
 		}
 
 		Dictionary<string, ActivityFeedItemTemplate> m_Templates = new Dictionary<string, ActivityFeedItemTemplate>();
@@ -76,7 +96,11 @@ namespace Synapse.Xmpp.Services
 		
 		public void PostItem (Account account, JID from, string type, string actionItem, string content, string contentUrl)
 		{
-			var item = new ActivityFeedItem(account, from, type, actionItem, content, contentUrl);
+			PostItem(new XmppActivityFeedItem(account, from, type, actionItem, content, contentUrl));
+		}
+
+		public void PostItem (IActivityFeedItem item)
+		{
 			if (NewItem == null) {
 				lock (m_Queue)
 					m_Queue.Enqueue(item);
@@ -84,20 +108,20 @@ namespace Synapse.Xmpp.Services
 				NewItem(item);
 			}
 			
-			var template = m_Templates[type];
+			var template = m_Templates[item.Type];
 			if (template.DesktopNotify) {
 				var text = new StringBuilder();
-				text.Append(account.GetDisplayName(from));
+				text.Append(item.FromName);
 				text.Append(" ");
-				text.AppendFormat(template.SingularText, actionItem);
+				text.AppendFormat(template.SingularText, item.ActionItem);
 				
 				var n = ServiceManager.Get<NotificationService>();
-				if (String.IsNullOrEmpty(content)) {
+				if (String.IsNullOrEmpty(item.Content)) {
 					text.Append(".");
 					n.Notify(text.ToString(), String.Empty, String.Empty, item, template.Actions);
 				} else {
 					text.Append(":");
-					n.Notify(text.ToString(), content, String.Empty, item, template.Actions);
+					n.Notify(text.ToString(), item.Content, String.Empty, item, template.Actions);
 				}
 			}
 		}		
@@ -167,7 +191,7 @@ namespace Synapse.Xmpp.Services
 		}
 	}
 	
-	public class ActivityFeedItem
+	public class XmppActivityFeedItem : IActivityFeedItem
 	{
 		Account  m_Account;
 		JID 	 m_From;
@@ -176,12 +200,12 @@ namespace Synapse.Xmpp.Services
 		string   m_Content;
 		Uri      m_ContentUrl;
 		
-		public ActivityFeedItem (Account account, JID from, string type, string actionItem, string content)
+		public XmppActivityFeedItem (Account account, JID from, string type, string actionItem, string content)
 			: this (account, from, type, actionItem, content, null)
 		{
 		}
 		
-		public ActivityFeedItem (Account account, JID from, string type, string actionItem, string content, string contentUrl)
+		public XmppActivityFeedItem (Account account, JID from, string type, string actionItem, string content, string contentUrl)
 		{
 			if (type == null)
 				throw new ArgumentNullException("type");
@@ -205,6 +229,12 @@ namespace Synapse.Xmpp.Services
 		public Account Account {
 			get {
 				return m_Account;
+			}
+		}
+		
+		public string FromUrl {
+			get {
+				return null;
 			}
 		}
 
@@ -262,5 +292,44 @@ namespace Synapse.Xmpp.Services
 			}
 			throw new Exception("Action not found: " + actionName);
 		}
+	}
+
+	public interface IActivityFeedItem
+	{
+		string FromName {
+			get;
+		}
+
+		string FromUrl {
+			get;
+		}
+
+		string AvatarUrl {
+			get;
+		}
+
+		string Type {
+			get;
+		}
+
+		string ActionItem {
+			get;
+		}
+
+		string Content {
+			get;
+		}
+
+		Uri ContentUrl {
+			get;
+		}
+
+		void TriggerAction (string actionName);
+	}
+	
+	
+	public interface IShoutHandler
+	{
+		void Shout (string message);
 	}
 }

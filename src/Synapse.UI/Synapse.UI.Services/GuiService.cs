@@ -59,7 +59,7 @@ namespace Synapse.UI.Services
 				Name = "join", 
 				Label = "Join",
 				Callback = delegate (object o, EventArgs args) {
-					var feedItem = (ActivityFeedItem)o;
+					var feedItem = (XmppActivityFeedItem)o;
 					ServiceManager.Get<OperationService>().Start(new JoinMucOperation(feedItem.Account, feedItem.ActionItem));
 				}
 			};
