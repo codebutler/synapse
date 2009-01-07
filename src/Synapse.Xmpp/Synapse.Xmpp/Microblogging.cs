@@ -25,6 +25,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using jabber;
 using jabber.protocol.iq;
+using Synapse.ServiceStack;
 
 namespace Synapse.Xmpp
 {	
@@ -40,16 +41,9 @@ namespace Synapse.Xmpp
 		
 		public void Post (string message)
 		{
-			/*
-			MicrobloggingItem item = new MicrobloggingItem();
-			item.Entry = new MicrobloggingEntry(message);
-			string payload = XmlSerialization.Serialize(item);
-			*/
-			
 			XmlDocument doc = m_Account.Client.Document;
 			
 			XmlElement itemElement = doc.CreateElement("item");
-			doc.AppendChild(itemElement);
 			
 			XmlElement entryElement = doc.CreateElement("entry");
 			entryElement.SetAttribute("xmlns", "http://www.w3.org/2005/Atom");
@@ -58,6 +52,10 @@ namespace Synapse.Xmpp
 			XmlElement titleElement = doc.CreateElement("title");
 			titleElement.InnerText = message;
 			entryElement.AppendChild(titleElement);
+
+			XmlElement publishedElement = doc.CreateElement("published");
+			publishedElement.InnerText = DateTime.Now.ToString("yyy-MM-ddTHH:mm:sszz");
+			entryElement.AppendChild(publishedElement);
 			
 			m_Account.GetFeature<PersonalEventing>().Publish("urn:xmpp:tmp:microblog", itemElement);
 		}
@@ -71,8 +69,16 @@ namespace Synapse.Xmpp
 		private void ReceivedMicroblog (JID from, string node, PubSubItem item)
 		{
 			XmlNode entry = item["entry"];
-			string title = entry["title"].InnerText;
-			m_Account.PostActivityFeedItem(from, "microblog", null, title);
+			Console.WriteLine(entry.OuterXml);
+			if (entry["published"] != null && !String.IsNullOrEmpty(entry["published"].InnerText)) {
+				var publishedDate = DateTime.Parse(entry["published"].InnerText);
+				if ((DateTime.Now - publishedDate).TotalSeconds <= 60) {
+					string title = entry["title"].InnerText;
+					Application.Invoke(delegate {
+						m_Account.PostActivityFeedItem(from, "microblog", null, title);
+					});
+				}
+			}
 		}
 	}
 }

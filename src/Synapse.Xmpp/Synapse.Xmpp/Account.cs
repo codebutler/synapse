@@ -172,6 +172,7 @@ namespace Synapse.Xmpp
 		void HandleOnStreamInit(object sender, ElementStream stream)
 		{
 			stream.AddType("tune", "http://jabber.org/protocol/tune", typeof(UserTune.Tune));
+			stream.AddType("mood", "http://jabber.org/protocol/mood", typeof(UserMood.Mood));
 		}
 
 		void HandleNetworkStateChanged (NetworkState state)

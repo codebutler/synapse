@@ -72,7 +72,7 @@ public partial class RosterWidget : QWidget {
     
     protected QLineEdit shoutLineEdit;
     
-    protected QLabel shoutCharsLabel_2;
+    protected QLabel shoutCharsLabel;
     
     protected QWebView m_ActivityWebView;
     
@@ -106,7 +106,7 @@ public partial class RosterWidget : QWidget {
         this.tabWidget.ObjectName = "tabWidget";
         this.tabWidget.tabPosition = QTabWidget.TabPosition.South;
         this.tabWidget.tabShape = QTabWidget.TabShape.Rounded;
-        this.tabWidget.CurrentIndex = 1;
+        this.tabWidget.CurrentIndex = 2;
         this.tabWidget.UsesScrollButtons = false;
         verticalLayout_2.AddWidget(this.tabWidget);
         this.friendsTab = new QWidget(this.tabWidget);
@@ -299,12 +299,12 @@ public partial class RosterWidget : QWidget {
         horizontalLayout_3.SetContentsMargins(6, 0, 6, 6);
         this.shoutLineEdit = new QLineEdit(this.shoutContainer);
         this.shoutLineEdit.ObjectName = "shoutLineEdit";
-        this.shoutLineEdit.MaxLength = 150;
+        this.shoutLineEdit.MaxLength = 140;
         horizontalLayout_3.AddWidget(this.shoutLineEdit);
-        this.shoutCharsLabel_2 = new QLabel(this.shoutContainer);
-        this.shoutCharsLabel_2.ObjectName = "shoutCharsLabel_2";
-        this.shoutCharsLabel_2.Text = "0";
-        horizontalLayout_3.AddWidget(this.shoutCharsLabel_2);
+        this.shoutCharsLabel = new QLabel(this.shoutContainer);
+        this.shoutCharsLabel.ObjectName = "shoutCharsLabel";
+        this.shoutCharsLabel.Text = "140";
+        horizontalLayout_3.AddWidget(this.shoutCharsLabel);
         verticalLayout.AddWidget(this.shoutContainer);
         this.m_ActivityWebView = new QWebView(this.activityTab);
         this.m_ActivityWebView.ObjectName = "m_ActivityWebView";

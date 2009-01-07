@@ -48,7 +48,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex" >
-          <number>1</number>
+          <number>2</number>
          </property>
          <property name="usesScrollButtons" >
           <bool>false</bool>
@@ -273,10 +273,6 @@
                </widget>
               </item>
              </layout>
-             <zorder>label</zorder>
-             <zorder>m_ChatNameEdit</zorder>
-             <zorder>m_JoinChatButton</zorder>
-             <zorder>splitter_2</zorder>
             </widget>
            </item>
            <item>
@@ -495,14 +491,14 @@ p, li { white-space: pre-wrap; }
               <item>
                <widget class="QLineEdit" name="shoutLineEdit" >
                 <property name="maxLength" >
-                 <number>150</number>
+                 <number>140</number>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="shoutCharsLabel_2" >
+               <widget class="QLabel" name="shoutCharsLabel" >
                 <property name="text" >
-                 <string>0</string>
+                 <string>140</string>
                 </property>
                </widget>
               </item>

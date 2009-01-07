@@ -37,6 +37,7 @@ using Synapse.QtClient.Widgets;
 using jabber;
 using jabber.connection;
 using jabber.protocol.iq;
+using Mono.Rocks;
 
 public partial class RosterWidget : QWidget
 {
@@ -106,6 +107,15 @@ public partial class RosterWidget : QWidget
 		tabWidget.SetCornerWidget(grip, Qt.Corner.BottomRightCorner);
 
 		tabWidget.ElideMode = Qt.TextElideMode.ElideMiddle;
+	
+		0.UpTo(9).ForEach(num => {
+			QAction action = new QAction(this);
+			action.Shortcut = new QKeySequence("Alt+" + num.ToString());
+			QObject.Connect(action, Qt.SIGNAL("triggered(bool)"), delegate {
+				tabWidget.CurrentIndex = num - 1;
+			});
+			this.AddAction(action);
+		});
 		
 		m_ActivityWebView.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
 		QObject.Connect(m_ActivityWebView, Qt.SIGNAL("linkClicked(QUrl)"), this, Qt.SLOT("HandleActivityLinkClicked(QUrl)"));
@@ -118,6 +128,18 @@ public partial class RosterWidget : QWidget
 
 		quickJoinMucContainer.Hide();
 		shoutContainer.Hide();
+
+		QObject.Connect(shoutLineEdit, Qt.SIGNAL("textChanged(const QString &)"), delegate {
+			shoutCharsLabel.Text = (140 - shoutLineEdit.Text.Length).ToString();
+		});
+		
+		QObject.Connect(shoutLineEdit, Qt.SIGNAL("returnPressed()"), delegate {
+			var accountService = ServiceManager.Get<AccountService>();
+			foreach (var account in accountService.Accounts) {
+				account.GetFeature<Microblogging>().Post(shoutLineEdit.Text);
+				shoutLineEdit.Clear();
+			}
+		});
 
 		QVBoxLayout layout = new QVBoxLayout(m_AccountsContainer);
 		layout.Margin = 0;
