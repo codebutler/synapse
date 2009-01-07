@@ -177,7 +177,9 @@ FILES = \
 	gtk-gui/Synapse.QtClient.ErrorDialog.cs \
 	Synapse.QtClient.UI.Views/EditGroupsWindow.cs \
 	qt-gui/EditGroupsWindow.cs \
-	Synapse.QtClient.Widgets/AvatarGrid.Scene.cs 
+	Synapse.QtClient.Widgets/AvatarGrid.Scene.cs \
+	EditAccountDialog.cs \
+	qt-gui/EditAccountDialog.cs 
 
 DATA_FILES = 
 

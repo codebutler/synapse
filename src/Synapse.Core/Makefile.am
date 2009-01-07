@@ -73,7 +73,9 @@ REFERENCES =  \
 	System.Xml \
 	$(MONO_ADDINS_LIBS) \
 	Mono.Posix \
-	System.Core
+	System.Web \
+	System.Core \
+	System.Web.Extensions
 
 DLL_REFERENCES =  \
 	../../contrib/Hyena.dll

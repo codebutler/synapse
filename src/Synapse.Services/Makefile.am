@@ -93,9 +93,9 @@ REFERENCES =  \
 	$(MONO_ADDINS_LIBS) \
 	System \
 	$(NDESK_DBUS_10_LIBS) \
-	$(NOTIFY_SHARP_LIBS) \
 	System.Xml \
-	Mono.Posix
+	Mono.Posix \
+	$(NOTIFY_SHARP_LIBS)
 
 DLL_REFERENCES =  \
 	../../contrib/Hyena.dll

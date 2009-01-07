@@ -83,7 +83,6 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG)
 
 FILES = \
 	Synapse.Xmpp/Account.cs \
-	Synapse.Xmpp/ActivityFeed.cs \
 	Synapse.Xmpp/IDiscoverable.cs \
 	Synapse.Xmpp/Namespace.cs \
 	Synapse.Xmpp/PersonalEventing.cs \
@@ -92,15 +91,16 @@ FILES = \
 	Synapse.Xmpp/UserTune.cs \
 	Synapse.Xmpp/ClientStatus.cs \
 	Synapse.Xmpp/IOperation.cs \
-	Synapse.Xmpp/AccountService.cs \
-	Synapse.Xmpp/OperationService.cs \
 	Synapse.Xmpp/AbstractOperation.cs \
 	Synapse.Xmpp/UserAvatars.cs \
 	Synapse.Xmpp/AvatarManager.cs \
 	Synapse.Xmpp/ChatStates.cs \
 	Synapse.Xmpp/AbstractIqOperation.cs \
 	Synapse.Xmpp/XmppUriQueryInfo.cs \
-	Synapse.Xmpp/Helper.cs 
+	Synapse.Xmpp/Helper.cs \
+	Synapse.Xmpp.Services/ActivityFeedService.cs \
+	Synapse.Xmpp.Services/AccountService.cs \
+	Synapse.Xmpp.Services/OperationService.cs 
 
 DATA_FILES = 
 
