@@ -18,13 +18,23 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using Qyoto;
+using Synapse.QtClient;
+using Synapse.UI.Controllers;
+using Synapse.UI.Views;
 
-public partial class PreferencesWindow : QWidget
+public partial class PreferencesWindow : QWidget, IPreferencesWindowView
 {
-	public PreferencesWindow ()
+	public PreferencesWindow (PreferencesWindowController controller)
 	{
 		SetupUi();
+	}
+
+	public new void Show ()
+	{
+		base.Show();
+		Gui.CenterWidgetOnScreen(this);
 	}
 }

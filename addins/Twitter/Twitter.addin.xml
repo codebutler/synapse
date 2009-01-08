@@ -1,0 +1,20 @@
+<Addin id        = "Twitter"
+	   namespace = "Synapse"
+	   name      = ""
+	   author    = "Eric Butler"
+	   copyright = "GPLv3"
+	   version   = "0.1">
+
+	<Dependencies>
+		<Addin id="Services" version="1.0" />
+		<Addin id="Xmpp" version="1.0" />
+	</Dependencies>
+
+	<Extension path="/Synapse/ServiceManager/Service">
+		<Service class="Synapse.Addins.TwitterAddin.TwitterService" />
+	</Extension>
+
+	<Extension path="/Synapse/Xmpp/ActivityFeed/ShoutHandlers">
+		<ShoutHandler class="Synapse.Addins.TwitterAddin.TwitterShoutHandler" />
+	</Extension>
+</Addin>

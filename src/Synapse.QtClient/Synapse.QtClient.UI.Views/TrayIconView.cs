@@ -51,8 +51,10 @@ namespace Synapse.QtClient.UI.Views
 			m_StatusMenu = new QMenu("Change Status");
 			
 			m_ShowPreferencesAction = new QAction("Preferences", this);
-			m_NewMessageAction      = new QAction("New Message...", this);
-			m_JoinMucAction         = new QAction("Create/Join Conference...", this);
+			QObject.Connect(m_ShowPreferencesAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowPreferencesActionTriggered()"));
+			
+			m_NewMessageAction = new QAction("New Message...", this);
+			m_JoinMucAction    = new QAction("Create/Join Conference...", this);
 			
 			m_ShowDebugWindowAction = new QAction("Debug Window", this);
 			m_ShowDebugWindowAction.Checkable = true;
@@ -136,6 +138,13 @@ namespace Synapse.QtClient.UI.Views
 				debugWindow.View.Show();
 			else
 				debugWindow.View.Hide();	
+		}
+		
+		[Q_SLOT]
+		void HandleShowPreferencesActionTriggered ()
+		{
+			var preferencesWindow = ServiceManager.Get<GuiService>().PreferencesWindow;
+			preferencesWindow.Show();
 		}
 		
 		[Q_SLOT]

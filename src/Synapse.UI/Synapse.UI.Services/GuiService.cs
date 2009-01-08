@@ -44,6 +44,7 @@ namespace Synapse.UI.Services
 		TrayIconController    m_TrayIcon;
 		DebugWindowController m_DebugWindow;
 		TabbedChatsWindowController m_ChatsWindow;
+		PreferencesWindowController m_PreferencesWindow;
 
 		Dictionary<Account, AccountChatWindowManager> m_AccountManagers;
 
@@ -87,6 +88,12 @@ namespace Synapse.UI.Services
 				return m_ChatsWindow;
 			}
 		}
+
+		public PreferencesWindowController PreferencesWindow {
+			get {
+				return m_PreferencesWindow;
+			}
+		}
 		
 		public void OpenChatWindow(Account account, JID jid)
 		{
@@ -105,6 +112,7 @@ namespace Synapse.UI.Services
 			m_TrayIcon    = new TrayIconController();
 			m_DebugWindow = new DebugWindowController();
 			m_ChatsWindow = new TabbedChatsWindowController();
+			m_PreferencesWindow = new PreferencesWindowController();
 		
 			AccountService accountService = ServiceManager.Get<AccountService>();
 			foreach (Account account in accountService.Accounts) {

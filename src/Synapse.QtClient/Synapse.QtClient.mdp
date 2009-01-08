@@ -42,7 +42,6 @@
     <File name="Synapse.QtClient.UI.Views/ProfileWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/ProfileWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="WindowMover.cs" subtype="Code" buildaction="Compile" />
-    <File name="PreferencesWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/PreferencesWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="ResizableGraphicsPixmapItem.cs" subtype="Code" buildaction="Compile" />
     <File name="ResourceFileEngine.cs" subtype="Code" buildaction="Compile" />
@@ -82,6 +81,7 @@
     <File name="EditAccountDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/EditAccountDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="JSDebugObject.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.UI.Views/PreferencesWindow.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />

@@ -136,7 +136,9 @@ FILES = \
 	Synapse.UI.Controllers/TabbedChatsWindowController.cs \
 	Synapse.UI.Views/ITabbedChatsWindowView.cs \
 	Synapse.UI.Views/IEditGroupsWindowView.cs \
-	Synapse.UI.Controllers/EditGroupsController.cs 
+	Synapse.UI.Controllers/EditGroupsController.cs \
+	Synapse.UI.Views/IPreferencesWindowView.cs \
+	Synapse.UI.Controllers/PreferencesWindowController.cs 
 
 DATA_FILES = 
 

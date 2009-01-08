@@ -44,6 +44,14 @@ public partial class EditAccountDialog : QDialog {
     
     protected QLineEdit lineEdit_3;
     
+    protected QLabel label_6;
+    
+    protected QSpinBox spinBox;
+    
+    protected QLabel label_7;
+    
+    protected QWidget tab_3;
+    
     protected QDialogButtonBox buttonBox;
     
     protected void SetupUi() {
@@ -55,7 +63,7 @@ public partial class EditAccountDialog : QDialog {
         verticalLayout.Margin = 6;
         this.tabWidget = new QTabWidget(this);
         this.tabWidget.ObjectName = "tabWidget";
-        this.tabWidget.CurrentIndex = 0;
+        this.tabWidget.CurrentIndex = 1;
         verticalLayout.AddWidget(this.tabWidget);
         this.tab = new QWidget(this.tabWidget);
         this.tab.ObjectName = "tab";
@@ -125,10 +133,29 @@ public partial class EditAccountDialog : QDialog {
         this.lineEdit_3 = new QLineEdit(this.tab_4);
         this.lineEdit_3.ObjectName = "lineEdit_3";
         gridLayout_2.AddWidget(this.lineEdit_3, 0, 1, 1, 1);
+        this.label_6 = new QLabel(this.tab_4);
+        this.label_6.ObjectName = "label_6";
+        this.label_6.Text = "Port:";
+        gridLayout_2.AddWidget(this.label_6, 0, 2, 1, 1);
+        this.spinBox = new QSpinBox(this.tab_4);
+        this.spinBox.ObjectName = "spinBox";
+        this.spinBox.Maximum = 9999999;
+        this.spinBox.SingleStep = 1;
+        this.spinBox.Value = 5222;
+        gridLayout_2.AddWidget(this.spinBox, 0, 3, 1, 1);
+        this.label_7 = new QLabel(this.tab_4);
+        this.label_7.ObjectName = "label_7";
+        this.label_7.Enabled = false;
+        this.label_7.Text = "(Encryption is required)";
+        this.label_7.Alignment = global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignCenter");
+        verticalLayout_3.AddWidget(this.label_7);
         QSpacerItem verticalSpacer_2;
         verticalSpacer_2 = new QSpacerItem(20, 170, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
         verticalLayout_3.AddItem(verticalSpacer_2);
         this.tabWidget.AddTab(this.tab_4, "Connection");
+        this.tab_3 = new QWidget(this.tabWidget);
+        this.tab_3.ObjectName = "tab_3";
+        this.tabWidget.AddTab(this.tab_3, "Privacy");
         this.buttonBox = new QDialogButtonBox(this);
         this.buttonBox.ObjectName = "buttonBox";
         this.buttonBox.Orientation = Qt.Orientation.Horizontal;

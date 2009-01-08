@@ -152,7 +152,6 @@ FILES = \
 	Synapse.QtClient.UI.Views/ProfileWindow.cs \
 	qt-gui/ProfileWindow.cs \
 	WindowMover.cs \
-	PreferencesWindow.cs \
 	qt-gui/PreferencesWindow.cs \
 	ResizableGraphicsPixmapItem.cs \
 	ResourceFileEngine.cs \
@@ -179,7 +178,9 @@ FILES = \
 	qt-gui/EditGroupsWindow.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.Scene.cs \
 	EditAccountDialog.cs \
-	qt-gui/EditAccountDialog.cs 
+	qt-gui/EditAccountDialog.cs \
+	JSDebugObject.cs \
+	Synapse.QtClient.UI.Views/PreferencesWindow.cs 
 
 DATA_FILES = 
 

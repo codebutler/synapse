@@ -20,49 +20,103 @@ public partial class PreferencesWindow : QWidget {
     
     protected QListView listView;
     
-    protected QFrame line;
-    
     protected QWidget widget;
     
     protected QPushButton pushButton;
     
     protected QPushButton pushButton_2;
     
-    protected QWidget tab_2;
+    protected QWidget tab_4;
+    
+    protected QGroupBox groupBox_5;
+    
+    protected QLabel label_4;
+    
+    protected QComboBox comboBox_3;
+    
+    protected QLabel label_5;
+    
+    protected QSlider horizontalSlider;
+    
+    protected QGroupBox groupBox_4;
+    
+    protected QLabel label_6;
+    
+    protected QWidget tab_5;
+    
+    protected QGroupBox groupBox_3;
+    
+    protected QLabel label;
+    
+    protected QComboBox comboBox;
+    
+    protected QLabel label_2;
+    
+    protected QComboBox comboBox_2;
+    
+    protected QCheckBox checkBox;
+    
+    protected QCheckBox checkBox_2;
+    
+    protected QGroupBox groupBox;
+    
+    protected QLabel label_3;
+    
+    protected QPushButton pushButton_4;
+    
+    protected QCheckBox checkBox_3;
+    
+    protected QCheckBox checkBox_4;
+    
+    protected QGroupBox groupBox_2;
+    
+    protected QCheckBox checkBox_5;
+    
+    protected QWebView webView;
+    
+    protected QWidget tab_7;
+    
+    protected QWidget tab_8;
+    
+    protected QWidget tab_3;
+    
+    protected QListView listView_2;
+    
+    protected QWidget widget_2;
+    
+    protected QPushButton pushButton_3;
+    
+    protected QWidget tab_9;
+    
+    protected QWidget tab_6;
     
     protected QDialogButtonBox buttonBox;
     
     protected void SetupUi() {
         base.ObjectName = "PreferencesWindow";
-        this.Geometry = new QRect(0, 0, 400, 302);
+        this.Geometry = new QRect(0, 0, 599, 446);
         this.WindowTitle = "Synapse Preferences";
         QVBoxLayout verticalLayout;
         verticalLayout = new QVBoxLayout(this);
         verticalLayout.Margin = 6;
         this.tabWidget = new QTabWidget(this);
         this.tabWidget.ObjectName = "tabWidget";
-        this.tabWidget.CurrentIndex = 0;
+        this.tabWidget.CurrentIndex = 1;
         verticalLayout.AddWidget(this.tabWidget);
         this.tab = new QWidget(this.tabWidget);
         this.tab.ObjectName = "tab";
         QVBoxLayout verticalLayout_2;
         verticalLayout_2 = new QVBoxLayout(this.tab);
-        verticalLayout_2.Spacing = 0;
-        verticalLayout_2.Margin = 0;
+        verticalLayout_2.Spacing = 6;
+        verticalLayout_2.Margin = 12;
         this.listView = new QListView(this.tab);
         this.listView.ObjectName = "listView";
-        this.listView.FrameShape = QFrame.Shape.NoFrame;
         verticalLayout_2.AddWidget(this.listView);
-        this.line = new QFrame(this.tab);
-        this.line.ObjectName = "line";
-        this.line.FrameShape = QFrame.Shape.HLine;
-        this.line.FrameShadow = QFrame.Shadow.Sunken;
-        verticalLayout_2.AddWidget(this.line);
         this.widget = new QWidget(this.tab);
         this.widget.ObjectName = "widget";
         QHBoxLayout horizontalLayout;
         horizontalLayout = new QHBoxLayout(this.widget);
-        horizontalLayout.Margin = 6;
+        horizontalLayout.Margin = 0;
         this.pushButton = new QPushButton(this.widget);
         this.pushButton.ObjectName = "pushButton";
         this.pushButton.Text = "Add Account";
@@ -76,9 +130,184 @@ public partial class PreferencesWindow : QWidget {
         horizontalLayout.AddItem(horizontalSpacer);
         verticalLayout_2.AddWidget(this.widget);
         this.tabWidget.AddTab(this.tab, "Accounts");
-        this.tab_2 = new QWidget(this.tabWidget);
-        this.tab_2.ObjectName = "tab_2";
-        this.tabWidget.AddTab(this.tab_2, "General");
+        this.tab_4 = new QWidget(this.tabWidget);
+        this.tab_4.ObjectName = "tab_4";
+        QVBoxLayout verticalLayout_6;
+        verticalLayout_6 = new QVBoxLayout(this.tab_4);
+        verticalLayout_6.Margin = 6;
+        this.groupBox_5 = new QGroupBox(this.tab_4);
+        this.groupBox_5.ObjectName = "groupBox_5";
+        this.groupBox_5.Title = "Friends List";
+        QGridLayout gridLayout_5;
+        gridLayout_5 = new QGridLayout(this.groupBox_5);
+        gridLayout_5.Margin = 6;
+        this.label_4 = new QLabel(this.groupBox_5);
+        this.label_4.ObjectName = "label_4";
+        this.label_4.Text = "Display As:";
+        gridLayout_5.AddWidget(this.label_4, 0, 0, 1, 1);
+        this.comboBox_3 = new QComboBox(this.groupBox_5);
+        this.comboBox_3.ObjectName = "comboBox_3";
+        gridLayout_5.AddWidget(this.comboBox_3, 0, 1, 1, 1);
+        QSpacerItem horizontalSpacer_3;
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        gridLayout_5.AddItem(horizontalSpacer_3);
+        this.label_5 = new QLabel(this.groupBox_5);
+        this.label_5.ObjectName = "label_5";
+        this.label_5.Text = "Icon Size:";
+        gridLayout_5.AddWidget(this.label_5, 1, 0, 1, 1);
+        this.horizontalSlider = new QSlider(this.groupBox_5);
+        this.horizontalSlider.ObjectName = "horizontalSlider";
+        this.horizontalSlider.Orientation = Qt.Orientation.Horizontal;
+        gridLayout_5.AddWidget(this.horizontalSlider, 1, 1, 1, 1);
+        verticalLayout_6.AddWidget(this.groupBox_5);
+        this.groupBox_4 = new QGroupBox(this.tab_4);
+        this.groupBox_4.ObjectName = "groupBox_4";
+        this.groupBox_4.Title = "Activity Feed";
+        QGridLayout gridLayout_4;
+        gridLayout_4 = new QGridLayout(this.groupBox_4);
+        this.label_6 = new QLabel(this.groupBox_4);
+        this.label_6.ObjectName = "label_6";
+        this.label_6.Text = "Put options here";
+        gridLayout_4.AddWidget(this.label_6, 0, 0, 1, 1);
+        verticalLayout_6.AddWidget(this.groupBox_4);
+        QSpacerItem verticalSpacer_3;
+        verticalSpacer_3 = new QSpacerItem(20, 199, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        verticalLayout_6.AddItem(verticalSpacer_3);
+        this.tabWidget.AddTab(this.tab_4, "Appearance");
+        this.tab_5 = new QWidget(this.tabWidget);
+        this.tab_5.ObjectName = "tab_5";
+        QHBoxLayout horizontalLayout_3;
+        horizontalLayout_3 = new QHBoxLayout(this.tab_5);
+        horizontalLayout_3.Margin = 6;
+        QVBoxLayout verticalLayout_4;
+        verticalLayout_4 = new QVBoxLayout();
+        horizontalLayout_3.AddLayout(verticalLayout_4);
+        this.groupBox_3 = new QGroupBox(this.tab_5);
+        this.groupBox_3.ObjectName = "groupBox_3";
+        this.groupBox_3.Title = "Message Style";
+        QGridLayout gridLayout;
+        gridLayout = new QGridLayout(this.groupBox_3);
+        this.label = new QLabel(this.groupBox_3);
+        this.label.ObjectName = "label";
+        this.label.Text = "Message Style:";
+        gridLayout.AddWidget(this.label, 0, 0, 1, 1);
+        this.comboBox = new QComboBox(this.groupBox_3);
+        this.comboBox.ObjectName = "comboBox";
+        QSizePolicy comboBox_sizePolicy;
+        comboBox_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed);
+        comboBox_sizePolicy.SetVerticalStretch(0);
+        comboBox_sizePolicy.SetHorizontalStretch(0);
+        comboBox_sizePolicy.SetHeightForWidth(this.comboBox.SizePolicy.HasHeightForWidth());
+        this.comboBox.SizePolicy = comboBox_sizePolicy;
+        gridLayout.AddWidget(this.comboBox, 0, 1, 1, 1);
+        this.label_2 = new QLabel(this.groupBox_3);
+        this.label_2.ObjectName = "label_2";
+        this.label_2.Text = "Variant:";
+        gridLayout.AddWidget(this.label_2, 1, 0, 1, 1);
+        this.comboBox_2 = new QComboBox(this.groupBox_3);
+        this.comboBox_2.ObjectName = "comboBox_2";
+        QSizePolicy comboBox_2_sizePolicy;
+        comboBox_2_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed);
+        comboBox_2_sizePolicy.SetVerticalStretch(0);
+        comboBox_2_sizePolicy.SetHorizontalStretch(0);
+        comboBox_2_sizePolicy.SetHeightForWidth(this.comboBox_2.SizePolicy.HasHeightForWidth());
+        this.comboBox_2.SizePolicy = comboBox_2_sizePolicy;
+        gridLayout.AddWidget(this.comboBox_2, 1, 1, 1, 1);
+        this.checkBox = new QCheckBox(this.groupBox_3);
+        this.checkBox.ObjectName = "checkBox";
+        this.checkBox.Text = "Show avatars";
+        this.checkBox.Checked = true;
+        gridLayout.AddWidget(this.checkBox, 2, 0, 1, 1);
+        this.checkBox_2 = new QCheckBox(this.groupBox_3);
+        this.checkBox_2.ObjectName = "checkBox_2";
+        this.checkBox_2.Text = "Show header";
+        this.checkBox_2.Checked = true;
+        gridLayout.AddWidget(this.checkBox_2, 3, 0, 1, 1);
+        verticalLayout_4.AddWidget(this.groupBox_3);
+        this.groupBox = new QGroupBox(this.tab_5);
+        this.groupBox.ObjectName = "groupBox";
+        this.groupBox.Title = "Text Display";
+        QGridLayout gridLayout_2;
+        gridLayout_2 = new QGridLayout(this.groupBox);
+        this.label_3 = new QLabel(this.groupBox);
+        this.label_3.ObjectName = "label_3";
+        this.label_3.Text = "Font:";
+        gridLayout_2.AddWidget(this.label_3, 0, 0, 1, 1);
+        this.pushButton_4 = new QPushButton(this.groupBox);
+        this.pushButton_4.ObjectName = "pushButton_4";
+        QSizePolicy pushButton_4_sizePolicy;
+        pushButton_4_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed);
+        pushButton_4_sizePolicy.SetVerticalStretch(0);
+        pushButton_4_sizePolicy.SetHorizontalStretch(0);
+        pushButton_4_sizePolicy.SetHeightForWidth(this.pushButton_4.SizePolicy.HasHeightForWidth());
+        this.pushButton_4.SizePolicy = pushButton_4_sizePolicy;
+        this.pushButton_4.Text = "(Set Font)";
+        gridLayout_2.AddWidget(this.pushButton_4, 0, 1, 1, 1);
+        this.checkBox_3 = new QCheckBox(this.groupBox);
+        this.checkBox_3.ObjectName = "checkBox_3";
+        this.checkBox_3.Text = "Show received message fonts";
+        this.checkBox_3.Checked = true;
+        gridLayout_2.AddWidget(this.checkBox_3, 1, 0, 1, 1);
+        this.checkBox_4 = new QCheckBox(this.groupBox);
+        this.checkBox_4.ObjectName = "checkBox_4";
+        this.checkBox_4.Text = "Show received message colors";
+        this.checkBox_4.Checked = true;
+        gridLayout_2.AddWidget(this.checkBox_4, 2, 0, 1, 1);
+        verticalLayout_4.AddWidget(this.groupBox);
+        this.groupBox_2 = new QGroupBox(this.tab_5);
+        this.groupBox_2.ObjectName = "groupBox_2";
+        this.groupBox_2.Enabled = false;
+        this.groupBox_2.Title = "Background";
+        QGridLayout gridLayout_3;
+        gridLayout_3 = new QGridLayout(this.groupBox_2);
+        this.checkBox_5 = new QCheckBox(this.groupBox_2);
+        this.checkBox_5.ObjectName = "checkBox_5";
+        this.checkBox_5.Text = "Use custom background";
+        gridLayout_3.AddWidget(this.checkBox_5, 0, 0, 1, 1);
+        verticalLayout_4.AddWidget(this.groupBox_2);
+        QSpacerItem verticalSpacer;
+        verticalSpacer = new QSpacerItem(268, 17, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        verticalLayout_4.AddItem(verticalSpacer);
+        this.webView = new QWebView(this.tab_5);
+        this.webView.ObjectName = "webView";
+        this.webView.Url = new QUrl("about:blank");
+        horizontalLayout_3.AddWidget(this.webView);
+        this.tabWidget.AddTab(this.tab_5, "Messages");
+        this.tab_7 = new QWidget(this.tabWidget);
+        this.tab_7.ObjectName = "tab_7";
+        this.tabWidget.AddTab(this.tab_7, "Status");
+        this.tab_8 = new QWidget(this.tabWidget);
+        this.tab_8.ObjectName = "tab_8";
+        this.tabWidget.AddTab(this.tab_8, "Events");
+        this.tab_3 = new QWidget(this.tabWidget);
+        this.tab_3.ObjectName = "tab_3";
+        QVBoxLayout verticalLayout_3;
+        verticalLayout_3 = new QVBoxLayout(this.tab_3);
+        verticalLayout_3.Spacing = 6;
+        verticalLayout_3.Margin = 12;
+        this.listView_2 = new QListView(this.tab_3);
+        this.listView_2.ObjectName = "listView_2";
+        verticalLayout_3.AddWidget(this.listView_2);
+        this.widget_2 = new QWidget(this.tab_3);
+        this.widget_2.ObjectName = "widget_2";
+        QHBoxLayout horizontalLayout_2;
+        horizontalLayout_2 = new QHBoxLayout(this.widget_2);
+        horizontalLayout_2.Margin = 0;
+        this.pushButton_3 = new QPushButton(this.widget_2);
+        this.pushButton_3.ObjectName = "pushButton_3";
+        this.pushButton_3.Text = "Find Updates";
+        horizontalLayout_2.AddWidget(this.pushButton_3);
+        QSpacerItem horizontalSpacer_2;
+        horizontalSpacer_2 = new QSpacerItem(293, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        horizontalLayout_2.AddItem(horizontalSpacer_2);
+        verticalLayout_3.AddWidget(this.widget_2);
+        this.tabWidget.AddTab(this.tab_3, "Extensions");
+        this.tab_9 = new QWidget(this.tabWidget);
+        this.tab_9.ObjectName = "tab_9";
+        this.tabWidget.AddTab(this.tab_9, "File Transfer");
+        this.tab_6 = new QWidget(this.tabWidget);
+        this.tab_6.ObjectName = "tab_6";
+        this.tabWidget.AddTab(this.tab_6, "Advanced");
         this.buttonBox = new QDialogButtonBox(this);
         this.buttonBox.ObjectName = "buttonBox";
         this.buttonBox.Orientation = Qt.Orientation.Horizontal;
