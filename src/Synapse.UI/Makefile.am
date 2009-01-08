@@ -138,7 +138,8 @@ FILES = \
 	Synapse.UI.Views/IEditGroupsWindowView.cs \
 	Synapse.UI.Controllers/EditGroupsController.cs \
 	Synapse.UI.Views/IPreferencesWindowView.cs \
-	Synapse.UI.Controllers/PreferencesWindowController.cs 
+	Synapse.UI.Controllers/PreferencesWindowController.cs \
+	IAddinPreferencesFactory.cs 
 
 DATA_FILES = 
 

@@ -1,6 +1,6 @@
 <Addin id        = "Banshee"
 	   namespace = "Synapse"
-	   name      = ""
+	   name      = "Banshee Now Playing Support"
 	   author    = "Eric Butler"
 	   copyright = "GPLv3"
 	   version   = "0.1">

@@ -34,7 +34,7 @@ namespace Synapse.Addins.TwitterAddin
 	{
 		TwitterClient m_Twitter;
 		Timer m_Timer;
-
+		
 		public void Initialize ()
 		{
 			m_Twitter = new TwitterClient();
@@ -51,11 +51,28 @@ namespace Synapse.Addins.TwitterAddin
 			m_Timer.Elapsed += HandleElapsed;
 
 			Application.Client.Started += delegate {
-				if (!String.IsNullOrEmpty(m_Twitter.Username) && !String.IsNullOrEmpty(m_Twitter.Password)) {
-					m_Timer.Start();
-				}
+				StartStop();
 			};
+		}
+		
+		public string Username {
+			get {
+				return m_Twitter.Username;
+			}
+			set {
+				m_Twitter.Username = value;
+				StartStop();
+			}
+		}
 
+		public string Password {
+			get {
+				return m_Twitter.Password;
+			}
+			set {
+				m_Twitter.Password = value;
+				StartStop();
+			}
 		}
 
 		public void Update (string status)
@@ -79,6 +96,15 @@ namespace Synapse.Addins.TwitterAddin
 				
 			} catch (Exception ex) {
 				Console.Error.WriteLine("Twitter API Error: " + ex);
+			}
+		}
+
+		void StartStop ()
+		{
+			if (!String.IsNullOrEmpty(Username) && !String.IsNullOrEmpty(Password)) {
+				m_Timer.Start();
+			} else {
+				m_Timer.Stop();
 			}
 		}
 		

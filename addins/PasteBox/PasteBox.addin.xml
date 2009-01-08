@@ -1,6 +1,6 @@
 <Addin id        = "PasteBox"
 	   namespace = "Synapse"
-	   name      = ""
+	   name      = "PasteBox"
 	   author    = "Eric Butler"
 	   copyright = "GPLv3"
 	   version   = "0.1">

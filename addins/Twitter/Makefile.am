@@ -12,17 +12,23 @@ COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.Core.dll \
 	../../build/Debug/Synapse.Services.dll \
-	../../build/Debug/Synapse.Xmpp.dll
+	../../build/Debug/Synapse.Xmpp.dll \
+	../../build/Debug/Synapse.UI.dll
 BUILD_DIR = ../../build/Debug
 
 SYNAPSE_SERVICES_DLL_SOURCE=../../build/Debug/Synapse.Services.dll
 SYNAPSE_SERVICES_DLL=$(BUILD_DIR)/Synapse.Services.dll
+SYNAPSE_DLL=
 DRAGON_CORE_DLL=
 SYNAPSE_CORE_DLL_SOURCE=../../build/Debug/Synapse.Core.dll
 SYNAPSE_CORE_DLL=$(BUILD_DIR)/Synapse.Core.dll
+SYNAPSE_UI_DLL_SOURCE=../../build/Debug/Synapse.UI.dll
+SYNAPSE_UI_DLL=$(BUILD_DIR)/Synapse.UI.dll
 SYNAPSE_CORE_DLL_MDB_SOURCE=../../build/Debug/Synapse.Core.dll.mdb
 SYNAPSE_CORE_DLL_MDB=$(BUILD_DIR)/Synapse.Core.dll.mdb
 JABBER_NET_DLL_MDB_SOURCE=../../contrib/jabber-net.dll.mdb
+SYNAPSE_UI_DLL_MDB_SOURCE=../../build/Debug/Synapse.UI.dll.mdb
+SYNAPSE_UI_DLL_MDB=$(BUILD_DIR)/Synapse.UI.dll.mdb
 SYNAPSE_XMPP_DLL_MDB_SOURCE=../../build/Debug/Synapse.Xmpp.dll.mdb
 SYNAPSE_XMPP_DLL_MDB=$(BUILD_DIR)/Synapse.Xmpp.dll.mdb
 DRAGON_SERVICES_DLL=
@@ -47,15 +53,20 @@ COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
 	../../build/Release/Dragon.Core.dll \
 	../../build/Release/Dragon.Services.dll \
-	../../src/Synapse.Xmpp/bin/Release/Dragon.Core.Xmpp.dll
+	../../src/Synapse.Xmpp/bin/Release/Dragon.Core.Xmpp.dll \
+	../../src/Synapse.UI/bin/Release/Synapse.dll
 BUILD_DIR = bin/Release
 
 SYNAPSE_SERVICES_DLL=
+SYNAPSE_DLL_SOURCE=../../src/Synapse.UI/bin/Release/Synapse.dll
+SYNAPSE_DLL=$(BUILD_DIR)/Synapse.dll
 DRAGON_CORE_DLL_SOURCE=../../build/Release/Dragon.Core.dll
 DRAGON_CORE_DLL=$(BUILD_DIR)/Dragon.Core.dll
 SYNAPSE_CORE_DLL=
+SYNAPSE_UI_DLL=
 SYNAPSE_CORE_DLL_MDB=
 JABBER_NET_DLL_MDB_SOURCE=../../contrib/jabber-net.dll.mdb
+SYNAPSE_UI_DLL_MDB=
 SYNAPSE_XMPP_DLL_MDB=
 DRAGON_SERVICES_DLL_SOURCE=../../build/Release/Dragon.Services.dll
 DRAGON_SERVICES_DLL=$(BUILD_DIR)/Dragon.Services.dll
@@ -74,10 +85,13 @@ SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
 
 PROGRAMFILES = \
 	$(SYNAPSE_SERVICES_DLL) \
+	$(SYNAPSE_DLL) \
 	$(DRAGON_CORE_DLL) \
 	$(SYNAPSE_CORE_DLL) \
+	$(SYNAPSE_UI_DLL) \
 	$(SYNAPSE_CORE_DLL_MDB) \
 	$(JABBER_NET_DLL_MDB) \
+	$(SYNAPSE_UI_DLL_MDB) \
 	$(SYNAPSE_XMPP_DLL_MDB) \
 	$(DRAGON_SERVICES_DLL) \
 	$(SYNAPSE_SERVICES_DLL_MDB) \
@@ -98,12 +112,18 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG)
 FILES = \
 	TwitterXmlApi.cs \
 	TwitterService.cs \
-	TwitterShoutHandler.cs 
+	TwitterShoutHandler.cs \
+	gtk-gui/generated.cs \
+	TwitterAddinPreferencesDialog.cs \
+	gtk-gui/Synapse.Addins.TwitterAddin.TwitterAddinPreferencesDialog.cs \
+	TwitterAddinPreferencesFactory.cs 
 
 DATA_FILES = 
 
 RESOURCES = \
-	Twitter.addin.xml 
+	Twitter.addin.xml \
+	gtk-gui/gui.stetic \
+	twitm.png 
 
 EXTRAS = \
 	twitter.pc.in 
@@ -112,6 +132,8 @@ REFERENCES =  \
 	System.Xml \
 	System.Web \
 	System \
+	$(GTK_SHARP_20_LIBS) \
+	Mono.Posix \
 	System.Core
 
 DLL_REFERENCES = 
@@ -126,6 +148,7 @@ HYENA_DLL = $(BUILD_DIR)/Hyena.dll
 JABBER_NET_DLL = $(BUILD_DIR)/jabber-net.dll
 
 $(eval $(call emit-deploy-wrapper,TWITTER_PC,twitter.pc))
+$(eval $(call emit-deploy-target,SYNAPSE_DLL))
 $(eval $(call emit-deploy-target,DRAGON_CORE_DLL))
 $(eval $(call emit-deploy-target,JABBER_NET_DLL_MDB))
 $(eval $(call emit-deploy-target,DRAGON_SERVICES_DLL))

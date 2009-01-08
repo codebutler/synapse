@@ -63,6 +63,7 @@
     <File name="Synapse.UI.Controllers/EditGroupsController.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Views/IPreferencesWindowView.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Controllers/PreferencesWindowController.cs" subtype="Code" buildaction="Compile" />
+    <File name="IAddinPreferencesFactory.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

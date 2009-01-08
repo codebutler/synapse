@@ -63,7 +63,7 @@ public partial class EditAccountDialog : QDialog {
         verticalLayout.Margin = 6;
         this.tabWidget = new QTabWidget(this);
         this.tabWidget.ObjectName = "tabWidget";
-        this.tabWidget.CurrentIndex = 1;
+        this.tabWidget.CurrentIndex = 0;
         verticalLayout.AddWidget(this.tabWidget);
         this.tab = new QWidget(this.tabWidget);
         this.tab.ObjectName = "tab";

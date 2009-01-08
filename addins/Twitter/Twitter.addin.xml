@@ -1,6 +1,6 @@
 <Addin id        = "Twitter"
 	   namespace = "Synapse"
-	   name      = ""
+	   name      = "Twitter"
 	   author    = "Eric Butler"
 	   copyright = "GPLv3"
 	   version   = "0.1">
@@ -8,6 +8,7 @@
 	<Dependencies>
 		<Addin id="Services" version="1.0" />
 		<Addin id="Xmpp" version="1.0" />
+		<Addin id="UI" version="1.0" />
 	</Dependencies>
 
 	<Extension path="/Synapse/ServiceManager/Service">
@@ -16,5 +17,9 @@
 
 	<Extension path="/Synapse/Xmpp/ActivityFeed/ShoutHandlers">
 		<ShoutHandler class="Synapse.Addins.TwitterAddin.TwitterShoutHandler" />
+	</Extension>
+
+	<Extension path="/Synapse/UI/AddinPreferences">
+		<AddinPreferencesFactory class="Synapse.Addins.TwitterAddin.TwitterAddinPreferencesFactory" />
 	</Extension>
 </Addin>
