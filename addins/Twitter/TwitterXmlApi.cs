@@ -92,10 +92,10 @@ namespace Twitter
 			var args = new Dictionary<string,string>();
 			if (since && FriendsTimelineLastCheckedAt != DateTime.MinValue)
 				args["since"] = FriendsTimelineLastCheckedAt.ToString("r");
-
-			FriendsTimelineLastCheckedAt = DateTime.Now.ToUniversalTime();
 			
-			return Request<Statuses>(FriendsTimelineUrl, args);
+			var statuses = Request<Statuses>(FriendsTimelineUrl, args);			
+			FriendsTimelineLastCheckedAt = DateTime.Now.ToUniversalTime();
+			return statuses;
 		}
 
 		public DirectMessages DirectMessages()
@@ -108,11 +108,11 @@ namespace Twitter
 			var args = new Dictionary<string,string>();
 			if (since && DirectMessagesLastChecked != DateTime.MinValue)
 				args["since"] = DirectMessagesLastChecked.ToString("r");
-
-			DirectMessagesLastChecked = DateTime.Now.ToUniversalTime();
 			
 			try {
-				return Request<DirectMessages>(DirectMessagesUrl, args);
+				var messages = Request<DirectMessages>(DirectMessagesUrl, args);
+				DirectMessagesLastChecked = DateTime.Now.ToUniversalTime();				
+				return messages;
 			} catch (InvalidOperationException ex) {
 				// Stupid twitter api inconsistency
 				// http://markmail.org/message/yaammnseabyvdx3m
@@ -129,11 +129,9 @@ namespace Twitter
 		{
 			var args = new Dictionary<string,string>();
 			if (since && RepliesLastCheckedAt != DateTime.MinValue)
-				args["since"] = RepliesLastCheckedAt.ToString("r");
-
-			RepliesLastCheckedAt = DateTime.Now.ToUniversalTime();
-			
+				args["since"] = RepliesLastCheckedAt.ToString("r");			
 			var statuses = Request<Statuses>(RepliesUrl, args);
+			RepliesLastCheckedAt = DateTime.Now.ToUniversalTime();
 			return statuses;
 		}
 

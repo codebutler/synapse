@@ -26,6 +26,7 @@ using System.Web;
 using System.Net;
 using Synapse.ServiceStack;
 using Synapse.Xmpp.Services;
+using Synapse.Services;
 using Twitter;
 
 namespace Synapse.Addins.TwitterAddin
@@ -40,12 +41,33 @@ namespace Synapse.Addins.TwitterAddin
 			m_Twitter = new TwitterClient();
 
 			// Only show messages within the last 15 minutes.
-			m_Twitter.FriendsTimelineLastCheckedAt = DateTime.Now.ToUniversalTime() - new TimeSpan(0, 15, 0);
-			m_Twitter.RepliesLastCheckedAt = DateTime.Now.ToUniversalTime() - new TimeSpan(1, 5, 0);
-			m_Twitter.DirectMessagesLastChecked = DateTime.Now.ToUniversalTime() - new TimeSpan(0, 15, 0);
+			m_Twitter.FriendsTimelineLastCheckedAt = DateTime.Now.ToUniversalTime() - new TimeSpan(2, 15, 0);
+			m_Twitter.RepliesLastCheckedAt = DateTime.Now.ToUniversalTime() - new TimeSpan(2, 5, 0);
+			m_Twitter.DirectMessagesLastChecked = DateTime.Now.ToUniversalTime() - new TimeSpan(2, 15, 0);
 
-			ServiceManager.Get<ActivityFeedService>().AddTemplate("tweet", "tweets", "tweet");
-			ServiceManager.Get<ActivityFeedService>().AddTemplate("direct-tweet", "direct tweets", "direct tweet");
+			var replyAction = new NotificationAction() {
+				Name = "reply",
+				Label = "Reply",
+				Callback = delegate (object o, EventArgs args) {
+					var feedItem = (TwitterActivityFeedItem)o;
+					// FIXME:
+					Console.WriteLine("Reply");
+				}
+			};
+			
+			var retweetAction = new NotificationAction() {
+				Name = "retweet",
+				Label = "Retweet",
+				Callback = delegate (object o, EventArgs args) {
+					var feedItem = (TwitterActivityFeedItem)o;
+					// FIXME:
+					Console.WriteLine("Retweet");
+				}
+			};
+
+			var feedService = ServiceManager.Get<ActivityFeedService>();
+			feedService.AddTemplate("tweet", "tweets", "tweet", "resource:/twitter/twitm-16.png", replyAction, retweetAction);			
+			feedService.AddTemplate("direct-tweet", "direct tweets", "direct tweet", "resource:/twitter/twitm-16.png", replyAction);
 			
 			m_Timer = new Timer(240000);
 			m_Timer.Elapsed += HandleElapsed;
@@ -102,7 +124,10 @@ namespace Synapse.Addins.TwitterAddin
 		void StartStop ()
 		{
 			if (!String.IsNullOrEmpty(Username) && !String.IsNullOrEmpty(Password)) {
-				m_Timer.Start();
+				System.Threading.ThreadPool.QueueUserWorkItem(delegate {
+					HandleElapsed(null, null);
+					m_Timer.Start();
+				});
 			} else {
 				m_Timer.Stop();
 			}
@@ -120,7 +145,7 @@ namespace Synapse.Addins.TwitterAddin
 		}
 	}
 
-	public class TwitterActivityFeedItem : IActivityFeedItem
+	public class TwitterActivityFeedItem : AbstractActivityFeedItem
 	{
 		AbstractTwitterItem m_Item;
 		
@@ -129,48 +154,43 @@ namespace Synapse.Addins.TwitterAddin
 			m_Item = item;
 		}
 		
-		public void TriggerAction (string actionName)
-		{
-			throw new System.NotImplementedException();
-		}
-		
-		public string FromName {
+		public override string FromName {
 			get {
 				return (m_Item is Status) ? ((Status)m_Item).User.ScreenName : ((DirectMessage)m_Item).SenderScreenName;
 			}
 		}
 		
-		public string FromUrl {
+		public override string FromUrl {
 			get {
 				return String.Format("http://twitter.com/{0}", HttpUtility.UrlEncode(FromName));
 			}
 		}
 		
-		public string AvatarUrl {
+		public override string AvatarUrl {
 			get {
 				return (m_Item is Status) ? ((Status)m_Item).User.ProfileImageUrl : ((DirectMessage)m_Item).Sender.ProfileImageUrl;
 			}
 		}
 		
-		public string Type {
+		public override string Type {
 			get {
 				return (m_Item is Status) ? "tweet" : "direct-tweet";
 			}
 		}
 		
-		public string ActionItem {
+		public override string ActionItem {
 			get {
 				return null;
 			}
 		}
 		
-		public string Content {
+		public override string Content {
 			get {
 				return m_Item.Text;
 			}
 		}
 		
-		public Uri ContentUrl {
+		public override Uri ContentUrl {
 			get {
 				if (m_Item is Status)
 					return new Uri(String.Format("http://twitter.com/{0}/status/{1}", FromName, m_Item.ID));

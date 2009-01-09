@@ -79,14 +79,24 @@ namespace Synapse.Xmpp.Services
 			}
 		}
 
-		public void AddTemplate (string name, string singularText, string pluralText)
+		public void AddTemplate (string name, string singularText, string pluralText, params NotificationAction[] actions)
 		{
-			AddTemplate(name, singularText, pluralText, false, null);
+			AddTemplate(name, singularText, pluralText, false, null, actions);
+		}
+
+		public void AddTemplate (string name, string singularText, string pluralText, string iconUrl, params NotificationAction[] actions)
+		{
+			AddTemplate(name, singularText, pluralText, false, iconUrl, actions);
+		}
+
+		public void AddTemplate (string name, string singularText, string pluralText, bool desktopNotify, params NotificationAction[] actions)
+		{
+			AddTemplate(name, singularText, pluralText, desktopNotify, null, actions);
 		}
 		
-		public void AddTemplate (string name, string singularText, string pluralText, bool desktopNotify, NotificationAction[] actions)
+		public void AddTemplate (string name, string singularText, string pluralText, bool desktopNotify, string iconUrl, params NotificationAction[] actions)
 		{
-			m_Templates.Add(name, new ActivityFeedItemTemplate(name, singularText, pluralText, desktopNotify, actions));
+			m_Templates.Add(name, new ActivityFeedItemTemplate(name, singularText, pluralText, desktopNotify, iconUrl, actions));
 		}
 		
 		public void PostItem (Account account, JID from, string type, string actionItem, string content)
@@ -148,15 +158,17 @@ namespace Synapse.Xmpp.Services
 		string m_SingularText;
 		string m_PlularText;
 		bool   m_DesktopNotify;
+		string m_IconUrl;
 		NotificationAction[] m_Actions;
 
-		public ActivityFeedItemTemplate (string name, string singularText, string pluarText, bool desktopNotify, 
-		                                 NotificationAction[] actions)
+		public ActivityFeedItemTemplate (string name, string singularText, string pluarText, bool desktopNotify,
+		                                 string iconUrl, params NotificationAction[] actions)
 		{
 			m_Name = name;
 			m_SingularText = singularText;
 			m_PlularText = pluarText;
 			m_DesktopNotify = desktopNotify;
+			m_IconUrl = iconUrl;
 			m_Actions = actions;
 		}
 
@@ -183,6 +195,12 @@ namespace Synapse.Xmpp.Services
 				return m_DesktopNotify;
 			}
 		}
+
+		public string IconUrl {
+			get {
+				return m_IconUrl;
+			}
+		}
 		
 		public NotificationAction[] Actions {
 			get {
@@ -191,7 +209,7 @@ namespace Synapse.Xmpp.Services
 		}
 	}
 	
-	public class XmppActivityFeedItem : IActivityFeedItem
+	public class XmppActivityFeedItem : AbstractActivityFeedItem
 	{
 		Account  m_Account;
 		JID 	 m_From;
@@ -232,7 +250,7 @@ namespace Synapse.Xmpp.Services
 			}
 		}
 		
-		public string FromUrl {
+		public override string FromUrl {
 			get {
 				return null;
 			}
@@ -244,46 +262,49 @@ namespace Synapse.Xmpp.Services
 			}
 		}
 
-		public string FromName {
+		public override string FromName {
 			get {
 				return (m_From == null) ? null : m_Account.GetDisplayName(m_From);
 			}
 		}
 
-		public string AvatarUrl {
+		public override string AvatarUrl {
 			get {
 				string avatarHash = (m_From != null) ? AvatarManager.GetAvatarHash(m_From) : "octy";
 				return "avatar:/" + avatarHash;
 			}
 		}
 
-		public string Type {
+		public override string Type {
 			get {
 				return m_Type;
 			}
 		}
 
-		public string ActionItem {
+		public override string ActionItem {
 			get {
 				return m_ActionItem;
 			}
 		}
 
-		public string Content {
+		public override string Content {
 			get {
 				return m_Content;
 			}
 		}
 
-		public Uri ContentUrl {
+		public override Uri ContentUrl {
 			get {
 				return m_ContentUrl;
 			}
 		}
+	}
 
-		public void TriggerAction (string actionName)
+	public abstract class AbstractActivityFeedItem : IActivityFeedItem
+	{
+		public virtual void TriggerAction (string actionName)
 		{
-			var template = ServiceManager.Get<ActivityFeedService>().Templates[m_Type];
+			var template = ServiceManager.Get<ActivityFeedService>().Templates[Type];
 			foreach (var action in template.Actions) {
 				if (action.Name == actionName) {
 					action.Callback(this, EventArgs.Empty);
@@ -292,7 +313,36 @@ namespace Synapse.Xmpp.Services
 			}
 			throw new Exception("Action not found: " + actionName);
 		}
+		
+		public abstract string FromName {
+			get;
+		}
+		
+		public abstract string FromUrl {
+			get;
+		}
+		
+		public abstract string AvatarUrl {
+			get;
+		}
+		
+		public abstract string Type {
+			get;
+		}
+		
+		public abstract string ActionItem {
+			get;
+		}
+		
+		public abstract string Content {
+			get;
+		}
+		
+		public abstract Uri ContentUrl {
+			get;
+		}		
 	}
+	
 
 	public interface IActivityFeedItem
 	{

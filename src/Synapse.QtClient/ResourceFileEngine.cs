@@ -60,9 +60,12 @@ namespace Synapse.QtClient
 				foreach (ResourceProviderCodon provider in providers) {
 					if (provider.Id == providerId) {
 						m_Stream = provider.GetResource(m_FileName);
+						break;
 					}
 				}
-				throw new Exception("Resource not found: " + m_FileName);
+				if (m_Stream == null) {
+					throw new Exception("Resource not found: " + m_FileName);
+				}
 			} else {
 				var asm = Assembly.GetCallingAssembly();
 				m_Stream = asm.GetManifestResourceStream(m_FileName);

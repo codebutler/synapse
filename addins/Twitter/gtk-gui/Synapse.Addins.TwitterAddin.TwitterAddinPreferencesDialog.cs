@@ -56,7 +56,7 @@ namespace Synapse.Addins.TwitterAddin {
             this.image1 = new Gtk.Image();
             this.image1.Name = "image1";
             this.image1.Yalign = 0F;
-            this.image1.Pixbuf = Gdk.Pixbuf.LoadFromResource("twitm.png");
+            this.image1.Pixbuf = Gdk.Pixbuf.LoadFromResource("twitm-48.png");
             this.hbox219.Add(this.image1);
             Gtk.Box.BoxChild w2 = ((Gtk.Box.BoxChild)(this.hbox219[this.image1]));
             w2.Position = 0;

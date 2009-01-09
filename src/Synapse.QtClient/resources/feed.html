@@ -34,6 +34,13 @@
 				padding-left: 25px;
 				overflow: hidden;
 			}
+			a.action {
+				color: inherit;
+				text-decoration: none;
+			}
+			a.action:hover {
+				text-decoration: underline;
+			}
 			div.timestamp {
 					float: right;
 					font-size: xx-small;
@@ -56,13 +63,14 @@
 				return this.replace(pattern, function(capture){ return args[capture.match(/\d+/)]; });
 			};
 
-			function ActivityFeedItem (id, accountJid, avatarUrl, fromJid, fromName, fromUrl, type, actionItem, content) {
+			function ActivityFeedItem (id, accountJid, avatarUrl, fromJid, fromName, fromUrl, type, actionItem, content, contentUrl) {
 				this.id           = id;
 				this.accountJid   = accountJid;
 				this.avatarUrl    = avatarUrl;
 				this.type         = type;
 				this.actionItem	  = actionItem;
 				this.content      = content;
+				this.contentUrl   = contentUrl;
 				this.from         = [];
 				this.timestamp    = new Date();
 
@@ -92,7 +100,9 @@
 
 				var html = '<div class="item" style="background-image: url(\'{0}\') !important">'.format(this.avatarUrl);
 				html += '<div class="timestamp">{0}</div>'.format(this.timestamp.toLocaleTimeString());
-				
+
+				var actionHtml = "";
+
 				if (this.from.length > 1) {
 					if (this.from.length < 5) {
 						var feedItem = this;
@@ -126,7 +136,7 @@
 							html += '<a href="#" title="{0}">{1}</a> friends '.format(fromNames, this.from.length);
 						}
 					}
-					html += template.pluralText.format(this.actionItem);
+					actionHtml = template.pluralText.format(this.actionItem);
 				} else if (this.from.length == 1) {
 					var fromJid = this.from[0].fromJid;
 					var fromName = (fromJid != null && fromJid == this.accountJid) ? "You" : this.from[0].fromName;
@@ -134,17 +144,24 @@
 					var fromTitle = (fromJid == null) ? fromUrl : fromJid;
 					html += '<a href="{0}" title="{1}">{2}</a> '.format(fromUrl, fromTitle, fromName);
 					if (fromJid == null || fromJid != this.accountJid) {
-						html += template.singularText.format(this.actionItem);
+						actionHtml = template.singularText.format(this.actionItem);
 					} else {
-						html += template.pluralText.format(this.actionItem);
+						actionHtml = template.pluralText.format(this.actionItem);
 					}
 				} else if (this.from.length == 0) {
-					html += template.pluralText.format(this.actionItem);
+					actionHtml = template.pluralText.format(this.actionItem);
 				}
-				if (!this.content.blank()) {
+
+				if (this.contentUrl != null && !this.contentUrl.blank()) {
+					actionHtml = '<a class="action" href="{0}" title="{0}">{1}</a>'.format(this.contentUrl, actionHtml);
+				}
+
+				html += actionHtml;
+				
+				if (this.content != null && !this.content.blank()) {
 					if (this.from.length > 0)
 						html += ":";
-					html += '<blockquote class="{0}">{1}</blockquote>'.format(this.type, this.content);
+						html += '<blockquote class="{0}">{1}</blockquote>'.format(this.type, this.content);
 				} else {
 					if (this.from.length > 0)
 						html += ".";
@@ -153,7 +170,7 @@
 				if (template.actions != null) {
 					html += "<p>";
 					for (var x = 0; x < template.actions.length; x++) {
-						html += '<a href="activity-item:{0}?{1}">{2}</a>'.format(this.id, template.actions[0]['Name'], template.actions[0]['Label']);
+						html += '<a href="activity-item:{0}?{1}">{2}</a> '.format(this.id, template.actions[x]['Name'], template.actions[x]['Label']);
 					}
 					html += "</p>";
 				}
@@ -174,20 +191,29 @@
 				loaded: false,
 				templates: {},
 				items: [],
-				addTemplate: function (type, singularText, pluralText, actions) {
+				addTemplate: function (type, singularText, pluralText, iconUrl, actions) {
 					try {
 						this.templates[type] = {
 							singularText: singularText.format('<strong>{0}</strong>'),
 							pluralText: pluralText.format('<strong>{0}</strong>'),
 							actions: actions
 						};
+
+						if (iconUrl != null && !iconUrl.blank()) {
+							var css = ".{0} { background: url('{1}') no-repeat; };".format(type, iconUrl);
+							var style = document.createElement('style');
+							style.setAttribute('type', 'text/css');
+							style.appendChild(document.createTextNode(css));
+							document.getElementsByTagName('head')[0].appendChild(style);
+						}
+
 						return true;
 					} catch (e) {
 						alert(e);
 						return false;
 					}
 				},
-				addItem: function (accountJid, type, avatarUrl, fromJid, fromName, fromUrl, actionItem, content) {
+				addItem: function (accountJid, type, avatarUrl, fromJid, fromName, fromUrl, actionItem, content, contentUrl) {
 					try {
 						
 						if (this.templates[type] == null) {
@@ -212,7 +238,7 @@
 							return null;
 						} else {
 							var id = "item-{0}".format(this.items.length + 1);
-							var item = new ActivityFeedItem(id, accountJid, avatarUrl, fromJid, fromName, fromUrl, type, actionItem, content);
+							var item = new ActivityFeedItem(id, accountJid, avatarUrl, fromJid, fromName, fromUrl, type, actionItem, content, contentUrl);
 							this.items.push(item);
 	
 							var itemsList = $('items');

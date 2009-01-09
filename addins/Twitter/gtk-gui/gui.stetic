@@ -31,7 +31,7 @@
               <widget class="Gtk.Image" id="image1">
                 <property name="MemberName" />
                 <property name="Yalign">0</property>
-                <property name="Pixbuf">resource:twitm.png</property>
+                <property name="Pixbuf">resource:twitm-48.png</property>
               </widget>
               <packing>
                 <property name="Position">0</property>

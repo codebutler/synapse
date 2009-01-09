@@ -178,7 +178,8 @@ public partial class RosterWidget : QWidget
 			string fromJid = (item is XmppActivityFeedItem) ? ((XmppActivityFeedItem)item).FromJid : null;
 			string content = Util.Linkify(item.Content);
 			string js = Util.CreateJavascriptCall("ActivityFeed.addItem", accountJid, item.Type, item.AvatarUrl, 
-		                                      	fromJid, item.FromName, item.FromUrl, item.ActionItem, content);
+		                                      	  fromJid, item.FromName, item.FromUrl, item.ActionItem, content, 
+			                                      item.ContentUrl);
 			var result = m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
 			if (!result.IsNull()) {
 				m_ActivityFeedItems.Add(result.ToString(), item);
@@ -309,7 +310,7 @@ public partial class RosterWidget : QWidget
 		var feedService = ServiceManager.Get<ActivityFeedService>();
 		foreach (var template in feedService.Templates.Values) {
 			string js = Util.CreateJavascriptCall("ActivityFeed.addTemplate", template.Name, template.SingularText,
-			                                      template.PluralText, template.Actions);
+			                                      template.PluralText, template.IconUrl, template.Actions);
 			var ret = m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
 			if (ret.IsNull() || !ret.ToBool()) {
 				throw new Exception("Failed to add template!\n" + js);

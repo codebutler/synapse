@@ -278,9 +278,7 @@ namespace Synapse.Core
                                                     + "|[1-9][0-9]|[0-9])))"
                                                     + "(?::\\d{1,5})?)" // plus option port number
                                                     + "(/(?:(?:[a-zA-Z0-9;/\\?:@&=#~"  // plus option query params
-                                                    + "\\-\\.\\+!\\*'\\(\\),_])|(?:%[a-fA-F0-9]{2}))*)?";
-			
-													// FIXME: This prevents a trailing "/" from matching. 
-                                                    // + "\\b"; // and finally, a word boundary  this is to stop foo.sure from matching as foo.su
+                                                    + "\\-\\.\\+!\\*'\\(\\),_])|(?:%[a-fA-F0-9]{2}))*)?"
+                                                    + "(?!\\w)"; // and finally, a word boundary  this is to stop foo.sure from matching as foo.su
 	}
 }
