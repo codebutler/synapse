@@ -60,7 +60,6 @@ AC_CONFIG_FILES([
 Makefile
 src/Synapse.QtClient/synapse.qtclient
 addins/Makefile
-addins/PasteBox/pastebox.pc
 src/Synapse.Services/Makefile
 src/Synapse.Core/Makefile
 addins/Twitter/Makefile
@@ -72,9 +71,7 @@ src/Synapse.QtClient/Makefile
 src/Synapse.UI/Makefile
 addins/Banshee/Makefile
 src/Synapse.Xmpp/synapse.xmpp.pc
-addins/Banshee/banshee.pc
 src/Synapse.Xmpp/Makefile
-addins/Twitter/twitter.pc
 
 ])
 

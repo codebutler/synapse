@@ -1,6 +1,0 @@
-Name: Banshee
-Description: Banshee
-Version: 
-
-Requires: 
-Libs: -r:@expanded_libdir@/@PACKAGE@/BansheeNowPlayingProvider.dll
