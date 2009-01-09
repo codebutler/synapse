@@ -41,9 +41,9 @@ namespace Synapse.Addins.TwitterAddin
 			m_Twitter = new TwitterClient();
 
 			// Only show messages within the last 15 minutes.
-			m_Twitter.FriendsTimelineLastCheckedAt = DateTime.Now.ToUniversalTime() - new TimeSpan(2, 15, 0);
-			m_Twitter.RepliesLastCheckedAt = DateTime.Now.ToUniversalTime() - new TimeSpan(2, 5, 0);
-			m_Twitter.DirectMessagesLastChecked = DateTime.Now.ToUniversalTime() - new TimeSpan(2, 15, 0);
+			m_Twitter.FriendsTimelineLastCheckedAt = DateTime.Now.ToUniversalTime() - new TimeSpan(0, 15, 0);
+			m_Twitter.RepliesLastCheckedAt = DateTime.Now.ToUniversalTime() - new TimeSpan(0, 15, 0);
+			m_Twitter.DirectMessagesLastChecked = DateTime.Now.ToUniversalTime() - new TimeSpan(0, 15, 0);
 
 			var replyAction = new NotificationAction() {
 				Name = "reply",
