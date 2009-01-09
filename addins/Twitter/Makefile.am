@@ -123,7 +123,8 @@ DATA_FILES =
 RESOURCES = \
 	Twitter.addin.xml \
 	gtk-gui/gui.stetic \
-	twitm.png 
+	twitm-48.png \
+	twitm-16.png 
 
 EXTRAS = \
 	twitter.pc.in 
