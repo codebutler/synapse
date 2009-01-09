@@ -36,6 +36,7 @@ namespace Synapse.QtClient.Widgets
 			double        m_Opacity = 1;
 			int           m_TextWidth;
 			int           m_RowCount;
+			RosterItemGroupMimeData m_MimeData;
 			
 			public RosterItemGroup (AvatarGrid<T> grid, string groupName)
 			{
@@ -51,6 +52,8 @@ namespace Synapse.QtClient.Widgets
 				
 				m_Rect = new QRectF(m_Grid.IconPadding, 0, 0, 0);
 
+				m_MimeData = new RosterItemGroupMimeData(this);
+				
 				base.SetHandlesChildEvents(false);
 				base.SetAcceptHoverEvents(true);
 			}
@@ -183,8 +186,7 @@ namespace Synapse.QtClient.Widgets
 				QDrag drag = new QDrag(evnt.Widget());
 				drag.SetHotSpot(evnt.Pos().ToPoint());
 				
-				var mime = new RosterItemGroupMimeData(this);
-				drag.SetMimeData(mime);
+				drag.SetMimeData(m_MimeData);
 
 				var pixmap = new QPixmap((int)BoundingRect().Width(), m_Grid.HeaderHeight);
 				pixmap.Fill(m_Grid.Palette.Color(QPalette.ColorRole.Base));
