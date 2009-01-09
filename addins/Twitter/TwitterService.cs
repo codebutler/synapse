@@ -68,9 +68,13 @@ namespace Synapse.Addins.TwitterAddin
 			var feedService = ServiceManager.Get<ActivityFeedService>();
 			feedService.AddTemplate("tweet", "tweets", "tweet", "resource:/twitter/twitm-16.png", replyAction, retweetAction);			
 			feedService.AddTemplate("direct-tweet", "direct tweets", "direct tweet", "resource:/twitter/twitm-16.png", replyAction);
-			
+
 			m_Timer = new Timer(240000);
 			m_Timer.Elapsed += HandleElapsed;
+				
+			var settingsService = ServiceManager.Get<SettingsService>();
+			m_Twitter.Username = settingsService.Get<string>("Twitter.Username");
+			m_Twitter.Password = settingsService.Get<string>("Twitter.Password");
 
 			Application.Client.Started += delegate {
 				StartStop();
@@ -82,6 +86,9 @@ namespace Synapse.Addins.TwitterAddin
 				return m_Twitter.Username;
 			}
 			set {
+				var settingsService = ServiceManager.Get<SettingsService>();
+				settingsService.Set("Twitter.Username", value);
+				
 				m_Twitter.Username = value;
 				StartStop();
 			}
@@ -92,6 +99,9 @@ namespace Synapse.Addins.TwitterAddin
 				return m_Twitter.Password;
 			}
 			set {
+				var settingsService = ServiceManager.Get<SettingsService>();
+				settingsService.Set("Twitter.Password", value);
+				
 				m_Twitter.Password = value;
 				StartStop();
 			}

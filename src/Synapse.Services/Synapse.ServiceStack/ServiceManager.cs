@@ -95,6 +95,7 @@ namespace Synapse.ServiceStack
         
         private static void RegisterDefaultServices ()
         {
+			RegisterService<SettingsService>();
 			RegisterService<DBusServiceManager>();
             RegisterService<NotificationService>();
 			RegisterService<ScreensaverService>();

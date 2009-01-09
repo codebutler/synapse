@@ -41,6 +41,7 @@ namespace Twitter
 		{
 			FriendsTimelineLastCheckedAt = DateTime.MinValue;
 			RepliesLastCheckedAt = DateTime.MinValue;
+			DirectMessagesLastChecked = DateTime.MinValue;
 		}
 		
 		public DateTime FriendsTimelineLastCheckedAt {

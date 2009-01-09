@@ -177,25 +177,27 @@ namespace Synapse.QtClient.Widgets
 
 			protected override void MouseMoveEvent (Qyoto.QGraphicsSceneMouseEvent evnt)
 			{
-				var app = ((QApplication)QApplication.Instance());
-				if (new QLineF(evnt.ScreenPos(), evnt.ButtonDownScreenPos(Qt.MouseButton.LeftButton))
-				.Length() < app.StartDragDistance) {
-					return;
-				}
-
-				QDrag drag = new QDrag(evnt.Widget());
-				drag.SetHotSpot(evnt.Pos().ToPoint());
-				
-				drag.SetMimeData(m_MimeData);
-
-				var pixmap = new QPixmap((int)BoundingRect().Width(), m_Grid.HeaderHeight);
-				pixmap.Fill(m_Grid.Palette.Color(QPalette.ColorRole.Base));
-				var painter = new QPainter(pixmap);
-				Paint(painter, null, null);
-				painter.End();
-				drag.SetPixmap(pixmap);
+				if (evnt.Button() == Qt.MouseButton.LeftButton) {
+					var app = ((QApplication)QApplication.Instance());
+					if (new QLineF(evnt.ScreenPos(), evnt.ButtonDownScreenPos(Qt.MouseButton.LeftButton))
+					.Length() < app.StartDragDistance) {
+						return;
+					}
 	
-				drag.Exec();
+					QDrag drag = new QDrag(evnt.Widget());
+					drag.SetHotSpot(evnt.Pos().ToPoint());
+					
+					drag.SetMimeData(m_MimeData);
+	
+					var pixmap = new QPixmap((int)BoundingRect().Width(), m_Grid.HeaderHeight);
+					pixmap.Fill(m_Grid.Palette.Color(QPalette.ColorRole.Base));
+					var painter = new QPainter(pixmap);
+					Paint(painter, null, null);
+					painter.End();
+					drag.SetPixmap(pixmap);
+		
+					drag.Exec();
+				}
 			}
 		}
 
