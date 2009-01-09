@@ -30,6 +30,7 @@
     <ProjectReference type="Gac" localcopy="True" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
     <ProjectReference type="Assembly" localcopy="True" refto="../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll" />
   </References>
+  <Deployment.LinuxDeployData generatePcFile="False" />
   <GtkDesignInfo />
   <QyotoDesignInfo>
     <Forms>

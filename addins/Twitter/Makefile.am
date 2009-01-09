@@ -101,13 +101,10 @@ PROGRAMFILES = \
 	$(SYNAPSE_XMPP_DLL) \
 	$(JABBER_NET_DLL)  
 
-LINUX_PKGCONFIG = \
-	$(TWITTER_PC)  
-
 
 RESGEN=resgen2
 	
-all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+all: $(ASSEMBLY) $(PROGRAMFILES) 
 
 FILES = \
 	TwitterXmlApi.cs \
@@ -126,8 +123,7 @@ RESOURCES = \
 	twitm-48.png \
 	twitm-16.png 
 
-EXTRAS = \
-	twitter.pc.in 
+EXTRAS = 
 
 REFERENCES =  \
 	System.Xml \
@@ -139,16 +135,14 @@ REFERENCES =  \
 
 DLL_REFERENCES = 
 
-CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+CLEANFILES = $(PROGRAMFILES) 
 
 include $(top_srcdir)/Makefile.include
 
-TWITTER_PC = $(BUILD_DIR)/twitter.pc
 JABBER_NET_DLL_MDB = $(BUILD_DIR)/jabber-net.dll.mdb
 HYENA_DLL = $(BUILD_DIR)/Hyena.dll
 JABBER_NET_DLL = $(BUILD_DIR)/jabber-net.dll
 
-$(eval $(call emit-deploy-wrapper,TWITTER_PC,twitter.pc))
 $(eval $(call emit-deploy-target,SYNAPSE_DLL))
 $(eval $(call emit-deploy-target,DRAGON_CORE_DLL))
 $(eval $(call emit-deploy-target,JABBER_NET_DLL_MDB))

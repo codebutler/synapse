@@ -67,13 +67,10 @@ PROGRAMFILES = \
 	$(DRAGON_CORE_DLL) \
 	$(SYNAPSE_CORE_DLL_MDB)  
 
-LINUX_PKGCONFIG = \
-	$(BANSHEE_PC)  
-
 
 RESGEN=resgen2
 	
-all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+all: $(ASSEMBLY) $(PROGRAMFILES) 
 
 FILES = \
 	BansheeNowPlayingProvider.cs \
@@ -86,8 +83,7 @@ DATA_FILES =
 RESOURCES = \
 	Banshee.addin.xml 
 
-EXTRAS = \
-	banshee.pc.in 
+EXTRAS = 
 
 REFERENCES =  \
 	System \
@@ -95,15 +91,13 @@ REFERENCES =  \
 
 DLL_REFERENCES = 
 
-CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+CLEANFILES = $(PROGRAMFILES) 
 
 include $(top_srcdir)/Makefile.include
 
 HYENA_DLL = $(BUILD_DIR)/Hyena.dll
-BANSHEE_PC = $(BUILD_DIR)/banshee.pc
 
 $(eval $(call emit-deploy-target,HYENA_DLL))
-$(eval $(call emit-deploy-wrapper,BANSHEE_PC,banshee.pc))
 $(eval $(call emit-deploy-target,DRAGON_SERVICES_DLL))
 $(eval $(call emit-deploy-target,DRAGON_CORE_DLL))
 

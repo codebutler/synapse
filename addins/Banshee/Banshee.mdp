@@ -26,5 +26,6 @@
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Services" />
     <ProjectReference type="Gac" localcopy="True" refto="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099" />
   </References>
+  <Deployment.LinuxDeployData generatePcFile="False" />
   <GtkDesignInfo />
 </Project>

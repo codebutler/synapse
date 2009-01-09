@@ -105,13 +105,10 @@ PROGRAMFILES = \
 	$(SYNAPSE_XMPP_DLL) \
 	$(JABBER_NET_DLL)  
 
-LINUX_PKGCONFIG = \
-	$(PASTEBOX_PC)  
-
 
 RESGEN=resgen2
 	
-all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+all: $(ASSEMBLY) $(PROGRAMFILES) 
 
 FILES = \
 	ActionHandler.cs \
@@ -127,8 +124,7 @@ RESOURCES = \
 	SyntaxHighlighter.css \
 	SyntaxHighlighter.js 
 
-EXTRAS = \
-	pastebox.pc.in 
+EXTRAS = 
 
 REFERENCES =  \
 	$(QYOTO_LIBS)
@@ -136,13 +132,12 @@ REFERENCES =  \
 DLL_REFERENCES =  \
 	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll
 
-CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+CLEANFILES = $(PROGRAMFILES) 
 
 include $(top_srcdir)/Makefile.include
 
 QTWEBKIT_DLL_CONFIG = $(BUILD_DIR)/qtwebkit.dll.config
 JABBER_NET_DLL_MDB = $(BUILD_DIR)/jabber-net.dll.mdb
-PASTEBOX_PC = $(BUILD_DIR)/pastebox.pc
 HYENA_DLL = $(BUILD_DIR)/Hyena.dll
 QTWEBKIT_DLL = $(BUILD_DIR)/qtwebkit.dll
 JABBER_NET_DLL = $(BUILD_DIR)/jabber-net.dll
@@ -152,7 +147,6 @@ $(eval $(call emit-deploy-target,QTWEBKIT_DLL_CONFIG))
 $(eval $(call emit-deploy-target,DRAGON_CORE_DLL))
 $(eval $(call emit-deploy-target,JABBER_NET_DLL_MDB))
 $(eval $(call emit-deploy-target,DRAGON_SERVICES_DLL))
-$(eval $(call emit-deploy-wrapper,PASTEBOX_PC,pastebox.pc))
 $(eval $(call emit-deploy-target,HYENA_DLL))
 $(eval $(call emit-deploy-target,DRAGON_CORE_XMPP_DLL))
 $(eval $(call emit-deploy-target,QTWEBKIT_DLL))
