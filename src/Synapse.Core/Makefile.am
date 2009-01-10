@@ -58,7 +58,8 @@ FILES = \
 	Synapse.Core/XdgBaseDirectorySpec.cs \
 	IEnumerable.cs \
 	Synapse.Core/UserException.cs \
-	Synapse.Core/Pair.cs 
+	Synapse.Core/Pair.cs \
+	Synapse.Core/SerializableDictionary.cs 
 
 DATA_FILES = 
 

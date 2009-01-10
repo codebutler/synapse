@@ -79,7 +79,8 @@ FILES = \
 	Synapse.ServiceStack/Client.cs \
 	Synapse.ServiceStack/IDBusObjectName.cs \
 	Synapse.ServiceStack/IRegisterOnDemandService.cs \
-	Synapse.ServiceStack/DBusConnection.cs 
+	Synapse.ServiceStack/DBusConnection.cs \
+	Synapse.Services/SettingsService.cs 
 
 DATA_FILES = 
 
