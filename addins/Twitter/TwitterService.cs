@@ -151,7 +151,7 @@ namespace Synapse.Addins.TwitterAddin
 
 		public void Dispose ()
 		{
-			
+			m_Timer.Stop();
 		}
 	}
 

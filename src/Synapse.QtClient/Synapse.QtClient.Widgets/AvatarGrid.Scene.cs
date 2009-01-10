@@ -68,7 +68,7 @@ namespace Synapse.QtClient.Widgets
 						m_GroupDropIndicatorItem.SetVisible(false);
 					}
 				} else {
-					arg1.Ignore();
+					base.DragMoveEvent(arg1);
 				}
 			}
 	
@@ -84,6 +84,8 @@ namespace Synapse.QtClient.Widgets
 					m_GroupDropIndicatorItem.SetVisible(false);
 
 					m_Grid.AllGroupsCollapsed = false;
+				} else {
+					base.DropEvent(arg1);
 				}
 			}
 			
@@ -92,6 +94,8 @@ namespace Synapse.QtClient.Widgets
 				if (arg1.MimeData() is RosterItemGroupMimeData) {
 					m_GroupDropIndicatorItem.SetVisible(false);
 					m_Grid.AllGroupsCollapsed = false;
+				} else {
+					base.DragLeaveEvent(arg1);
 				}
 			}
 		}

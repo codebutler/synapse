@@ -36,7 +36,8 @@ namespace Synapse.QtClient.Widgets
 			double        m_Opacity = 1;
 			int           m_TextWidth;
 			int           m_RowCount;
-			RosterItemGroupMimeData m_MimeData;
+			QRectF        m_ArrowRect;
+			bool          m_LeftButtonDown = false;
 			
 			public RosterItemGroup (AvatarGrid<T> grid, string groupName)
 			{
@@ -52,10 +53,9 @@ namespace Synapse.QtClient.Widgets
 				
 				m_Rect = new QRectF(m_Grid.IconPadding, 0, 0, 0);
 
-				m_MimeData = new RosterItemGroupMimeData(this);
-				
 				base.SetHandlesChildEvents(false);
 				base.SetAcceptHoverEvents(true);
+				base.SetAcceptDrops(true);
 			}
 
 			public double Opacity {
@@ -134,9 +134,12 @@ namespace Synapse.QtClient.Widgets
 				painter.SetPen(new QPen(color));
 				painter.DrawText(BoundingRect(), m_GroupName);
 
+				int arrowX = m_Grid.IconPadding + m_TextWidth + 4;
+				int arrowY = 5;
+				
 				// Group expander arrow
 				painter.Save();
-				painter.Translate(m_Grid.IconPadding + m_TextWidth + 4, 5); // FIXME: These numbers probably shouldn't be hard coded.
+				painter.Translate(arrowX, arrowY);
 				QPainterPath path = new QPainterPath();
 				if (IsExpanded) {
 					path.MoveTo(0, 0);
@@ -154,6 +157,8 @@ namespace Synapse.QtClient.Widgets
 				painter.DrawPath(path);
 				painter.Restore();
 
+				m_ArrowRect = new QRectF(arrowX, 0, 4,  m_Grid.HeaderHeight);
+
 				//painter.SetPen(new QPen(new QColor("red")));
 				//painter.DrawRect(BoundingRect());
 			}
@@ -161,23 +166,25 @@ namespace Synapse.QtClient.Widgets
 			protected override void MouseReleaseEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
 			{
 				if (arg1.Button() == Qt.MouseButton.LeftButton) {
+					m_LeftButtonDown = false;
 					var pos = arg1.Pos();
 					var pos1 = arg1.ButtonDownPos(Qt.MouseButton.LeftButton);
-					if (pos.Y() < m_Grid.HeaderHeight && pos1.Equals(pos)) {
+					if (m_ArrowRect.Contains(pos1) && pos.Y() < m_Grid.HeaderHeight && pos1.Equals(pos)) {
 						this.IsExpanded = !this.IsExpanded;
 						m_Grid.ResizeAndRepositionGroups();
 					}
 				}
 			}
 
-			// Nothing works without this.
 			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
 			{
+				if (arg1.Button() == Qt.MouseButton.LeftButton)
+					m_LeftButtonDown = true;
 			}
 
 			protected override void MouseMoveEvent (Qyoto.QGraphicsSceneMouseEvent evnt)
 			{
-				if (evnt.Button() == Qt.MouseButton.LeftButton) {
+				if (m_LeftButtonDown) {
 					var app = ((QApplication)QApplication.Instance());
 					if (new QLineF(evnt.ScreenPos(), evnt.ButtonDownScreenPos(Qt.MouseButton.LeftButton))
 					.Length() < app.StartDragDistance) {
@@ -186,8 +193,9 @@ namespace Synapse.QtClient.Widgets
 	
 					QDrag drag = new QDrag(evnt.Widget());
 					drag.SetHotSpot(evnt.Pos().ToPoint());
-					
-					drag.SetMimeData(m_MimeData);
+
+					var mime = new RosterItemGroupMimeData(this, m_Grid);
+					drag.SetMimeData(mime);
 	
 					var pixmap = new QPixmap((int)BoundingRect().Width(), m_Grid.HeaderHeight);
 					pixmap.Fill(m_Grid.Palette.Color(QPalette.ColorRole.Base));
@@ -199,15 +207,34 @@ namespace Synapse.QtClient.Widgets
 					drag.Exec();
 				}
 			}
+	
+			protected override void DragMoveEvent (Qyoto.QGraphicsSceneDragDropEvent arg1)
+			{
+				if (arg1.MimeData() is RosterItemMimeData<T>) {
+					arg1.Accept();
+				} else {
+					arg1.Ignore();
+				}
+			}
+			
+			protected override void DropEvent (Qyoto.QGraphicsSceneDragDropEvent arg1)
+			{
+				if (arg1.MimeData() is RosterItemMimeData<T>) {
+					arg1.Accept();
+				} else {
+					arg1.Ignore();
+				}
+			}
 		}
 
 		class RosterItemGroupMimeData : QMimeData
 		{
 			RosterItemGroup m_Group;
 			
-			public RosterItemGroupMimeData (RosterItemGroup group)
+			public RosterItemGroupMimeData (RosterItemGroup group, QObject parent)
 			{
 				m_Group = group;
+				SetParent(parent);
 			}
 
 			public RosterItemGroup Group {

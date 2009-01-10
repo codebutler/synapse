@@ -36,7 +36,7 @@ using jabber;
 
 namespace Synapse.Xmpp.Services
 {
-	public class AccountService : IRequiredService, IInitializeService
+	public class AccountService : IRequiredService, IInitializeService, IDisposable
 	{
 		List<Account> m_Accounts = new List<Account>();
 		string        m_FileName = Path.Combine(Paths.ApplicationData, "accounts.xml");
@@ -68,6 +68,8 @@ namespace Synapse.Xmpp.Services
 
 		public void Dispose ()
 		{
+			foreach (Account account in m_Accounts)
+				account.Disconnect();
 		}
 		
 		public void AddAccount (Account account)

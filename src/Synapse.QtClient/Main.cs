@@ -22,6 +22,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using System.IO;
 
 using Hyena;
 
@@ -57,7 +58,7 @@ namespace Synapse.QtClient
 			Gtk.Application.Init();
 
 			// FIXME: This is seriously unstable.
-			//NDesk.DBus.BusG.Init();
+			NDesk.DBus.BusG.Init();
 			
 			m_App = new QApplication(args);
 			m_App.ApplicationName = "Synapse";
@@ -78,24 +79,7 @@ namespace Synapse.QtClient
 				Debug.WriteLine("Debug Mode On");
 			}
 			
-			AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs e) {
-				Console.Error.WriteLine("UNHANDLED EXCEPTION: " + e.ExceptionObject);
-				/*
-				ManualResetEvent mutex = new ManualResetEvent(false);
-				Application.Invoke(delegate {
-					QApplication.Quit();
-					new QApplication(new string[0]);
-					try {
-					QMessageBox.Critical(null, "Unhandled Exception", e.ExceptionObject.ToString(), 
-					                     (uint)QMessageBox.StandardButton.Abort);
-					mutex.Set();
-					Thread.CurrentThread.Abort();
-					} catch (Exception eee) { Console.Error.WriteLine("WTF !!!! " + eee); }
-				});
-				mutex.WaitOne();
-				*/
-				Environment.Exit(-1);
-			};
+			AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
 			
 			// XXX: I dont like this being here.
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.AccountService>();
@@ -117,6 +101,33 @@ namespace Synapse.QtClient
 			});
 
 			QApplication.Exec();
+		}
+
+		void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
+		{
+			Console.Error.WriteLine("UNHANDLED EXCEPTION: " + args.ExceptionObject);
+
+			string desktopPath = Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+			string crashFileName = Path.Combine(desktopPath, String.Format("synapse-crash-{0}.log", DateTime.Now.ToFileTime()));
+			string crashLog = args.ExceptionObject.ToString();
+			Util.WriteToFile(crashFileName, crashLog);
+			
+			/*
+			ManualResetEvent mutex = new ManualResetEvent(false);
+			Application.Invoke(delegate {
+				QApplication.Quit();
+				new QApplication(new string[0]);
+				try {
+				QMessageBox.Critical(null, "Unhandled Exception", e.ExceptionObject.ToString(), 
+				                     (uint)QMessageBox.StandardButton.Abort);
+				mutex.Set();
+				Thread.CurrentThread.Abort();
+				} catch (Exception eee) { Console.Error.WriteLine("WTF !!!! " + eee); }
+			});
+			mutex.WaitOne();
+			*/
+			
+			Environment.Exit(-1);
 		}
 
 		public QApplication QApp {

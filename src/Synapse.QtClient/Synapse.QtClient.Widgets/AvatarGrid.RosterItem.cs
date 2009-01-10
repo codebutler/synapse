@@ -129,12 +129,15 @@ namespace Synapse.QtClient.Widgets
 				}
 	
 				QDrag drag = new QDrag(evnt.Widget());
-				QMimeData mime = new QMimeData();
+				QMimeData mime = new RosterItemMimeData<T>(this, m_Grid);
 				drag.SetMimeData(mime);
 	
 				drag.Exec((uint)Qt.DropAction.MoveAction | (uint)Qt.DropAction.CopyAction | (uint)Qt.DropAction.IgnoreAction);
-	
-				SetCursor(new QCursor(Qt.CursorShape.OpenHandCursor));
+			}
+
+			protected override void MouseReleaseEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
+			{
+				
 			}
 
 			public void BeginFade(bool fadeIn)
@@ -148,7 +151,25 @@ namespace Synapse.QtClient.Widgets
 			{
 				// FIXME: Start an animation.
 				this.SetPos(pos);
-			}			
+			}
 		}
+
+		class RosterItemMimeData<T> : QMimeData
+		{
+			RosterItem<T> m_Item;
+			
+			public RosterItemMimeData (RosterItem<T> item, QObject parent)
+			{
+				m_Item = item;
+				SetParent(parent);
+			}
+
+			public RosterItem<T> Item {
+				get {
+					return m_Item;
+				}
+			}
+		}
+
 	}
 }

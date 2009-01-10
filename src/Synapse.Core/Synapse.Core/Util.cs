@@ -206,7 +206,14 @@ namespace Synapse.Core
 
             return result.ToString();
         }
-		
+			
+		public static void WriteToFile(string fileName, string text) 
+		{
+			using (StreamWriter writer = new StreamWriter(fileName)) {
+				writer.Write(text);
+			}
+		}
+
 		public static string JoinPath(params string[] pathParts)
 		{
 			if (pathParts.Length < 2) {

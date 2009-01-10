@@ -54,7 +54,7 @@ namespace Synapse.Services
 		{
 			if (m_Settings.ContainsKey(name))
 				return (T)m_Settings[name];
-		    else
+			else
 		    	return default(T);
 		}
 
