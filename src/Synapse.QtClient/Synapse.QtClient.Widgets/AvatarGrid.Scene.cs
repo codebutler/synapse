@@ -77,7 +77,9 @@ namespace Synapse.QtClient.Widgets
 				if (arg1.MimeData() is RosterItemGroupMimeData) {
 					var mime = (RosterItemGroupMimeData)arg1.MimeData();
 					if (mime.Group != m_GroupDropBeforeGroup) {
-						m_Grid.Model.SetGroupOrder(mime.Group.Name, m_Grid.Model.GetGroupOrder(m_GroupDropBeforeGroup.Name) - 1);
+						int newOrder = m_Grid.Model.GetGroupOrder(m_GroupDropBeforeGroup.Name) - 1;
+						m_Grid.Model.SetGroupOrder(mime.Group.Name, newOrder);
+						Console.WriteLine("Setting group order to: " + newOrder);
 						m_Grid.ResizeAndRepositionGroups();
 					}
 					

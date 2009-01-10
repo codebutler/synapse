@@ -48,6 +48,7 @@ namespace Synapse.UI
 		bool   m_ShowOffline   = false;
 		bool   m_ModelUpdating = false;
 		string m_TextFilter    = null;
+		bool   m_ShowTransports = false;
 		Dictionary<string, int> m_GroupIndexes = new Dictionary<string, int>();
 		
 		public RosterAvatarGridModel()
@@ -59,6 +60,16 @@ namespace Synapse.UI
 		}
 
 		#region Public Properties
+		public bool ShowTransports {
+			get {
+				return m_ShowTransports;
+			}
+			set {
+				m_ShowTransports = value;
+				OnItemsChanged();
+			}
+		}
+		
 		public bool ModelUpdating {
 			get {
 				return m_ModelUpdating;
@@ -118,6 +129,16 @@ namespace Synapse.UI
 			m_GroupIndexes[groupName] = groupOrder;
 		}
 
+		// FIXME: This needs to be cached.
+		public IEnumerable<AccountItemPair> GetItemsInGroup (string groupName)
+		{
+			foreach (var item in Items) {
+				if (item.Item.HasGroup(groupName)) {
+					yield return item;
+				}
+			}
+		}
+
 		public object GetImage (AccountItemPair pair)
 		{
 			return AvatarManager.GetAvatar(pair.Item.JID);
@@ -137,7 +158,9 @@ namespace Synapse.UI
 		{
 			//bool showOffline = !String.IsNullOrEmpty(m_TextFilter) ? true : m_ShowOffline;
 			bool showOffline = m_ShowOffline;
-			return (String.IsNullOrEmpty(m_TextFilter) || MatchesFilter(pair)) && (showOffline ? true : pair.Account.PresenceManager.IsAvailable(pair.Item.JID));
+			return (String.IsNullOrEmpty(m_TextFilter) || MatchesFilter(pair)) &&
+			       (m_ShowTransports || !String.IsNullOrEmpty(pair.Item.JID.User)) &&
+				   (showOffline ? true : pair.Account.PresenceManager.IsAvailable(pair.Item.JID));
 		}
 
 		public string GetPresenceInfo (AccountItemPair pair)

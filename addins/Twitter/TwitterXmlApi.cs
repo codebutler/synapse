@@ -136,10 +136,10 @@ namespace Twitter
 			return statuses;
 		}
 
-		public void Update (string status)
+		public Status Update (string status)
 		{
 			var args = new Dictionary<string, string>() { { "status", status } };
-			Request<Status>(UpdateUrl, args, true);
+			return Request<Status>(UpdateUrl, args, true);
 		}
 
 		T Request<T> (string url, Dictionary<string,string> args)

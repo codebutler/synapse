@@ -139,7 +139,12 @@ namespace Synapse.QtClient.Widgets
 			get {
 				return m_IconWidth / 4;
 			}
-		}		
+		}
+
+		public bool ShowGroupCounts {
+			get;
+			set;
+		}
 		#endregion
 				
 		#region Model Events
@@ -519,22 +524,6 @@ namespace Synapse.QtClient.Widgets
 			if (oldItem != null && oldItem != m_HoverItem) {
 				oldItem.Update();
 			}
-		}
-	}
-	
-	class MyGraphicsView : QGraphicsView
-	{
-		public event EventHandler DoubleClicked;
-
-		public MyGraphicsView (QWidget parent) : base (parent)
-		{
-		}
-		
-		protected override void MouseDoubleClickEvent (Qyoto.QMouseEvent arg1)
-		{
-			this.ParentWidget().Hide();
-			if (DoubleClicked != null)
-				DoubleClicked(this, EventArgs.Empty);
 		}
 	}
 }

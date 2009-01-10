@@ -158,4 +158,20 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	}
+			
+	class MyGraphicsView : QGraphicsView
+	{
+		public event EventHandler DoubleClicked;
+
+		public MyGraphicsView (QWidget parent) : base (parent)
+		{
+		}
+		
+		protected override void MouseDoubleClickEvent (Qyoto.QMouseEvent arg1)
+		{
+			this.ParentWidget().Hide();
+			if (DoubleClicked != null)
+				DoubleClicked(this, EventArgs.Empty);
+		}
+	}
 }

@@ -33,6 +33,11 @@ namespace Synapse.QtClient
 		public KeyPressEater (QObject parent) : base (parent)
 		{
 		}
+
+		public KeyPressEater(KeyEventHandler handler, QObject parent) : base (parent)
+		{
+			this.KeyEvent += handler;
+		}
 			
 		private bool EventFilter(QObject obj, QEvent evnt)
 		{

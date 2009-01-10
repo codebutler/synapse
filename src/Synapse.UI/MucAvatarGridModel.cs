@@ -120,6 +120,16 @@ namespace Synapse.UI
 			role = role.Substring(0,1).ToUpper() + role.Substring(1) + "s";			
 			return new string [] { role };
 		}
+
+		public IEnumerable<RoomParticipant> GetItemsInGroup (string groupName)
+		{
+			/*
+			foreach (var participant in m_Room.Participants)
+				if (participant.Affiliation.ToString() == groupName)
+					yield return participant;
+			*/
+			throw new NotImplementedException();
+		}
 		
 		void HandleOnParticipantJoin(Room room, RoomParticipant participant)
 		{

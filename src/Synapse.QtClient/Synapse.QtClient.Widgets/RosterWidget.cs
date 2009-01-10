@@ -52,6 +52,7 @@ public partial class RosterWidget : QWidget
 	QAction 			  m_ViewProfileAction;
 	QAction               m_IMAction;
 	QAction               m_ListModeAction;
+	QAction               m_ShowTransportsAction;
 	QAction               m_EditGroupsAction;
 
 	// Map the JS element ID to the ActivityFeedItem
@@ -74,6 +75,10 @@ public partial class RosterWidget : QWidget
 		m_ListModeAction = new QAction("List Mode", this);
 		m_ListModeAction.Checkable = true;
 		m_RosterMenu.AddAction(m_ListModeAction);
+		
+		m_ShowTransportsAction = new QAction("Show Transports", this);
+		m_ShowTransportsAction.Checkable = true;
+		m_RosterMenu.AddAction(m_ShowTransportsAction);
 
 		m_InviteActions = new List<QAction>();
 		
@@ -102,6 +107,26 @@ public partial class RosterWidget : QWidget
 		m_RosterModel = new RosterAvatarGridModel();
 		rosterGrid.Model = m_RosterModel;
 		rosterGrid.ItemActivated += HandleItemActivated;
+		rosterGrid.ShowGroupCounts = true;
+		rosterGrid.InstallEventFilter(new KeyPressEater(delegate (QKeyEvent evnt) {
+			char c = (char)evnt.Key();
+			// FIXME: What I really want is a IsHumanReadable() or something.
+			if (Char.IsLetterOrDigit(c) || Char.IsPunctuation(c)) {
+				friendSearchLineEdit.Text += evnt.Text();
+				friendSearchLineEdit.SetFocus();
+				return true;
+			}
+			return false;
+		}, this));
+		
+		friendSearchLineEdit.InstallEventFilter(new KeyPressEater(delegate (QKeyEvent evnt) {
+			if (evnt.Key() == (int)Key.Key_Escape) {
+				friendSearchLineEdit.Clear();
+				rosterGrid.SetFocus();
+				return true;
+			}
+			return false;
+		}, this));
 		
 		QSizeGrip grip = new QSizeGrip(tabWidget);
 		tabWidget.SetCornerWidget(grip, Qt.Corner.BottomRightCorner);
@@ -276,6 +301,8 @@ public partial class RosterWidget : QWidget
 			m_RosterModel.ShowOffline = action.Checked;
 		} else if (action == m_ListModeAction) {
 			rosterGrid.ListMode = action.Checked;
+		} else if (action == m_ShowTransportsAction) {
+			m_RosterModel.ShowTransports = action.Checked;
 		}
 	}
 

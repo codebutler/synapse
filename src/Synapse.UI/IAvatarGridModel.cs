@@ -36,6 +36,8 @@ namespace Synapse.UI
 		}
 
 		IEnumerable<string> GetItemGroups(T item);
+		
+		IEnumerable<T> GetItemsInGroup(string groupName);
 
 		int GetGroupOrder(string groupName);
 		void SetGroupOrder(string groupName, int order);

@@ -30,11 +30,11 @@ namespace Synapse.QtClient.Widgets
 		{
 			AvatarGrid<T> m_Grid;
 			QFont         m_Font;
+			QFontMetrics  m_Metrics;
 			string        m_GroupName;
 			QRectF        m_Rect;
 			bool          m_Expanded = true;
 			double        m_Opacity = 1;
-			int           m_TextWidth;
 			int           m_RowCount;
 			QRectF        m_ArrowRect;
 			bool          m_LeftButtonDown = false;
@@ -48,8 +48,7 @@ namespace Synapse.QtClient.Widgets
 				m_Font.SetPointSize(8); // FIXME: Set to m_Grid.HeaderHeight.
 				m_Font.SetBold(true);
 				
-				QFontMetrics metrics = new QFontMetrics(m_Font);
-				m_TextWidth = metrics.Width(m_GroupName);
+				m_Metrics = new QFontMetrics(m_Font);
 				
 				m_Rect = new QRectF(m_Grid.IconPadding, 0, 0, 0);
 
@@ -132,9 +131,25 @@ namespace Synapse.QtClient.Widgets
 				// Group Name
 				painter.SetFont(m_Font);
 				painter.SetPen(new QPen(color));
-				painter.DrawText(BoundingRect(), m_GroupName);
 
-				int arrowX = m_Grid.IconPadding + m_TextWidth + 4;
+				string text = null;
+				if (m_Grid.ShowGroupCounts) {
+					int inGroup = 0;
+					int visibleInGroup = 0;
+					foreach (var item in m_Grid.Model.GetItemsInGroup(this.Name)) {
+						inGroup ++;
+						if (m_Grid.Model.IsVisible(item))
+							visibleInGroup ++;
+					}
+					
+					text = String.Format("{0} ({1}/{2})", m_GroupName, visibleInGroup, inGroup);
+				} else {
+					text = m_GroupName;
+				}
+
+				painter.DrawText(BoundingRect(), text);
+				
+				int arrowX = m_Grid.IconPadding + m_Metrics.Width(text) + 4;
 				int arrowY = 5;
 				
 				// Group expander arrow
