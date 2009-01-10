@@ -470,7 +470,7 @@ namespace Synapse.QtClient.Widgets
 		void tooltipTimer_timeout()
 		{
 			UpdateHoverItem();
-			if (m_InfoPopup.Item != null && this.TopLevelWidget().IsActiveWindow) {
+			if (m_InfoPopup.Item != null) {
 				m_InfoPopup.Show();
 			}
 		}

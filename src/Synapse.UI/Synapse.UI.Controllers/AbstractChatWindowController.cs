@@ -103,7 +103,10 @@ namespace Synapse.UI.Controllers
 				} else {
 					body = Util.EscapeHtml(msg.Body);
 					body = Util.Linkify(body);
-					body = "<span style=\"white-space: pre\">" + body + "</span>";
+					body = body.Replace("  ", " &nbsp;");
+					body = body.Replace("\t", " &nbsp;&nbsp;&nbsp;");
+					body = body.Replace("\r\n", "<br/>");
+					body = body.Replace("\n", "<br/>");
 				}
 			
 				iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(fromJid.Bare));

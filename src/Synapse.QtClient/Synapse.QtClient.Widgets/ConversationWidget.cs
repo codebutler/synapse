@@ -35,20 +35,21 @@ namespace Synapse.QtClient
 	public class ConversationWidget : QWebView
 	{
 		#region Private Variables
-		string m_baseTemplateHtml       = null;
-		string m_statusHtml             = null;
-		PList  m_themeProperties        = null;
-		DateTime m_timeOpened;
+		string m_BaseTemplateHtml       = null;
+		string m_StatusHtml             = null;
+		DateTime m_TimeOpened;		
+		PList  m_ThemeProperties         = null;
+		bool   m_UsingCustomTemplateHtml = false;
 
-		string m_incomingContentHtml     = null;
-		string m_incomingNextContentHtml = null;
-		string m_incomingContextHtml     = null;
-		string m_incomingNextContextHtml = null;
+		string m_IncomingContentHtml     = null;
+		string m_IncomingNextContentHtml = null;
+		string m_IncomingContextHtml     = null;
+		string m_IncomingNextContextHtml = null;
 		
-		string m_outgoingContentHtml     = null;
-		string m_outgoingNextContentHtml = null;
-		string m_outgoingContextHtml     = null;
-		string m_outgoingNextContextHtml = null;
+		string m_OutgoingContentHtml     = null;
+		string m_OutgoingNextContentHtml = null;
+		string m_OutgoingContextHtml     = null;
+		string m_OutgoingNextContextHtml = null;
 		
 		string m_ThemeName              = null;
 		string m_VariantName            = null;
@@ -89,18 +90,14 @@ namespace Synapse.QtClient
 				throw new Exception("Set ThemesDirectory first");
 			}
 			
-			Assembly asm = Assembly.GetExecutingAssembly();
-			using (StreamReader reader = new StreamReader(asm.GetManifestResourceStream("Template.html"))) {
-				m_baseTemplateHtml = reader.ReadToEnd();
-			}
-			
-			this.m_timeOpened = DateTime.Now;
+			this.m_TimeOpened = DateTime.Now;
 			
 			m_Menu = new QMenu(this);
 			// FIXME: Need to selectively show certain actions depending on what's under the cursor.
 			//m_Menu.AddAction(this.PageAction(QWebPage.WebAction.OpenLink));
 			//m_Menu.AddSeparator();
 			m_Menu.AddAction(this.PageAction(QWebPage.WebAction.Copy));
+			m_Menu.AddAction(this.PageAction(QWebPage.WebAction.InspectElement));
 			//m_Menu.AddAction(this.PageAction(QWebPage.WebAction.CopyLinkToClipboard));
 			//m_Menu.AddAction(this.PageAction(QWebPage.WebAction.CopyImageToClipboard));
 
@@ -120,15 +117,15 @@ namespace Synapse.QtClient
 			if (next) {
 				jsMethod = "appendNextMessage";
 				if (incoming)
-					template = this.m_incomingNextContentHtml;
+					template = this.m_IncomingNextContentHtml;
 				else
-					template = this.m_outgoingNextContentHtml;
+					template = this.m_OutgoingNextContentHtml;
 			} else {
 				jsMethod = "appendMessage";
 				if (incoming)
-					template = this.m_incomingContentHtml;
+					template = this.m_IncomingContentHtml;
 				else
-					template = this.m_outgoingContentHtml;
+					template = this.m_OutgoingContentHtml;
 			}
 			
 			DateTime time = DateTime.Now;
@@ -141,7 +138,7 @@ namespace Synapse.QtClient
 		
 		public void AppendStatus(string status, string message)
 		{
-			string html = FormatStatus(this.m_statusHtml, status, message, DateTime.Now);
+			string html = FormatStatus(this.m_StatusHtml, status, message, DateTime.Now);
 			html = Util.EscapeJavascript(html);
 			base.Page().MainFrame().EvaluateJavaScript(String.Format("{0}(\"{1}\")", "appendMessage", html));
 		}
@@ -161,10 +158,22 @@ namespace Synapse.QtClient
 				throw new Exception("Missing required theme file: Info.plist");
 			}
 			
-			PList themeProperties = new PList(plistPath);
-			if (themeProperties.GetValue<long>("MessageViewVersion") < 3) {
-			//	throw new Exception("Unsupported version.");
-			}
+			this.m_ThemeProperties = new PList(plistPath);
+			this.m_ThemeName       = themeName;
+			this.m_VariantName     = variantName;			
+
+			// Check if theme is version 1 and has its own Template.html
+			string customTemplatePath = Util.JoinPath(resourcesPath, "Template.html");
+			if (!File.Exists(customTemplatePath) && StyleVersion >= 1) {
+				Assembly asm = Assembly.GetExecutingAssembly();
+				using (StreamReader reader = new StreamReader(asm.GetManifestResourceStream("Template.html"))) {
+					m_BaseTemplateHtml = reader.ReadToEnd();
+				}
+				m_UsingCustomTemplateHtml = false;
+			} else {
+				m_BaseTemplateHtml = File.ReadAllText(customTemplatePath);
+				m_UsingCustomTemplateHtml = true;
+			}					
 			
 			// Set up base template
 			string headerHtml     = FormatHeaderOrFooter(File.ReadAllText(Util.JoinPath(resourcesPath, "Header.html")));
@@ -178,7 +187,7 @@ namespace Synapse.QtClient
 			string mainCssPath    = "main.css";
 			string variantCssPath = Util.JoinPath("Variants", variantName + ".css");
 			
-			string baseHtml       = FormatBaseTemplate(themeProperties, baseUri, mainCssPath, variantCssPath, headerHtml, footerHtml);
+			string baseHtml       = FormatBaseTemplate(m_ThemeProperties, baseUri, mainCssPath, variantCssPath, headerHtml, footerHtml);
 			base.Page().MainFrame().SetHtml(baseHtml, themeDirectory);
 				
 			string incomingPath = Util.JoinPath(resourcesPath, "Incoming");
@@ -202,22 +211,16 @@ namespace Synapse.QtClient
 			 * If FileTransfer.html isn't found, a modified version of Status.html will be used 
 			 */
 			
-			this.m_statusHtml              = File.ReadAllText(statusPath);
-			this.m_incomingContentHtml     = File.ReadAllText(Util.JoinPath(incomingPath, "Content.html"));
-			this.m_incomingNextContentHtml = File.Exists(incomingNextContentPath) ? File.ReadAllText(incomingNextContentPath) : this.m_incomingContentHtml;
-			this.m_incomingContextHtml     = File.Exists(incomingContextPath)     ? File.ReadAllText(incomingContextPath)     : this.m_incomingContentHtml;
-			this.m_incomingNextContextHtml = File.Exists(incomingNextContextPath) ? File.ReadAllText(incomingNextContextPath) : this.m_incomingNextContentHtml;
-			this.m_outgoingContentHtml     = File.Exists(outgoingContentPath)     ? File.ReadAllText(outgoingContentPath)     : this.m_incomingContentHtml;
-			this.m_outgoingNextContentHtml = File.Exists(outgoingNextContentPath) ? File.ReadAllText(outgoingNextContentPath) : this.m_outgoingContentHtml;
-			this.m_outgoingContextHtml     = File.Exists(outgoingContextPath)     ? File.ReadAllText(outgoingContextPath)     : this.m_outgoingContentHtml;
-			this.m_outgoingNextContextHtml = File.Exists(incomingContextPath)     ? File.ReadAllText(incomingContextPath)     : this.m_outgoingNextContentHtml;
+			this.m_StatusHtml              = File.ReadAllText(statusPath);
+			this.m_IncomingContentHtml     = File.ReadAllText(Util.JoinPath(incomingPath, "Content.html"));
+			this.m_IncomingNextContentHtml = File.Exists(incomingNextContentPath) ? File.ReadAllText(incomingNextContentPath) : this.m_IncomingContentHtml;
+			this.m_IncomingContextHtml     = File.Exists(incomingContextPath)     ? File.ReadAllText(incomingContextPath)     : this.m_IncomingContentHtml;
+			this.m_IncomingNextContextHtml = File.Exists(incomingNextContextPath) ? File.ReadAllText(incomingNextContextPath) : this.m_IncomingNextContentHtml;
+			this.m_OutgoingContentHtml     = File.Exists(outgoingContentPath)     ? File.ReadAllText(outgoingContentPath)     : this.m_IncomingContentHtml;
+			this.m_OutgoingNextContentHtml = File.Exists(outgoingNextContentPath) ? File.ReadAllText(outgoingNextContentPath) : this.m_OutgoingContentHtml;
+			this.m_OutgoingContextHtml     = File.Exists(outgoingContextPath)     ? File.ReadAllText(outgoingContextPath)     : this.m_OutgoingContentHtml;
+			this.m_OutgoingNextContextHtml = File.Exists(incomingContextPath)     ? File.ReadAllText(incomingContextPath)     : this.m_OutgoingNextContentHtml;
 			
-			// Save theme info
-			this.m_themeProperties     = themeProperties;
-			this.m_ThemeName           = themeName;
-			this.m_VariantName         = variantName;
-			this.m_themeProperties     = new PList(plistPath);
-
 			OnJavaScriptWindowObjectCleared();
 
 			Console.WriteLine("Loaded!");
@@ -275,6 +278,12 @@ namespace Synapse.QtClient
 		{			
 			m_Menu.Popup(arg1.GlobalPos());
 		}
+
+		int StyleVersion {
+			get {
+				return Convert.ToInt32(m_ThemeProperties.GetValue<long>("MessageViewVersion"));
+			}
+		}
 		
 		#region Private Methods
 		void HandleLinkClicked (QUrl url)
@@ -284,10 +293,15 @@ namespace Synapse.QtClient
 		
 		private string FormatBaseTemplate(PList themeProperties, string basePath, string mainPath, string variantPath, string headerHtml, string footerHtml)
 		{
-			mainPath = "@import url(\"" + mainPath + "\");";
+			mainPath = String.Format("@import url(\"{0}\");", mainPath);
 			
-			string html = this.m_baseTemplateHtml;
-			string[] substitutions = new string[] { basePath, mainPath, variantPath, headerHtml, footerHtml };
+			string html = this.m_BaseTemplateHtml;
+			string[] substitutions = null;
+			if (StyleVersion < 3 && m_UsingCustomTemplateHtml) {
+				substitutions = new string[] { basePath, variantPath, headerHtml, footerHtml };
+			} else {
+				substitutions = new string[] { basePath, mainPath, variantPath, headerHtml, footerHtml };
+			}
 			for (int i = 0; i < substitutions.Length; i++) {
 				int index = html.IndexOf("%@");
 				html = html.Remove(index, 2);
@@ -352,12 +366,12 @@ namespace Synapse.QtClient
 			headerTemplateHtml = headerTemplateHtml.Replace("%sourceName%", this.m_SourceName);
 			headerTemplateHtml = headerTemplateHtml.Replace("%destinationName%", this.m_DestinationName);
 			headerTemplateHtml = headerTemplateHtml.Replace("%destinationDisplayName%", this.m_DestinationDisplayName);
-			headerTemplateHtml = headerTemplateHtml.Replace("%timeOpened%", this.m_timeOpened.ToString());
+			headerTemplateHtml = headerTemplateHtml.Replace("%timeOpened%", this.m_TimeOpened.ToString());
 			
 			Regex regex = new Regex(@"%timeOpened\{(.*)\}%");
 			headerTemplateHtml = regex.Replace(headerTemplateHtml, delegate (Match match) {
 				string pattern = match.Groups[1].Value;
-				return Util.Strftime(pattern, this.m_timeOpened);
+				return Util.Strftime(pattern, this.m_TimeOpened);
 			});
 		
 			return headerTemplateHtml;
