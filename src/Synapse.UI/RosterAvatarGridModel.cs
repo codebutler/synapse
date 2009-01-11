@@ -35,7 +35,7 @@ using jabber.protocol.client;
 
 namespace Synapse.UI
 {
-	public class RosterAvatarGridModel : IAvatarGridModel<AccountItemPair>
+	public class RosterAvatarGridModel : IAvatarGridModel<AccountItemPair>, IAvatarGridEditableModel<AccountItemPair>
 	{
 		public event ItemEventHandler<AccountItemPair> ItemAdded;
 		public event ItemEventHandler<AccountItemPair> ItemRemoved;
@@ -129,6 +129,20 @@ namespace Synapse.UI
 			m_GroupIndexes[groupName] = groupOrder;
 		}
 
+		public void AddItemToGroup(AccountItemPair item, string groupName)
+		{
+			item.Item.AddGroup(groupName);
+			// FIXME: item.Account.Roster.Modify(item.Item);
+			OnItemChanged(item);
+		}
+		
+		public void RemoveItemFromGroup(AccountItemPair item, string groupName)
+		{
+			item.Item.RemoveGroup(groupName);
+			// FIXME: item.Account.Roster.Modify(item.Item);
+			OnItemChanged(item);
+		}
+		
 		// FIXME: This needs to be cached.
 		public IEnumerable<AccountItemPair> GetItemsInGroup (string groupName)
 		{
@@ -207,9 +221,14 @@ namespace Synapse.UI
 
 		protected virtual void OnItemChanged (Account account, Item item)
 		{
+			OnItemChanged(new AccountItemPair(account, item));
+		}
+		
+		protected virtual void OnItemChanged (AccountItemPair pair)
+		{
 			var evnt = ItemChanged;
 			if (evnt != null)
-				evnt(this, new AccountItemPair(account, item));
+				evnt(this, pair);
 		}
 
 		protected virtual void OnRefreshed ()

@@ -20,6 +20,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using Synapse.UI;
 using Qyoto;
 
 namespace Synapse.QtClient.Widgets
@@ -38,6 +39,7 @@ namespace Synapse.QtClient.Widgets
 			int           m_RowCount;
 			QRectF        m_ArrowRect;
 			bool          m_LeftButtonDown = false;
+			bool          m_ItemOver = false;
 			
 			public RosterItemGroup (AvatarGrid<T> grid, string groupName)
 			{
@@ -116,7 +118,7 @@ namespace Synapse.QtClient.Widgets
 				m_Rect.SetLeft(m_Grid.IconPadding);
 				m_Rect.SetWidth(m_Grid.Viewport().Width() - (m_Grid.IconPadding * 2));
 				if (IsExpanded)
-					m_Rect.SetHeight(m_RowCount * (m_Grid.IconSize + m_Grid.IconPadding));
+					m_Rect.SetHeight(m_Grid.HeaderHeight + (m_RowCount * (m_Grid.IconSize + m_Grid.IconPadding)));
 				else
 					m_Rect.SetHeight(m_Grid.HeaderHeight);							
 				return m_Rect;
@@ -174,8 +176,10 @@ namespace Synapse.QtClient.Widgets
 
 				m_ArrowRect = new QRectF(arrowX, 0, 4,  m_Grid.HeaderHeight);
 
-				//painter.SetPen(new QPen(new QColor("red")));
-				//painter.DrawRect(BoundingRect());
+				if (ItemOver) {
+					painter.SetPen(new QPen(new QColor("red")));
+					painter.DrawRect(BoundingRect());
+				}
 			}
 
 			protected override void MouseReleaseEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
@@ -205,21 +209,23 @@ namespace Synapse.QtClient.Widgets
 					.Length() < app.StartDragDistance) {
 						return;
 					}
-	
-					QDrag drag = new QDrag(evnt.Widget());
-					drag.SetHotSpot(evnt.Pos().ToPoint());
 
-					var mime = new RosterItemGroupMimeData(this, m_Grid);
-					drag.SetMimeData(mime);
+					if (m_Grid.Model is IAvatarGridEditableModel<T>) {
+						QDrag drag = new QDrag(evnt.Widget());
+						drag.SetHotSpot(evnt.Pos().ToPoint());
 	
-					var pixmap = new QPixmap((int)BoundingRect().Width(), m_Grid.HeaderHeight);
-					pixmap.Fill(m_Grid.Palette.Color(QPalette.ColorRole.Base));
-					var painter = new QPainter(pixmap);
-					Paint(painter, null, null);
-					painter.End();
-					drag.SetPixmap(pixmap);
+						var mime = new RosterItemGroupMimeData(this, m_Grid);
+						drag.SetMimeData(mime);
 		
-					drag.Exec();
+						var pixmap = new QPixmap((int)BoundingRect().Width(), m_Grid.HeaderHeight);
+						pixmap.Fill(m_Grid.Palette.Color(QPalette.ColorRole.Base));
+						var painter = new QPainter(pixmap);
+						Paint(painter, null, null);
+						painter.End();
+						drag.SetPixmap(pixmap);
+			
+						drag.Exec();
+					}
 				}
 			}
 	
@@ -231,13 +237,47 @@ namespace Synapse.QtClient.Widgets
 					arg1.Ignore();
 				}
 			}
+
+			protected override void DragEnterEvent (Qyoto.QGraphicsSceneDragDropEvent arg1)
+			{
+				if (arg1.MimeData() is RosterItemMimeData<T>)
+					ItemOver = true;
+			}
+			
+			protected override void DragLeaveEvent (Qyoto.QGraphicsSceneDragDropEvent arg1)
+			{
+				if (arg1.MimeData() is RosterItemMimeData<T>)
+					ItemOver = false;
+			}
 			
 			protected override void DropEvent (Qyoto.QGraphicsSceneDragDropEvent arg1)
 			{
 				if (arg1.MimeData() is RosterItemMimeData<T>) {
 					arg1.Accept();
+
+					ItemOver = false;
+					
+					var mimeData = (RosterItemMimeData<T>)arg1.MimeData();
+					var oldGroup = (RosterItemGroup)mimeData.Item.ParentItem();
+
+					var editableModel = (IAvatarGridEditableModel<T>)m_Grid.Model;					
+					editableModel.AddItemToGroup(mimeData.Item.Item, this.Name);
+					if (arg1.DropAction() != Qt.DropAction.CopyAction) {
+						editableModel.RemoveItemFromGroup(mimeData.Item.Item, oldGroup.Name);
+					}
+					
 				} else {
 					arg1.Ignore();
+				}
+			}
+
+			bool ItemOver {
+				get {
+					return m_ItemOver;
+				}
+				set {
+					m_ItemOver = value;
+					base.Update();
 				}
 			}
 		}

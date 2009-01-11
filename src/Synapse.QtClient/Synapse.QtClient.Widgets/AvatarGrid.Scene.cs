@@ -18,6 +18,7 @@
 //
 
 using System;
+using Synapse.UI;
 using Qyoto;
 
 namespace Synapse.QtClient.Widgets
@@ -67,6 +68,9 @@ namespace Synapse.QtClient.Widgets
 					} else {
 						m_GroupDropIndicatorItem.SetVisible(false);
 					}
+				} else if (arg1.MimeData() is RosterItemMimeData<T>) {
+					m_Grid.AllGroupsCollapsed = true;
+					base.DragMoveEvent(arg1);
 				} else {
 					base.DragMoveEvent(arg1);
 				}
@@ -76,9 +80,10 @@ namespace Synapse.QtClient.Widgets
 			{
 				if (arg1.MimeData() is RosterItemGroupMimeData) {
 					var mime = (RosterItemGroupMimeData)arg1.MimeData();
-					if (mime.Group != m_GroupDropBeforeGroup) {
+					if (mime.Group != m_GroupDropBeforeGroup && m_GroupDropBeforeGroup != null) {
 						int newOrder = m_Grid.Model.GetGroupOrder(m_GroupDropBeforeGroup.Name) - 1;
-						m_Grid.Model.SetGroupOrder(mime.Group.Name, newOrder);
+						var editableModel = (IAvatarGridEditableModel<T>)m_Grid.Model;
+						editableModel.SetGroupOrder(mime.Group.Name, newOrder);
 						Console.WriteLine("Setting group order to: " + newOrder);
 						m_Grid.ResizeAndRepositionGroups();
 					}
@@ -86,6 +91,9 @@ namespace Synapse.QtClient.Widgets
 					m_GroupDropIndicatorItem.SetVisible(false);
 
 					m_Grid.AllGroupsCollapsed = false;
+				} else if (arg1.MimeData() is RosterItemMimeData<T>) {
+					m_Grid.AllGroupsCollapsed = false;
+					base.DropEvent(arg1);
 				} else {
 					base.DropEvent(arg1);
 				}
@@ -96,6 +104,9 @@ namespace Synapse.QtClient.Widgets
 				if (arg1.MimeData() is RosterItemGroupMimeData) {
 					m_GroupDropIndicatorItem.SetVisible(false);
 					m_Grid.AllGroupsCollapsed = false;
+				} else if (arg1.MimeData() is RosterItemMimeData<T>) {
+					m_Grid.AllGroupsCollapsed = false;
+					base.DragLeaveEvent(arg1);
 				} else {
 					base.DragLeaveEvent(arg1);
 				}

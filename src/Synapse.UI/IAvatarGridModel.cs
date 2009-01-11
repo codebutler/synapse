@@ -40,7 +40,6 @@ namespace Synapse.UI
 		IEnumerable<T> GetItemsInGroup(string groupName);
 
 		int GetGroupOrder(string groupName);
-		void SetGroupOrder(string groupName, int order);
 		
 		string GetName(T item);
 		JID    GetJID(T item);
@@ -63,5 +62,13 @@ namespace Synapse.UI
 		event ItemEventHandler<T> ItemChanged;
 		event EventHandler ItemsChanged;
 		event EventHandler Refreshed;
+	}
+
+	public interface IAvatarGridEditableModel<T>
+	{
+		void SetGroupOrder(string groupName, int order);
+		
+		void AddItemToGroup(T item, string groupName);
+		void RemoveItemFromGroup(T item, string groupName);				
 	}
 }

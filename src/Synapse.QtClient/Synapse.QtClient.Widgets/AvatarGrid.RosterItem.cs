@@ -20,6 +20,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using Synapse.UI;
 using Qyoto;
 
 namespace Synapse.QtClient.Widgets
@@ -115,24 +116,23 @@ namespace Synapse.QtClient.Widgets
 
 			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)
 			{
-				Console.WriteLine("item mouse press");
 			}
 	
 			protected override void MouseMoveEvent (Qyoto.QGraphicsSceneMouseEvent evnt)
 			{
-				Console.WriteLine("Item Mouse Move");
-				
 				var app = ((QApplication)QApplication.Instance());
 				if (new QLineF(evnt.ScreenPos(), evnt.ButtonDownScreenPos(Qt.MouseButton.LeftButton))
 				.Length() < app.StartDragDistance) {
 					return;
 				}
-	
-				QDrag drag = new QDrag(evnt.Widget());
-				QMimeData mime = new RosterItemMimeData<T>(this, m_Grid);
-				drag.SetMimeData(mime);
-	
-				drag.Exec((uint)Qt.DropAction.MoveAction | (uint)Qt.DropAction.CopyAction | (uint)Qt.DropAction.IgnoreAction);
+			
+				if (m_Grid.Model is IAvatarGridEditableModel<T>) {
+					QDrag drag = new QDrag(evnt.Widget());
+					QMimeData mime = new RosterItemMimeData<T>(this, m_Grid);
+					drag.SetMimeData(mime);
+		
+					drag.Exec((uint)Qt.DropAction.MoveAction | (uint)Qt.DropAction.CopyAction | (uint)Qt.DropAction.IgnoreAction);
+				}
 			}
 
 			protected override void MouseReleaseEvent (Qyoto.QGraphicsSceneMouseEvent arg1)

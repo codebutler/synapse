@@ -176,7 +176,14 @@ namespace Synapse.QtClient.Widgets
 		
 		private void model_ItemChanged (IAvatarGridModel<T> model, T item)
 		{
+			// FIXME: Make this smarter.
+			model_ItemRemoved(model, item);
+			model_ItemAdded(model, item);
+			
+			/*
 			Application.Invoke(delegate {
+				bool visibilityChanged = false;
+				bool groupsChanged = false;
 				foreach (QGraphicsItem gitem in m_Scene.Items()) {
 					if (gitem is RosterItem<T>) {
 						if (((RosterItem<T>)gitem).Item.Equals(item)) {
@@ -189,7 +196,11 @@ namespace Synapse.QtClient.Widgets
 						}
 					}
 				}
+				
+				if (visibilityChanged || groupsChanged)
+					ResizeAndRepositionGroups();
 			});
+			*/
 		}
 
 		private void model_Refreshed (object o, EventArgs args)
@@ -435,22 +446,27 @@ namespace Synapse.QtClient.Widgets
 			
 			lock (m_Groups) {
 				foreach (string groupName in groups) {
-					if (!m_Groups.ContainsKey(groupName))
-						AddGroup(groupName, resizeAndReposition);
-					
-					QGraphicsItemGroup group = m_Groups[groupName];
-					group.SetVisible(false);
-	
-					RosterItem<T> graphicsItem = new RosterItem<T>(this, item, (uint)IconSize,
-					                                               (uint)IconSize, group);
-					m_Items.Add(graphicsItem);
-					graphicsItem.SetVisible(false);
-					group.AddToGroup(graphicsItem);
+					AddItemToGroup(item, groupName, resizeAndReposition);
 				}
 
 				if (resizeAndReposition)
 					ResizeAndRepositionGroups();
 			}			
+		}
+
+		void AddItemToGroup (T item, string groupName, bool resizeAndReposition)
+		{
+			if (!m_Groups.ContainsKey(groupName))
+				AddGroup(groupName, resizeAndReposition);
+			
+			QGraphicsItemGroup group = m_Groups[groupName];
+			group.SetVisible(false);
+
+			RosterItem<T> graphicsItem = new RosterItem<T>(this, item, (uint)IconSize,
+			                                               (uint)IconSize, group);
+			m_Items.Add(graphicsItem);
+			graphicsItem.SetVisible(false);
+			group.AddToGroup(graphicsItem);
 		}
 
 		void RemoveItem (RosterItem<T> item)
