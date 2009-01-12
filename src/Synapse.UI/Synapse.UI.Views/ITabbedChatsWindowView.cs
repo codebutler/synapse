@@ -28,6 +28,7 @@ namespace Synapse.UI.Views
 	{
 		void AddChatWindow (AbstractChatWindowController window, bool focus);
 		void RemoveChatWindow (AbstractChatWindowController window);
+		void FocusChatWindow (AbstractChatWindowController window);
 		
 		IChatWindowView CurrentChat {
 			get;

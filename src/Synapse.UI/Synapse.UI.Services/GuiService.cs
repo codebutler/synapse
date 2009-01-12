@@ -38,6 +38,9 @@ using Synapse.UI.Actions.ExtensionNodes;
 
 namespace Synapse.UI.Services
 {
+	public delegate void ChatWindowOpenedEventHandler (AbstractChatWindowController window, bool focus);
+	public delegate void ChatWindowEventHandler (AbstractChatWindowController window);
+
 	public class GuiService : IService, IRequiredService, IInitializeService
 	{
 		MainWindowController  m_MainWindow;
@@ -48,8 +51,9 @@ namespace Synapse.UI.Services
 
 		Dictionary<Account, AccountChatWindowManager> m_AccountManagers;
 
-		public event ChatWindowOpenEvent ChatWindowOpened;
-		public event ChatWindowCloseEvent ChatWindowClosed;
+		public event ChatWindowOpenedEventHandler ChatWindowOpened;
+		public event ChatWindowEventHandler ChatWindowClosed;
+		public event ChatWindowEventHandler ChatWindowFocused;
 		
 		public void Initialize()
 		{
@@ -105,6 +109,24 @@ namespace Synapse.UI.Services
 			
 			m_AccountManagers[account].OpenChatWindow(jid, true);
 		}
+
+		internal void RaiseChatWindowOpened(AbstractChatWindowController window, bool focus)
+		{
+			if (ChatWindowOpened != null)
+				ChatWindowOpened(window, focus);
+		}
+
+		internal void RaiseChatWindowClosed(AbstractChatWindowController window)
+		{
+			if (ChatWindowClosed != null)
+				ChatWindowClosed(window);
+		}
+		
+		internal void RaiseChatWindowFocused(AbstractChatWindowController window)
+		{
+			if (ChatWindowFocused != null)
+				ChatWindowFocused(window);
+		}
 		
 		void OnClientStarted (Synapse.ServiceStack.Client client)
 		{
@@ -127,21 +149,7 @@ namespace Synapse.UI.Services
 			account.Error += HandleAccountError;
 			
 			var manager = new AccountChatWindowManager(account);
-			manager.ChatWindowOpened += HandleChatWindowOpened;
-			manager.ChatWindowClosed += HandleChatWindowClosed;
 			m_AccountManagers.Add(account, manager);
-		}
-
-		void HandleChatWindowOpened(AbstractChatWindowController window, bool focus)
-		{
-			if (ChatWindowOpened != null)
-				ChatWindowOpened(window, focus);
-		}
-
-		void HandleChatWindowClosed(AbstractChatWindowController window)
-		{
-			if (ChatWindowClosed != null)
-				ChatWindowClosed(window);
 		}
 
 		void HandleAccountError(Account account, Exception ex)

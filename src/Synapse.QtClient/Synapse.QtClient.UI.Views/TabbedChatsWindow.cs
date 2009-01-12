@@ -134,11 +134,10 @@ namespace Synapse.QtClient
 			var view = (QWidget)window.View;
 			
 			int oldIndex = m_Tabs.CurrentIndex;
-			int newIndex = m_Tabs.InsertTab(oldIndex + 1, view, view.WindowIcon, view.WindowTitle);
+			m_Tabs.InsertTab(oldIndex + 1, view, view.WindowIcon, view.WindowTitle);
 
 			if (focus) {
-				m_Tabs.SetCurrentIndex(newIndex);
-				view.Show();				
+				FocusChatWindow(window);
 			} else {
 				m_Tabs.SetCurrentIndex(oldIndex);
 			}
@@ -146,6 +145,16 @@ namespace Synapse.QtClient
 			TabAdded();
 
 			window.View.UrgencyHintChanged += HandleChatUrgencyHintChanged;
+		}
+
+		public void FocusChatWindow (AbstractChatWindowController window)
+		{
+			window.View.Show();
+			int newIndex = m_Tabs.IndexOf((QWidget)window.View);
+			m_Tabs.SetCurrentIndex(newIndex);
+			if (this.Minimized)
+				this.ShowNormal();
+			this.SetFocus();			
 		}
 
 		public void RemoveChatWindow (AbstractChatWindowController window)

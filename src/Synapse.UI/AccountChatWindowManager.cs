@@ -25,6 +25,7 @@ using System.Text;
 using Synapse.Services;
 using Synapse.ServiceStack;
 using Synapse.UI.Controllers;
+using Synapse.UI.Services;
 using Synapse.Xmpp;
 using jabber;
 using jabber.connection;
@@ -32,17 +33,11 @@ using jabber.protocol.client;
 
 namespace Synapse.UI
 {
-	public delegate void ChatWindowOpenEvent (AbstractChatWindowController window, bool focus);
-	public delegate void ChatWindowCloseEvent (AbstractChatWindowController window);
-
 	public class AccountChatWindowManager : IDisposable
 	{
 		Account m_Account;
 		Dictionary<Room, MucWindowController> m_MucWindows;
 		Dictionary<string, ChatWindowController> m_ChatWindows;
-		
-		public event ChatWindowOpenEvent ChatWindowOpened;
-		public event ChatWindowCloseEvent ChatWindowClosed;
 		
 		public AccountChatWindowManager (Account account)
 		{
@@ -63,10 +58,10 @@ namespace Synapse.UI
 				window.Closed += HandleChatWindowClosed;
 				m_ChatWindows.Add(jid.Bare, window);
 
-				if (ChatWindowOpened != null)
-					ChatWindowOpened(window, focus);
+				ServiceManager.Get<GuiService>().RaiseChatWindowOpened(window, focus);
 			} else {
 				window = m_ChatWindows[jid.Bare];
+				ServiceManager.Get<GuiService>().RaiseChatWindowFocused(window);
 			}
 			return window;
 		}
@@ -103,8 +98,7 @@ namespace Synapse.UI
 				window.Closed += HandleMucWindowClosed;
 				m_MucWindows[room] = window;
 				
-				if (ChatWindowOpened != null)
-					ChatWindowOpened(window, true);
+				ServiceManager.Get<GuiService>().RaiseChatWindowOpened(window, true);
 			}
 		}
 
@@ -113,8 +107,7 @@ namespace Synapse.UI
 			var window = (ChatWindowController)sender;
 			m_ChatWindows.Remove(window.Jid.Bare);
 
-			if (ChatWindowClosed != null)
-				ChatWindowClosed(window);
+			ServiceManager.Get<GuiService>().RaiseChatWindowClosed(window);
 		}
 		
 		void HandleMucWindowClosed(object sender, EventArgs e)
@@ -123,8 +116,7 @@ namespace Synapse.UI
 			var window = m_MucWindows[room];
 			m_MucWindows.Remove(room);
 			
-			if (ChatWindowClosed != null)
-				ChatWindowClosed(window);
+			ServiceManager.Get<GuiService>().RaiseChatWindowClosed(window);
 		}
 	}
 }

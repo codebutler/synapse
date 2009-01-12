@@ -37,6 +37,7 @@ namespace Synapse.UI.Controllers
 			var gui = ServiceManager.Get<GuiService>();
 			gui.ChatWindowOpened += HandleChatWindowOpened;
 			gui.ChatWindowClosed += HandleChatWindowClosed;
+			gui.ChatWindowFocused += HandleChatWindowFocused;
 		}
 
 		void HandleChatWindowOpened (AbstractChatWindowController window, bool focus)
@@ -52,5 +53,12 @@ namespace Synapse.UI.Controllers
 				base.View.RemoveChatWindow(window);
 			});
 		}
+
+		void HandleChatWindowFocused (AbstractChatWindowController window)
+		{
+			Application.Invoke(delegate {
+				base.View.FocusChatWindow(window);
+			});
+		}		
 	}
 }
