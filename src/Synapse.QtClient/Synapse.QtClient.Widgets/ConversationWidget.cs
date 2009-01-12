@@ -7,6 +7,8 @@
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
 //
+// Based on code from the Adium project.
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -29,6 +31,8 @@ using System.IO;
 using IO = System.IO;
 using Qyoto;
 using Synapse.Core;
+using Synapse.UI.Chat;
+using Synapse.Xmpp;
 
 namespace Synapse.QtClient
 {
@@ -41,15 +45,16 @@ namespace Synapse.QtClient
 		PList  m_ThemeProperties         = null;
 		bool   m_UsingCustomTemplateHtml = false;
 
-		string m_IncomingContentHtml     = null;
-		string m_IncomingNextContentHtml = null;
-		string m_IncomingContextHtml     = null;
-		string m_IncomingNextContextHtml = null;
+		string m_ContentInHtml     = null;
+		string m_NextContentInHtml = null;
+		string m_ContextInHtml     = null;
+		string m_NextContextInHtml = null;
 		
-		string m_OutgoingContentHtml     = null;
-		string m_OutgoingNextContentHtml = null;
-		string m_OutgoingContextHtml     = null;
-		string m_OutgoingNextContextHtml = null;
+		string m_ContentOutHtml     = null;
+		string m_NextContentOutHtml = null;
+		string m_ContextOutHtml     = null;
+		string m_NextContextOutHtml = null;
+		string m_FileTransferHtml   = null;
 		
 		string m_ThemeName              = null;
 		string m_VariantName            = null;
@@ -61,10 +66,19 @@ namespace Synapse.QtClient
 		CustomBackgroundType m_CustomBackgroundType  = CustomBackgroundType.BackgroundNormal;
 		string               m_CustomBackgroundPath  = null;
 		string               m_CustomBackgroundColor = null;
+		bool                 m_CombineConsecutive = true;
+		
+		QMenu m_Menu;
 		
 		static string s_ThemesDirectory = null;
 
-		QMenu m_Menu;
+		const string APPEND_MESSAGE_WITH_SCROLL      = "checkIfScrollToBottomIsNeeded(); appendMessage(\"{0}\"); scrollToBottomIfNeeded();";
+		const string APPEND_NEXT_MESSAGE_WITH_SCROLL = "checkIfScrollToBottomIsNeeded(); appendNextMessage(\"{0}\"); scrollToBottomIfNeeded();";
+		const string APPEND_MESSAGE                  = "appendMessage(\"{0}\");";
+		const string APPEND_NEXT_MESSAGE             = "appendNextMessage(\"{0}\");";
+		const string APPEND_MESSAGE_NO_SCROLL        = "appendMessageNoScroll(\"{0}\");";
+		const string APPEND_NEXT_MESSAGE_NO_SCROLL	 = "appendNextMessageNoScroll(\"{0}\");";
+		const string REPLACE_LAST_MESSAGE            = "replaceLastMessage(\"{0}\");";
 		#endregion
 		
 		#region Public Static Properties
@@ -107,40 +121,13 @@ namespace Synapse.QtClient
 		#endregion
 		
 		#region Public Methods
-		public void AppendMessage(bool incoming, bool next, string userIconPath, string senderScreenName, string sender,
-		                          string senderColor, string senderStatusIcon, string senderDisplayName,
-		                          string message)
+		public void AppendContent(AbstractChatContent content, bool contentIsSimilar, bool willAddMoreContentObjects, 
+		                          bool replaceLastContent)
 		{
-			string jsMethod = null;
-			string template = null;
-			
-			if (next) {
-				jsMethod = "appendNextMessage";
-				if (incoming)
-					template = this.m_IncomingNextContentHtml;
-				else
-					template = this.m_OutgoingNextContentHtml;
-			} else {
-				jsMethod = "appendMessage";
-				if (incoming)
-					template = this.m_IncomingContentHtml;
-				else
-					template = this.m_OutgoingContentHtml;
-			}
-			
-			DateTime time = DateTime.Now;
-			string html = FormatMessage(template, userIconPath, senderScreenName, sender, senderColor, senderStatusIcon,
-			                            "ltr", senderDisplayName, String.Empty, message, time);
-			html = Util.EscapeJavascript(html);
-			
-			base.Page().MainFrame().EvaluateJavaScript(String.Format("{0}(\"{1}\")", jsMethod, html));
-		}
-		
-		public void AppendStatus(string status, string message)
-		{
-			string html = FormatStatus(this.m_StatusHtml, status, message, DateTime.Now);
-			html = Util.EscapeJavascript(html);
-			base.Page().MainFrame().EvaluateJavaScript(String.Format("{0}(\"{1}\")", "appendMessage", html));
+			Page().MainFrame().EvaluateJavaScript(ScriptForAppendingContent(content,
+			                                                                contentIsSimilar,
+			                                                                willAddMoreContentObjects,
+			                                                                replaceLastContent));
 		}
 				
 		public void LoadTheme(string themeName, string variantName)
@@ -202,6 +189,7 @@ namespace Synapse.QtClient
 			string incomingNextContextPath = Util.JoinPath(incomingPath, "NextContext.html");
 			string outgoingContextPath     = Util.JoinPath(outgoingPath, "Context.html");
 			string outgoingNextContextPath = Util.JoinPath(outgoingPath, "NextContext.html");
+			string filetransferRequestPath = Util.JoinPath(resourcesPath, "FileTransferRequest.html");
 			
 			/* From http://trac.adiumx.com/wiki/CreatingMessageStyles:
 			 * If Incoming/NextContent.html isn't found, Incoming/Content.html will be used
@@ -211,15 +199,26 @@ namespace Synapse.QtClient
 			 * If FileTransfer.html isn't found, a modified version of Status.html will be used 
 			 */
 			
-			this.m_StatusHtml              = File.ReadAllText(statusPath);
-			this.m_IncomingContentHtml     = File.ReadAllText(Util.JoinPath(incomingPath, "Content.html"));
-			this.m_IncomingNextContentHtml = File.Exists(incomingNextContentPath) ? File.ReadAllText(incomingNextContentPath) : this.m_IncomingContentHtml;
-			this.m_IncomingContextHtml     = File.Exists(incomingContextPath)     ? File.ReadAllText(incomingContextPath)     : this.m_IncomingContentHtml;
-			this.m_IncomingNextContextHtml = File.Exists(incomingNextContextPath) ? File.ReadAllText(incomingNextContextPath) : this.m_IncomingNextContentHtml;
-			this.m_OutgoingContentHtml     = File.Exists(outgoingContentPath)     ? File.ReadAllText(outgoingContentPath)     : this.m_IncomingContentHtml;
-			this.m_OutgoingNextContentHtml = File.Exists(outgoingNextContentPath) ? File.ReadAllText(outgoingNextContentPath) : this.m_OutgoingContentHtml;
-			this.m_OutgoingContextHtml     = File.Exists(outgoingContextPath)     ? File.ReadAllText(outgoingContextPath)     : this.m_OutgoingContentHtml;
-			this.m_OutgoingNextContextHtml = File.Exists(incomingContextPath)     ? File.ReadAllText(incomingContextPath)     : this.m_OutgoingNextContentHtml;
+			this.m_StatusHtml         = File.ReadAllText(statusPath);
+			this.m_ContentInHtml      = File.ReadAllText(Util.JoinPath(incomingPath, "Content.html"));
+			this.m_NextContentInHtml  = File.Exists(incomingNextContentPath) ? File.ReadAllText(incomingNextContentPath) : this.m_ContentInHtml;
+			this.m_ContextInHtml      = File.Exists(incomingContextPath)     ? File.ReadAllText(incomingContextPath)     : this.m_ContentInHtml;
+			this.m_NextContextInHtml  = File.Exists(incomingNextContextPath) ? File.ReadAllText(incomingNextContextPath) : this.m_NextContentInHtml;
+			this.m_ContentOutHtml     = File.Exists(outgoingContentPath)     ? File.ReadAllText(outgoingContentPath)     : this.m_ContentInHtml;
+			this.m_NextContentOutHtml = File.Exists(outgoingNextContentPath) ? File.ReadAllText(outgoingNextContentPath) : this.m_ContentOutHtml;
+			this.m_ContextOutHtml     = File.Exists(outgoingContextPath)     ? File.ReadAllText(outgoingContextPath)     : this.m_ContentOutHtml;
+			this.m_NextContextOutHtml = File.Exists(incomingContextPath)     ? File.ReadAllText(incomingContextPath)     : this.m_NextContentOutHtml;
+
+			if (File.Exists(filetransferRequestPath)) {
+				this.m_FileTransferHtml = File.ReadAllText(filetransferRequestPath);
+				// FIXME:
+				/*
+				[fileTransferHTMLTemplate replaceKeyword:@"%message%"
+							 	   	          withString:@"<p><img src=\"%fileIconPath%\" style=\"width:32px; height:32px; vertical-align:middle;\"></img><input type=\"button\" onclick=\"%saveFileAsHandler%\" value=\"Download %fileName%\"></p>"];
+				[fileTransferHTMLTemplate replaceKeyword:@"Download %fileName%"
+						                      withString:[NSString stringWithFormat:AILocalizedString(@"Download %@", "%@ will be a file name"), @"%fileName%"]];
+				*/
+			}
 			
 			OnJavaScriptWindowObjectCleared();
 
@@ -286,12 +285,119 @@ namespace Synapse.QtClient
 		}
 		
 		#region Private Methods
+		string ScriptForAppendingContent(AbstractChatContent content, bool contentIsSimilar, bool willAddMoreContentObjects, bool replaceLastContent)
+		{
+			string newHTML = null;
+			string script;
+
+			if (!m_CombineConsecutive) contentIsSimilar = false;
+
+			newHTML = TemplateForContent(content, contentIsSimilar);
+			newHTML = FillKeywords(newHTML, content, contentIsSimilar);
+
+			if (!m_UsingCustomTemplateHtml || StyleVersion >= 4) {
+				if (replaceLastContent)
+					script = REPLACE_LAST_MESSAGE;
+				else if (willAddMoreContentObjects) {
+					script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_NO_SCROLL : APPEND_MESSAGE_NO_SCROLL);
+				} else {
+					script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
+				}
+			} else if (StyleVersion >= 3) {
+				if (willAddMoreContentObjects) {
+					script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_NO_SCROLL : APPEND_MESSAGE_NO_SCROLL);
+				} else {
+					script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
+				}
+			} else if (StyleVersion >= 1) {
+				script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
+			} else {
+				if (m_UsingCustomTemplateHtml && content is ChatContentStatus) {
+					script = APPEND_MESSAGE_WITH_SCROLL;
+				} else {
+					script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_WITH_SCROLL : APPEND_MESSAGE_WITH_SCROLL);
+				}
+			}
+
+			return String.Format(script, Util.EscapeJavascript(newHTML));
+		}
+
+		string TemplateForContent (AbstractChatContent content, bool contentIsSimilar)
+		{
+			string template = null;
+			if (content.Type == ChatContentType.Message || content.Type == ChatContentType.Notification) {
+				if (content.IsOutgoing) {
+					template = (contentIsSimilar ? m_NextContentOutHtml : m_ContentOutHtml);
+				} else {
+					template = (contentIsSimilar ? m_NextContentInHtml : m_ContentInHtml);
+				}
+			} else if (content.Type == ChatContentType.Context) {
+				if (content.IsOutgoing) {
+					template = (contentIsSimilar ? m_NextContextOutHtml : m_ContextOutHtml);
+				} else {
+					template = (contentIsSimilar ? m_NextContextInHtml : m_ContextInHtml);
+				}
+			} else if (content.Type == ChatContentType.FileTransfer) {
+				template = m_FileTransferHtml;
+			} else {
+				template = m_StatusHtml;
+			}
+			return template;
+		}
+
+		string FillKeywords (string inString, AbstractChatContent content, bool contentIsSimilar)
+		{
+			inString = inString.Replace("%time%", content.Date.ToShortTimeString());
+			inString = inString.Replace("%shortTime%", content.Date.ToString("%h:%m"));
+
+			string senderStatusIcon = (content.Source != null) ? String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(content.Source.Bare)) : String.Empty;
+			inString = inString.Replace("%senderStatusIcon%", senderStatusIcon);
+
+			// FIXME do %localized{x}% replacements
+
+			inString = inString.Replace("%messageClasses%", (contentIsSimilar ? "consecutive " : "") + String.Join(" ", content.DisplayClasses));
+
+			// FIXME: sender colors
+
+			inString = inString.Replace("%messageDirection%", inString.Contains("<DIV dir=\"rtl\">") ? "rtl" : "ltr");
+
+			Regex regex = new Regex(@"%time\{(.*)\}%");
+			inString = regex.Replace(inString, delegate (Match match) {
+				string pattern = match.Groups[1].Value;
+				return Util.Strftime(pattern, content.Date);
+			});
+			
+			if (content is ChatContentMessage) {
+				string userStatusIcon = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(content.Destination.Bare));
+				
+				inString = inString.Replace("%userIconPath%", userStatusIcon);
+				inString = inString.Replace("%senderScreenName%", content.Source.ToString());
+				inString = inString.Replace("%sender%", content.Account.GetDisplayName(content.Source));
+				inString = inString.Replace("%senderDisplayName%", content.Account.GetDisplayName(content.Source));
+				inString = inString.Replace("%service%", String.Empty);
+
+				// FIXME: %textbackgroundcolor{
+
+				// FIXME: File transfers
+								
+			} else if (content is ChatContentStatus) {
+				inString = inString.Replace("%status%", ((ChatContentStatus)content).StatusType);
+				inString = inString.Replace("%statusSender%", (content.Source != null) ? content.Source.ToString() : String.Empty);
+
+				// FIXME: %statusPhrase%
+			}
+			
+			inString = inString.Replace("%message%", content.MessageHtml);
+			
+			return inString;
+		}
+		
 		void HandleLinkClicked (QUrl url)
 		{
 			Gui.Open(url);
 		}
 		
-		private string FormatBaseTemplate(PList themeProperties, string basePath, string mainPath, string variantPath, string headerHtml, string footerHtml)
+		string FormatBaseTemplate(PList themeProperties, string basePath, string mainPath, string variantPath, string headerHtml, string footerHtml)
 		{
 			mainPath = String.Format("@import url(\"{0}\");", mainPath);
 			
@@ -360,7 +466,7 @@ namespace Synapse.QtClient
 			return html;
 		}
 		              
-		private string FormatHeaderOrFooter(string headerTemplateHtml)
+		string FormatHeaderOrFooter(string headerTemplateHtml)
 		{
 			headerTemplateHtml = headerTemplateHtml.Replace("%chatName%", this.m_ChatName);
 			headerTemplateHtml = headerTemplateHtml.Replace("%sourceName%", this.m_SourceName);
@@ -375,59 +481,6 @@ namespace Synapse.QtClient
 			});
 		
 			return headerTemplateHtml;
-		}
-		
-		private string FormatMessage(string contentTemplate, string userIconPath,
-		                             string senderScreenName, string sender, 
-		                             string senderColor, string senderStatusIcon, 
-		                             string messageDirection, string senderDisplayName, 
-		                             string service, string message, DateTime time)
-		{
-			if (String.IsNullOrEmpty(contentTemplate))
-				throw new ArgumentNullException("contentTemplate");
-			
-			contentTemplate = contentTemplate.Replace("%userIconPath%", userIconPath);
-			contentTemplate = contentTemplate.Replace("%senderScreenName%", senderScreenName);
-			contentTemplate = contentTemplate.Replace("%sender%", sender);
-			contentTemplate = contentTemplate.Replace("%senderColor%", senderColor);
-			contentTemplate = contentTemplate.Replace("%senderStatusIcon%", senderStatusIcon);
-			contentTemplate = contentTemplate.Replace("%messageDirection%", messageDirection);
-			contentTemplate = contentTemplate.Replace("%senderDisplayName%", senderDisplayName);
-			contentTemplate = contentTemplate.Replace("%service%", service);
-			
-			Regex regex = new Regex(@"%textbackgroundcolor\{(.*)\}%");
-			contentTemplate = regex.Replace(contentTemplate, delegate (Match match) {
-				//Console.WriteLine(match.Groups[1].Value);
-				//throw new NotImplementedException();
-				return String.Empty;
-			});
-			
-			return FormatStatusOrMessage(contentTemplate, message, time, String.Empty); // XXX
-		}
-		
-		private string FormatStatus(string statusTemplate, string status, string message, DateTime time)
-		{
-			if (String.IsNullOrEmpty(statusTemplate))
-				throw new ArgumentNullException("statusTemplate");
-			
-			statusTemplate = statusTemplate.Replace("%status%", status);
-			return FormatStatusOrMessage(statusTemplate, message, time, String.Empty); // XXX
-		}
-		
-		private string FormatStatusOrMessage(string template, string message, DateTime time, string messageClasses)
-		{
-			template = template.Replace("%message%", message);
-			template = template.Replace("%time%", time.ToShortTimeString());
-			template = template.Replace("%shortTime%", time.ToString("%h:%m"));
-			template = template.Replace("%messageClasses%", messageClasses);
-			
-			Regex regex = new Regex(@"%time\{(.*)\}%");
-			template = regex.Replace(template, delegate (Match match) {
-				string pattern = match.Groups[1].Value;
-				return Util.Strftime(pattern, time);
-			});
-			
-			return template;
 		}
 		#endregion
 

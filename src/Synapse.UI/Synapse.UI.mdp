@@ -1,4 +1,4 @@
-<Project name="Synapse.UI" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
+<Project name="Synapse.UI" fileversion="2.0" language="C#" UseParentDirectoryAsNamespace="True" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug" assembly="Synapse.UI" />
@@ -64,6 +64,14 @@
     <File name="Synapse.UI.Views/IPreferencesWindowView.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Controllers/PreferencesWindowController.cs" subtype="Code" buildaction="Compile" />
     <File name="IAddinPreferencesFactory.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat" subtype="Directory" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/AbstractChatContent.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/ChatContentStatus.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/ChatContentContext.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/ChatContentMessage.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/ChatContentTyping.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/ChatContentNotification.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/ChatContentEvent.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

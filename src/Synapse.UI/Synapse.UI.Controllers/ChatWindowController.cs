@@ -56,7 +56,7 @@ namespace Synapse.UI.Controllers
 				base.View.TextEntered += HandleTextEntered;
 
 				if (account.ConnectionState == AccountConnectionState.Disconnected) {
-					base.View.AppendStatus(String.Empty, "You are offline.");
+					AppendStatus("You are offline.");
 					base.View.SetInputEnabled(false);
 				}	
 			});
@@ -66,10 +66,10 @@ namespace Synapse.UI.Controllers
 		{
 			Application.Invoke(delegate {
 				if (account.ConnectionState == AccountConnectionState.Connected) {
-					base.View.AppendStatus(String.Empty, "You are now online.");
+					AppendStatus("You are now online.");
 					base.View.SetInputEnabled(true);
 				} else if (account.ConnectionState == AccountConnectionState.Disconnected) {
-					base.View.AppendStatus(String.Empty, "You are now offline.");
+					AppendStatus("You are now offline.");
 					base.View.SetInputEnabled(false);
 				}
 			});
@@ -90,8 +90,8 @@ namespace Synapse.UI.Controllers
 			} else {
 				message = String.Format("{0} is now {1}.", fromName, Helper.GetPresenceDisplay(presence));
 			}
-			// FIXME: What to pass as the first arg?
-			AppendStatus(String.Empty, message);
+			
+			AppendStatus(message);
 		}
 
 		private void HandleTextEntered (string text)

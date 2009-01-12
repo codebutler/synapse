@@ -1,10 +1,12 @@
 //
-// IChatWindowView.cs
+// ChatContentNotification.cs
 // 
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
+//
+// Based on code from the Adium project.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,26 +22,35 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Synapse.UI.Chat;
+using Synapse.Xmpp;
+using jabber;
 
-namespace Synapse.UI.Views
-{
-	public delegate void TextEventHandler (string text);
-	
-	public interface IChatWindowView : IView
+namespace Synapse.UI.Chat
+{	
+	public class ChatContentNotification : ChatContentMessage
 	{
-		event TextEventHandler TextEntered;
-		event EventHandler Closed;
-
-		event EventHandler UrgencyHintChanged;
-
-		bool UrgencyHint {
-			get;
+		NotificationType m_NotificationType;
+		
+		public ChatContentNotification(Account account, JID source, JID destination, DateTime date, NotificationType type)
+			: base (account, source, destination, date)
+		{
+			m_NotificationType = type;
 		}
 
-		void AppendContent(AbstractChatContent content, bool contentIsSimilar, bool willAddMoreContentObjects,
-		                   bool replaceLastContent);
+		public NotificationType NotificationType {
+			get {
+				return m_NotificationType;
+			}
+		}
+		
+		public override ChatContentType Type {
+			get {
+				return ChatContentType.Notification;
+			}
+		}
+	}
 
-		void SetInputEnabled (bool enabled);
+	public enum NotificationType {
+		Default
 	}
 }

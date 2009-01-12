@@ -1,3 +1,4 @@
+
 //
 // ChatWindowController.cs
 // 
@@ -25,6 +26,7 @@ using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Xmpp;
 using Synapse.UI.Views;
+using Synapse.UI.Chat;
 using jabber;
 using jabber.connection;
 using jabber.protocol.client;
@@ -33,7 +35,7 @@ namespace Synapse.UI.Controllers
 {	
 	public abstract class AbstractChatWindowController : AbstractController<IChatWindowView>
 	{
-		JID m_LastMessageJid;
+		AbstractChatContent m_PreviousContent;
 		
 		protected Account m_Account;
 		
@@ -79,18 +81,31 @@ namespace Synapse.UI.Controllers
 			
 			foreach (XmlNode child in msg) {
 				if (child.NamespaceURI == Namespace.ChatStates) {
+					TypingState? state = null;
+					string message = null;
 					if (child.Name == "active") {
-						AppendStatus("active", String.Format("{0} is paying attention.", from));
+						state = TypingState.NotTyping;
+						message = String.Format("{0} is paying attention.", from);
 					} else if (child.Name == "composing") {
-						AppendStatus("composing", String.Format("{0} is typing...", from));
+						state = TypingState.Typing;
+						message = String.Format("{0} is typing...", from);
 					} else if (child.Name == "paused") {
-						AppendStatus("paused", String.Format("{0} stopped typing.", from));
+						state = TypingState.EnteredText;
+						message = String.Format("{0} stopped typing.", from);
 					} else if (child.Name == "inactive") {
-						AppendStatus("inactive", String.Format("{0} is not paying attention.", from));
+						state = TypingState.NotTyping;
+						message = String.Format("{0} is not paying attention.", from);
 					} else if (child.Name == "gone") {
-						AppendStatus("gone", String.Format("{0} has left the conversation.", from));
+						state = TypingState.NotTyping;
+						message = String.Format("{0} has left the conversation.", from);
 					} else {
 						Console.WriteLine(String.Format("Unknown chatstate from {0}: {1}", from, child.Name));
+					}
+
+					if (state != null) {
+						var content = new ChatContentTyping(m_Account, null, null, state.Value);
+						content.MessageHtml = message;
+						AppendContent(content);
 					}
 				}
 			}
@@ -108,23 +123,35 @@ namespace Synapse.UI.Controllers
 					body = body.Replace("\r\n", "<br/>");
 					body = body.Replace("\n", "<br/>");
 				}
-			
-				iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(fromJid.Bare));
-			
-				Application.Invoke(delegate {	
-					bool isNext = (m_LastMessageJid == fromJid);
-					base.View.AppendMessage(incoming, isNext, iconPath, String.Empty, from, String.Empty,
-					                        String.Empty, from, body);
-					m_LastMessageJid = fromJid;
-				});
+
+				// FIXME: Add support for delayed message timestamps.
+				DateTime date = DateTime.Now;
+				
+				var content = new ChatContentMessage(m_Account, fromJid, msg.To, date);
+				content.MessageHtml = body;
+				AppendContent(content);
 			}
 		}
 		
-		public void AppendStatus (string status, string message)
+		public void AppendStatus (string message)
 		{
-			m_LastMessageJid = null;
+			var content = new ChatContentStatus(m_Account, null, null, DateTime.Now, String.Empty);
+			content.MessageHtml = message;
+			AppendContent(content);
+		}
+
+		void AppendContent (AbstractChatContent content)
+		{			
+			bool isSimilar   = m_PreviousContent != null && content.IsSimilarToContent(m_PreviousContent);
+			//bool replaceLast = m_PreviousContent is ChatContentStatus && 
+			//	               content is ChatContentStatus && 
+			//	               ((ChatContentStatus)m_PreviousContent).CoalescingKey == ((ChatContentStatus)content).CoalescingKey;
+			bool replaceLast = m_PreviousContent is ChatContentTyping;
+			
+			m_PreviousContent = content;
+			
 			Application.Invoke(delegate {
-				base.View.AppendStatus(status, message);
+				base.View.AppendContent(content, isSimilar, false, replaceLast);
 			});
 		}
 	}

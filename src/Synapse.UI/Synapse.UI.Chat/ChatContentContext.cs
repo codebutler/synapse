@@ -1,10 +1,12 @@
 //
-// IChatWindowView.cs
+// ChatContentContext.cs
 // 
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
+//
+// Based on code from the Adium project.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,26 +22,32 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Synapse.UI.Chat;
+using System.Collections.Generic;
+using Synapse.Xmpp;
+using jabber;
 
-namespace Synapse.UI.Views
+namespace Synapse.UI.Chat
 {
-	public delegate void TextEventHandler (string text);
-	
-	public interface IChatWindowView : IView
+	public class ChatContentContext : AbstractChatContent
 	{
-		event TextEventHandler TextEntered;
-		event EventHandler Closed;
-
-		event EventHandler UrgencyHintChanged;
-
-		bool UrgencyHint {
-			get;
+		public ChatContentContext(Account account, JID source, JID destination, DateTime date)
+			: base (account, source, destination, date)
+		{
+		}
+		
+		public override ChatContentType Type {
+			get {
+				return ChatContentType.Context;
+			}
 		}
 
-		void AppendContent(AbstractChatContent content, bool contentIsSimilar, bool willAddMoreContentObjects,
-		                   bool replaceLastContent);
-
-		void SetInputEnabled (bool enabled);
+		public override string[] DisplayClasses {
+			get {
+				var classes = new List<string>();
+				classes.AddRange(base.DisplayClasses);
+				classes.Add("history");
+				return classes.ToArray();
+			}
+		}
 	}
 }

@@ -73,17 +73,17 @@ namespace Synapse.UI.Controllers
 		void HandleOnSubjectChange(object sender, Message msg)
 		{
 			// FIXME: Show who set the subject. Handle null subject.
-			AppendStatus(null, String.Format("Subject is now: {0}", m_Room.Subject));
+			AppendStatus(String.Format("Subject is now: {0}", m_Room.Subject));
 		}
 
 		void HandleOnParticipantLeave(Room room, RoomParticipant participant)
 		{
-			AppendStatus(null, String.Format("{0} has left the room.", participant.Nick));	
+			AppendStatus(String.Format("{0} has left the room.", participant.Nick));	
 		}
 
 		void HandleOnParticipantJoin(Room room, RoomParticipant participant)
 		{
-			AppendStatus(null, String.Format("{0} has joined the room.", participant.Nick));
+			AppendStatus(String.Format("{0} has joined the room.", participant.Nick));
 		}
 
 		public Room Room {

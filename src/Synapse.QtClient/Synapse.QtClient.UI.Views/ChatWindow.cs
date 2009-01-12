@@ -27,6 +27,7 @@ using Synapse.UI.Views;
 using Synapse.UI.Controllers;
 using Synapse.UI;
 using Synapse.UI.Actions.ExtensionNodes;
+using Synapse.UI.Chat;
 using Synapse.QtClient;
 using jabber.connection;
 using Mono.Addins;
@@ -113,20 +114,12 @@ public partial class ChatWindow : QWidget, IChatWindowView
 		}
 	}
 
-	public void AppendStatus (string status, string message)
+	public void AppendContent(AbstractChatContent content, bool contentIsSimilar, bool willAddMoreContentObjects, 
+	                          bool replaceLastContent)
 	{
-		m_ConversationWidget.AppendStatus(status, message);
-	}
-	
-	public void AppendMessage(bool incoming, bool next, string userIconPath, string senderScreenName, string sender,
-	                          string senderColor, string senderStatusIcon, string senderDisplayName,
-	                          string message)
-	{
-			
-		m_ConversationWidget.AppendMessage(incoming, next, userIconPath, senderScreenName, sender, senderColor,
-		                                   senderStatusIcon, senderDisplayName, message);
+		m_ConversationWidget.AppendContent(content, contentIsSimilar, willAddMoreContentObjects, replaceLastContent);
 
-		if (!IsActive) {
+		if (content is ChatContentMessage && !IsActive) {
 			UrgencyHint = true;
 		}
 	}

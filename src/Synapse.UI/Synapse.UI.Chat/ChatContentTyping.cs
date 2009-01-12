@@ -1,10 +1,12 @@
 //
-// IChatWindowView.cs
+// ChatContentTyping.cs
 // 
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
+//
+// Based on code from the Adium project.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,26 +22,32 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Synapse.UI.Chat;
+using Synapse.Xmpp;
+using jabber;
 
-namespace Synapse.UI.Views
+namespace Synapse.UI.Chat
 {
-	public delegate void TextEventHandler (string text);
-	
-	public interface IChatWindowView : IView
+	public class ChatContentTyping : AbstractChatContent
 	{
-		event TextEventHandler TextEntered;
-		event EventHandler Closed;
-
-		event EventHandler UrgencyHintChanged;
-
-		bool UrgencyHint {
-			get;
+		TypingState m_TypingState;
+		
+		public ChatContentTyping (Account account, JID source, JID destination, TypingState state)
+			: base (account, source, destination)
+		{
+			m_TypingState = state;
 		}
 
-		void AppendContent(AbstractChatContent content, bool contentIsSimilar, bool willAddMoreContentObjects,
-		                   bool replaceLastContent);
+		public override ChatContentType Type {
+			get {
+				return ChatContentType.Typing;
+			}
+		}
+	}
 
-		void SetInputEnabled (bool enabled);
+	public enum TypingState
+	{
+		NotTyping,
+		Typing,
+		EnteredText
 	}
 }
