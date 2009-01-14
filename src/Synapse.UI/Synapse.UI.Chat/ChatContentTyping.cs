@@ -42,12 +42,37 @@ namespace Synapse.UI.Chat
 				return ChatContentType.Typing;
 			}
 		}
+
+		public override string MessageHtml {
+			get {
+				var from = base.Account.GetDisplayName(base.Source);
+				switch (m_TypingState) {
+				case TypingState.Active:
+					return String.Format("{0} is paying attention.", from);
+				case TypingState.Composing:
+					return String.Format("{0} is typing...", from);
+				case TypingState.Gone:
+					return String.Format("{0} has left the conversation.", from);
+				case TypingState.Inactive:
+					return String.Format("{0} is not paying attention.", from);
+				case TypingState.Paused:
+					return String.Format("{0} stopped typing.", from);
+				default:
+					return null;
+				}
+			}
+			set {
+				throw new InvalidOperationException();
+			}
+		}
 	}
 
 	public enum TypingState
 	{
-		NotTyping,
-		Typing,
-		EnteredText
+		Active,
+		Composing,
+		Paused,
+		Inactive,
+		Gone
 	}
 }

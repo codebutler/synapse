@@ -36,6 +36,7 @@ namespace Synapse.UI.Controllers
 	public abstract class AbstractChatWindowController : AbstractController<IChatWindowView>
 	{
 		AbstractChatContent m_PreviousContent;
+		ChatContentTyping   m_RemoteTypingState;
 		
 		protected Account m_Account;
 		
@@ -44,6 +45,15 @@ namespace Synapse.UI.Controllers
 		public Account Account {
 			get {
 				return m_Account;
+			}
+		}
+
+		public ChatContentTyping RemoteTypingState {
+			get {
+				return m_RemoteTypingState;
+			}
+			set {
+				m_RemoteTypingState = value;
 			}
 		}
 
@@ -82,30 +92,32 @@ namespace Synapse.UI.Controllers
 			foreach (XmlNode child in msg) {
 				if (child.NamespaceURI == Namespace.ChatStates) {
 					TypingState? state = null;
-					string message = null;
 					if (child.Name == "active") {
-						state = TypingState.NotTyping;
-						message = String.Format("{0} is paying attention.", from);
+						state = TypingState.Active;
+						
 					} else if (child.Name == "composing") {
-						state = TypingState.Typing;
-						message = String.Format("{0} is typing...", from);
+						state = TypingState.Composing;
 					} else if (child.Name == "paused") {
-						state = TypingState.EnteredText;
-						message = String.Format("{0} stopped typing.", from);
+						state = TypingState.Paused;
 					} else if (child.Name == "inactive") {
-						state = TypingState.NotTyping;
-						message = String.Format("{0} is not paying attention.", from);
+						state = TypingState.Inactive;
 					} else if (child.Name == "gone") {
-						state = TypingState.NotTyping;
-						message = String.Format("{0} has left the conversation.", from);
+						state = TypingState.Gone;
 					} else {
 						Console.WriteLine(String.Format("Unknown chatstate from {0}: {1}", from, child.Name));
 					}
 
 					if (state != null) {
-						var content = new ChatContentTyping(m_Account, null, null, state.Value);
-						content.MessageHtml = message;
-						AppendContent(content);
+						var typingContent = new ChatContentTyping(m_Account, null, null, state.Value);
+						
+						RemoteTypingState = typingContent;
+
+						// FIXME: It might be nice to offer this as an option, 
+						// but without a JS method to remove the last object, 
+						// it doesnt work well at all.
+						//AppendContent(content);
+					} else {
+						RemoteTypingState = null;
 					}
 				}
 			}
@@ -128,6 +140,7 @@ namespace Synapse.UI.Controllers
 				DateTime date = DateTime.Now;
 				
 				var content = new ChatContentMessage(m_Account, fromJid, msg.To, date);
+				content.IsOutgoing = (msg.From == null);
 				content.MessageHtml = body;
 				AppendContent(content);
 			}

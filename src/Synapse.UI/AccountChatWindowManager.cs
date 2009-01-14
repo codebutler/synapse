@@ -61,7 +61,9 @@ namespace Synapse.UI
 				ServiceManager.Get<GuiService>().RaiseChatWindowOpened(window, focus);
 			} else {
 				window = m_ChatWindows[jid.Bare];
-				ServiceManager.Get<GuiService>().RaiseChatWindowFocused(window);
+				if (focus) {
+					ServiceManager.Get<GuiService>().RaiseChatWindowFocused(window);
+				}
 			}
 			return window;
 		}

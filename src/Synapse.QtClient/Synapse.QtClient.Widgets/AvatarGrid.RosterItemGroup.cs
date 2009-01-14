@@ -204,6 +204,10 @@ namespace Synapse.QtClient.Widgets
 			protected override void MouseMoveEvent (Qyoto.QGraphicsSceneMouseEvent evnt)
 			{
 				if (m_LeftButtonDown) {
+
+					if (evnt.Pos().Y() > m_Grid.HeaderHeight)
+						return;
+					
 					var app = ((QApplication)QApplication.Instance());
 					if (new QLineF(evnt.ScreenPos(), evnt.ButtonDownScreenPos(Qt.MouseButton.LeftButton))
 					.Length() < app.StartDragDistance) {

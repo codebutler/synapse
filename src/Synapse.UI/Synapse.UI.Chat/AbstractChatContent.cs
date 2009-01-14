@@ -56,7 +56,7 @@ namespace Synapse.UI.Chat
 			m_Date        = date;
 		}
 		
-		public string MessageHtml {
+		public virtual string MessageHtml {
 			get {
 				return m_MessageHtml;
 			}

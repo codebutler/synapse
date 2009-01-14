@@ -182,6 +182,7 @@ namespace Synapse.QtClient
 			
 			// Load other templates
 			string statusPath              = Util.JoinPath(resourcesPath, "Status.html");
+			string incomingContentPath     = Util.JoinPath(incomingPath, "Content.html");
 			string incomingNextContentPath = Util.JoinPath(incomingPath, "NextContent.html");
 			string outgoingContentPath     = Util.JoinPath(outgoingPath, "Content.html");
 			string outgoingNextContentPath = Util.JoinPath(outgoingPath, "NextContent.html");
@@ -200,7 +201,7 @@ namespace Synapse.QtClient
 			 */
 			
 			this.m_StatusHtml         = File.ReadAllText(statusPath);
-			this.m_ContentInHtml      = File.ReadAllText(Util.JoinPath(incomingPath, "Content.html"));
+			this.m_ContentInHtml      = File.ReadAllText(incomingContentPath);
 			this.m_NextContentInHtml  = File.Exists(incomingNextContentPath) ? File.ReadAllText(incomingNextContentPath) : this.m_ContentInHtml;
 			this.m_ContextInHtml      = File.Exists(incomingContextPath)     ? File.ReadAllText(incomingContextPath)     : this.m_ContentInHtml;
 			this.m_NextContextInHtml  = File.Exists(incomingNextContextPath) ? File.ReadAllText(incomingNextContextPath) : this.m_NextContentInHtml;
@@ -208,7 +209,7 @@ namespace Synapse.QtClient
 			this.m_NextContentOutHtml = File.Exists(outgoingNextContentPath) ? File.ReadAllText(outgoingNextContentPath) : this.m_ContentOutHtml;
 			this.m_ContextOutHtml     = File.Exists(outgoingContextPath)     ? File.ReadAllText(outgoingContextPath)     : this.m_ContentOutHtml;
 			this.m_NextContextOutHtml = File.Exists(incomingContextPath)     ? File.ReadAllText(incomingContextPath)     : this.m_NextContentOutHtml;
-
+			
 			if (File.Exists(filetransferRequestPath)) {
 				this.m_FileTransferHtml = File.ReadAllText(filetransferRequestPath);
 				// FIXME:
@@ -368,7 +369,7 @@ namespace Synapse.QtClient
 			});
 			
 			if (content is ChatContentMessage) {
-				string userStatusIcon = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(content.Destination.Bare));
+				string userStatusIcon = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(content.Source.Bare));
 				
 				inString = inString.Replace("%userIconPath%", userStatusIcon);
 				inString = inString.Replace("%senderScreenName%", content.Source.ToString());

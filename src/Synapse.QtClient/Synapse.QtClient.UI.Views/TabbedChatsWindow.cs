@@ -154,7 +154,8 @@ namespace Synapse.QtClient
 			m_Tabs.SetCurrentIndex(newIndex);
 			if (this.Minimized)
 				this.ShowNormal();
-			this.SetFocus();			
+			
+			((QWidget)window.View).SetFocus();
 		}
 
 		public void RemoveChatWindow (AbstractChatWindowController window)
