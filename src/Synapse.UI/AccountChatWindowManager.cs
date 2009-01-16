@@ -78,10 +78,13 @@ namespace Synapse.UI
 
 		void HandleOnMessage (object sender, Message message)
 		{
-			// FIXME: Don't open a new window if the message is just a chatstate.
 			if (message.Type == MessageType.chat) {
-				ChatWindowController window = OpenChatWindow(message.From, false);
-				window.AppendMessage(message);
+				// Make sure we don't open a new window if all we've got is a chatstate.
+				// Some people like a "psycic" mode though, so this should be configurable.
+				if (m_ChatWindows.ContainsKey(message.From.Bare) || (message.Body != null || message.Html != null )) {
+					ChatWindowController window = OpenChatWindow(message.From, false);
+					window.AppendMessage(message);
+				}
 			}
 		}	
 		
