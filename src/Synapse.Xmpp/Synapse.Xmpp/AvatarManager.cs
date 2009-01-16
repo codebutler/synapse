@@ -33,6 +33,8 @@ using jabber.protocol.iq;
 
 namespace Synapse.Xmpp
 {
+	public delegate void AvatarEventHandler (string jid, string avatarHash);
+	
 	public class AvatarManager
 	{
 		static string s_AvatarPath;
@@ -46,6 +48,8 @@ namespace Synapse.Xmpp
 		static object s_DefaultAvatarImage;
 		
 		Account m_Account;
+
+		public event AvatarEventHandler AvatarUpdated;
 		
 		static AvatarManager ()
 		{
@@ -63,7 +67,15 @@ namespace Synapse.Xmpp
 		public AvatarManager(Account account)
 		{
 			account.Client.OnPresence += HandleOnPresence;
+			account.ConnectionStateChanged += HandleConnectionStateChanged;
 			m_Account = account;	
+		}
+
+		void HandleConnectionStateChanged(Account account)
+		{
+			if (account.ConnectionState == AccountConnectionState.Connected) {
+				UpdateAvatar(account.Jid.Bare, null);
+			}
 		}
 
 		public static string GetAvatarHash (JID jid)
@@ -126,7 +138,10 @@ namespace Synapse.Xmpp
 
 		static bool AvatarExists(string hash)
 		{
-			return File.Exists(AvatarFileName(hash));
+			if (String.IsNullOrEmpty(hash))
+				return false;
+			else
+				return File.Exists(AvatarFileName(hash));
 		}
 
 		static string AvatarFileName(string hash)
@@ -140,22 +155,24 @@ namespace Synapse.Xmpp
 			VCardIQ iq = new VCardIQ(m_Account.Client.Document);
 			iq.Type = IQType.get;
 			iq.To = jid;
-			iq.AddChild(new VCard(m_Account.Client.Document));
-			
-			m_Account.Client.Tracker.BeginIQ(iq, HandleReceivedAvatar, expectedHash); 
+			m_Account.Client.Tracker.BeginIQ(iq, HandleReceivedAvatar, new [] { jid, expectedHash, }); 
 		}
 
 		void HandleReceivedAvatar (object o, IQ i, object data)
 		{
-			string expectedHash = (string)data;
+			string jid          = ((string[])data)[0];
+			string expectedHash = ((string[])data)[1];
 
 			VCard vcard = (VCard)i.FirstChild;
 			if (vcard.Photo != null) {
 				byte[] imageData = vcard.Photo.BinVal;
 				string hash = Util.SHA1(imageData);
 
-				if (hash == expectedHash) {
+				if (expectedHash == null || hash == expectedHash) {
 					vcard.Photo.Image.Save(AvatarFileName(hash), System.Drawing.Imaging.ImageFormat.Png);
+					if (AvatarUpdated != null) {
+						AvatarUpdated(jid, hash);
+					}
 				}
 			}
 		}

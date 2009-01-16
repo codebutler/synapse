@@ -64,6 +64,7 @@ namespace Synapse.QtClient.Widgets
 
 			public override void Paint (Qyoto.QPainter painter, Qyoto.QStyleOptionGraphicsItem option, Qyoto.QWidget widget)
 			{
+				painter.SetRenderHint(QPainter.RenderHint.Antialiasing, true);
 				int iconSize = m_Grid.IconSize;
 				
 				// Parent opacity overrides item opacity.
@@ -74,15 +75,25 @@ namespace Synapse.QtClient.Widgets
 					painter.SetOpacity(parentGroup.Opacity);
 				else
 					painter.SetOpacity(m_Opacity);
+
+				var roundedRectPath = new QPainterPath();
+				roundedRectPath.AddRoundedRect(0, 0, iconSize, iconSize, 5, 5);
+
+				painter.FillPath(roundedRectPath, new QBrush(new QColor("#FEFDFB")));
 				
 				QPixmap pixmap = (QPixmap)m_Grid.Model.GetImage(m_Item);				
-				if (pixmap != null)
+				if (pixmap != null) {
+					painter.Save();
+					painter.SetClipPath(roundedRectPath);					
 					painter.DrawPixmap(0, 0, iconSize, iconSize, pixmap);
-				else
-					painter.DrawRect(0, 0, iconSize, iconSize);
+					painter.Restore();
+				}
 
+				painter.SetPen(new QPen(new QBrush(new QColor("#CECECC")), 0.5 ));
+				painter.DrawPath(roundedRectPath);
+				
 				if (IsHover) {
-					painter.DrawRect(BoundingRect());
+					painter.DrawPath(roundedRectPath);
 				}
 				
 				if (m_Grid.ListMode) {

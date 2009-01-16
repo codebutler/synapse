@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Threading;
+using System.Xml;
 using jabber;
 using jabber.client;
 using jabber.connection;
@@ -58,6 +59,8 @@ namespace Synapse.Xmpp
 		AccountConnectionState m_State;
 		ClientStatus           m_Status;
 		ClientStatus           m_PendingStatus;
+
+		VCard m_MyVCard;
 		
 		JabberClient      m_Client;
 		CapsManager       m_CapsManager;
@@ -67,6 +70,7 @@ namespace Synapse.Xmpp
 		ConferenceManager m_ConferenceManager;
 		BookmarkManager   m_BookmarkManager;
 		PresenceManager   m_PresenceManager;
+		IQTracker         m_IQTracker;
 
 		AvatarManager     m_AvatarManager;
 		
@@ -78,6 +82,7 @@ namespace Synapse.Xmpp
 		public event AccountEventHandler Changed; // XXX: is this used?
 		public event AccountEventHandler ConnectionStateChanged;
 		public event AccountEventHandler StatusChanged;
+		public event EventHandler MyVCardUpdated;
 
 		public event AccountErrorEventHandler Error;
 		
@@ -147,6 +152,10 @@ namespace Synapse.Xmpp
 			m_PresenceManager.Stream = m_Client;
 
 			m_AvatarManager = new AvatarManager(this);
+
+			m_IQTracker = new IQTracker(m_Client);
+
+			m_Client.OnIQ += HandleOnIQ;
 			
 			// XXX: Don't hard-code this.
 			m_CapsManager.AddIdentity("Synapse 0.1", "client", "pc", "en_US");
@@ -161,6 +170,19 @@ namespace Synapse.Xmpp
 			AddFeature(new ChatStates(this));
 
 			ServiceManager.Get<NetworkService>().StateChange += HandleNetworkStateChanged;
+		}
+
+		void HandleOnIQ(object sender, IQ iq)
+		{
+			if (iq.Type == IQType.result && iq.FirstChild != null && 
+			    iq.FirstChild.Name == "vCard" && iq.From.Equals(this.Jid.BareJID)) 
+			{
+				var vcard = (VCard)iq.FirstChild;
+				m_MyVCard = vcard;
+
+				if (MyVCardUpdated != null)
+					MyVCardUpdated(this, EventArgs.Empty);
+			}
 		}
 
 		void HandleOnInvite(object sender, Message msg)
@@ -200,7 +222,7 @@ namespace Synapse.Xmpp
 			} else {
 				Status = new ClientStatus(ClientStatusType.Available, null);
 			}
-
+			
 			m_ConnectedAt = DateTime.Now;
 		}
 
@@ -373,6 +395,12 @@ namespace Synapse.Xmpp
 				return this.m_Roster;
 			}
 		}
+
+		public AvatarManager AvatarManager {
+			get {
+				return m_AvatarManager;
+			}
+		}
 		
 		public T GetFeature<T>()
 		{
@@ -401,6 +429,12 @@ namespace Synapse.Xmpp
 					m_Status = null;
 				}
 				OnStateChanged();
+			}
+		}
+
+		public VCard VCard {
+			get {
+				return m_MyVCard;
 			}
 		}
 		

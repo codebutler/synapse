@@ -28,6 +28,7 @@ using Synapse.UI;
 using Synapse.UI.Controllers;
 using Synapse.UI.Views;
 using Synapse.QtClient.UI.Views;
+using jabber;
 
 public partial class AccountStatusWidget : QWidget
 {
@@ -51,12 +52,17 @@ public partial class AccountStatusWidget : QWidget
 		
 		m_ParentWindow = parentWindow;
 
-		QPixmap pixmap = new QPixmap("resource:/default-avatar.png");
-		m_AvatarLabel.Pixmap = pixmap;
+		m_AvatarLabel.Cursor = new QCursor(CursorShape.PointingHandCursor);
+		m_AvatarLabel.Clicked += delegate {
+			var dialog = new AvatarSelectDialog(m_Account);
+			dialog.Show();
+		};
 			
 		m_Account = account;
 		m_Account.ConnectionStateChanged += OnAccountStateChanged;
 		m_Account.StatusChanged += OnAccountStateChanged;
+		m_Account.MyVCardUpdated += HandleMyVCardUpdated;
+		m_Account.AvatarManager.AvatarUpdated += HandleAvatarUpdated;
 		OnAccountStateChanged(account);
 
 		m_AccountMenu = new QMenu(this);
@@ -64,8 +70,11 @@ public partial class AccountStatusWidget : QWidget
 		QObject.Connect(m_AccountMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("HandleAccountMenuTriggered(QAction*)"));
 		m_ShowBrowserAction = new QAction("Show Browser", this);
 		m_AccountMenu.AddAction(m_ShowBrowserAction);
+
+		HandleAvatarUpdated(m_Account.Jid.Bare, null);
 		
-		m_NameLabel.Text = account.Jid.Bare;
+		HandleMyVCardUpdated(null, EventArgs.Empty);
+		m_NameLabel.TextFormat = TextFormat.RichText;
 		m_NameLabel.Clicked += HandleNameClicked;
 
 		m_PresenceMenu = new QMenu(this);
@@ -116,8 +125,9 @@ public partial class AccountStatusWidget : QWidget
 			}
 	
 			StringBuilder statusLabelBuilder = new StringBuilder();
-			
-			statusLabelBuilder.Append(@"<html><style>a { color: white; }</style><body>");
+
+			// FIXME: Read font size / color from theme:
+			statusLabelBuilder.Append(@"<html><style>a { font-size: 9pt; color: white; }</style><body>");
 			
 			if (statusText == null)
 				statusLabelBuilder.Append(String.Format("<a href=\"#show-presence-menu\">{0}</a>", text));
@@ -125,11 +135,48 @@ public partial class AccountStatusWidget : QWidget
 				statusLabelBuilder.Append(String.Format("<a href=\"#show-presence-menu\">{0}</a> - {1}", text, statusText));
 	
 			statusLabelBuilder.Append("</body></html>");
-	
+
 			m_StatusLabel.Text = statusLabelBuilder.ToString();
 		});
 	}
 
+	void HandleAvatarUpdated (string jid, string hash)
+	{
+		Application.Invoke(delegate {
+			if (jid == m_Account.Jid.Bare) {				
+				QPixmap pixmap = new QPixmap(32, 32);
+				pixmap.Fill(GlobalColor.transparent);
+
+				QPainterPath path = new QPainterPath();
+				path.AddRoundedRect(0, 0, 32, 32, 5, 5);
+				
+				QPainter painter = new QPainter(pixmap);
+				painter.SetRenderHint(QPainter.RenderHint.Antialiasing, true);
+				painter.SetClipPath(path);
+				painter.DrawPixmap(0, 0, 32, 32, (QPixmap)AvatarManager.GetAvatar(hash));
+				painter.SetClipping(false);
+
+				// FIXME: Do this only if the corner pixels are not transparent
+				//painter.SetPen(new QPen(new QBrush(new QColor("#CECECC")), 0.5 ));
+				//painter.DrawPath(path);
+				
+				painter.Dispose();
+
+				m_AvatarLabel.Pixmap = pixmap;
+			}
+		});
+	}
+	
+	void HandleMyVCardUpdated (object sender, EventArgs args)
+	{
+		Application.Invoke(delegate {
+			if (m_Account.VCard != null && !String.IsNullOrEmpty(m_Account.VCard.Nickname))
+				m_NameLabel.Text = m_Account.VCard.Nickname;
+			else
+				m_NameLabel.Text = m_Account.Jid.Bare;
+		});
+	}
+		
 	[Q_SLOT]
 	void on_m_StatusLabel_linkActivated(string link)
 	{

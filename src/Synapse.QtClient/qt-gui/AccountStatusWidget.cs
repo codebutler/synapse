@@ -14,7 +14,7 @@ using Qyoto;
 
 public partial class AccountStatusWidget : QWidget {
     
-    protected QLabel m_AvatarLabel;
+    protected Synapse.QtClient.Widgets.AvatarLabel m_AvatarLabel;
     
     protected Synapse.QtClient.Widgets.FadingQLabel m_NameLabel;
     
@@ -34,7 +34,7 @@ public partial class AccountStatusWidget : QWidget {
         horizontalLayout = new QHBoxLayout(this);
         horizontalLayout.Spacing = 6;
         horizontalLayout.SetContentsMargins(6, 0, 6, 6);
-        this.m_AvatarLabel = new QLabel(this);
+        this.m_AvatarLabel = new Synapse.QtClient.Widgets.AvatarLabel(this);
         this.m_AvatarLabel.ObjectName = "m_AvatarLabel";
         QSizePolicy m_AvatarLabel_sizePolicy;
         m_AvatarLabel_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed);
@@ -43,6 +43,7 @@ public partial class AccountStatusWidget : QWidget {
         m_AvatarLabel_sizePolicy.SetHeightForWidth(this.m_AvatarLabel.SizePolicy.HasHeightForWidth());
         this.m_AvatarLabel.SizePolicy = m_AvatarLabel_sizePolicy;
         this.m_AvatarLabel.MinimumSize = new QSize(32, 32);
+        this.m_AvatarLabel.MaximumSize = new QSize(32, 32);
         horizontalLayout.AddWidget(this.m_AvatarLabel);
         QVBoxLayout verticalLayout;
         verticalLayout = new QVBoxLayout();
@@ -51,7 +52,7 @@ public partial class AccountStatusWidget : QWidget {
         this.m_NameLabel = new Synapse.QtClient.Widgets.FadingQLabel(this);
         this.m_NameLabel.ObjectName = "m_NameLabel";
         this.m_NameLabel.Text = "test@localhost";
-        this.m_NameLabel.TextFormat = Qt.TextFormat.PlainText;
+        this.m_NameLabel.TextFormat = Qt.TextFormat.RichText;
         verticalLayout.AddWidget(this.m_NameLabel);
         this.m_StatusLabel = new QLabel(this);
         this.m_StatusLabel.ObjectName = "m_StatusLabel";

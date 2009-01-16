@@ -47,4 +47,8 @@
 		<Description>Resource providers</Description>
 		<ExtensionNodeSet id="Synapse.UI.ResourceProviderSet" />
 	</ExtensionPoint>
+
+	<ExtensionPoint path="/Synapse/UI/AvatarProviders">
+		<ExtensionNode name="AvatarProvider" />
+	</ExtensionPoint>
 </Addin>
