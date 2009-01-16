@@ -75,7 +75,7 @@
             </layout>
            </item>
            <item>
-            <widget class="Synapse.QtClient.Widgets.AvatarGrid&lt;Synapse.UI.AccountItemPair>" name="rosterGrid" >
+            <widget class="Synapse.QtClient.Widgets.AvatarGrid&lt;Synapse.UI.RosterItem>" name="rosterGrid" >
              <property name="frameShape" >
               <enum>QFrame::NoFrame</enum>
              </property>
@@ -531,7 +531,7 @@ p, li { white-space: pre-wrap; }
    <header>QtWebKit/QWebView</header>
   </customwidget>
   <customwidget>
-   <class>Synapse.QtClient.Widgets.AvatarGrid&lt;Synapse.UI.AccountItemPair></class>
+   <class>Synapse.QtClient.Widgets.AvatarGrid&lt;Synapse.UI.RosterItem></class>
    <extends>QGraphicsView</extends>
    <header>rostergrid.h</header>
   </customwidget>

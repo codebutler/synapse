@@ -212,10 +212,10 @@ public partial class RosterWidget : QWidget
 		});
 	}
 	
-	void HandleItemActivated (AvatarGrid<AccountItemPair> grid, AccountItemPair pair)
+	void HandleItemActivated (AvatarGrid<RosterItem> grid, RosterItem item)
 	{
 		// FIXME: Move to controller.
-		Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(pair.Account, pair.Item.JID);
+		Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(item.Account, item.Item.JID);
 	}
 	
 	#region Private Slots

@@ -35,20 +35,22 @@ using jabber.protocol.client;
 
 namespace Synapse.UI
 {
-	public class RosterAvatarGridModel : IAvatarGridModel<AccountItemPair>, IAvatarGridEditableModel<AccountItemPair>
+	public class RosterAvatarGridModel : IAvatarGridModel<RosterItem>, IAvatarGridEditableModel<RosterItem>
 	{
-		public event ItemEventHandler<AccountItemPair> ItemAdded;
-		public event ItemEventHandler<AccountItemPair> ItemRemoved;
-		public event ItemEventHandler<AccountItemPair> ItemChanged;
+		public event ItemEventHandler<RosterItem> ItemAdded;
+		public event ItemEventHandler<RosterItem> ItemRemoved;
+		public event ItemEventHandler<RosterItem> ItemChanged;
 		public event EventHandler Refreshed;
 		public event EventHandler ItemsChanged;
 
 		AccountService m_AccountService;
 		
-		bool   m_ShowOffline   = false;
-		bool   m_ModelUpdating = false;
-		string m_TextFilter    = null;
+		bool   m_ShowOffline    = false;
+		bool   m_ModelUpdating  = false;
 		bool   m_ShowTransports = false;
+		string m_TextFilter     = null;
+
+		Dictionary<Item, RosterItem> m_Items = new Dictionary<Item, RosterItem>();
 		Dictionary<string, int> m_GroupIndexes = new Dictionary<string, int>();
 		
 		public RosterAvatarGridModel()
@@ -96,22 +98,17 @@ namespace Synapse.UI
 			}
 		}
 		
-		public IEnumerable<AccountItemPair> Items {
+		public IEnumerable<RosterItem> Items {
 			get {
-				foreach (Account account in m_AccountService.Accounts) {
-					foreach (JID jid in account.Roster) {
-						Item item = account.Roster[jid];
-						yield return new AccountItemPair(account, item);
-					}
-				}
+				return m_Items.Values;
 			}
 		}
 		#endregion
 
 		#region Public Methods
-		public IEnumerable<string> GetItemGroups(AccountItemPair pair)
+		public IEnumerable<string> GetItemGroups(RosterItem item)
 		{
-			return pair.Item.GetGroups().Select(g => g.GroupName);
+			return item.Item.GetGroups().Select(g => g.GroupName);
 		}
 		
 		public int GetGroupOrder (string groupName)
@@ -129,14 +126,14 @@ namespace Synapse.UI
 			m_GroupIndexes[groupName] = groupOrder;
 		}
 
-		public void AddItemToGroup(AccountItemPair item, string groupName)
+		public void AddItemToGroup(RosterItem item, string groupName)
 		{
 			item.Item.AddGroup(groupName);
 			// FIXME: item.Account.Roster.Modify(item.Item);
 			OnItemChanged(item);
 		}
 		
-		public void RemoveItemFromGroup(AccountItemPair item, string groupName)
+		public void RemoveItemFromGroup(RosterItem item, string groupName)
 		{
 			item.Item.RemoveGroup(groupName);
 			// FIXME: item.Account.Roster.Modify(item.Item);
@@ -144,7 +141,7 @@ namespace Synapse.UI
 		}
 		
 		// FIXME: This needs to be cached.
-		public IEnumerable<AccountItemPair> GetItemsInGroup (string groupName)
+		public IEnumerable<RosterItem> GetItemsInGroup (string groupName)
 		{
 			foreach (var item in Items) {
 				if (item.Item.HasGroup(groupName)) {
@@ -153,34 +150,34 @@ namespace Synapse.UI
 			}
 		}
 
-		public object GetImage (AccountItemPair pair)
+		public object GetImage (RosterItem item)
 		{
-			return AvatarManager.GetAvatar(pair.Item.JID);
+			return AvatarManager.GetAvatar(item.Item.JID);
 		}
 
-		public string GetName (AccountItemPair pair)
+		public string GetName (RosterItem item)
 		{
-			return pair.Account.GetDisplayName(pair.Item.JID);
+			return item.Account.GetDisplayName(item.Item.JID);
 		}
 
-		public JID GetJID (AccountItemPair pair)
+		public JID GetJID (RosterItem item)
 		{
-			return pair.Item.JID;
+			return item.Item.JID;
 		}
 
-		public bool IsVisible (AccountItemPair pair)
+		public bool IsVisible (RosterItem item)
 		{
 			//bool showOffline = !String.IsNullOrEmpty(m_TextFilter) ? true : m_ShowOffline;
 			bool showOffline = m_ShowOffline;
-			return (String.IsNullOrEmpty(m_TextFilter) || MatchesFilter(pair)) &&
-			       (m_ShowTransports || !String.IsNullOrEmpty(pair.Item.JID.User)) &&
-				   (showOffline ? true : pair.Account.PresenceManager.IsAvailable(pair.Item.JID));
+			return (String.IsNullOrEmpty(m_TextFilter) || MatchesFilter(item)) &&
+			       (m_ShowTransports || !String.IsNullOrEmpty(item.Item.JID.User)) &&
+				   (showOffline ? true : item.Account.PresenceManager.IsAvailable(item.Item.JID));
 		}
 
-		public string GetPresenceInfo (AccountItemPair pair)
+		public string GetPresenceInfo (RosterItem item)
 		{
 			var builder = new StringBuilder();
-			var presences = pair.Account.PresenceManager.GetAll(pair.Item.JID);
+			var presences = item.Account.PresenceManager.GetAll(item.Item.JID);
 			if (presences.Length == 1) {
 				var presence = presences[0];
 				builder.AppendFormat("\n");
@@ -207,28 +204,34 @@ namespace Synapse.UI
 		#region Protected Methods
 		protected virtual void OnItemAdded (Account account, Item item)
 		{
+			var ritem = new RosterItem(account, item);
+			m_Items.Add(item, ritem);
+			
 			var evnt = ItemAdded;
 			if (evnt != null)
-				evnt(this, new AccountItemPair(account, item));
+				evnt(this, ritem);
 		}
 
 		protected virtual void OnItemRemoved (Account account, Item item)
 		{
+			var ritem = m_Items[item];
+			m_Items.Remove(item);
+			
 			var evnt = ItemRemoved;
 			if (evnt != null)
-				evnt(this, new AccountItemPair(account, item));
+				evnt(this, ritem);
 		}
 
 		protected virtual void OnItemChanged (Account account, Item item)
 		{
-			OnItemChanged(new AccountItemPair(account, item));
+			OnItemChanged(m_Items[item]);
 		}
 		
-		protected virtual void OnItemChanged (AccountItemPair pair)
+		protected virtual void OnItemChanged (RosterItem item)
 		{
 			var evnt = ItemChanged;
 			if (evnt != null)
-				evnt(this, pair);
+				evnt(this, item);
 		}
 
 		protected virtual void OnRefreshed ()
@@ -263,9 +266,13 @@ namespace Synapse.UI
 			};
 			
 			account.Client.OnPresence += delegate(object sender, Presence pres) {
-				Item item = account.Roster[pres.From.BareJID];
+				Item item = account.Roster[pres.From.BareJID];			
 				if (item != null) {
-					OnItemChanged(account, item);
+					if (!m_Items.ContainsKey(item)) {
+						OnItemAdded(account, item);
+					} else {
+						OnItemChanged(account, item);
+					}
 				}
 			};
 			
@@ -282,10 +289,10 @@ namespace Synapse.UI
 			};
 		}
 
-		bool MatchesFilter(AccountItemPair pair)
+		bool MatchesFilter(RosterItem item)
 		{
-			string name = GetName(pair);
-			JID jid = GetJID(pair);
+			string name = GetName(item);
+			JID jid = GetJID(item);
 			bool matchesName = (name != null) ? name.ToLower().Contains(m_TextFilter.ToLower()) : false;
 			bool matchesJid = (jid != null && jid.User != null) ? jid.User.Contains(m_TextFilter.ToLower()) : false;
 			return matchesName || matchesJid;
@@ -298,21 +305,26 @@ namespace Synapse.UI
 		#endregion
 	}
 	
-	public class AccountItemPair : Pair<Account, Item>
+	public class RosterItem
 	{
-		public AccountItemPair (Account account, Item item) : base (account, item)
+		Account m_Account;
+		Item    m_Item;
+		
+		public RosterItem (Account account, Item item)
 		{
+			m_Account = account;
+			m_Item    = item;
 		}
 
 		public Account Account {
 			get {
-				return base.First;
+				return m_Account;
 			}
 		}
 		
 		public Item Item {
 			get {
-				return base.Second;
+				return m_Item;
 			}
 		}
 	}

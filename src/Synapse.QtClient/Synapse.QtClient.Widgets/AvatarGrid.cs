@@ -41,7 +41,9 @@ namespace Synapse.QtClient.Widgets
 		QTimer               m_TooltipTimer;
 		
 		Dictionary<string, RosterItemGroup> m_Groups = new Dictionary<string, RosterItemGroup>();
-		List<RosterItem<T>> m_Items = new List<RosterItem<T>>();
+		
+		// item => { groupName => rosterItem }
+		Dictionary<T, Dictionary<string, RosterItem<T>>> m_Items = new Dictionary<T, Dictionary<string, RosterItem<T>>>();
 		
 		int  m_IconWidth    = 32;
 		int  m_HeaderHeight = 16;		
@@ -159,48 +161,53 @@ namespace Synapse.QtClient.Widgets
 		private void model_ItemRemoved (IAvatarGridModel<T> model, T item)
 		{
 			Application.Invoke(delegate {
-				foreach (var pair in m_Groups) {
-					QGraphicsItemGroup group = pair.Value;
-					foreach (QGraphicsItem gitem in group.Children()) {
-						if (gitem is RosterItem<T>) {
-							if (((RosterItem<T>)gitem).Item.Equals(item)) {
-								RemoveItem((RosterItem<T>)gitem);
-								break;
-							}
-						}
-					}
-				}
-				ResizeAndRepositionGroups();
+				RemoveItem(item);
 			});
 		}
 		
 		private void model_ItemChanged (IAvatarGridModel<T> model, T item)
 		{
-			// FIXME: Make this smarter.
-			model_ItemRemoved(model, item);
-			model_ItemAdded(model, item);
-			
-			/*
+			var s = Environment.StackTrace;
 			Application.Invoke(delegate {
 				bool visibilityChanged = false;
 				bool groupsChanged = false;
-				foreach (QGraphicsItem gitem in m_Scene.Items()) {
-					if (gitem is RosterItem<T>) {
-						if (((RosterItem<T>)gitem).Item.Equals(item)) {
+
+				List<string> toRemove = new List<string>();
+				
+				// Redraw existing items, check if item needs to be removed from any groups.
+				lock (m_Items) {					
+					foreach (RosterItem<T> gitem in m_Items[item].Values) {
+						RosterItemGroup group = (RosterItemGroup)gitem.ParentItem();
+						var groups = model.GetItemGroups(item);
+						if (groups.Contains(group.Name) || (groups.Count() == 0 && group.Name == "No Group")) {
 							if (model.IsVisible(item) != gitem.IsVisible()) {
-								ResizeAndRepositionGroups();
-								return;
-		 					} else {
+								visibilityChanged = true;
+							} else {
 								gitem.Update();
 							}
+						} else {
+							toRemove.Add(group.Name);
+							groupsChanged = true;
 						}
 					}
 				}
 				
-				if (visibilityChanged || groupsChanged)
+				foreach (string groupName in toRemove) {
+					RemoveItemFromGroup(item, groupName, false);
+				}
+				
+				// Check if item was added to any groups
+				foreach (string groupName in model.GetItemGroups(item)) {
+					if (!m_Items[item].ContainsKey(groupName)) {
+						AddItemToGroup(item, groupName, false);
+						groupsChanged = true;
+					}
+				}
+
+				if (visibilityChanged || groupsChanged) {
 					ResizeAndRepositionGroups();
+				}				
 			});
-			*/
 		}
 
 		private void model_Refreshed (object o, EventArgs args)
@@ -237,14 +244,16 @@ namespace Synapse.QtClient.Widgets
 
 		private void AddGroup (string groupName, bool resizeAndReposition)
 		{
-			if (!m_Groups.ContainsKey(groupName)) {
-				RosterItemGroup group = new RosterItemGroup(this, groupName);
-				group.SetVisible(false);
-				m_Scene.AddItem(group);
-				m_Groups.Add(groupName, group);
-
-				if (resizeAndReposition)
-					ResizeAndRepositionGroups();
+			lock (m_Groups) {
+				if (!m_Groups.ContainsKey(groupName)) {
+					RosterItemGroup group = new RosterItemGroup(this, groupName);
+					group.SetVisible(false);
+					m_Scene.AddItem(group);
+					m_Groups.Add(groupName, group);
+	
+					if (resizeAndReposition)
+						ResizeAndRepositionGroups();
+				}
 			}
 		}
 
@@ -255,12 +264,12 @@ namespace Synapse.QtClient.Widgets
 		}
 
 		void RemoveGroup (RosterItemGroup group)
-		{
+		{		
 			m_Groups.Remove(group.Name);
 
 			foreach (var child in group.Children()) {
 				if (child is RosterItem<T>)
-					RemoveItem((RosterItem<T>)child);
+					RemoveItemFromGroup(((RosterItem<T>)child).Item, group.Name, false);
 			}
 			m_Scene.DestroyItemGroup(group);
 
@@ -312,6 +321,8 @@ namespace Synapse.QtClient.Widgets
 		
 		void ResizeAndRepositionGroups ()
 		{
+			Console.WriteLine("ResizeAndReposition");
+			
 			int iconWidth  = (IconSize + IconPadding);
 			int iconHeight = (IconSize + IconPadding);
 			
@@ -436,45 +447,69 @@ namespace Synapse.QtClient.Widgets
 		}
 
 		void AddItem (T item, bool resizeAndReposition)
-		{
+		{			
 			var groups = m_Model.GetItemGroups(item);
 
 			// FIXME: Is there some sort of "Standard" name for this?
 			// Otherwise, perhaps they should be drawn outside of any group?
 			if (groups.Count() == 0)
 				groups = new string[] { "No Group" };
-			
-			lock (m_Groups) {
-				foreach (string groupName in groups) {
-					AddItemToGroup(item, groupName, resizeAndReposition);
-				}
+		
+			foreach (string groupName in groups) {
+				AddItemToGroup(item, groupName, resizeAndReposition);
+			}
 
-				if (resizeAndReposition)
-					ResizeAndRepositionGroups();
-			}			
+			if (resizeAndReposition)
+				ResizeAndRepositionGroups();
 		}
 
 		void AddItemToGroup (T item, string groupName, bool resizeAndReposition)
 		{
-			if (!m_Groups.ContainsKey(groupName))
-				AddGroup(groupName, resizeAndReposition);
-			
-			QGraphicsItemGroup group = m_Groups[groupName];
-			group.SetVisible(false);
+			lock (m_Groups) {
+				if (!m_Groups.ContainsKey(groupName))
+					AddGroup(groupName, resizeAndReposition);
+			}
 
-			RosterItem<T> graphicsItem = new RosterItem<T>(this, item, (uint)IconSize,
-			                                               (uint)IconSize, group);
-			m_Items.Add(graphicsItem);
-			graphicsItem.SetVisible(false);
-			group.AddToGroup(graphicsItem);
+			lock (m_Items) {
+				if (!m_Items.ContainsKey(item))
+					m_Items.Add(item, new Dictionary<string, RosterItem<T>>());
+	
+				if (m_Items[item].ContainsKey(groupName))
+				    throw new Exception("Already in group!");			
+				    
+				QGraphicsItemGroup group = m_Groups[groupName];
+				RosterItem<T> graphicsItem = new RosterItem<T>(this, item, (uint)IconSize, (uint)IconSize, group);
+				graphicsItem.SetVisible(false);
+				group.AddToGroup(graphicsItem);
+				m_Items[item].Add(groupName, graphicsItem);
+			}
 		}
 
-		void RemoveItem (RosterItem<T> item)
+		void RemoveItemFromGroup (T item, string groupName, bool resizeAndReposition)
+		{			
+			var graphicsItem = m_Items[item][groupName];
+			var group = (RosterItemGroup)graphicsItem.ParentItem();
+			group.RemoveFromGroup(graphicsItem);
+			m_Scene.RemoveItem(graphicsItem);
+			m_Items[item].Remove(groupName);
+			if (m_Items[item].Count == 0)
+				m_Items.Remove(item);
+
+			if (resizeAndReposition)
+				ResizeAndRepositionGroups();
+		}
+
+		void RemoveItem (T item)
 		{
-			var group = (RosterItemGroup)item.ParentItem();
-			group.RemoveFromGroup(item);
-			m_Scene.RemoveItem(item);
+			foreach (var gitem in m_Items[item].Values) {
+				var group = (RosterItemGroup)gitem.ParentItem();
+				group.RemoveFromGroup(gitem);
+				m_Scene.RemoveItem(gitem);
+			}
+			
 			m_Items.Remove(item);
+
+			ResizeAndRepositionGroups();
 
 			// FIXME: stuck in a loop
 			//if (group.ChildItems().Count == 0) {
