@@ -1,4 +1,4 @@
-<Project name="PasteBox" fileversion="2.0" language="C#" DefaultNamespace="Synapse.PasteBox" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
+<Project name="PasteBox" fileversion="2.0" language="C#" UseParentDirectoryAsNamespace="True" DefaultNamespace="Synapse.PasteBox" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug" assembly="PasteBox" />

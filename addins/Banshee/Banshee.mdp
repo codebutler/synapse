@@ -1,4 +1,4 @@
-<Project name="Banshee" fileversion="2.0" language="C#" targetFramework="3.5" ctype="DotNetProject">
+<Project name="Banshee" fileversion="2.0" language="C#" UseParentDirectoryAsNamespace="True" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug" assembly="BansheeNowPlayingProvider" />

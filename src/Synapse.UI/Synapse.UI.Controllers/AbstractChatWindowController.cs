@@ -145,7 +145,7 @@ namespace Synapse.UI.Controllers
 				AppendContent(content);
 			}
 		}
-		
+
 		public void AppendStatus (string message)
 		{
 			var content = new ChatContentStatus(m_Account, null, null, DateTime.Now, String.Empty);

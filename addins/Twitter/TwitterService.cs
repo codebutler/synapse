@@ -24,6 +24,7 @@ using System.Timers;
 using System.Linq;
 using System.Web;
 using System.Net;
+using System.Collections.Generic;
 using Synapse.ServiceStack;
 using Synapse.Xmpp.Services;
 using Synapse.Services;
@@ -34,7 +35,8 @@ namespace Synapse.Addins.TwitterAddin
 	public class TwitterService  : IExtensionService, IInitializeService
 	{
 		TwitterClient m_Twitter;
-		Timer m_Timer;
+		Timer         m_Timer;
+		List<int>     m_SeenIds = new List<int>();
 		
 		public void Initialize ()
 		{
@@ -110,7 +112,7 @@ namespace Synapse.Addins.TwitterAddin
 		public void Update (string status)
 		{
 			if (!String.IsNullOrEmpty(m_Twitter.Username) && !String.IsNullOrEmpty(m_Twitter.Password)) {
-				m_Twitter.Update(status);
+				AddStatus(m_Twitter.Update(status));
 			} else {
 				throw new Exception("No username/password");
 			}
@@ -119,11 +121,10 @@ namespace Synapse.Addins.TwitterAddin
 		void HandleElapsed(object sender, ElapsedEventArgs e)
 		{
 			try {
-				Console.WriteLine("Checking Twitter...");
-				var activityFeed = ServiceManager.Get<ActivityFeedService>();
+				Console.WriteLine("Checking Twitter... " + m_Twitter.FriendsTimelineLastCheckedAt.ToLocalTime().ToString());
 				var statuses = m_Twitter.FriendsAndRepliesAndMessages(true).OrderBy(s => s.CreatedAtDT);
 				foreach (var status in statuses) {
-					activityFeed.PostItem(new TwitterActivityFeedItem(status));
+					AddStatus(status);
 				}
 				
 			} catch (Exception ex) {
@@ -140,6 +141,21 @@ namespace Synapse.Addins.TwitterAddin
 				});
 			} else {
 				m_Timer.Stop();
+			}
+		}
+
+		void AddStatus (AbstractTwitterItem status)
+		{
+			if (!m_SeenIds.Contains(status.ID)) {
+				m_SeenIds.Add(status.ID);
+				
+				var item = new TwitterActivityFeedItem(status);
+				
+				Console.WriteLine("Adding Item! " + item.FromName  + " " + item.Content);
+	
+				
+				var activityFeed = ServiceManager.Get<ActivityFeedService>();
+				activityFeed.PostItem(item);
 			}
 		}
 		
