@@ -1,0 +1,15 @@
+<Addin id        = "Flickr"
+	   namespace = "Synapse"
+	   name      = "Flickr"
+	   author    = "Eric Butler"
+	   copyright = "GPLv3"
+	   version   = "0.1">
+
+	<Dependencies>
+		<Addin id="UI" version="1.0" />
+	</Dependencies>
+
+	<Extension path="/Synapse/UI/AvatarProviders">
+		<AvatarProvider class="Synapse.Addins.Flickr.FlickrAvatarProvider" />
+	</Extension>
+</Addin>

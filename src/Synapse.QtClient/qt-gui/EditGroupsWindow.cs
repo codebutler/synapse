@@ -27,7 +27,7 @@ public partial class EditGroupsWindow : QWidget {
         QVBoxLayout verticalLayout;
         verticalLayout = new QVBoxLayout(this);
         QSpacerItem verticalSpacer;
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
         verticalLayout.AddItem(verticalSpacer);
         this.label = new QLabel(this);
         this.label.ObjectName = "label";
@@ -54,7 +54,7 @@ public partial class EditGroupsWindow : QWidget {
         this.buttonBox.ObjectName = "buttonBox";
         verticalLayout.AddWidget(this.buttonBox);
         QSpacerItem verticalSpacer_2;
-        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
         verticalLayout.AddItem(verticalSpacer_2);
         QMetaObject.ConnectSlotsByName(this);
     }

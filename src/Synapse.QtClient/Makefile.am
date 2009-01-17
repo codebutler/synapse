@@ -180,7 +180,10 @@ FILES = \
 	EditAccountDialog.cs \
 	qt-gui/EditAccountDialog.cs \
 	JSDebugObject.cs \
-	Synapse.QtClient.UI.Views/PreferencesWindow.cs 
+	Synapse.QtClient.UI.Views/PreferencesWindow.cs \
+	AvatarSelectDialog.cs \
+	qt-gui/AvatarSelectDialog.cs \
+	Synapse.QtClient.Widgets/AvatarLabel.cs 
 
 DATA_FILES = 
 
@@ -200,7 +203,8 @@ RESOURCES = \
 	resources/effects.js \
 	gtk-gui/gui.stetic \
 	resources/friend-muclist.html \
-	resources/music-16.png 
+	resources/music-16.png \
+	resources/loading.gif 
 
 EXTRAS = \
 	synapse.qtclient.in 

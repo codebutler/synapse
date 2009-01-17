@@ -121,7 +121,6 @@ namespace Synapse.Addins.TwitterAddin
 		void HandleElapsed(object sender, ElapsedEventArgs e)
 		{
 			try {
-				Console.WriteLine("Checking Twitter... " + m_Twitter.FriendsTimelineLastCheckedAt.ToLocalTime().ToString());
 				var statuses = m_Twitter.FriendsAndRepliesAndMessages(true).OrderBy(s => s.CreatedAtDT);
 				foreach (var status in statuses) {
 					AddStatus(status);
@@ -150,9 +149,6 @@ namespace Synapse.Addins.TwitterAddin
 				m_SeenIds.Add(status.ID);
 				
 				var item = new TwitterActivityFeedItem(status);
-				
-				Console.WriteLine("Adding Item! " + item.FromName  + " " + item.Content);
-	
 				
 				var activityFeed = ServiceManager.Get<ActivityFeedService>();
 				activityFeed.PostItem(item);

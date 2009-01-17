@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>AvatarSelectDialog</string>
+   <string>Select Avatar</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2" >
    <item>
@@ -28,7 +28,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label" >
+        <widget class="QLabel" name="avatarLabel" >
          <property name="minimumSize" >
           <size>
            <width>48</width>
@@ -44,17 +44,20 @@
          <property name="text" >
           <string/>
          </property>
+         <property name="alignment" >
+          <set>Qt::AlignCenter</set>
+         </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2" >
+        <widget class="QPushButton" name="browseButton" >
          <property name="text" >
           <string>Select File...</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton" >
+        <widget class="QPushButton" name="clearButton" >
          <property name="text" >
           <string>Clear</string>
          </property>
@@ -97,7 +100,7 @@
           <widget class="QLineEdit" name="lineEdit" />
          </item>
          <item row="0" column="2" >
-          <widget class="QPushButton" name="pushButton_3" >
+          <widget class="QPushButton" name="searchButton" >
            <property name="text" >
             <string>Search</string>
            </property>
@@ -126,7 +129,6 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="6" />
- <includes/>
  <resources/>
  <connections/>
 </ui>

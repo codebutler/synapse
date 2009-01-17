@@ -139,7 +139,15 @@ FILES = \
 	Synapse.UI.Controllers/EditGroupsController.cs \
 	Synapse.UI.Views/IPreferencesWindowView.cs \
 	Synapse.UI.Controllers/PreferencesWindowController.cs \
-	IAddinPreferencesFactory.cs 
+	IAddinPreferencesFactory.cs \
+	Synapse.UI.Chat/AbstractChatContent.cs \
+	Synapse.UI.Chat/ChatContentStatus.cs \
+	Synapse.UI.Chat/ChatContentContext.cs \
+	Synapse.UI.Chat/ChatContentMessage.cs \
+	Synapse.UI.Chat/ChatContentTyping.cs \
+	Synapse.UI.Chat/ChatContentNotification.cs \
+	Synapse.UI.Chat/ChatContentEvent.cs \
+	IAvatarProvider.cs 
 
 DATA_FILES = 
 

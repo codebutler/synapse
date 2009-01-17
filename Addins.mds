@@ -4,21 +4,25 @@
       <Entry build="True" name="PasteBox" configuration="Debug" />
       <Entry build="True" name="Banshee" configuration="Debug" />
       <Entry build="True" name="Twitter" configuration="Debug" />
+      <Entry build="True" name="Flickr" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="PasteBox" configuration="Release" />
       <Entry build="True" name="Banshee" configuration="Release" />
       <Entry build="True" name="Twitter" configuration="Release" />
+      <Entry build="True" name="Flickr" configuration="Release" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="PasteBox" single="True">
     <Execute type="None" entry="PasteBox" />
     <Execute type="None" entry="Banshee" />
     <Execute type="None" entry="Twitter" />
+    <Execute type="None" entry="Flickr" />
   </StartMode>
   <Entries>
     <Entry filename="addins/PasteBox/PasteBox.mdp" />
     <Entry filename="addins/Banshee/Banshee.mdp" />
     <Entry filename="addins/Twitter/Twitter.mdp" />
+    <Entry filename="addins/Flickr/Flickr.mdp" />
   </Entries>
 </Combine>

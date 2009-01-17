@@ -169,8 +169,6 @@ namespace Twitter
 				url += "?" + argsString;
 				request = (HttpWebRequest)HttpWebRequest.Create(url);
 			}
-				
-			Console.WriteLine(url);
 			
 			request.Credentials = new NetworkCredential(Username, Password);
 			var response = request.GetResponse();

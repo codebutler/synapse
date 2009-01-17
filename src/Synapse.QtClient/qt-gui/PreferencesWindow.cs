@@ -220,7 +220,7 @@ public partial class PreferencesWindow : QWidget {
         gridLayout_4.AddWidget(this.label_6, 0, 0, 1, 1);
         verticalLayout_6.AddWidget(this.groupBox_4);
         QSpacerItem verticalSpacer_3;
-        verticalSpacer_3 = new QSpacerItem(20, 260, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        verticalSpacer_3 = new QSpacerItem(20, 260, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
         verticalLayout_6.AddItem(verticalSpacer_3);
         this.tabWidget.AddTab(this.tab_4, "General");
         this.tab_5 = new QWidget(this.tabWidget);
@@ -334,7 +334,7 @@ public partial class PreferencesWindow : QWidget {
         gridLayout_3.AddWidget(this.checkBox_5, 0, 0, 1, 1);
         verticalLayout_4.AddWidget(this.groupBox_2);
         QSpacerItem verticalSpacer;
-        verticalSpacer = new QSpacerItem(268, 17, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        verticalSpacer = new QSpacerItem(268, 17, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
         verticalLayout_4.AddItem(verticalSpacer);
         this.frame = new QFrame(this.tab_5);
         this.frame.ObjectName = "frame";

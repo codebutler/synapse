@@ -100,7 +100,7 @@ public partial class EditAccountDialog : QDialog {
         this.checkBox.Text = "Connect Automatically";
         verticalLayout_2.AddWidget(this.checkBox);
         QSpacerItem verticalSpacer;
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
         verticalLayout_2.AddItem(verticalSpacer);
         this.widget = new QWidget(this.tab);
         this.widget.ObjectName = "widget";
@@ -150,7 +150,7 @@ public partial class EditAccountDialog : QDialog {
         this.label_7.Alignment = global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignCenter");
         verticalLayout_3.AddWidget(this.label_7);
         QSpacerItem verticalSpacer_2;
-        verticalSpacer_2 = new QSpacerItem(20, 170, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        verticalSpacer_2 = new QSpacerItem(20, 170, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
         verticalLayout_3.AddItem(verticalSpacer_2);
         this.tabWidget.AddTab(this.tab_4, "Connection");
         this.tab_3 = new QWidget(this.tabWidget);

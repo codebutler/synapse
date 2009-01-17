@@ -54,8 +54,14 @@ public partial class AccountStatusWidget : QWidget
 
 		m_AvatarLabel.Cursor = new QCursor(CursorShape.PointingHandCursor);
 		m_AvatarLabel.Clicked += delegate {
-			var dialog = new AvatarSelectDialog(m_Account);
-			dialog.Show();
+			if (m_Account.ConnectionState == AccountConnectionState.Connected) {
+				var dialog = new AvatarSelectDialog(m_Account);
+				dialog.Show();
+			} else {
+				// FIXME: It really wouldn't be so hard to make this work. 
+				// On connect, check to see if it was changed and update server.
+				QMessageBox.Warning(this.TopLevelWidget(), "Synapse", "Cannot edit avatar when you're not connected.");
+			}
 		};
 			
 		m_Account = account;

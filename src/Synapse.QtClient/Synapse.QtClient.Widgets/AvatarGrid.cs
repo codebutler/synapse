@@ -320,9 +320,7 @@ namespace Synapse.QtClient.Widgets
 		}
 		
 		void ResizeAndRepositionGroups ()
-		{
-			Console.WriteLine("ResizeAndReposition");
-			
+		{			
 			int iconWidth  = (IconSize + IconPadding);
 			int iconHeight = (IconSize + IconPadding);
 			
@@ -429,7 +427,7 @@ namespace Synapse.QtClient.Widgets
 					
 					groupY += itemY;
 				}
-				
+								
 				// Update the scene's height
 				int newHeight = groupY;
 				var currentRect = m_Scene.SceneRect;

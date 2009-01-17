@@ -16,11 +16,11 @@ public partial class AvatarSelectDialog : QDialog {
     
     protected QLabel label_2;
     
-    protected QLabel label;
+    protected QLabel avatarLabel;
     
-    protected QPushButton pushButton_2;
+    protected QPushButton browseButton;
     
-    protected QPushButton pushButton;
+    protected QPushButton clearButton;
     
     protected QFrame line;
     
@@ -28,7 +28,7 @@ public partial class AvatarSelectDialog : QDialog {
     
     protected QLineEdit lineEdit;
     
-    protected QPushButton pushButton_3;
+    protected QPushButton searchButton;
     
     protected QTabWidget tabWidget;
     
@@ -37,7 +37,7 @@ public partial class AvatarSelectDialog : QDialog {
     protected void SetupUi() {
         base.ObjectName = "AvatarSelectDialog";
         this.Geometry = new QRect(0, 0, 468, 300);
-        this.WindowTitle = "AvatarSelectDialog";
+        this.WindowTitle = "Select Avatar";
         QVBoxLayout verticalLayout_2;
         verticalLayout_2 = new QVBoxLayout(this);
         QHBoxLayout horizontalLayout;
@@ -51,23 +51,24 @@ public partial class AvatarSelectDialog : QDialog {
         this.label_2.ObjectName = "label_2";
         this.label_2.Text = "Your Avatar:";
         verticalLayout_3.AddWidget(this.label_2);
-        this.label = new QLabel(this);
-        this.label.ObjectName = "label";
-        this.label.MinimumSize = new QSize(48, 96);
-        this.label.FrameShape = QFrame.Shape.StyledPanel;
-        this.label.FrameShadow = QFrame.Shadow.Raised;
-        this.label.Text = "";
-        verticalLayout_3.AddWidget(this.label);
-        this.pushButton_2 = new QPushButton(this);
-        this.pushButton_2.ObjectName = "pushButton_2";
-        this.pushButton_2.Text = "Select File...";
-        verticalLayout_3.AddWidget(this.pushButton_2);
-        this.pushButton = new QPushButton(this);
-        this.pushButton.ObjectName = "pushButton";
-        this.pushButton.Text = "Clear";
-        verticalLayout_3.AddWidget(this.pushButton);
+        this.avatarLabel = new QLabel(this);
+        this.avatarLabel.ObjectName = "avatarLabel";
+        this.avatarLabel.MinimumSize = new QSize(48, 96);
+        this.avatarLabel.FrameShape = QFrame.Shape.StyledPanel;
+        this.avatarLabel.FrameShadow = QFrame.Shadow.Raised;
+        this.avatarLabel.Text = "";
+        this.avatarLabel.Alignment = global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignCenter");
+        verticalLayout_3.AddWidget(this.avatarLabel);
+        this.browseButton = new QPushButton(this);
+        this.browseButton.ObjectName = "browseButton";
+        this.browseButton.Text = "Select File...";
+        verticalLayout_3.AddWidget(this.browseButton);
+        this.clearButton = new QPushButton(this);
+        this.clearButton.ObjectName = "clearButton";
+        this.clearButton.Text = "Clear";
+        verticalLayout_3.AddWidget(this.clearButton);
         QSpacerItem verticalSpacer;
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
         verticalLayout_3.AddItem(verticalSpacer);
         this.line = new QFrame(this);
         this.line.ObjectName = "line";
@@ -87,10 +88,10 @@ public partial class AvatarSelectDialog : QDialog {
         this.lineEdit = new QLineEdit(this);
         this.lineEdit.ObjectName = "lineEdit";
         gridLayout.AddWidget(this.lineEdit, 0, 1, 1, 1);
-        this.pushButton_3 = new QPushButton(this);
-        this.pushButton_3.ObjectName = "pushButton_3";
-        this.pushButton_3.Text = "Search";
-        gridLayout.AddWidget(this.pushButton_3, 0, 2, 1, 1);
+        this.searchButton = new QPushButton(this);
+        this.searchButton.ObjectName = "searchButton";
+        this.searchButton.Text = "Search";
+        gridLayout.AddWidget(this.searchButton, 0, 2, 1, 1);
         this.tabWidget = new QTabWidget(this);
         this.tabWidget.ObjectName = "tabWidget";
         this.tabWidget.CurrentIndex = -1;
