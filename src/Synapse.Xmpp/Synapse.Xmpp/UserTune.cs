@@ -62,8 +62,6 @@ namespace Synapse.Xmpp
 		
 		private void ReceivedTune (JID from, string node, PubSubItem item)
 		{
-			Console.WriteLine("RECEIVED TUNE:");
-			Console.WriteLine(item);
 			Tune tune = (Tune)item["tune"];
 			m_FriendTunes[from.Bare] = tune;
 			if (!String.IsNullOrEmpty(tune.Artist) && !String.IsNullOrEmpty(tune.Title)) {

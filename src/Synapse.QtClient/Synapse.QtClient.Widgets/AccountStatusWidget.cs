@@ -45,6 +45,8 @@ public partial class AccountStatusWidget : QWidget
 	QAction m_ExtendedAwayAction;
 	QAction m_DoNotDisturbAction;
 	QAction m_OfflineAction;
+
+	AvatarSelectDialog m_AvatarDialog;
 	
 	public AccountStatusWidget(Account account, RosterWidget parent, MainWindow parentWindow) : base (parent)
 	{
@@ -52,11 +54,13 @@ public partial class AccountStatusWidget : QWidget
 		
 		m_ParentWindow = parentWindow;
 
+		m_AvatarDialog = new AvatarSelectDialog(account);
+		
 		m_AvatarLabel.Cursor = new QCursor(CursorShape.PointingHandCursor);
 		m_AvatarLabel.Clicked += delegate {
 			if (m_Account.ConnectionState == AccountConnectionState.Connected) {
-				var dialog = new AvatarSelectDialog(m_Account);
-				dialog.Show();
+				m_AvatarDialog.Show();
+				m_AvatarDialog.ActivateWindow();
 			} else {
 				// FIXME: It really wouldn't be so hard to make this work. 
 				// On connect, check to see if it was changed and update server.

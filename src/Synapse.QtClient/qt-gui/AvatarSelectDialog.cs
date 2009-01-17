@@ -36,7 +36,7 @@ public partial class AvatarSelectDialog : QDialog {
     
     protected void SetupUi() {
         base.ObjectName = "AvatarSelectDialog";
-        this.Geometry = new QRect(0, 0, 468, 300);
+        this.Geometry = new QRect(0, 0, 542, 361);
         this.WindowTitle = "Select Avatar";
         QVBoxLayout verticalLayout_2;
         verticalLayout_2 = new QVBoxLayout(this);
@@ -84,6 +84,7 @@ public partial class AvatarSelectDialog : QDialog {
         this.label_3 = new QLabel(this);
         this.label_3.ObjectName = "label_3";
         this.label_3.Text = "Search:";
+        this.label_3.SetBuddy(lineEdit);
         gridLayout.AddWidget(this.label_3, 0, 0, 1, 1);
         this.lineEdit = new QLineEdit(this);
         this.lineEdit.ObjectName = "lineEdit";
@@ -91,6 +92,7 @@ public partial class AvatarSelectDialog : QDialog {
         this.searchButton = new QPushButton(this);
         this.searchButton.ObjectName = "searchButton";
         this.searchButton.Text = "Search";
+        this.searchButton.Default = true;
         gridLayout.AddWidget(this.searchButton, 0, 2, 1, 1);
         this.tabWidget = new QTabWidget(this);
         this.tabWidget.ObjectName = "tabWidget";
@@ -100,6 +102,7 @@ public partial class AvatarSelectDialog : QDialog {
         this.buttonBox.ObjectName = "buttonBox";
         this.buttonBox.StandardButtons = global::Qyoto.Qyoto.GetCPPEnumValue("QDialogButtonBox", "Close");
         verticalLayout_2.AddWidget(this.buttonBox);
+        QObject.Connect(buttonBox, Qt.SIGNAL("rejected()"), this, Qt.SLOT("reject()"));
         QMetaObject.ConnectSlotsByName(this);
     }
 }

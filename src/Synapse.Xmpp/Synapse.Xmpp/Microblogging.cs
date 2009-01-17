@@ -69,7 +69,6 @@ namespace Synapse.Xmpp
 		private void ReceivedMicroblog (JID from, string node, PubSubItem item)
 		{
 			XmlNode entry = item["entry"];
-			Console.WriteLine(entry.OuterXml);
 			if (entry["published"] != null && !String.IsNullOrEmpty(entry["published"].InnerText)) {
 				var publishedDate = DateTime.Parse(entry["published"].InnerText);
 				if ((DateTime.Now - publishedDate).TotalSeconds <= 60) {

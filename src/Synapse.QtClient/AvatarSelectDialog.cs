@@ -35,6 +35,9 @@ public partial class AvatarSelectDialog : QDialog
 	
 	public AvatarSelectDialog (Account account)
 	{
+		if (account == null)
+			throw new ArgumentNullException("account");
+		
 		SetupUi();
 
 		m_Account = account;
