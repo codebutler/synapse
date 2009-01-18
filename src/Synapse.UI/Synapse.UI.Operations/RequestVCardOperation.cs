@@ -37,7 +37,6 @@ namespace Synapse.UI.Operations
 		public RequestVCardOperation (Account account, JID jid) : base (account)
 		{
 			m_JID = jid;
-			base.ReplyReceived += HandleReplyReceived;
 		}
 
 		public override string Name { 
@@ -62,7 +61,7 @@ namespace Synapse.UI.Operations
 			base.Account.Client.Write(iq);
 		}
 
-		void HandleReplyReceived(IQ iq)
+		protected override void ReplyReceived (IQ iq)
 		{
 			if (iq.Type == IQType.result) {
 				m_Controller.Populate((VCard)iq.FirstChild);

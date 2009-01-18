@@ -68,6 +68,7 @@ namespace Synapse.Xmpp
 		{
 			account.Client.OnPresence += HandleOnPresence;
 			account.ConnectionStateChanged += HandleConnectionStateChanged;
+			account.MyVCardUpdated += HandleMyVCardUpdated;
 			m_Account = account;	
 		}
 
@@ -158,22 +159,42 @@ namespace Synapse.Xmpp
 			m_Account.Client.Tracker.BeginIQ(iq, HandleReceivedAvatar, new [] { jid, expectedHash, }); 
 		}
 
+		void HandleMyVCardUpdated(object sender, EventArgs e)
+		{
+			Account account = (Account)sender;
+			string hash = null;
+			if (account.VCard.Photo.BinVal != null) {
+				byte[] imageData = account.VCard.Photo.BinVal;
+				hash = Util.SHA1(imageData);
+				s_HashCache[account.Jid.Bare] = hash;
+			} else {
+				if (s_HashCache.ContainsKey(account.Jid.Bare))
+					s_HashCache.Remove(account.Jid.Bare);
+			}
+			
+			if (AvatarUpdated != null) {
+				AvatarUpdated(account.Jid.Bare, hash);
+			}
+		}
+
 		void HandleReceivedAvatar (object o, IQ i, object data)
 		{
 			string jid          = ((string[])data)[0];
 			string expectedHash = ((string[])data)[1];
 
 			VCard vcard = (VCard)i.FirstChild;
+			string hash = null;
 			if (vcard.Photo != null) {
 				byte[] imageData = vcard.Photo.BinVal;
-				string hash = Util.SHA1(imageData);
+				hash = Util.SHA1(imageData);
 
 				if (expectedHash == null || hash == expectedHash) {
 					vcard.Photo.Image.Save(AvatarFileName(hash), System.Drawing.Imaging.ImageFormat.Png);
-					if (AvatarUpdated != null) {
-						AvatarUpdated(jid, hash);
-					}
 				}
+			}
+			
+			if (AvatarUpdated != null) {
+				AvatarUpdated(jid, hash);
 			}
 		}
 	}

@@ -25,13 +25,9 @@ using jabber.protocol;
 
 namespace Synapse.Xmpp
 {
-	public delegate void IqEventHandler (IQ iq);
-	
 	public abstract class AbstractIqOperation : AbstractOperation
 	{
 		string m_ID;
-
-		protected event IqEventHandler ReplyReceived;
 
 		public AbstractIqOperation (Account account) : base (account)
 		{
@@ -66,8 +62,7 @@ namespace Synapse.Xmpp
 				return false;
 			}
 		
-			if (ReplyReceived != null)
-				ReplyReceived(iq);
+			ReplyReceived(iq);
 
 			if (iq.Type == IQType.result) {
 				base.Status = OperationStatus.Finished;
@@ -77,5 +72,7 @@ namespace Synapse.Xmpp
 			
 			return true;
 		}
+
+		protected abstract void ReplyReceived (IQ iq);
 	}
 }

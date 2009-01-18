@@ -501,6 +501,20 @@ namespace Synapse.Xmpp
 				m_Client.Connect();
 			}).Start();
 		}
+
+		public void SaveVCard ()
+		{
+			IQ iq = new IQ(m_Client.Document);
+			iq.Type = IQType.set;
+
+			var vcard = m_Client.Document.ImportNode(m_MyVCard, true);
+			iq.AppendChild(vcard);
+			
+			m_Client.Write(iq);
+
+			if (MyVCardUpdated != null)
+				MyVCardUpdated(this, EventArgs.Empty);
+		}
 		
 		public void Send (Packet message)
 		{

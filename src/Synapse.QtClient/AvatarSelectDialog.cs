@@ -23,11 +23,20 @@ using System;
 using System.Text;
 using System.Net;
 using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
 using Qyoto;
 using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 using Synapse.ServiceStack;
 using Synapse.UI;
+using Synapse.UI.Services;
+using Synapse.UI.Operations;
 using Mono.Addins;
+using jabber;
+using jabber.protocol.client;
+using jabber.protocol.iq;
+
 
 public partial class AvatarSelectDialog : QDialog
 {
@@ -41,6 +50,7 @@ public partial class AvatarSelectDialog : QDialog
 		SetupUi();
 
 		m_Account = account;
+		m_Account.AvatarManager.AvatarUpdated += HandleAvatarUpdated;
 
 		avatarLabel.Pixmap = (QPixmap)AvatarManager.GetAvatar(account.Jid);
 		
@@ -64,6 +74,15 @@ public partial class AvatarSelectDialog : QDialog
 		}
 	}
 
+	void HandleAvatarUpdated(string jid, string avatarHash)
+	{
+		if (jid == m_Account.Jid.Bare) {
+			Application.Invoke(delegate {
+				avatarLabel.Pixmap = (QPixmap)AvatarManager.GetAvatar(avatarHash);
+			});
+		}
+	}
+
 	[Q_SLOT]
 	public void setAvatarUrl(string url)
 	{
@@ -72,24 +91,16 @@ public partial class AvatarSelectDialog : QDialog
 		var request = (HttpWebRequest)HttpWebRequest.Create(url);
 		request.BeginGetResponse(delegate (IAsyncResult result) {
 			HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result);
-			byte[] buffer = new byte[response.ContentLength];
-			using (Stream stream = response.GetResponseStream()) {
-				int offset = 0;
-				int remaining = buffer.Length;
-				while (remaining > 0) {
-					int read = stream.Read(buffer, offset, remaining);
-					if (read <= 0)
-						throw new EndOfStreamException(String.Format("End of stream reached with {0} bytes left to read", remaining));
-					remaining -= read;
-					offset += read;
-				}
+
+			Image image = Image.FromStream(response.GetResponseStream());
+			byte[] buffer = null;
+			using (MemoryStream stream = new MemoryStream()) {
+				image.Save(stream, image.RawFormat);
+				buffer = stream.GetBuffer();
 			}
 			
 			Application.Invoke(delegate {
-				QPixmap pixmap = new QPixmap();
-				Pointer<byte> p = new Pointer<byte>(buffer);
-				pixmap.LoadFromData(p, (uint)buffer.Length);
-				SetAvatar(pixmap);
+				SetAvatar(buffer, image.RawFormat);
 			});
 		}, null);
 	}
@@ -106,30 +117,46 @@ public partial class AvatarSelectDialog : QDialog
 		var dialog = new QFileDialog(this.TopLevelWidget(), "Select Avatar");
 		if (dialog.Exec() == (int)DialogCode.Accepted && dialog.SelectedFiles().Count > 0) {
 			string fileName = dialog.SelectedFiles()[0];
-			SetAvatar(new QPixmap(fileName));
+
+			byte[] buffer = null;
+			Image image = Image.FromFile(fileName);
+			using (MemoryStream stream = new MemoryStream()) {
+				image.Save(stream, image.RawFormat);
+				buffer = stream.GetBuffer();
+			}			
+			SetAvatar(buffer, image.RawFormat);
 		}
 	}
 	
 	[Q_SLOT]
 	void on_clearButton_clicked ()
 	{
-		SetAvatar(null);
+		SetAvatar(null, null);
 	}
 
-	void SetAvatar (QPixmap pixmap)
+	void SetAvatar (byte[] buffer, ImageFormat format)
 	{
-		if (pixmap == null) {
-			pixmap = new QPixmap("resource:/default-avatar.png");
-		}
-
-		// FIXME:
-		// The image SHOULD use less than eight kilobytes (8k) of data; this restriction is to be enforced by the publishing client.
-		// The image height and width SHOULD be between thirty-two (32) and ninety-six (96) pixels; the recommended size is sixty-four (64) pixels high and sixty-four (64) pixels wide.
-		// The image SHOULD be square.
+		QPixmap pixmap = new QPixmap();
 		
-		avatarLabel.Pixmap = pixmap;
+		if (buffer == null) {
+			pixmap = new QPixmap("resource:/default-avatar.png");
+			
+			m_Account.VCard.Photo.BinVal    = null;
+			m_Account.VCard.Photo.ImageType = null;
+		} else {
+			if (format == null)
+				throw new ArgumentNullException("format");
+			
+			// FIXME:
+			// The image SHOULD use less than eight kilobytes (8k) of data; this restriction is to be enforced by the publishing client.
+			// The image height and width SHOULD be between thirty-two (32) and ninety-six (96) pixels; the recommended size is sixty-four (64) pixels high and sixty-four (64) pixels wide.
+			// The image SHOULD be square.
 
-		// FIXME: Update server
+			m_Account.VCard.Photo.ImageType = format;
+			m_Account.VCard.Photo.BinVal = buffer;
+		}
+			
+		m_Account.SaveVCard();
 	}
 	
 	class AvatarProviderTab : QWebView
@@ -166,7 +193,6 @@ public partial class AvatarSelectDialog : QDialog
 			foreach (AvatarInfo info in avatars) {
 				builder.AppendFormat("<div style=\"float: left; padding: 6px;\"> <a href=\"javascript:AvatarSelectDialog.setAvatarUrl('{0}')\" title=\"{1}\"><img style=\"width: 75px; height: 75px;\" alt=\"{1}\" src=\"{2}\"/></a></div>", info.Url, info.Title, info.ThumbnailUrl);
 			}
-			Console.WriteLine(builder.ToString());
 
 			Application.Invoke(delegate {
 				base.SetHtml(builder.ToString());
