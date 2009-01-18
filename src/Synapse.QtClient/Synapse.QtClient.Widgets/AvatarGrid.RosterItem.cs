@@ -141,6 +141,14 @@ namespace Synapse.QtClient.Widgets
 					QDrag drag = new QDrag(evnt.Widget());
 					QMimeData mime = new RosterItemMimeData<T>(this, m_Grid);
 					drag.SetMimeData(mime);
+
+					QPixmap pixmap = new QPixmap(m_Grid.IconSize, m_Grid.IconSize);
+					pixmap.Fill(m_Grid.Palette.Color(QPalette.ColorRole.Base));
+					var painter = new QPainter(pixmap);
+					Paint(painter, null, null);
+					painter.End();
+					drag.SetPixmap(pixmap);
+					
 		
 					drag.Exec((uint)Qt.DropAction.MoveAction | (uint)Qt.DropAction.CopyAction | (uint)Qt.DropAction.IgnoreAction);
 				}

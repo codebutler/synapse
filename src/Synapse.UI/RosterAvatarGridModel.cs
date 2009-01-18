@@ -50,7 +50,7 @@ namespace Synapse.UI
 		bool   m_ShowTransports = false;
 		string m_TextFilter     = null;
 
-		Dictionary<Item, RosterItem> m_Items = new Dictionary<Item, RosterItem>();
+		List<RosterItem> m_Items = new List<RosterItem>();
 		Dictionary<string, int> m_GroupIndexes = new Dictionary<string, int>();
 		
 		public RosterAvatarGridModel()
@@ -100,7 +100,7 @@ namespace Synapse.UI
 		
 		public IEnumerable<RosterItem> Items {
 			get {
-				return m_Items.Values;
+				return m_Items;
 			}
 		}
 		#endregion
@@ -129,14 +129,14 @@ namespace Synapse.UI
 		public void AddItemToGroup(RosterItem item, string groupName)
 		{
 			item.Item.AddGroup(groupName);
-			// FIXME: item.Account.Roster.Modify(item.Item);
+			item.Account.Roster.Modify(item.Item);
 			OnItemChanged(item);
 		}
 		
 		public void RemoveItemFromGroup(RosterItem item, string groupName)
 		{
 			item.Item.RemoveGroup(groupName);
-			// FIXME: item.Account.Roster.Modify(item.Item);
+			item.Account.Roster.Modify(item.Item);
 			OnItemChanged(item);
 		}
 		
@@ -205,7 +205,7 @@ namespace Synapse.UI
 		protected virtual void OnItemAdded (Account account, Item item)
 		{
 			var ritem = new RosterItem(account, item);
-			m_Items.Add(item, ritem);
+			m_Items.Add(ritem);
 			
 			var evnt = ItemAdded;
 			if (evnt != null)
@@ -214,8 +214,8 @@ namespace Synapse.UI
 
 		protected virtual void OnItemRemoved (Account account, Item item)
 		{
-			var ritem = m_Items[item];
-			m_Items.Remove(item);
+			var ritem = FindRosterItem(account, item);
+			m_Items.Remove(ritem);
 			
 			var evnt = ItemRemoved;
 			if (evnt != null)
@@ -224,7 +224,7 @@ namespace Synapse.UI
 
 		protected virtual void OnItemChanged (Account account, Item item)
 		{
-			OnItemChanged(m_Items[item]);
+			OnItemChanged(FindRosterItem(account, item));
 		}
 		
 		protected virtual void OnItemChanged (RosterItem item)
@@ -236,6 +236,15 @@ namespace Synapse.UI
 
 		protected virtual void OnRefreshed ()
 		{
+			m_Items.Clear();
+			foreach (Account account in m_AccountService.Accounts) {
+				foreach (JID jid in account.Roster) {
+					var item = account.Roster[jid];
+					var ritem = new RosterItem(account, item);
+					m_Items.Add(ritem);
+				}
+			}
+			
 			var evnt = Refreshed;
 			if (evnt != null)
 				evnt(this, EventArgs.Empty);
@@ -262,13 +271,17 @@ namespace Synapse.UI
 			};
 			
 			account.Roster.OnRosterItem += delegate(object sender, Item ri) {
-				OnItemAdded(account, ri);
+				if (FindRosterItem(account, ri) == null) {
+					OnItemAdded(account, ri);
+				} else {
+					OnItemChanged(account, ri);
+				}
 			};
 			
 			account.Client.OnPresence += delegate(object sender, Presence pres) {
 				Item item = account.Roster[pres.From.BareJID];			
 				if (item != null) {
-					if (!m_Items.ContainsKey(item)) {
+					if (FindRosterItem(account, item) == null) {
 						OnItemAdded(account, item);
 					} else {
 						OnItemChanged(account, item);
@@ -301,6 +314,14 @@ namespace Synapse.UI
 		void HandleOnDisconnect(object sender)
 		{
 			OnRefreshed();
+		}
+
+		RosterItem FindRosterItem (Account account, Item item)
+		{
+			foreach (RosterItem ritem in m_Items)
+				if (ritem.Account == account && ritem.Item.JID.Equals(item.JID))
+				    return ritem;
+			return null;				
 		}
 		#endregion
 	}

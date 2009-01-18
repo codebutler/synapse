@@ -462,7 +462,7 @@ namespace Synapse.QtClient.Widgets
 		}
 
 		void AddItemToGroup (T item, string groupName, bool resizeAndReposition)
-		{
+		{			
 			lock (m_Groups) {
 				if (!m_Groups.ContainsKey(groupName))
 					AddGroup(groupName, resizeAndReposition);
@@ -485,13 +485,15 @@ namespace Synapse.QtClient.Widgets
 
 		void RemoveItemFromGroup (T item, string groupName, bool resizeAndReposition)
 		{			
-			var graphicsItem = m_Items[item][groupName];
-			var group = (RosterItemGroup)graphicsItem.ParentItem();
-			group.RemoveFromGroup(graphicsItem);
-			m_Scene.RemoveItem(graphicsItem);
-			m_Items[item].Remove(groupName);
-			if (m_Items[item].Count == 0)
-				m_Items.Remove(item);
+			lock (m_Items) {
+				var graphicsItem = m_Items[item][groupName];
+				var group = (RosterItemGroup)graphicsItem.ParentItem();
+				group.RemoveFromGroup(graphicsItem);
+				m_Scene.RemoveItem(graphicsItem);
+				m_Items[item].Remove(groupName);
+				if (m_Items[item].Count == 0)
+					m_Items.Remove(item);
+			}
 
 			if (resizeAndReposition)
 				ResizeAndRepositionGroups();
