@@ -214,8 +214,10 @@ namespace Synapse.UI
 
 		protected virtual void OnItemRemoved (Account account, Item item)
 		{
-			var ritem = FindRosterItem(account, item);
-			m_Items.Remove(ritem);
+			lock (m_Items) {
+				var ritem = FindRosterItem(account, item);
+				m_Items.Remove(ritem);
+			}
 			
 			var evnt = ItemRemoved;
 			if (evnt != null)
@@ -236,12 +238,14 @@ namespace Synapse.UI
 
 		protected virtual void OnRefreshed ()
 		{
-			m_Items.Clear();
-			foreach (Account account in m_AccountService.Accounts) {
-				foreach (JID jid in account.Roster) {
-					var item = account.Roster[jid];
-					var ritem = new RosterItem(account, item);
-					m_Items.Add(ritem);
+			lock (m_Items) {
+				m_Items.Clear();
+				foreach (Account account in m_AccountService.Accounts) {
+					foreach (JID jid in account.Roster) {
+						var item = account.Roster[jid];
+						var ritem = new RosterItem(account, item);
+						m_Items.Add(ritem);
+					}
 				}
 			}
 			
@@ -318,10 +322,12 @@ namespace Synapse.UI
 
 		RosterItem FindRosterItem (Account account, Item item)
 		{
-			foreach (RosterItem ritem in m_Items)
-				if (ritem.Account == account && ritem.Item.JID.Equals(item.JID))
-				    return ritem;
-			return null;				
+			lock (m_Items) {
+				foreach (RosterItem ritem in m_Items)
+					if (ritem.Account == account && ritem.Item.JID.Equals(item.JID))
+					    return ritem;
+				return null;				
+			}
 		}
 		#endregion
 	}
