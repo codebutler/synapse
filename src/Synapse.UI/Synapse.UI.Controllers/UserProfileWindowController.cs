@@ -24,21 +24,31 @@ using System.Reflection;
 using System.IO;
 using Synapse.ServiceStack;
 using Synapse.UI.Views;
+using Synapse.Xmpp;
+using jabber;
+using jabber.protocol.client;
 using jabber.protocol.iq;
 
 namespace Synapse.UI.Controllers
 {
 	public class UserProfileWindowController : AbstractController<IUserProfileWindowView>
 	{
-		public UserProfileWindowController()
+		public UserProfileWindowController(Account account, JID jid)
 		{
 			Application.InvokeAndBlock(delegate {
 				base.InitializeView();
 				base.View.Show();
 			});
+
+			account.RequestVCard(jid, delegate (object sender, IQ iq, object data) {
+				if (iq.Type == IQType.result)
+					Populate((VCard)iq.FirstChild);
+				else
+					Populate(null);
+			});
 		}
 
-		public void Populate (VCard vcard)
+		private void Populate (VCard vcard)
 		{
 			string template = null;
 			
@@ -124,8 +134,7 @@ namespace Synapse.UI.Controllers
 			                     address.Region,
 			                     address.PostalCode,
 			                     address.Country,
-			                     address.Extra);
-			                     
+			                     address.Extra);	
 		}
 	}
 }

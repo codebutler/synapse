@@ -46,8 +46,6 @@
     <File name="IActionItemCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Controllers/UserProfileWindowController.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Views/IUserProfileWindowView.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Operations/JoinMucOperation.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Operations/RequestVCardOperation.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/profile.html" subtype="Code" buildaction="EmbedAsResource" />
     <File name="ResourceProviderCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Services/ActionService.cs" subtype="Code" buildaction="Compile" />

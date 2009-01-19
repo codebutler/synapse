@@ -16,7 +16,7 @@ public partial class EditGroupsWindow : QWidget {
     
     protected QLabel label;
     
-    protected QListWidget listWidget;
+    protected Synapse.QtClient.Widgets.EditGroupsWidget groupsWidget;
     
     protected QDialogButtonBox buttonBox;
     
@@ -26,6 +26,7 @@ public partial class EditGroupsWindow : QWidget {
         this.WindowTitle = "EditGroupsWindow";
         QVBoxLayout verticalLayout;
         verticalLayout = new QVBoxLayout(this);
+        verticalLayout.Margin = 6;
         QSpacerItem verticalSpacer;
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
         verticalLayout.AddItem(verticalSpacer);
@@ -37,19 +38,11 @@ public partial class EditGroupsWindow : QWidget {
         label_sizePolicy.SetHorizontalStretch(0);
         label_sizePolicy.SetHeightForWidth(this.label.SizePolicy.HasHeightForWidth());
         this.label.SizePolicy = label_sizePolicy;
-        this.label.Text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Edit Groups</span></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"><span style=\" font-weight:400;\">eric@extremeboredom.net</span></p></body></html>";
+        this.label.Text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Edit Groups</span></p></body></html>";
         verticalLayout.AddWidget(this.label);
-        this.listWidget = new QListWidget(this);
-        this.listWidget.ObjectName = "listWidget";
-        QSizePolicy listWidget_sizePolicy;
-        listWidget_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
-        listWidget_sizePolicy.SetVerticalStretch(0);
-        listWidget_sizePolicy.SetHorizontalStretch(0);
-        listWidget_sizePolicy.SetHeightForWidth(this.listWidget.SizePolicy.HasHeightForWidth());
-        this.listWidget.SizePolicy = listWidget_sizePolicy;
-        this.listWidget.MinimumSize = new QSize(0, 50);
-        this.listWidget.FrameShape = QFrame.Shape.NoFrame;
-        verticalLayout.AddWidget(this.listWidget);
+        this.groupsWidget = new Synapse.QtClient.Widgets.EditGroupsWidget(this);
+        this.groupsWidget.ObjectName = "groupsWidget";
+        verticalLayout.AddWidget(this.groupsWidget);
         this.buttonBox = new QDialogButtonBox(this);
         this.buttonBox.ObjectName = "buttonBox";
         verticalLayout.AddWidget(this.buttonBox);

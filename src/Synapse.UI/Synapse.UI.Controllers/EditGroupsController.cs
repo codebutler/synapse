@@ -33,10 +33,12 @@ namespace Synapse.UI.Controllers
 	{
 		string[] m_GroupNames;
 		Item     m_RosterItem;
+		Account  m_Account;
 		
 		public EditGroupsWindowController(Account account, Item rosterItem)
 		{
 			m_RosterItem = rosterItem;
+			m_Account    = account;
 			
 			m_GroupNames = account.Roster.Select(jid => account.Roster[jid])
 				.SelectMany(item => item.GetGroups())
@@ -49,6 +51,12 @@ namespace Synapse.UI.Controllers
 				InitializeView();
 				View.Show();
 			});
+		}
+		
+		public Account Account {
+			get {
+				return m_Account;
+			}
 		}
 
 		public Item RosterItem {

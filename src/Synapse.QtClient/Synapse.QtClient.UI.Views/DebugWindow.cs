@@ -32,16 +32,11 @@ namespace Synapse.QtClient.UI.Views
 {
 	public partial class DebugWindow : QWidget, IDebugWindowView
 	{
-		OperationsModel m_Model;
 		Dictionary<Account, QWidget> m_AccountXmlWidgets = new Dictionary<Account, QWidget>();
 		
 		public DebugWindow (DebugWindowController controller)
 		{
 			SetupUi();
-			m_Model = new OperationsModel();
-			m_OperationsTableView.selectionBehavior = QAbstractItemView.SelectionBehavior.SelectRows;
-			m_OperationsTableView.VerticalHeader().Hide();
-			m_OperationsTableView.SetModel(m_Model);
 	
 			((QBoxLayout)m_XmlToolBox.Layout()).Spacing = 0;
 		}
@@ -88,70 +83,6 @@ namespace Synapse.QtClient.UI.Views
 		void on_clearConsoleButton_clicked ()
 		{
 			
-		}
-	
-		private class OperationsModel : QAbstractTableModel
-		{
-			OperationService m_Service;
-			
-			string[] m_ColumnNames = new string[] { "Name", "Status", "Started At" };
-	
-			public OperationsModel ()
-			{
-				m_Service = ServiceManager.Get<OperationService>();
-				m_Service.OperationAdded   += HandleAccountAddedUpdated;
-				m_Service.OperationUpdated += HandleAccountAddedUpdated;
-			}
-			
-			public override QVariant Data (QModelIndex index, int role)
-			{
-				int row = index.Row();
-				int col = index.Column();
-			
-				IOperation operation = m_Service.Operations[row];
-				
-				if (role == (int)Qt.ItemDataRole.DisplayRole) {
-					if (col == 0)
-						return String.Format("{0}: {1}", operation.Name, operation.Description);
-					else if (col == 1)
-						return operation.Status.ToString();
-					else if (col == 2)
-						return operation.StartedAt.ToShortTimeString();
-				} else if (role == (int)Qt.ItemDataRole.ToolTipRole) {
-					return operation.StackTrace;
-				}
-				return new QVariant();
-			}
-	
-			public override int ColumnCount (Qyoto.QModelIndex parent)
-			{
-				return m_ColumnNames.Length;
-			}
-	
-			public override int RowCount (Qyoto.QModelIndex parent)
-			{
-				return m_Service.Operations.Count;
-			}
-	
-			public override QModelIndex Parent (Qyoto.QModelIndex child)
-			{
-				return null;
-			}
-	
-			public override QVariant HeaderData (int section, Qt.Orientation orientation, int role)
-			{
-				if (role == (int)Qt.ItemDataRole.DisplayRole)
-					return m_ColumnNames[section];
-				else
-					return new QVariant();
-			}
-	
-			private void HandleAccountAddedUpdated (IOperation operation)
-			{
-				Application.Invoke(delegate {
-					Emit.LayoutChanged();
-				});
-			}			
 		}
 	}
 }

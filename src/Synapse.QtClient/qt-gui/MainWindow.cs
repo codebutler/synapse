@@ -19,15 +19,11 @@ namespace Synapse.QtClient.UI.Views {
         
         protected QLabel headerLabel;
         
-        protected QStackedWidget stackedWidget;
+        protected Synapse.QtClient.Widgets.LightboxContainerWidget stackedWidget;
         
         protected QWidget page;
         
         protected QWidget contentWidget;
-        
-        protected QWidget page_2;
-        
-        protected QWidget lightboxWidget;
         
         protected void SetupUi() {
             base.ObjectName = "MainWindow";
@@ -55,8 +51,9 @@ namespace Synapse.QtClient.UI.Views {
             this.headerLabel.Alignment = global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignCenter");
             this.headerLabel.Margin = 3;
             verticalLayout_2.AddWidget(this.headerLabel);
-            this.stackedWidget = new QStackedWidget(this.containerWidget);
+            this.stackedWidget = new Synapse.QtClient.Widgets.LightboxContainerWidget(this.containerWidget);
             this.stackedWidget.ObjectName = "stackedWidget";
+            this.stackedWidget.CurrentIndex = 0;
             verticalLayout_2.AddWidget(this.stackedWidget);
             this.page = new QWidget(this.stackedWidget);
             this.page.ObjectName = "page";
@@ -74,18 +71,6 @@ namespace Synapse.QtClient.UI.Views {
             this.contentWidget.SizePolicy = contentWidget_sizePolicy;
             horizontalLayout.AddWidget(this.contentWidget);
             this.stackedWidget.AddWidget(this.page);
-            this.page_2 = new QWidget(this.stackedWidget);
-            this.page_2.ObjectName = "page_2";
-            QHBoxLayout horizontalLayout_2;
-            horizontalLayout_2 = new QHBoxLayout(this.page_2);
-            horizontalLayout_2.Spacing = 0;
-            horizontalLayout_2.Margin = 0;
-            this.lightboxWidget = new QWidget(this.page_2);
-            this.lightboxWidget.ObjectName = "lightboxWidget";
-            QHBoxLayout horizontalLayout_3;
-            horizontalLayout_3 = new QHBoxLayout(this.lightboxWidget);
-            horizontalLayout_2.AddWidget(this.lightboxWidget);
-            this.stackedWidget.AddWidget(this.page_2);
             verticalLayout.AddWidget(this.containerWidget);
             QMetaObject.ConnectSlotsByName(this);
         }

@@ -22,18 +22,14 @@
     <File name="Synapse.Xmpp/UserMood.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/UserTune.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/ClientStatus.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp/IOperation.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp/AbstractOperation.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/UserAvatars.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/AvatarManager.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/ChatStates.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp/AbstractIqOperation.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/XmppUriQueryInfo.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/Helper.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp.Services" subtype="Directory" buildaction="Compile" />
     <File name="Synapse.Xmpp.Services/ActivityFeedService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp.Services/AccountService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp.Services/OperationService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>

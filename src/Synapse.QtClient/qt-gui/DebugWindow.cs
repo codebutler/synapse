@@ -27,10 +27,6 @@ namespace Synapse.QtClient.UI.Views {
         
         protected QPushButton clearConsoleButton;
         
-        protected QWidget tab_2;
-        
-        protected QTableView m_OperationsTableView;
-        
         protected void SetupUi() {
             base.ObjectName = "DebugWindow";
             this.Geometry = new QRect(0, 0, 518, 405);
@@ -78,17 +74,6 @@ namespace Synapse.QtClient.UI.Views {
             this.clearConsoleButton.Text = "Clear";
             horizontalLayout.AddWidget(this.clearConsoleButton);
             this.tabWidget.AddTab(this.tab, "XML Console");
-            this.tab_2 = new QWidget(this.tabWidget);
-            this.tab_2.ObjectName = "tab_2";
-            QVBoxLayout verticalLayout_2;
-            verticalLayout_2 = new QVBoxLayout(this.tab_2);
-            verticalLayout_2.Spacing = 0;
-            verticalLayout_2.Margin = 0;
-            this.m_OperationsTableView = new QTableView(this.tab_2);
-            this.m_OperationsTableView.ObjectName = "m_OperationsTableView";
-            this.m_OperationsTableView.FrameShape = QFrame.Shape.NoFrame;
-            verticalLayout_2.AddWidget(this.m_OperationsTableView);
-            this.tabWidget.AddTab(this.tab_2, "Operations");
             QMetaObject.ConnectSlotsByName(this);
         }
     }

@@ -28,24 +28,15 @@ using Synapse.UI.Views;
 using Synapse.QtClient.UI.Views;
 
 public partial class EditGroupsWindow : QWidget, IEditGroupsWindowView
-{
+{	
 	public EditGroupsWindow (EditGroupsWindowController controller)
 	{
 		SetupUi();
 
 		buttonBox.StandardButtons = (uint)QDialogButtonBox.StandardButton.Ok | (uint)QDialogButtonBox.StandardButton.Cancel;
 
-		foreach (var groupName in controller.GroupNames) {
-			QListWidgetItem item = new QListWidgetItem(groupName, listWidget);
-			if (controller.RosterItem.GetGroup(groupName) != null)
-				item.SetCheckState(Qt.CheckState.Checked);
-			else
-				item.SetCheckState(Qt.CheckState.Unchecked);
-			item.SetFlags((uint)Qt.ItemFlag.ItemIsUserCheckable |
-			              (uint)Qt.ItemFlag.ItemIsEditable      |
-			              (uint)Qt.ItemFlag.ItemIsSelectable);
-			listWidget.AddItem(item);
-		}
+		groupsWidget.Account = controller.Account;
+		groupsWidget.SelectedGroups = controller.GroupNames;
 	}
 
 	public new void Show ()

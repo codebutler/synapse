@@ -28,7 +28,6 @@ using Synapse.ServiceStack;
 using Synapse.Services;
 using Synapse.UI;
 using Synapse.UI.Controllers;
-using Synapse.UI.Operations;
 using jabber;
 using jabber.connection;
 using jabber.protocol.client;
@@ -65,7 +64,7 @@ namespace Synapse.UI.Services
 				Label = "Join",
 				Callback = delegate (object o, EventArgs args) {
 					var feedItem = (XmppActivityFeedItem)o;
-					ServiceManager.Get<OperationService>().Start(new JoinMucOperation(feedItem.Account, feedItem.ActionItem));
+					feedItem.Account.JoinMuc(feedItem.ActionItem);
 				}
 			};
 			ServiceManager.Get<ActivityFeedService>().AddTemplate("invite", "invites you to join {0}", "invites you to join {0}", true, new [] { joinMucAction });

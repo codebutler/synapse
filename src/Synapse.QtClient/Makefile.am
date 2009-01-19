@@ -183,7 +183,10 @@ FILES = \
 	Synapse.QtClient.UI.Views/PreferencesWindow.cs \
 	AvatarSelectDialog.cs \
 	qt-gui/AvatarSelectDialog.cs \
-	Synapse.QtClient.Widgets/AvatarLabel.cs 
+	Synapse.QtClient.Widgets/AvatarLabel.cs \
+	AddFriendWindow.cs \
+	qt-gui/AddFriendWindow.cs \
+	Synapse.QtClient.Widgets/LightboxContainerWidget.cs 
 
 DATA_FILES = 
 
@@ -218,6 +221,7 @@ REFERENCES =  \
 	$(NDESK_DBUS_GLIB_10_LIBS) \
 	Mono.Posix \
 	$(GLIB_SHARP_20_LIBS) \
+	System.Drawing \
 	System.Core
 
 DLL_REFERENCES =  \

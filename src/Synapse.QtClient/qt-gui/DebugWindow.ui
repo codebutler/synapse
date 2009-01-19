@@ -85,26 +85,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2" >
-      <attribute name="title" >
-       <string>Operations</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2" >
-       <property name="spacing" >
-        <number>0</number>
-       </property>
-       <property name="margin" >
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QTableView" name="m_OperationsTableView" >
-         <property name="frameShape" >
-          <enum>QFrame::NoFrame</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
     </widget>
    </item>
   </layout>

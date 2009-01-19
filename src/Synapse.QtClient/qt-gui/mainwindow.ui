@@ -52,7 +52,10 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="QStackedWidget" name="stackedWidget" >
+       <widget class="Synapse.QtClient.Widgets.LightboxContainerWidget" name="stackedWidget" >
+        <property name="currentIndex" >
+         <number>0</number>
+        </property>
         <widget class="QWidget" name="page" >
          <layout class="QHBoxLayout" name="horizontalLayout" >
           <property name="spacing" >
@@ -73,21 +76,6 @@ p, li { white-space: pre-wrap; }
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="page_2" >
-         <layout class="QHBoxLayout" name="horizontalLayout_2" >
-          <property name="spacing" >
-           <number>0</number>
-          </property>
-          <property name="margin" >
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QWidget" native="1" name="lightboxWidget" >
-            <layout class="QHBoxLayout" name="horizontalLayout_3" />
-           </widget>
-          </item>
-         </layout>
-        </widget>
        </widget>
       </item>
      </layout>
@@ -95,6 +83,14 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Synapse.QtClient.Widgets.LightboxContainerWidget</class>
+   <extends>QStackedWidget</extends>
+   <header>lightboxcontainerwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -28,6 +28,8 @@ public partial class RosterWidget : QWidget {
     
     protected Synapse.QtClient.Widgets.AvatarGrid<Synapse.UI.RosterItem> rosterGrid;
     
+    protected QPushButton addFriendButton;
+    
     protected QLabel statsLabel;
     
     protected QSlider rosterIconSizeSlider;
@@ -78,7 +80,7 @@ public partial class RosterWidget : QWidget {
     
     protected void SetupUi() {
         base.ObjectName = "RosterWidget";
-        this.Geometry = new QRect(0, 0, 319, 773);
+        this.Geometry = new QRect(0, 0, 319, 519);
         this.WindowTitle = "RosterWidget";
         QVBoxLayout verticalLayout_6;
         verticalLayout_6 = new QVBoxLayout(this);
@@ -106,7 +108,7 @@ public partial class RosterWidget : QWidget {
         this.tabWidget.ObjectName = "tabWidget";
         this.tabWidget.tabPosition = QTabWidget.TabPosition.South;
         this.tabWidget.tabShape = QTabWidget.TabShape.Rounded;
-        this.tabWidget.CurrentIndex = 2;
+        this.tabWidget.CurrentIndex = 0;
         this.tabWidget.UsesScrollButtons = false;
         verticalLayout_2.AddWidget(this.tabWidget);
         this.friendsTab = new QWidget(this.tabWidget);
@@ -131,6 +133,10 @@ public partial class RosterWidget : QWidget {
         horizontalLayout = new QHBoxLayout();
         verticalLayout_4.AddLayout(horizontalLayout);
         horizontalLayout.Spacing = 6;
+        this.addFriendButton = new QPushButton(this.friendsTab);
+        this.addFriendButton.ObjectName = "addFriendButton";
+        this.addFriendButton.Text = "";
+        horizontalLayout.AddWidget(this.addFriendButton);
         this.statsLabel = new QLabel(this.friendsTab);
         this.statsLabel.ObjectName = "statsLabel";
         QSizePolicy statsLabel_sizePolicy;

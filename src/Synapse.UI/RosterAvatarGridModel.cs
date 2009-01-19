@@ -49,6 +49,7 @@ namespace Synapse.UI
 		bool   m_ModelUpdating  = false;
 		bool   m_ShowTransports = false;
 		string m_TextFilter     = null;
+		bool   m_AlwaysShowResource = true;
 
 		List<RosterItem> m_Items = new List<RosterItem>();
 		Dictionary<string, int> m_GroupIndexes = new Dictionary<string, int>();
@@ -100,7 +101,7 @@ namespace Synapse.UI
 		
 		public IEnumerable<RosterItem> Items {
 			get {
-				return m_Items;
+				return m_Items.AsReadOnly();
 			}
 		}
 		#endregion
@@ -143,9 +144,11 @@ namespace Synapse.UI
 		// FIXME: This needs to be cached.
 		public IEnumerable<RosterItem> GetItemsInGroup (string groupName)
 		{
-			foreach (var item in Items) {
-				if (item.Item.HasGroup(groupName)) {
-					yield return item;
+			lock (m_Items) {
+				foreach (var item in m_Items) {
+					if (item.Item.HasGroup(groupName)) {
+						yield return item;
+					}
 				}
 			}
 		}
@@ -178,19 +181,25 @@ namespace Synapse.UI
 		{
 			var builder = new StringBuilder();
 			var presences = item.Account.PresenceManager.GetAll(item.Item.JID);
-			if (presences.Length == 1) {
-				var presence = presences[0];
-				builder.AppendFormat("\n");
-				builder.Append(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Helper.GetPresenceDisplay(presence)));
-				if (!String.IsNullOrEmpty(presence.Status)) {
-					builder.Append(" - ");
-				    builder.Append(presence.Status);
-				}	
-			} else if (presences.Length > 1) {
+			if (presences.Length > 1) {
 				foreach (var presence in presences) {
 					builder.AppendFormat("\n{0}: {1}",
 					                     presence.From.Resource,
 					                     Helper.GetPresenceDisplay(presence));
+					if (!String.IsNullOrEmpty(presence.Status)) {
+						builder.Append(" - ");
+					    builder.Append(presence.Status);
+					}
+				}
+			} else if (presences.Length == 1) {
+				var presence = presences[0];
+				if (!String.IsNullOrEmpty(presence.From.Resource) && m_AlwaysShowResource) {
+					builder.AppendFormat("\n{0}: {1}",
+					                     presence.From.Resource,
+					                     Helper.GetPresenceDisplay(presence));
+				} else {
+					builder.AppendFormat("\n");
+					builder.Append(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Helper.GetPresenceDisplay(presence)));
 					if (!String.IsNullOrEmpty(presence.Status)) {
 						builder.Append(" - ");
 					    builder.Append(presence.Status);
@@ -214,14 +223,17 @@ namespace Synapse.UI
 
 		protected virtual void OnItemRemoved (Account account, Item item)
 		{
+			RosterItem rosterItem = null;
 			lock (m_Items) {
-				var ritem = FindRosterItem(account, item);
-				m_Items.Remove(ritem);
+				rosterItem = FindRosterItem(account, item);
+				if (rosterItem == null)
+					throw new Exception("Trying to remove an item before it was added. " + item);
+				m_Items.Remove(rosterItem);
 			}
 			
 			var evnt = ItemRemoved;
 			if (evnt != null)
-				evnt(this, ritem);
+				evnt(this, rosterItem);
 		}
 
 		protected virtual void OnItemChanged (Account account, Item item)

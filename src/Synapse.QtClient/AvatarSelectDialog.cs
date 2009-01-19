@@ -31,7 +31,6 @@ using Synapse.Xmpp.Services;
 using Synapse.ServiceStack;
 using Synapse.UI;
 using Synapse.UI.Services;
-using Synapse.UI.Operations;
 using Mono.Addins;
 using jabber;
 using jabber.protocol.client;

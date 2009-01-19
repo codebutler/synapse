@@ -142,8 +142,7 @@ namespace Synapse.QtClient.Widgets
 						inGroup ++;
 						if (m_Grid.Model.IsVisible(item))
 							visibleInGroup ++;
-					}
-					
+					}					
 					text = String.Format("{0} ({1}/{2})", m_GroupName, visibleInGroup, inGroup);
 				} else {
 					text = m_GroupName;

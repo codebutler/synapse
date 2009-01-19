@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>319</width>
-    <height>773</height>
+    <height>519</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -48,7 +48,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex" >
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="usesScrollButtons" >
           <bool>false</bool>
@@ -95,6 +95,13 @@
              <property name="bottomMargin" >
               <number>0</number>
              </property>
+             <item>
+              <widget class="QPushButton" name="addFriendButton" >
+               <property name="text" >
+                <string/>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QLabel" name="statsLabel" >
                <property name="sizePolicy" >

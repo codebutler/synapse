@@ -86,6 +86,10 @@
     <File name="qt-gui/AvatarSelectDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AvatarLabel.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/loading.gif" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="AddFriendWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/AddFriendWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Widgets/LightboxContainerWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="EditGroupsWidget.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
@@ -107,8 +111,8 @@
     <ProjectReference type="Gac" localcopy="True" refto="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference type="Gac" localcopy="True" refto="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <GtkDesignInfo />
   <QyotoDesignInfo>
@@ -125,6 +129,8 @@
       <QyotoForm UiFileName="EditGroupsWindow.ui" />
       <QyotoForm UiFileName="EditAccountDialog.ui" />
       <QyotoForm UiFileName="AvatarSelectDialog.ui" />
+      <QyotoForm UiFileName="AddFriend.ui" />
+      <QyotoForm UiFileName="EditGroupsWidget.ui" Namespace="Synapse.QtClient.Widgets" />
     </Forms>
   </QyotoDesignInfo>
 </Project>
