@@ -92,9 +92,9 @@ EXTRAS = \
 REFERENCES =  \
 	../../build/Debug/Synapse.Core.dll \
 	../../contrib/Hyena.dll \
+	../../contrib/NDesk.DBus.dll \
 	Mono.Posix \
 	-pkg:mono-addins \
-	-pkg:ndesk-dbus-1.0 \
 	-pkg:notify-sharp \
 	System \
 	System.Xml

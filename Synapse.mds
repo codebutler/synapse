@@ -25,6 +25,7 @@
     <Execute type="None" entry="Synapse.QtClient" />
     <Execute type="None" entry="Addins" />
   </StartMode>
+  <MonoDevelop.ChangeLogAddIn.ChangeLogInfo policy="OneChangeLogInProjectRootDirectory" />
   <Entries>
     <Entry filename="src/Synapse.Core/Synapse.Core.mdp" />
     <Entry filename="src/Synapse.Services/Synapse.Services.mdp" />

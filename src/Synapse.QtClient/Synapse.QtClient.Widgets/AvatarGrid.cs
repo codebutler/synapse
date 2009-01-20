@@ -471,9 +471,15 @@ namespace Synapse.QtClient.Widgets
 			lock (m_Items) {
 				if (!m_Items.ContainsKey(item))
 					m_Items.Add(item, new Dictionary<string, RosterItem<T>>());
-	
-				if (m_Items[item].ContainsKey(groupName))
-				    throw new Exception("Already in group!");			
+
+				// FIXME: Need to figure out why this happens to some people.
+				if (m_Items[item].ContainsKey(groupName)) {
+					string err = String.Format("FIXME: '{0}' is already in group '{1}'!", m_Model.GetJID(item), groupName);
+					if (item is Item) {
+						err += " All Groups: " + String.Join(",", m_Model.GetItemGroups(item).ToArray());
+					}
+				    throw new Exception(err);
+				}
 				    
 				QGraphicsItemGroup group = m_Groups[groupName];
 				RosterItem<T> graphicsItem = new RosterItem<T>(this, item, (uint)IconSize, (uint)IconSize, group);

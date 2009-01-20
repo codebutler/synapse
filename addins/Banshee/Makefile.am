@@ -87,7 +87,7 @@ EXTRAS =
 REFERENCES =  \
 	../../build/Debug/Synapse.Core.dll \
 	../../build/Debug/Synapse.Services.dll \
-	-pkg:ndesk-dbus-1.0 \
+	../../contrib/NDesk.DBus.dll \
 	System
 
 DLL_REFERENCES = 

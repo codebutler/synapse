@@ -24,7 +24,7 @@
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Services" />
-    <ProjectReference type="Gac" localcopy="True" refto="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099" />
+    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/NDesk.DBus.dll" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
   <GtkDesignInfo />
