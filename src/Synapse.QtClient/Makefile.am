@@ -1,5 +1,15 @@
 
-EXTRA_DIST =  
+EXTRA_DIST = 
+
+THEMES_DIR = resources/themes
+INSTALLED_THEMES_DIR = $(expanded_datadir)/$(PACKAGE)/themes/
+
+install-data-hook:
+	mkdir -p $(INSTALLED_THEMES_DIR)
+	cd $(THEMES_DIR) && find . -type f -exec $(INSTALL_DATA) -D -v '{}' '$(INSTALLED_THEMES_DIR){}' \; ;
+
+uninstall-hook:
+	rm -rf $(INSTALLED_THEMES_DIR)
 
 # Warning: This is an automatically generated file, do not edit!
 
@@ -283,3 +293,7 @@ $(build_xamlg_list): %.xaml.g.cs: %.xaml
 $(ASSEMBLY) $(ASSEMBLY_MDB): $(build_sources) $(build_resources) $(build_datafiles) $(DLL_REFERENCES) $(PROJECT_REFERENCES) $(build_xamlg_list) $(build_satellite_assembly_list)
 	mkdir -p $(shell dirname $(ASSEMBLY))
 	$(ASSEMBLY_COMPILER_COMMAND) $(ASSEMBLY_COMPILER_FLAGS) -out:$(ASSEMBLY) -target:$(COMPILE_TARGET) $(build_sources_embed) $(build_resources_embed) $(build_references_ref)
+	cp -r $(THEMES_DIR) $(BUILD_DIR)/themes
+
+clean:
+	rm -rf $(BUILD_DIR)/themes
