@@ -47,36 +47,36 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
-FILES = \
+FILES =  \
+	IEnumerable.cs \
+	Synapse.Core/Pair.cs \
 	Synapse.Core/Paths.cs \
+	Synapse.Core/PlatformHacks.cs \
 	Synapse.Core/PropertyCollection.cs \
 	Synapse.Core/ReadOnlyDictionary.cs \
-	Synapse.Core/Util.cs \
+	Synapse.Core/SerializableDictionary.cs \
 	Synapse.Core/Serialization.cs \
 	Synapse.Core/StringWriterWithEncoding.cs \
-	Synapse.Core/PlatformHacks.cs \
-	Synapse.Core/XdgBaseDirectorySpec.cs \
-	IEnumerable.cs \
 	Synapse.Core/UserException.cs \
-	Synapse.Core/Pair.cs \
-	Synapse.Core/SerializableDictionary.cs 
+	Synapse.Core/Util.cs \
+	Synapse.Core/XdgBaseDirectorySpec.cs 
 
 DATA_FILES = 
 
-RESOURCES = \
-	Synapse.Core.addin.xml 
+RESOURCES = Synapse.Core.addin.xml 
 
 EXTRAS = \
 	synapse.core.pc.in 
 
 REFERENCES =  \
-	System \
-	System.Xml \
-	$(MONO_ADDINS_LIBS) \
+	../../contrib/Hyena.dll \
 	Mono.Posix \
-	System.Web \
+	-pkg:mono-addins \
+	System \
 	System.Core \
-	System.Web.Extensions
+	System.Web \
+	System.Web.Extensions \
+	System.Xml
 
 DLL_REFERENCES =  \
 	../../contrib/Hyena.dll

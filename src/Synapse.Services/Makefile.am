@@ -61,42 +61,43 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
-FILES = \
+FILES =  \
 	Synapse.Services/NetworkService.cs \
 	Synapse.Services/NotificationService.cs \
-	Synapse.Services/ScreensaverService.cs \
 	Synapse.Services/NowPlayingService.cs \
-	Synapse.ServiceStack/IService.cs \
-	Synapse.ServiceStack/ServiceManager.cs \
-	Synapse.ServiceStack/IRequiredService.cs \
-	Synapse.ServiceStack/IInitializeService.cs \
-	Synapse.ServiceStack/IExtensionService.cs \
-	Synapse.ServiceStack/ServiceStartedHandler.cs \
-	Synapse.ServiceStack/IDelayedInitializeService.cs \
-	Synapse.ServiceStack/DBusServiceManager.cs \
-	Synapse.ServiceStack/IDBusExportable.cs \
+	Synapse.Services/ScreensaverService.cs \
+	Synapse.Services/SettingsService.cs \
 	Synapse.ServiceStack/Application.cs \
 	Synapse.ServiceStack/Client.cs \
-	Synapse.ServiceStack/IDBusObjectName.cs \
-	Synapse.ServiceStack/IRegisterOnDemandService.cs \
 	Synapse.ServiceStack/DBusConnection.cs \
-	Synapse.Services/SettingsService.cs 
+	Synapse.ServiceStack/DBusServiceManager.cs \
+	Synapse.ServiceStack/IDBusExportable.cs \
+	Synapse.ServiceStack/IDBusObjectName.cs \
+	Synapse.ServiceStack/IDelayedInitializeService.cs \
+	Synapse.ServiceStack/IExtensionService.cs \
+	Synapse.ServiceStack/IInitializeService.cs \
+	Synapse.ServiceStack/IRegisterOnDemandService.cs \
+	Synapse.ServiceStack/IRequiredService.cs \
+	Synapse.ServiceStack/IService.cs \
+	Synapse.ServiceStack/ServiceManager.cs \
+	Synapse.ServiceStack/ServiceStartedHandler.cs 
 
 DATA_FILES = 
 
-RESOURCES = \
-	Synapse.Services.addin.xml 
+RESOURCES = Synapse.Services.addin.xml 
 
 EXTRAS = \
 	synapse.services.pc.in 
 
 REFERENCES =  \
-	$(MONO_ADDINS_LIBS) \
-	System \
-	$(NDESK_DBUS_10_LIBS) \
-	System.Xml \
+	../../build/Debug/Synapse.Core.dll \
+	../../contrib/Hyena.dll \
 	Mono.Posix \
-	$(NOTIFY_SHARP_LIBS)
+	-pkg:mono-addins \
+	-pkg:ndesk-dbus-1.0 \
+	-pkg:notify-sharp \
+	System \
+	System.Xml
 
 DLL_REFERENCES =  \
 	../../contrib/Hyena.dll

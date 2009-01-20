@@ -20,23 +20,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
 using Qyoto;
 using Synapse.ServiceStack;
+using Synapse.Xmpp;
 using Synapse.UI.Services;
 using Synapse.UI.Controllers;
 using Synapse.UI.Views;
 using Synapse.QtClient.UI.Views;
+using jabber.protocol.iq;
 
-public partial class EditGroupsWindow : QWidget, IEditGroupsWindowView
+public partial class EditGroupsWindow : QWidget
 {	
-	public EditGroupsWindow (EditGroupsWindowController controller)
+	public EditGroupsWindow (Account account, Item item)
 	{
 		SetupUi();
 
 		buttonBox.StandardButtons = (uint)QDialogButtonBox.StandardButton.Ok | (uint)QDialogButtonBox.StandardButton.Cancel;
 
-		groupsWidget.Account = controller.Account;
-		groupsWidget.SelectedGroups = controller.GroupNames;
+		groupsWidget.Account = account;
+		groupsWidget.SelectedGroups = item.GetGroups().Select(g => g.Name).ToArray();
 	}
 
 	public new void Show ()

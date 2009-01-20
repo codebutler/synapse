@@ -72,22 +72,23 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) 
 
-FILES = \
-	BansheeNowPlayingProvider.cs \
+FILES =  \
 	AssemblyInfo.cs \
-	PlayerEvent.cs \
-	IPlayerEngineService.cs 
+	BansheeNowPlayingProvider.cs \
+	IPlayerEngineService.cs \
+	PlayerEvent.cs 
 
 DATA_FILES = 
 
-RESOURCES = \
-	Banshee.addin.xml 
+RESOURCES = Banshee.addin.xml 
 
 EXTRAS = 
 
 REFERENCES =  \
-	System \
-	$(NDESK_DBUS_10_LIBS)
+	../../build/Debug/Synapse.Core.dll \
+	../../build/Debug/Synapse.Services.dll \
+	-pkg:ndesk-dbus-1.0 \
+	System
 
 DLL_REFERENCES = 
 

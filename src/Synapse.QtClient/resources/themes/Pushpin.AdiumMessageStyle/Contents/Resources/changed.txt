@@ -1,0 +1,7 @@
+fixed emoticon spacing to it won't overlap text.
+set buddy icons to hide when "show user icons" is deselected.
+fix white background on buddy icons.
+set spacing on black variant to it matches other variants.
+set emoticon scaling so that they won't throw off line spacing.
+updated to latest messagestyle "framework", so now things like click toggling emoticons will work properly.
+changed header font (date) to match rest of header text.

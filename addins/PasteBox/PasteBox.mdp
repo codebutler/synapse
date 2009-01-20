@@ -4,6 +4,7 @@
       <Output directory="../../build/Debug" assembly="PasteBox" />
       <Build debugmode="True" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <EnvironmentVariables />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
@@ -32,6 +33,15 @@
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
   <GtkDesignInfo />
+  <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
+    <BuildFilesVar Sync="True" Name="FILES" />
+    <DeployFilesVar />
+    <ResourcesVar Sync="True" Name="RESOURCES" />
+    <OthersVar />
+    <GacRefVar Sync="True" Name="REFERENCES" />
+    <AsmRefVar Sync="True" Name="REFERENCES" />
+    <ProjectRefVar Sync="True" Name="REFERENCES" />
+  </MonoDevelop.Autotools.MakefileInfo>
   <QyotoDesignInfo>
     <Forms>
       <QyotoForm UiFileName="PasteBoxDialog.ui" />

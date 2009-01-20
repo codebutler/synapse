@@ -292,7 +292,7 @@ public partial class RosterWidget : QWidget
 			// FIXME
 			Console.WriteLine("Send Invitation!!");
 		} else if (action == m_EditGroupsAction) {
-			var c = new EditGroupsWindowController(rosterGrid.HoverItem.Account, rosterGrid.HoverItem.Item);
+			var c = new EditGroupsWindow(rosterGrid.HoverItem.Account, rosterGrid.HoverItem.Item);
 		}
 	}
 	

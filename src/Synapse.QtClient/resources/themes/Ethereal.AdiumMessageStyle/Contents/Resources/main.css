@@ -1,0 +1,139 @@
+body {
+    font-weight: normal;
+}
+	                
+.incoming { color: #a6002c; }
+.context .incoming { color:#A65369; }
+
+.outgoing { color: #001190; }
+.context .outgoing { color: #47508F; }
+
+.container {
+    background: url("images/white/bottom_right.png") bottom right no-repeat;
+    position: relative;
+    margin: 15px 0px 0px 43px;
+}
+
+.context {
+    background: url("images/white/context_bottom_right.png") bottom right no-repeat;
+}
+                
+.sender {
+    top: -16px;
+    left: -41px;
+    right: 38px;
+    position: absolute;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: lowercase;
+    padding: 13px 0 0 56px;
+    margin-bottom: 0;
+    background: url("images/white/top_left.png") top left no-repeat;
+}
+
+.context .sender {
+    background: url("images/white/context_top_left.png") top left no-repeat; 
+}
+    
+.time_initial {
+    position: absolute;
+    right: 0;
+    top: -16px;
+    font-size: 9px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 14px 16px 0 5px;
+    margin-bottom: 0;
+    background: url("images/white/top_right.png") top right no-repeat;
+    color: #333333;
+}
+    
+.context .time_initial {
+    background: url("images/white/context_top_right.png") top right no-repeat;
+}
+    
+.time_consecutive {
+    float: left;
+    background: 29px url("images/white/arrow.png") no-repeat;
+    margin-left: -40px;
+    margin-top: 5px;
+    font-size: 9px;
+    color: #111111;
+}
+
+    
+.buddyicon {
+    position: absolute;
+    background: url("images/white/buddy_background.png");
+    top: -5px;
+    left: -29px;
+    z-index: 4;
+    height: 40px;
+    width: 40px;
+}
+	
+.buddyicon img {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    z-index: 3;
+}
+    
+.message {
+    position: relative;
+    top: 0;
+    left: -41px;
+    margin-right: -24px;
+    padding: 6px 0 10px 56px;
+    background: url("images/white/bottom_left.png") bottom left repeat-y;
+    color: #000;
+}
+ 
+.context .message {
+    background: url("images/white/context_bottom_left.png") bottom left repeat-y;
+    color: #404040;
+}    
+   
+ p {
+    padding: 0;
+    margin-bottom: 6px;
+    overflow: auto;
+}
+    
+.status_container {
+    position: relative;
+    background: url("images/white/status_background.png");
+    margin: 0px 30px -1px 32px;
+    color: #111111;
+    text-shadow: 1px 1px 3px #aaa;
+    font-size: 9px;
+    text-transform: lowercase;
+    height: 29px;
+}
+
+.status_message {
+    position: relative;
+    left: -30px;
+    background: url("images/white/status_left.png") top left no-repeat;
+    padding: 7px 8px 7px 15px;
+}
+
+.status_time {
+    position: absolute;
+    top: 0px;
+    right: -30px;
+    padding: 8px 19px 8px 5px;
+    text-transform: uppercase;
+    font-size: 8px;
+    background: url("images/white/status_right.png") top right no-repeat;
+}
+
+IMG {
+    vertical-align:middle;
+    top:-3px;
+}
+
+#Chat {
+    overflow: hidden;
+    margin-bottom: -8px;
+}

@@ -3,7 +3,7 @@
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug" assembly="Synapse" />
       <Build debugmode="True" target="Exe" />
-      <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution runwithwarnings="True" commandlineparameters="--uninstalled" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
       <EnvironmentVariables>
         <Variable name="SYNAPSE_DEBUG" value="1" />
       </EnvironmentVariables>
@@ -17,7 +17,6 @@
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="Synapse.QtClient.UI.Views" subtype="Directory" buildaction="Compile" />
     <File name="Main.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.UI.Views/MainWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/mainwindow.qss" subtype="Code" buildaction="EmbedAsResource" />
@@ -51,7 +50,6 @@
     <File name="AvatarFileEngine.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/ServiceBrowserWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.UI.Views/TabbedChatsWindow.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.QtClient.Widgets" subtype="Directory" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AvatarGrid.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AvatarGrid.InfoPopup.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AvatarGrid.FadeInOutAnimation.cs" subtype="Code" buildaction="Compile" />
@@ -90,6 +88,7 @@
     <File name="qt-gui/AddFriendWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/LightboxContainerWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="EditGroupsWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/EditGroupsWidget.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
@@ -101,7 +100,6 @@
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <ProjectReference type="Assembly" localcopy="True" refto="../../../../../../usr/lib/cli/kdebindings-4.4/qt-dotnet.dll" />
     <ProjectReference type="Assembly" localcopy="True" refto="../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.dll" />
@@ -112,9 +110,20 @@
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference type="Gac" localcopy="True" refto="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <ProjectReference type="Gac" localcopy="True" refto="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Gac" localcopy="True" refto="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
+  <Deployment.LinuxDeployData scriptName="synapse" />
   <GtkDesignInfo />
+  <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
+    <BuildFilesVar Sync="True" Name="FILES" />
+    <ResourcesVar Sync="True" Name="RESOURCES" />
+    <OthersVar />
+    <GacRefVar Sync="True" Name="REFERENCES" />
+    <AsmRefVar Sync="True" Name="REFERENCES" />
+    <ProjectRefVar Sync="True" Name="REFERENCES" />
+  </MonoDevelop.Autotools.MakefileInfo>
   <QyotoDesignInfo>
     <Forms>
       <QyotoForm UiFileName="accountstatuswidget.ui" />

@@ -19,7 +19,6 @@
     <File name="Synapse.Services/NotificationService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services/ScreensaverService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services/NowPlayingService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack" subtype="Directory" buildaction="Compile" />
     <File name="Synapse.ServiceStack/IService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/ServiceManager.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/IRequiredService.cs" subtype="Code" buildaction="Compile" />
@@ -48,4 +47,13 @@
     <ProjectReference type="Gac" localcopy="True" refto="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
   </References>
   <GtkDesignInfo />
+  <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
+    <BuildFilesVar Sync="True" Name="FILES" />
+    <DeployFilesVar />
+    <ResourcesVar Sync="True" Name="RESOURCES" />
+    <OthersVar />
+    <GacRefVar Sync="True" Name="REFERENCES" />
+    <AsmRefVar Sync="True" Name="REFERENCES" />
+    <ProjectRefVar Sync="True" Name="REFERENCES" />
+  </MonoDevelop.Autotools.MakefileInfo>
 </Project>

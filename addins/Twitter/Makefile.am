@@ -106,32 +106,36 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) 
 
-FILES = \
-	TwitterXmlApi.cs \
+FILES =  \
+	gtk-gui/generated.cs \
+	gtk-gui/Synapse.Addins.TwitterAddin.TwitterAddinPreferencesDialog.cs \
+	TwitterAddinPreferencesDialog.cs \
+	TwitterAddinPreferencesFactory.cs \
 	TwitterService.cs \
 	TwitterShoutHandler.cs \
-	gtk-gui/generated.cs \
-	TwitterAddinPreferencesDialog.cs \
-	gtk-gui/Synapse.Addins.TwitterAddin.TwitterAddinPreferencesDialog.cs \
-	TwitterAddinPreferencesFactory.cs 
+	TwitterXmlApi.cs 
 
 DATA_FILES = 
 
-RESOURCES = \
-	Twitter.addin.xml \
+RESOURCES =  \
 	gtk-gui/gui.stetic \
+	twitm-16.png \
 	twitm-48.png \
-	twitm-16.png 
+	Twitter.addin.xml 
 
 EXTRAS = 
 
 REFERENCES =  \
-	System.Xml \
-	System.Web \
-	System \
-	$(GTK_SHARP_20_LIBS) \
+	../../build/Debug/Synapse.Core.dll \
+	../../build/Debug/Synapse.Services.dll \
+	../../build/Debug/Synapse.UI.dll \
+	../../build/Debug/Synapse.Xmpp.dll \
 	Mono.Posix \
-	System.Core
+	-pkg:gtk-sharp-2.0 \
+	System \
+	System.Core \
+	System.Web \
+	System.Xml
 
 DLL_REFERENCES = 
 

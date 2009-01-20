@@ -100,22 +100,22 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) 
 
-FILES = \
+FILES =  \
 	AssemblyInfo.cs \
 	FlickrAvatarProvider.cs 
 
 DATA_FILES = 
 
-RESOURCES = \
-	Flickr.addin.xml 
+RESOURCES = Flickr.addin.xml 
 
 EXTRAS = 
 
 REFERENCES =  \
+	../../build/Debug/Synapse.UI.dll \
+	-pkg:mono-addins \
 	System \
-	System.Xml \
-	$(MONO_ADDINS_LIBS) \
-	System.Web
+	System.Web \
+	System.Xml
 
 DLL_REFERENCES = 
 

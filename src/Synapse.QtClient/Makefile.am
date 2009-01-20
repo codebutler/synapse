@@ -133,96 +133,107 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) $(BINARIES) 
 
-FILES = \
-	Main.cs \
-	Synapse.QtClient.UI.Views/MainWindow.cs \
-	Synapse.QtClient.UI.Views/TrayIconView.cs \
-	qt-gui/NoAccountsWidget.cs \
-	qt-gui/AccountStatusWidget.cs \
-	qt-gui/RosterWidget.cs \
-	qt-gui/MainWindow.cs \
-	Synapse.QtClient.UI.Views/ChatWindow.cs \
-	PList.cs \
-	qt-gui/DebugWindow.cs \
-	KeyPressEater.cs \
+FILES =  \
+	AbstractSimpleFileEngine.cs \
+	AddFriendWindow.cs \
+	AvatarFileEngine.cs \
+	AvatarSelectDialog.cs \
 	BookmarkedMUCsModel.cs \
-	Synapse.QtClient.UI.Views/DebugWindow.cs \
-	QtTraceListener.cs \
+	EditAccountDialog.cs \
+	EditGroupsWidget.cs \
+	ErrorDialog.cs \
+	gtk-gui/generated.cs \
+	gtk-gui/Synapse.QtClient.ErrorDialog.cs \
+	Gui.cs \
+	JSDebugObject.cs \
+	KeyPressEater.cs \
+	Main.cs \
+	PList.cs \
+	qt-gui/AccountStatusWidget.cs \
+	qt-gui/AddFriendWindow.cs \
+	qt-gui/AvatarSelectDialog.cs \
 	qt-gui/ChatWindow.cs \
-	Synapse.QtClient.UI.Views/ProfileWindow.cs \
-	qt-gui/ProfileWindow.cs \
-	WindowMover.cs \
+	qt-gui/DebugWindow.cs \
+	qt-gui/EditAccountDialog.cs \
+	qt-gui/EditGroupsWidget.cs \
+	qt-gui/EditGroupsWindow.cs \
+	qt-gui/MainWindow.cs \
+	qt-gui/NoAccountsWidget.cs \
 	qt-gui/PreferencesWindow.cs \
+	qt-gui/ProfileWindow.cs \
+	qt-gui/RosterWidget.cs \
+	qt-gui/ServiceBrowserWindow.cs \
+	QtTraceListener.cs \
 	ResizableGraphicsPixmapItem.cs \
 	ResourceFileEngine.cs \
-	AvatarFileEngine.cs \
-	qt-gui/ServiceBrowserWindow.cs \
+	Synapse.QtClient.UI.Views/ChatWindow.cs \
+	Synapse.QtClient.UI.Views/DebugWindow.cs \
+	Synapse.QtClient.UI.Views/EditGroupsWindow.cs \
+	Synapse.QtClient.UI.Views/MainWindow.cs \
+	Synapse.QtClient.UI.Views/PreferencesWindow.cs \
+	Synapse.QtClient.UI.Views/ProfileWindow.cs \
+	Synapse.QtClient.UI.Views/ServiceBrowserWindow.cs \
 	Synapse.QtClient.UI.Views/TabbedChatsWindow.cs \
+	Synapse.QtClient.UI.Views/TrayIconView.cs \
+	Synapse.QtClient.Widgets/AccountStatusWidget.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.cs \
-	Synapse.QtClient.Widgets/AvatarGrid.InfoPopup.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.FadeInOutAnimation.cs \
-	Synapse.QtClient.Widgets/AvatarGrid.RosterItemGroup.cs \
+	Synapse.QtClient.Widgets/AvatarGrid.InfoPopup.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.RosterItem.cs \
-	Gui.cs \
-	AbstractSimpleFileEngine.cs \
+	Synapse.QtClient.Widgets/AvatarGrid.RosterItemGroup.cs \
+	Synapse.QtClient.Widgets/AvatarGrid.Scene.cs \
+	Synapse.QtClient.Widgets/AvatarLabel.cs \
 	Synapse.QtClient.Widgets/ConversationWidget.cs \
 	Synapse.QtClient.Widgets/FadingQLabel.cs \
+	Synapse.QtClient.Widgets/LightboxContainerWidget.cs \
 	Synapse.QtClient.Widgets/NoAccountsWidget.cs \
-	Synapse.QtClient.Widgets/AccountStatusWidget.cs \
 	Synapse.QtClient.Widgets/RosterWidget.cs \
-	Synapse.QtClient.UI.Views/ServiceBrowserWindow.cs \
-	gtk-gui/generated.cs \
-	ErrorDialog.cs \
-	gtk-gui/Synapse.QtClient.ErrorDialog.cs \
-	Synapse.QtClient.UI.Views/EditGroupsWindow.cs \
-	qt-gui/EditGroupsWindow.cs \
-	Synapse.QtClient.Widgets/AvatarGrid.Scene.cs \
-	EditAccountDialog.cs \
-	qt-gui/EditAccountDialog.cs \
-	JSDebugObject.cs \
-	Synapse.QtClient.UI.Views/PreferencesWindow.cs \
-	AvatarSelectDialog.cs \
-	qt-gui/AvatarSelectDialog.cs \
-	Synapse.QtClient.Widgets/AvatarLabel.cs \
-	AddFriendWindow.cs \
-	qt-gui/AddFriendWindow.cs \
-	Synapse.QtClient.Widgets/LightboxContainerWidget.cs 
+	WindowMover.cs 
 
 DATA_FILES = 
 
-RESOURCES = \
-	resources/mainwindow.qss \
-	resources/feed.html \
-	resources/Template.html \
-	resources/mainwindow-noaccounts.qss \
+RESOURCES =  \
+	gtk-gui/gui.stetic \
 	resources/default-avatar.png \
-	resources/newtab.html \
-	resources/octy.svg \
-	resources/oceanbg.png \
+	resources/effects.js \
+	resources/feed.html \
+	resources/friend-muclist.html \
 	resources/handle.png \
+	resources/loading.gif \
+	resources/mainwindow.qss \
+	resources/mainwindow-noaccounts.qss \
+	resources/music-16.png \
+	resources/newtab.html \
+	resources/oceanbg.png \
+	resources/octy.svg \
 	resources/octy-22.png \
 	resources/octy-32.png \
 	resources/prototype.js \
-	resources/effects.js \
-	gtk-gui/gui.stetic \
-	resources/friend-muclist.html \
-	resources/music-16.png \
-	resources/loading.gif 
+	resources/Template.html 
 
 EXTRAS = \
-	synapse.qtclient.in 
+	synapse.in 
 
 REFERENCES =  \
-	$(MONO_ADDINS_LIBS) \
-	System \
-	System.Xml \
-	$(GTK_SHARP_20_LIBS) \
-	$(QYOTO_LIBS) \
-	$(NDESK_DBUS_GLIB_10_LIBS) \
+	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll \
+	../../build/Debug/Synapse.Core.dll \
+	../../build/Debug/Synapse.Services.dll \
+	../../build/Debug/Synapse.UI.dll \
+	../../build/Debug/Synapse.Xmpp.dll \
+	../../contrib/Hyena.dll \
+	../../contrib/Hyena.Gui.dll \
+	../../contrib/jabber-net.dll \
+	../../contrib/Mono.Rocks.dll \
 	Mono.Posix \
-	$(GLIB_SHARP_20_LIBS) \
+	-pkg:glib-sharp-2.0 \
+	-pkg:gtk-sharp-2.0 \
+	-pkg:mono-addins \
+	-pkg:ndesk-dbus-glib-1.0 \
+	-pkg:qyoto \
+	System \
+	System.Core \
 	System.Drawing \
-	System.Core
+	System.Xml
 
 DLL_REFERENCES =  \
 	../../contrib/jabber-net.dll \
@@ -242,7 +253,7 @@ MONO_ROCKS_DLL_MDB = $(BUILD_DIR)/Mono.Rocks.dll.mdb
 JABBER_NET_DLL_MDB = $(BUILD_DIR)/jabber-net.dll.mdb
 HYENA_GUI_DLL = $(BUILD_DIR)/Hyena.Gui.dll
 HYENA_GUI_DLL_CONFIG = $(BUILD_DIR)/Hyena.Gui.dll.config
-SYNAPSE_QTCLIENT = $(BUILD_DIR)/synapse.qtclient
+SYNAPSE_QTCLIENT = $(BUILD_DIR)/synapse
 QT_DOTNET_DLL = $(BUILD_DIR)/qt-dotnet.dll
 HYENA_DLL = $(BUILD_DIR)/Hyena.dll
 MONO_ROCKS_DLL = $(BUILD_DIR)/Mono.Rocks.dll
@@ -256,7 +267,7 @@ $(eval $(call emit-deploy-target,MONO_ROCKS_DLL_MDB))
 $(eval $(call emit-deploy-target,JABBER_NET_DLL_MDB))
 $(eval $(call emit-deploy-target,HYENA_GUI_DLL))
 $(eval $(call emit-deploy-target,HYENA_GUI_DLL_CONFIG))
-$(eval $(call emit-deploy-wrapper,SYNAPSE_QTCLIENT,synapse.qtclient,x))
+$(eval $(call emit-deploy-wrapper,SYNAPSE_QTCLIENT,synapse,x))
 $(eval $(call emit-deploy-target,QT_DOTNET_DLL))
 $(eval $(call emit-deploy-target,HYENA_DLL))
 $(eval $(call emit-deploy-target,DRAGON_CORE_XMPP_DLL))

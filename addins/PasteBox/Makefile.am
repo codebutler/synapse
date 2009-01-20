@@ -110,16 +110,16 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) 
 
-FILES = \
+FILES =  \
 	ActionHandler.cs \
-	PasteBoxDialog.cs \
-	qt-gui/PasteBoxDialog.cs \
 	CodePasteFormatter.cs \
-	IPasteFormatter.cs 
+	IPasteFormatter.cs \
+	PasteBoxDialog.cs \
+	qt-gui/PasteBoxDialog.cs 
 
 DATA_FILES = 
 
-RESOURCES = \
+RESOURCES =  \
 	PasteBox.addin.xml \
 	SyntaxHighlighter.css \
 	SyntaxHighlighter.js 
@@ -127,7 +127,11 @@ RESOURCES = \
 EXTRAS = 
 
 REFERENCES =  \
-	$(QYOTO_LIBS)
+	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll \
+	../../build/Debug/Synapse.Core.dll \
+	../../build/Debug/Synapse.Services.dll \
+	../../build/Debug/Synapse.UI.dll \
+	-pkg:qyoto
 
 DLL_REFERENCES =  \
 	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll

@@ -58,7 +58,7 @@ dnl package checks, per config
 
 AC_CONFIG_FILES([
 Makefile
-src/Synapse.QtClient/synapse.qtclient
+src/Synapse.QtClient/synapse
 addins/Makefile
 src/Synapse.Services/Makefile
 src/Synapse.Core/Makefile

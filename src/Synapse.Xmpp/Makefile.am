@@ -81,42 +81,40 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
-FILES = \
+FILES =  \
+	Synapse.Xmpp.Services/AccountService.cs \
+	Synapse.Xmpp.Services/ActivityFeedService.cs \
 	Synapse.Xmpp/Account.cs \
-	Synapse.Xmpp/IDiscoverable.cs \
-	Synapse.Xmpp/Namespace.cs \
-	Synapse.Xmpp/PersonalEventing.cs \
-	Synapse.Xmpp/Microblogging.cs \
-	Synapse.Xmpp/UserMood.cs \
-	Synapse.Xmpp/UserTune.cs \
-	Synapse.Xmpp/ClientStatus.cs \
-	Synapse.Xmpp/IOperation.cs \
-	Synapse.Xmpp/AbstractOperation.cs \
-	Synapse.Xmpp/UserAvatars.cs \
 	Synapse.Xmpp/AvatarManager.cs \
 	Synapse.Xmpp/ChatStates.cs \
-	Synapse.Xmpp/AbstractIqOperation.cs \
-	Synapse.Xmpp/XmppUriQueryInfo.cs \
+	Synapse.Xmpp/ClientStatus.cs \
 	Synapse.Xmpp/Helper.cs \
-	Synapse.Xmpp.Services/ActivityFeedService.cs \
-	Synapse.Xmpp.Services/AccountService.cs \
-	Synapse.Xmpp.Services/OperationService.cs 
+	Synapse.Xmpp/IDiscoverable.cs \
+	Synapse.Xmpp/Microblogging.cs \
+	Synapse.Xmpp/Namespace.cs \
+	Synapse.Xmpp/PersonalEventing.cs \
+	Synapse.Xmpp/UserAvatars.cs \
+	Synapse.Xmpp/UserMood.cs \
+	Synapse.Xmpp/UserTune.cs \
+	Synapse.Xmpp/XmppUriQueryInfo.cs 
 
 DATA_FILES = 
 
-RESOURCES = \
-	Synapse.Xmpp.addin.xml 
+RESOURCES = Synapse.Xmpp.addin.xml 
 
 EXTRAS = \
 	synapse.xmpp.pc.in 
 
 REFERENCES =  \
+	../../build/Debug/Synapse.Core.dll \
+	../../build/Debug/Synapse.Services.dll \
+	../../contrib/jabber-net.dll \
+	-pkg:mono-addins \
 	System \
-	System.Xml \
-	$(MONO_ADDINS_LIBS) \
+	System.Core \
 	System.Drawing \
 	System.Web \
-	System.Core
+	System.Xml
 
 DLL_REFERENCES =  \
 	../../contrib/jabber-net.dll

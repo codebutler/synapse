@@ -15,8 +15,6 @@
   </Configurations>
   <Contents>
     <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Views" subtype="Directory" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers" subtype="Directory" buildaction="Compile" />
     <File name="IController.cs" subtype="Code" buildaction="Compile" />
     <File name="IView.cs" subtype="Code" buildaction="Compile" />
     <File name="ViewFactory.cs" subtype="Code" buildaction="Compile" />
@@ -37,7 +35,6 @@
     <File name="Synapse.UI.Controllers/AbstractChatWindowController.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Controllers/ChatWindowController.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="Synapse.UI.Actions.ExtensionNodes" subtype="Directory" buildaction="Compile" />
     <File name="Synapse.UI.Actions.ExtensionNodes/ActionCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="ActionHandlerAttribute.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Actions.ExtensionNodes/ActionHandlerCodon.cs" subtype="Code" buildaction="Compile" />
@@ -57,12 +54,9 @@
     <File name="template4dotnet.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Controllers/TabbedChatsWindowController.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Views/ITabbedChatsWindowView.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Views/IEditGroupsWindowView.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers/EditGroupsController.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Views/IPreferencesWindowView.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Controllers/PreferencesWindowController.cs" subtype="Code" buildaction="Compile" />
     <File name="IAddinPreferencesFactory.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat" subtype="Directory" buildaction="Compile" />
     <File name="Synapse.UI.Chat/AbstractChatContent.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Chat/ChatContentStatus.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Chat/ChatContentContext.cs" subtype="Code" buildaction="Compile" />
@@ -85,4 +79,13 @@
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <GtkDesignInfo />
+  <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
+    <BuildFilesVar Sync="True" Name="FILES" />
+    <DeployFilesVar />
+    <ResourcesVar Sync="True" Name="RESOURCES" />
+    <OthersVar />
+    <GacRefVar Sync="True" Name="REFERENCES" />
+    <AsmRefVar Sync="True" Name="REFERENCES" />
+    <ProjectRefVar Sync="True" Name="REFERENCES" />
+  </MonoDevelop.Autotools.MakefileInfo>
 </Project>

@@ -90,8 +90,10 @@ namespace Synapse.QtClient
 			
 			QWebSettings.GlobalSettings().SetAttribute(QWebSettings.WebAttribute.DeveloperExtrasEnabled, true);
 			
-			string themesDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "themes");
-			ConversationWidget.ThemesDirectory = themesDirectory;
+			if (Application.CommandLine.Contains ("uninstalled"))
+				ConversationWidget.ThemesDirectory = Path.Combine(Environment.CurrentDirectory, "themes");
+			else
+				ConversationWidget.ThemesDirectory = Path.Combine(Paths.InstalledApplicationData, "themes");
 			
 			Application.Run();
 				

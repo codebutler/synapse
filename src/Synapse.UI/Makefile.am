@@ -95,76 +95,77 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
-FILES = \
-	AssemblyInfo.cs \
-	IController.cs \
-	IView.cs \
-	ViewFactory.cs \
-	Synapse.UI.Controllers/MainWindowController.cs \
+FILES =  \
 	AbstractController.cs \
-	Synapse.UI.Views/IMainWindowView.cs \
-	Synapse.UI.Controllers/TrayIconController.cs \
-	Synapse.UI.Views/ITrayIconView.cs \
-	IDialogView.cs \
-	EventHandlers.cs \
-	IAvatarGridModel.cs \
-	RosterAvatarGridModel.cs \
-	Synapse.UI.Controllers/MucWindowController.cs \
-	Synapse.UI.Controllers/DebugWindowController.cs \
-	Synapse.UI.Views/IDebugWindowView.cs \
-	MucAvatarGridModel.cs \
-	Synapse.UI.Views/IChatWindowView.cs \
-	Synapse.UI.Controllers/AbstractChatWindowController.cs \
-	Synapse.UI.Controllers/ChatWindowController.cs \
-	Synapse.UI.Actions.ExtensionNodes/ActionCodon.cs \
+	AccountChatWindowManager.cs \
 	ActionHandlerAttribute.cs \
+	AssemblyInfo.cs \
+	EventHandlers.cs \
+	IActionItemCodon.cs \
+	IAddinPreferencesFactory.cs \
+	IAvatarGridModel.cs \
+	IAvatarProvider.cs \
+	IController.cs \
+	IDialogView.cs \
+	IView.cs \
+	MucAvatarGridModel.cs \
+	ResourceProviderCodon.cs \
+	RosterAvatarGridModel.cs \
+	Synapse.UI.Actions.ExtensionNodes/ActionCodon.cs \
 	Synapse.UI.Actions.ExtensionNodes/ActionHandlerCodon.cs \
 	Synapse.UI.Actions.ExtensionNodes/ActionItemCodon.cs \
 	Synapse.UI.Actions.ExtensionNodes/SeparatorItemCodon.cs \
-	IActionItemCodon.cs \
+	Synapse.UI.Chat/AbstractChatContent.cs \
+	Synapse.UI.Chat/ChatContentContext.cs \
+	Synapse.UI.Chat/ChatContentEvent.cs \
+	Synapse.UI.Chat/ChatContentMessage.cs \
+	Synapse.UI.Chat/ChatContentNotification.cs \
+	Synapse.UI.Chat/ChatContentStatus.cs \
+	Synapse.UI.Chat/ChatContentTyping.cs \
+	Synapse.UI.Controllers/AbstractChatWindowController.cs \
+	Synapse.UI.Controllers/ChatWindowController.cs \
+	Synapse.UI.Controllers/DebugWindowController.cs \
+	Synapse.UI.Controllers/MainWindowController.cs \
+	Synapse.UI.Controllers/MucWindowController.cs \
+	Synapse.UI.Controllers/PreferencesWindowController.cs \
+	Synapse.UI.Controllers/ServiceBrowserWindowController.cs \
+	Synapse.UI.Controllers/TabbedChatsWindowController.cs \
+	Synapse.UI.Controllers/TrayIconController.cs \
 	Synapse.UI.Controllers/UserProfileWindowController.cs \
-	Synapse.UI.Views/IUserProfileWindowView.cs \
-	Synapse.UI.Operations/JoinMucOperation.cs \
-	Synapse.UI.Operations/RequestVCardOperation.cs \
-	ResourceProviderCodon.cs \
 	Synapse.UI.Services/ActionService.cs \
 	Synapse.UI.Services/GuiService.cs \
-	AccountChatWindowManager.cs \
-	Synapse.UI.Views/IServiceBrowserWindowView.cs \
-	Synapse.UI.Controllers/ServiceBrowserWindowController.cs \
-	template4dotnet.cs \
-	Synapse.UI.Controllers/TabbedChatsWindowController.cs \
-	Synapse.UI.Views/ITabbedChatsWindowView.cs \
-	Synapse.UI.Views/IEditGroupsWindowView.cs \
-	Synapse.UI.Controllers/EditGroupsController.cs \
+	Synapse.UI.Views/IChatWindowView.cs \
+	Synapse.UI.Views/IDebugWindowView.cs \
+	Synapse.UI.Views/IMainWindowView.cs \
 	Synapse.UI.Views/IPreferencesWindowView.cs \
-	Synapse.UI.Controllers/PreferencesWindowController.cs \
-	IAddinPreferencesFactory.cs \
-	Synapse.UI.Chat/AbstractChatContent.cs \
-	Synapse.UI.Chat/ChatContentStatus.cs \
-	Synapse.UI.Chat/ChatContentContext.cs \
-	Synapse.UI.Chat/ChatContentMessage.cs \
-	Synapse.UI.Chat/ChatContentTyping.cs \
-	Synapse.UI.Chat/ChatContentNotification.cs \
-	Synapse.UI.Chat/ChatContentEvent.cs \
-	IAvatarProvider.cs 
+	Synapse.UI.Views/IServiceBrowserWindowView.cs \
+	Synapse.UI.Views/ITabbedChatsWindowView.cs \
+	Synapse.UI.Views/ITrayIconView.cs \
+	Synapse.UI.Views/IUserProfileWindowView.cs \
+	template4dotnet.cs \
+	ViewFactory.cs 
 
 DATA_FILES = 
 
-RESOURCES = \
-	Synapse.UI.addin.xml \
+RESOURCES =  \
 	resources/profile.html \
-	resources/ServiceDiscovery.html 
+	resources/ServiceDiscovery.html \
+	Synapse.UI.addin.xml 
 
 EXTRAS = \
 	synapse.ui.pc.in 
 
 REFERENCES =  \
+	../../build/Debug/Synapse.Core.dll \
+	../../build/Debug/Synapse.Services.dll \
+	../../build/Debug/Synapse.Xmpp.dll \
+	../../contrib/Hyena.dll \
+	../../contrib/jabber-net.dll \
+	-pkg:mono-addins \
 	System \
-	$(MONO_ADDINS_LIBS) \
-	System.Xml \
+	System.Core \
 	System.Web \
-	System.Core
+	System.Xml
 
 DLL_REFERENCES =  \
 	../../contrib/jabber-net.dll \
