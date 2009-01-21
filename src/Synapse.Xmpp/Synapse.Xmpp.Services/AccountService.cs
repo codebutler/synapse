@@ -69,7 +69,8 @@ namespace Synapse.Xmpp.Services
 		public void Dispose ()
 		{
 			foreach (Account account in m_Accounts)
-				account.Disconnect();
+				if (account.ConnectionState != AccountConnectionState.Disconnected)
+					account.Disconnect();
 		}
 		
 		public void AddAccount (Account account)
