@@ -501,6 +501,20 @@ namespace Synapse.Xmpp
 				m_Client.Connect();
 			}).Start();
 		}
+
+		public void SaveVCard ()
+		{
+			IQ iq = new IQ(m_Client.Document);
+			iq.Type = IQType.set;
+
+			var vcard = m_Client.Document.ImportNode(m_MyVCard, true);
+			iq.AppendChild(vcard);
+			
+			m_Client.Write(iq);
+
+			if (MyVCardUpdated != null)
+				MyVCardUpdated(this, EventArgs.Empty);
+		}
 		
 		public void Send (Packet message)
 		{
@@ -553,6 +567,35 @@ namespace Synapse.Xmpp
 			var s = ServiceManager.Get<ActivityFeedService>();
 			s.PostItem(this, from, type, actionItem, content, contentUrl);
 		}
+
+		#region Stuff that should be in jabber-net
+		public void JoinMuc (string roomJid)
+		{
+			Room room = this.ConferenceManager.GetRoom(roomJid);
+			if (!room.IsParticipating)
+				room.Join();
+			else
+				throw new UserException("Already in this room");
+		}
+
+		public void RequestVCard (JID jid, IqCB callback)
+		{			
+			VCardIQ iq = new VCardIQ(this.Client.Document);
+			iq.Type = IQType.get;
+			iq.To = jid;
+			iq.AddChild(new VCard(this.Client.Document));
+			if (callback != null)
+				m_IQTracker.BeginIQ(iq, callback, this);
+			else
+				m_Client.Write(iq);
+		}
+
+		public void AddRosterItem (JID jid, string[] groups, IqCB callback)
+		{
+			// FIXME
+			throw new NotImplementedException();
+		}
+		#endregion
 		
 		protected virtual void OnStateChanged ()
 		{

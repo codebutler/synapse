@@ -462,7 +462,7 @@ namespace Synapse.QtClient.Widgets
 		}
 
 		void AddItemToGroup (T item, string groupName, bool resizeAndReposition)
-		{
+		{			
 			lock (m_Groups) {
 				if (!m_Groups.ContainsKey(groupName))
 					AddGroup(groupName, resizeAndReposition);
@@ -471,9 +471,15 @@ namespace Synapse.QtClient.Widgets
 			lock (m_Items) {
 				if (!m_Items.ContainsKey(item))
 					m_Items.Add(item, new Dictionary<string, RosterItem<T>>());
-	
-				if (m_Items[item].ContainsKey(groupName))
-				    throw new Exception("Already in group!");			
+
+				// FIXME: Need to figure out why this happens to some people.
+				if (m_Items[item].ContainsKey(groupName)) {
+					string err = String.Format("FIXME: '{0}' is already in group '{1}'!", m_Model.GetJID(item), groupName);
+					if (item is Item) {
+						err += " All Groups: " + String.Join(",", m_Model.GetItemGroups(item).ToArray());
+					}
+				    throw new Exception(err);
+				}
 				    
 				QGraphicsItemGroup group = m_Groups[groupName];
 				RosterItem<T> graphicsItem = new RosterItem<T>(this, item, (uint)IconSize, (uint)IconSize, group);
@@ -485,13 +491,15 @@ namespace Synapse.QtClient.Widgets
 
 		void RemoveItemFromGroup (T item, string groupName, bool resizeAndReposition)
 		{			
-			var graphicsItem = m_Items[item][groupName];
-			var group = (RosterItemGroup)graphicsItem.ParentItem();
-			group.RemoveFromGroup(graphicsItem);
-			m_Scene.RemoveItem(graphicsItem);
-			m_Items[item].Remove(groupName);
-			if (m_Items[item].Count == 0)
-				m_Items.Remove(item);
+			lock (m_Items) {
+				var graphicsItem = m_Items[item][groupName];
+				var group = (RosterItemGroup)graphicsItem.ParentItem();
+				group.RemoveFromGroup(graphicsItem);
+				m_Scene.RemoveItem(graphicsItem);
+				m_Items[item].Remove(groupName);
+				if (m_Items[item].Count == 0)
+					m_Items.Remove(item);
+			}
 
 			if (resizeAndReposition)
 				ResizeAndRepositionGroups();

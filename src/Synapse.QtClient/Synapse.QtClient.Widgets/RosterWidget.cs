@@ -27,10 +27,10 @@ using Qyoto;
 using Synapse.Core;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
-using Synapse.UI.Operations;
 using Synapse.ServiceStack;
 using Synapse.UI;
 using Synapse.UI.Controllers;
+using Synapse.UI.Services;
 using Synapse.QtClient;
 using Synapse.QtClient.UI.Views;
 using Synapse.QtClient.Widgets;
@@ -176,6 +176,8 @@ public partial class RosterWidget : QWidget
 		mucTree.SetModel(m_MucModel);
 
 		rosterIconSizeSlider.Value = rosterGrid.IconSize;
+
+		addFriendButton.icon = Gui.LoadIcon("add");
 	}
 
 	public int AccountsCount {
@@ -227,7 +229,7 @@ public partial class RosterWidget : QWidget
 			JID jid = null;
 			if (JID.TryParse(m_ChatNameEdit.Text, out jid)) {
 				if (!String.IsNullOrEmpty(jid.User) && !String.IsNullOrEmpty(jid.Server)) {
-					ServiceManager.Get<OperationService>().Start(new JoinMucOperation(selectedAccount, jid));
+					selectedAccount.JoinMuc(jid);
 				} else {
 					QMessageBox.Critical(null, "Synapse", "Invalid JID");
 				}
@@ -246,7 +248,7 @@ public partial class RosterWidget : QWidget
 				Account account = (Account)index.Parent().InternalPointer();
 				BookmarkConference conf = (BookmarkConference)index.InternalPointer();
 				try {
-					ServiceManager.Get<OperationService>().Start(new JoinMucOperation(account, conf.JID));
+					account.JoinMuc(conf.JID);
 				} catch (UserException e) {
 					QMessageBox.Critical(this.TopLevelWidget(), "Synapse", e.Message);
 				}
@@ -283,14 +285,14 @@ public partial class RosterWidget : QWidget
 			return;
 		
 		if (action == m_ViewProfileAction) {
-			ServiceManager.Get<OperationService>().Start(new RequestVCardOperation(rosterGrid.HoverItem.Account, rosterGrid.HoverItem.Item.JID));
+			rosterGrid.HoverItem.Account.RequestVCard(rosterGrid.HoverItem.Item.JID, null);
 		} else if (action == m_IMAction) {
 			Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(rosterGrid.HoverItem.Account, rosterGrid.HoverItem.Item.JID);	
 		} else if (m_InviteActions.Contains(action)) {
 			// FIXME
 			Console.WriteLine("Send Invitation!!");
 		} else if (action == m_EditGroupsAction) {
-			var c = new EditGroupsWindowController(rosterGrid.HoverItem.Account, rosterGrid.HoverItem.Item);
+			var c = new EditGroupsWindow(rosterGrid.HoverItem.Account, rosterGrid.HoverItem.Item);
 		}
 	}
 	
@@ -378,6 +380,16 @@ public partial class RosterWidget : QWidget
 		} catch (Exception ex) {
 			Console.Error.WriteLine(ex);
 			QMessageBox.Critical(null, "Synapse Error", ex.Message);
+		}
+	}
+
+	[Q_SLOT]
+	void on_addFriendButton_clicked ()
+	{
+		Account account = Gui.ShowAccountSelectMenu(addFriendButton);
+		if (account != null) {
+			AddFriendWindow window = new AddFriendWindow(account);
+			window.Show();
 		}
 	}
 	#endregion

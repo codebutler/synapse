@@ -19,7 +19,6 @@
     <File name="Synapse.Services/NotificationService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services/ScreensaverService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services/NowPlayingService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack" subtype="Directory" buildaction="Compile" />
     <File name="Synapse.ServiceStack/IService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/ServiceManager.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/IRequiredService.cs" subtype="Code" buildaction="Compile" />
@@ -40,12 +39,21 @@
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference type="Gac" localcopy="True" refto="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
+    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/NDesk.DBus.dll" />
   </References>
   <GtkDesignInfo />
+  <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
+    <BuildFilesVar Sync="True" Name="FILES" />
+    <DeployFilesVar />
+    <ResourcesVar Sync="True" Name="RESOURCES" />
+    <OthersVar />
+    <GacRefVar Sync="True" Name="REFERENCES" />
+    <AsmRefVar Sync="True" Name="REFERENCES" />
+    <ProjectRefVar Sync="True" Name="REFERENCES" />
+  </MonoDevelop.Autotools.MakefileInfo>
 </Project>

@@ -27,6 +27,7 @@ using Synapse.Xmpp;
 using Synapse.UI;
 using Synapse.UI.Controllers;
 using Synapse.UI.Views;
+using Synapse.QtClient;
 using Synapse.QtClient.UI.Views;
 using jabber;
 
@@ -59,6 +60,7 @@ public partial class AccountStatusWidget : QWidget
 		m_AvatarLabel.Cursor = new QCursor(CursorShape.PointingHandCursor);
 		m_AvatarLabel.Clicked += delegate {
 			if (m_Account.ConnectionState == AccountConnectionState.Connected) {
+				Gui.CenterWidgetOnScreen(m_AvatarDialog);
 				m_AvatarDialog.Show();
 				m_AvatarDialog.ActivateWindow();
 			} else {
@@ -152,8 +154,8 @@ public partial class AccountStatusWidget : QWidget
 
 	void HandleAvatarUpdated (string jid, string hash)
 	{
-		Application.Invoke(delegate {
-			if (jid == m_Account.Jid.Bare) {				
+		if (jid == m_Account.Jid.Bare) {				
+			Application.Invoke(delegate {		
 				QPixmap pixmap = new QPixmap(32, 32);
 				pixmap.Fill(GlobalColor.transparent);
 
@@ -173,8 +175,8 @@ public partial class AccountStatusWidget : QWidget
 				painter.Dispose();
 
 				m_AvatarLabel.Pixmap = pixmap;
-			}
-		});
+			});
+		}
 	}
 	
 	void HandleMyVCardUpdated (object sender, EventArgs args)

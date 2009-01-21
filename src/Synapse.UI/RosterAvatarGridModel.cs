@@ -49,8 +49,9 @@ namespace Synapse.UI
 		bool   m_ModelUpdating  = false;
 		bool   m_ShowTransports = false;
 		string m_TextFilter     = null;
+		bool   m_AlwaysShowResource = true;
 
-		Dictionary<Item, RosterItem> m_Items = new Dictionary<Item, RosterItem>();
+		List<RosterItem> m_Items = new List<RosterItem>();
 		Dictionary<string, int> m_GroupIndexes = new Dictionary<string, int>();
 		
 		public RosterAvatarGridModel()
@@ -100,7 +101,7 @@ namespace Synapse.UI
 		
 		public IEnumerable<RosterItem> Items {
 			get {
-				return m_Items.Values;
+				return m_Items.AsReadOnly();
 			}
 		}
 		#endregion
@@ -129,23 +130,25 @@ namespace Synapse.UI
 		public void AddItemToGroup(RosterItem item, string groupName)
 		{
 			item.Item.AddGroup(groupName);
-			// FIXME: item.Account.Roster.Modify(item.Item);
+			item.Account.Roster.Modify(item.Item);
 			OnItemChanged(item);
 		}
 		
 		public void RemoveItemFromGroup(RosterItem item, string groupName)
 		{
 			item.Item.RemoveGroup(groupName);
-			// FIXME: item.Account.Roster.Modify(item.Item);
+			item.Account.Roster.Modify(item.Item);
 			OnItemChanged(item);
 		}
 		
 		// FIXME: This needs to be cached.
 		public IEnumerable<RosterItem> GetItemsInGroup (string groupName)
 		{
-			foreach (var item in Items) {
-				if (item.Item.HasGroup(groupName)) {
-					yield return item;
+			lock (m_Items) {
+				foreach (var item in m_Items) {
+					if (item.Item.HasGroup(groupName)) {
+						yield return item;
+					}
 				}
 			}
 		}
@@ -178,19 +181,25 @@ namespace Synapse.UI
 		{
 			var builder = new StringBuilder();
 			var presences = item.Account.PresenceManager.GetAll(item.Item.JID);
-			if (presences.Length == 1) {
-				var presence = presences[0];
-				builder.AppendFormat("\n");
-				builder.Append(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Helper.GetPresenceDisplay(presence)));
-				if (!String.IsNullOrEmpty(presence.Status)) {
-					builder.Append(" - ");
-				    builder.Append(presence.Status);
-				}	
-			} else if (presences.Length > 1) {
+			if (presences.Length > 1) {
 				foreach (var presence in presences) {
 					builder.AppendFormat("\n{0}: {1}",
 					                     presence.From.Resource,
 					                     Helper.GetPresenceDisplay(presence));
+					if (!String.IsNullOrEmpty(presence.Status)) {
+						builder.Append(" - ");
+					    builder.Append(presence.Status);
+					}
+				}
+			} else if (presences.Length == 1) {
+				var presence = presences[0];
+				if (!String.IsNullOrEmpty(presence.From.Resource) && m_AlwaysShowResource) {
+					builder.AppendFormat("\n{0}: {1}",
+					                     presence.From.Resource,
+					                     Helper.GetPresenceDisplay(presence));
+				} else {
+					builder.AppendFormat("\n");
+					builder.Append(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Helper.GetPresenceDisplay(presence)));
 					if (!String.IsNullOrEmpty(presence.Status)) {
 						builder.Append(" - ");
 					    builder.Append(presence.Status);
@@ -205,7 +214,7 @@ namespace Synapse.UI
 		protected virtual void OnItemAdded (Account account, Item item)
 		{
 			var ritem = new RosterItem(account, item);
-			m_Items.Add(item, ritem);
+			m_Items.Add(ritem);
 			
 			var evnt = ItemAdded;
 			if (evnt != null)
@@ -214,17 +223,22 @@ namespace Synapse.UI
 
 		protected virtual void OnItemRemoved (Account account, Item item)
 		{
-			var ritem = m_Items[item];
-			m_Items.Remove(item);
+			RosterItem rosterItem = null;
+			lock (m_Items) {
+				rosterItem = FindRosterItem(account, item);
+				if (rosterItem == null)
+					throw new Exception("Trying to remove an item before it was added. " + item);
+				m_Items.Remove(rosterItem);
+			}
 			
 			var evnt = ItemRemoved;
 			if (evnt != null)
-				evnt(this, ritem);
+				evnt(this, rosterItem);
 		}
 
 		protected virtual void OnItemChanged (Account account, Item item)
 		{
-			OnItemChanged(m_Items[item]);
+			OnItemChanged(FindRosterItem(account, item));
 		}
 		
 		protected virtual void OnItemChanged (RosterItem item)
@@ -236,6 +250,17 @@ namespace Synapse.UI
 
 		protected virtual void OnRefreshed ()
 		{
+			lock (m_Items) {
+				m_Items.Clear();
+				foreach (Account account in m_AccountService.Accounts) {
+					foreach (JID jid in account.Roster) {
+						var item = account.Roster[jid];
+						var ritem = new RosterItem(account, item);
+						m_Items.Add(ritem);
+					}
+				}
+			}
+			
 			var evnt = Refreshed;
 			if (evnt != null)
 				evnt(this, EventArgs.Empty);
@@ -262,13 +287,17 @@ namespace Synapse.UI
 			};
 			
 			account.Roster.OnRosterItem += delegate(object sender, Item ri) {
-				OnItemAdded(account, ri);
+				if (FindRosterItem(account, ri) == null) {
+					OnItemAdded(account, ri);
+				} else {
+					OnItemChanged(account, ri);
+				}
 			};
 			
 			account.Client.OnPresence += delegate(object sender, Presence pres) {
 				Item item = account.Roster[pres.From.BareJID];			
 				if (item != null) {
-					if (!m_Items.ContainsKey(item)) {
+					if (FindRosterItem(account, item) == null) {
 						OnItemAdded(account, item);
 					} else {
 						OnItemChanged(account, item);
@@ -301,6 +330,16 @@ namespace Synapse.UI
 		void HandleOnDisconnect(object sender)
 		{
 			OnRefreshed();
+		}
+
+		RosterItem FindRosterItem (Account account, Item item)
+		{
+			lock (m_Items) {
+				foreach (RosterItem ritem in m_Items)
+					if (ritem.Account == account && ritem.Item.JID.Equals(item.JID))
+					    return ritem;
+				return null;				
+			}
 		}
 		#endregion
 	}

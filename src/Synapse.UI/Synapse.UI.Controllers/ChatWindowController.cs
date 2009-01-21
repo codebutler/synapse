@@ -97,7 +97,7 @@ namespace Synapse.UI.Controllers
 		private void HandleTextEntered (string text)
 		{
 			if (!String.IsNullOrEmpty(text)) {
-				// FIXME: Create an action for this
+				// FIXME: Abstract this into Synapse.Xmpp somehow, perhaps.
 				Message message = new Message(m_Account.Client.Document);
 				message.Type = MessageType.chat;
 				message.To = m_Jid;

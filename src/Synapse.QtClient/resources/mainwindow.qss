@@ -14,7 +14,7 @@ QLabel#headerLabel {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5D5D5D, stop: 1 #444444);
 }
 
-QLabel, QLineEdit, QTabBar, QTreeView, QGraphicsView {
+QLabel, QLineEdit, QTabBar, QTreeView, QGraphicsView, QListWidget {
 	color: white;
 }
 

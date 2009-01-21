@@ -22,18 +22,13 @@
     <File name="Synapse.Xmpp/UserMood.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/UserTune.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/ClientStatus.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp/IOperation.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp/AbstractOperation.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/UserAvatars.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/AvatarManager.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/ChatStates.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp/AbstractIqOperation.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/XmppUriQueryInfo.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/Helper.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp.Services" subtype="Directory" buildaction="Compile" />
     <File name="Synapse.Xmpp.Services/ActivityFeedService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp.Services/AccountService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp.Services/OperationService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>
@@ -48,4 +43,13 @@
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <GtkDesignInfo />
+  <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
+    <BuildFilesVar Sync="True" Name="FILES" />
+    <DeployFilesVar />
+    <ResourcesVar Sync="True" Name="RESOURCES" />
+    <OthersVar />
+    <GacRefVar Sync="True" Name="REFERENCES" />
+    <AsmRefVar Sync="True" Name="REFERENCES" />
+    <ProjectRefVar Sync="True" Name="REFERENCES" />
+  </MonoDevelop.Autotools.MakefileInfo>
 </Project>

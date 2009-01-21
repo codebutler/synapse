@@ -54,10 +54,9 @@ namespace Synapse.QtClient
 		{	
 			Log.Information ("Starting Synapse");
 			PlatformHacks.SetProcessName("synapse");
-
+			GLib.Global.ProgramName = "Synapse";
 			Gtk.Application.Init();
 
-			// FIXME: This is seriously unstable.
 			NDesk.DBus.BusG.Init();
 			
 			m_App = new QApplication(args);
@@ -83,7 +82,6 @@ namespace Synapse.QtClient
 			
 			// XXX: I dont like this being here.
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.AccountService>();
-			ServiceManager.RegisterService<Synapse.Xmpp.Services.OperationService>();
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.ActivityFeedService>();
 			
 			ServiceManager.RegisterService<GuiService>();
@@ -91,8 +89,10 @@ namespace Synapse.QtClient
 			
 			QWebSettings.GlobalSettings().SetAttribute(QWebSettings.WebAttribute.DeveloperExtrasEnabled, true);
 			
-			string themesDirectory = System.IO.Path.Combine(Environment.CurrentDirectory, "themes");
-			ConversationWidget.ThemesDirectory = themesDirectory;
+			if (Application.CommandLine.Contains ("uninstalled"))
+				ConversationWidget.ThemesDirectory = Path.Combine(Environment.CurrentDirectory, "themes");
+			else
+				ConversationWidget.ThemesDirectory = Path.Combine(Paths.InstalledApplicationData, "themes");
 			
 			Application.Run();
 				

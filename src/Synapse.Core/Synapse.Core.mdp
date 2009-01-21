@@ -14,7 +14,6 @@
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="." subtype="Directory" buildaction="Compile" />
     <File name="Synapse.Core/Paths.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Core/PropertyCollection.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Core/ReadOnlyDictionary.cs" subtype="Code" buildaction="Compile" />
@@ -40,4 +39,13 @@
     <ProjectReference type="Gac" localcopy="True" refto="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
   </References>
   <GtkDesignInfo />
+  <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
+    <BuildFilesVar Sync="True" Name="FILES" />
+    <DeployFilesVar />
+    <ResourcesVar Sync="True" Name="RESOURCES" />
+    <OthersVar />
+    <GacRefVar Sync="True" Name="REFERENCES" />
+    <AsmRefVar Sync="True" Name="REFERENCES" />
+    <ProjectRefVar Sync="True" Name="REFERENCES" />
+  </MonoDevelop.Autotools.MakefileInfo>
 </Project>

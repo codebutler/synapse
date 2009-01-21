@@ -1,0 +1,32 @@
+.incoming { color: #EDAFAF; font-weight: lighter;}
+.context .incoming { color:#A65369; }
+
+.outgoing { color: #AFB6EE; font-weight: lighter;}
+.context .outgoing { color: #47508F; }
+
+.container {
+    background: url("../images/smoke/bottom_right.png") bottom right no-repeat;
+}
+
+.context {
+    background: url("../images/white/context_bottom_right.png") bottom right no-repeat !important;
+}
+
+.sender {
+    background: url("../images/smoke/top_left.png") top left no-repeat;
+}
+
+.time_initial {
+    background: url("../images/smoke/top_right.png") top right no-repeat;
+    color: #e4e4e4;
+}
+
+.time_consecutive {
+    color: #f0f0f0;
+    background: 29px url("../images/smoke/arrow.png") no-repeat;
+}
+
+.message {
+    background: url("../images/smoke/bottom_left.png") bottom left repeat-y;
+    color: #fff;
+}
