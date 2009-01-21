@@ -11,15 +11,12 @@ install-data-hook:
 uninstall-hook:
 	rm -rf $(DESTDIR)$(INSTALLED_THEMES_DIR)
 
-# Warning: This is an automatically generated file, do not edit!
-
-if ENABLE_DEBUG
 ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -unsafe -warn:4 -optimize- -debug "-define:DEBUG"
 ASSEMBLY = ../../build/Debug/Synapse.exe
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = exe
-PROJECT_REFERENCES = \
+PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.Core.dll \
 	../../build/Debug/Synapse.Services.dll \
 	../../build/Debug/Synapse.UI.dll \
@@ -56,46 +53,6 @@ NDESK_DBUS_DLL_SOURCE=../../contrib/NDesk.DBus.dll
 JABBER_NET_DLL_SOURCE=../../contrib/jabber-net.dll
 SYNAPSE_EXE_MDB_SOURCE=../../build/Debug/Synapse.exe.mdb
 SYNAPSE_EXE_MDB=$(BUILD_DIR)/Synapse.exe.mdb
-
-endif
-
-if ENABLE_RELEASE
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -unsafe -warn:4 -optimize-
-ASSEMBLY = ../../build/Release/Synapse.exe
-ASSEMBLY_MDB = 
-COMPILE_TARGET = exe
-PROJECT_REFERENCES =  \
-	../../build/Debug/Synapse.Core.dll \
-	../../build/Debug/Synapse.Services.dll \
-	../../build/Debug/Synapse.UI.dll \
-	../../build/Debug/Synapse.Xmpp.dll
-BUILD_DIR = ../../build/Release
-
-SYNAPSE_SERVICES_DLL=
-SYNAPSE_DLL_SOURCE=../Synapse.UI/bin/Release/Synapse.dll
-SYNAPSE_DLL=$(BUILD_DIR)/Synapse.dll
-QTWEBKIT_DLL_CONFIG_SOURCE=../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll.config
-SYNAPSE_CORE_DLL=
-NDESK_DBUS_DLL_MDB_SOURCE=../../contrib/NDesk.DBus.dll.mdb
-SYNAPSE_UI_DLL=
-MONO_ROCKS_DLL_MDB_SOURCE=../../contrib/Mono.Rocks.dll.mdb
-SYNAPSE_CORE_DLL_MDB=
-JABBER_NET_DLL_MDB_SOURCE=../../contrib/jabber-net.dll.mdb
-SYNAPSE_UI_DLL_MDB=
-HYENA_GUI_DLL_SOURCE=../../contrib/Hyena.Gui.dll
-SYNAPSE_XMPP_DLL_MDB=
-HYENA_GUI_DLL_CONFIG_SOURCE=../../contrib/Hyena.Gui.dll.config
-SYNAPSE_SERVICES_DLL_MDB=
-HYENA_DLL_SOURCE=../../contrib/Hyena.dll
-MONO_ROCKS_DLL_SOURCE=../../contrib/Mono.Rocks.dll
-QTWEBKIT_DLL_SOURCE=../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll
-SYNAPSE_XMPP_DLL=
-NDESK_DBUS_DLL_SOURCE=../../contrib/NDesk.DBus.dll
-JABBER_NET_DLL_SOURCE=../../contrib/jabber-net.dll
-SYNAPSE_EXE_MDB=
-
-endif
 
 AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll

@@ -1,16 +1,12 @@
 
 EXTRA_DIST =  
 
-# Warning: This is an automatically generated file, do not edit!
-
-if ENABLE_DEBUG
 ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
 ASSEMBLY = ../../build/Debug/Synapse.Services.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
-PROJECT_REFERENCES = \
-	../../build/Debug/Synapse.Core.dll
+PROJECT_REFERENCES = ../../build/Debug/Synapse.Core.dll
 BUILD_DIR = ../../build/Debug
 
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
@@ -22,27 +18,6 @@ NDESK_DBUS_DLL_MDB_SOURCE=../../contrib/NDesk.DBus.dll.mdb
 NDESK_DBUS_DLL_SOURCE=../../contrib/NDesk.DBus.dll
 SYNAPSE_CORE_DLL_MDB_SOURCE=../../build/Debug/Synapse.Core.dll.mdb
 SYNAPSE_CORE_DLL_MDB=$(BUILD_DIR)/Synapse.Core.dll.mdb
-
-endif
-
-if ENABLE_RELEASE
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize-
-ASSEMBLY = ../../build/Release/Synapse.Services.dll
-ASSEMBLY_MDB = 
-COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
-	../../build/Release/Synapse.Core.dll
-BUILD_DIR = ../../build/Release
-
-HYENA_DLL_SOURCE=../../contrib/Hyena.dll
-SYNAPSE_SERVICES_DLL_MDB=
-SYNAPSE_CORE_DLL=
-NDESK_DBUS_DLL_MDB_SOURCE=../../contrib/NDesk.DBus.dll.mdb
-NDESK_DBUS_DLL_SOURCE=../../contrib/NDesk.DBus.dll
-SYNAPSE_CORE_DLL_MDB=
-
-endif
 
 AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll

@@ -1,9 +1,6 @@
 
 EXTRA_DIST =  
 
-# Warning: This is an automatically generated file, do not edit!
-
-if ENABLE_DEBUG
 ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
 ASSEMBLY = ../../build/Debug/Synapse.Xmpp.dll
@@ -29,32 +26,6 @@ SYNAPSE_SERVICES_DLL_MDB=$(BUILD_DIR)/Synapse.Services.dll.mdb
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
 NDESK_DBUS_DLL_SOURCE=../../contrib/NDesk.DBus.dll
 JABBER_NET_DLL_SOURCE=../../contrib/jabber-net.dll
-
-endif
-
-if ENABLE_RELEASE
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize-
-ASSEMBLY = bin/Release/Synapse.Core.Xmpp.dll
-ASSEMBLY_MDB = 
-COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
-	../../build/Release/Synapse.Core.dll \
-	../../build/Release/Synapse.Services.dll
-BUILD_DIR = bin/Release
-
-SYNAPSE_SERVICES_DLL=
-SYNAPSE_CORE_DLL=
-NDESK_DBUS_DLL_MDB_SOURCE=../../contrib/NDesk.DBus.dll.mdb
-SYNAPSE_CORE_DLL_MDB=
-JABBER_NET_DLL_MDB_SOURCE=../../contrib/jabber-net.dll.mdb
-SYNAPSE_XMPP_DLL_MDB=
-SYNAPSE_SERVICES_DLL_MDB=
-HYENA_DLL_SOURCE=../../contrib/Hyena.dll
-NDESK_DBUS_DLL_SOURCE=../../contrib/NDesk.DBus.dll
-JABBER_NET_DLL_SOURCE=../../contrib/jabber-net.dll
-
-endif
 
 AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
@@ -111,8 +82,7 @@ REFERENCES =  \
 	System.Web \
 	System.Xml
 
-DLL_REFERENCES =  \
-	../../contrib/jabber-net.dll
+DLL_REFERENCES = ../../contrib/jabber-net.dll
 
 CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 

@@ -1,36 +1,16 @@
 
 EXTRA_DIST =  
 
-# Warning: This is an automatically generated file, do not edit!
-
-if ENABLE_DEBUG
 ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
 ASSEMBLY = ../../build/Debug/addins/Flickr.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
-PROJECT_REFERENCES = \
-	../../build/Debug/Synapse.UI.dll
+PROJECT_REFERENCES = ../../build/Debug/Synapse.UI.dll 
 BUILD_DIR = ../../build/Debug/addins
 
 FLICKR_DLL_MDB_SOURCE=../../build/Debug/addins/Flickr.dll.mdb
 FLICKR_DLL_MDB=$(BUILD_DIR)/Flickr.dll.mdb
-
-endif
-
-if ENABLE_RELEASE
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize-
-ASSEMBLY = bin/Release/Flickr.dll
-ASSEMBLY_MDB = 
-COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
-	../../build/Release/Synapse.UI.dll
-BUILD_DIR = bin/Release
-
-FLICKR_DLL_MDB=
-
-endif
 
 AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll

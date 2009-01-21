@@ -1,38 +1,18 @@
 
 EXTRA_DIST =  
 
-# Warning: This is an automatically generated file, do not edit!
-
-if ENABLE_DEBUG
 ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
 ASSEMBLY = ../../build/Debug/addins/PasteBox.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
-PROJECT_REFERENCES = \
-	../../build/Debug/Synapse.UI.dll \
-	../../build/Debug/Synapse.Services.dll
+PROJECT_REFERENCES =  \
+	../../build/Debug/Synapse.Services.dll \
+	../../build/Debug/Synapse.UI.dll 
 BUILD_DIR = ../../build/Debug/addins
 
 PASTEBOX_DLL_MDB_SOURCE=../../build/Debug/addins/PasteBox.dll.mdb
 PASTEBOX_DLL_MDB=$(BUILD_DIR)/PasteBox.dll.mdb
-
-endif
-
-if ENABLE_RELEASE
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize-
-ASSEMBLY = bin/Release/PasteBox.dll
-ASSEMBLY_MDB = 
-COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
-	../../build/Release/Synapse.UI.dll \
-	../../build/Release/Synapse.Services.dll
-BUILD_DIR = bin/Release
-
-PASTEBOX_DLL_MDB=
-
-endif
 
 AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
@@ -63,8 +43,7 @@ EXTRAS =
 
 REFERENCES = $(QYOTO_LIBS)
 
-DLL_REFERENCES =  \
-	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll 
+DLL_REFERENCES = ../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll 
 
 CLEANFILES = $(PROGRAMFILES) 
 

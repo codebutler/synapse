@@ -1,40 +1,19 @@
 
 EXTRA_DIST =  
 
-# Warning: This is an automatically generated file, do not edit!
-
-if ENABLE_DEBUG
 ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
 ASSEMBLY = ../../build/Debug/addins/Twitter.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
-PROJECT_REFERENCES = \
+PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.Services.dll \
 	../../build/Debug/Synapse.UI.dll \
-	../../build/Debug/Synapse.Xmpp.dll
+	../../build/Debug/Synapse.Xmpp.dll 
 BUILD_DIR = ../../build/Debug/addins
 
 TWITTER_DLL_MDB_SOURCE=../../build/Debug/addins/Twitter.dll.mdb
 TWITTER_DLL_MDB=$(BUILD_DIR)/Twitter.dll.mdb
-
-endif
-
-if ENABLE_RELEASE
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize-
-ASSEMBLY = bin/Release/Twitter.dll
-ASSEMBLY_MDB = 
-COMPILE_TARGET = library
-PROJECT_REFERENCES = \
-	../../build/Release/Synapse.Services.dll \
-	../../build/Release/Synapse.UI.dll \
-	../../build/Release/Synapse.Xmpp.dll
-BUILD_DIR = bin/Release
-
-TWITTER_DLL_MDB=
-
-endif
 
 AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
@@ -74,7 +53,7 @@ REFERENCES =  \
 	System.Web \
 	System.Xml
 
-DLL_REFERENCES =  
+DLL_REFERENCES = 
 
 CLEANFILES = $(PROGRAMFILES) 
 
