@@ -16,4 +16,8 @@ missing
 omf.make
 xmldocs.make
 build
-debian/
+debian/stamp*
+debian/synapse*
+debian/files
+debian/synapse/
+src/Synapse.QtClient/synapse

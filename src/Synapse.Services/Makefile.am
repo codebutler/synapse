@@ -9,7 +9,7 @@ ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-
 ASSEMBLY = ../../build/Debug/Synapse.Services.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
+PROJECT_REFERENCES = \
 	../../build/Debug/Synapse.Core.dll
 BUILD_DIR = ../../build/Debug
 
@@ -18,29 +18,29 @@ SYNAPSE_SERVICES_DLL_MDB_SOURCE=../../build/Debug/Synapse.Services.dll.mdb
 SYNAPSE_SERVICES_DLL_MDB=$(BUILD_DIR)/Synapse.Services.dll.mdb
 SYNAPSE_CORE_DLL_SOURCE=../../build/Debug/Synapse.Core.dll
 SYNAPSE_CORE_DLL=$(BUILD_DIR)/Synapse.Core.dll
-DRAGON_CORE_DLL=
 NDESK_DBUS_DLL_MDB_SOURCE=../../contrib/NDesk.DBus.dll.mdb
 NDESK_DBUS_DLL_SOURCE=../../contrib/NDesk.DBus.dll
+SYNAPSE_CORE_DLL_MDB_SOURCE=../../build/Debug/Synapse.Core.dll.mdb
+SYNAPSE_CORE_DLL_MDB=$(BUILD_DIR)/Synapse.Core.dll.mdb
 
 endif
 
 if ENABLE_RELEASE
 ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize-
-ASSEMBLY = ../../build/Release/Dragon.Services.dll
+ASSEMBLY = ../../build/Release/Synapse.Services.dll
 ASSEMBLY_MDB = 
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
-	../../build/Release/Dragon.Core.dll
+	../../build/Release/Synapse.Core.dll
 BUILD_DIR = ../../build/Release
 
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
 SYNAPSE_SERVICES_DLL_MDB=
 SYNAPSE_CORE_DLL=
-DRAGON_CORE_DLL_SOURCE=../../build/Release/Dragon.Core.dll
-DRAGON_CORE_DLL=$(BUILD_DIR)/Dragon.Core.dll
 NDESK_DBUS_DLL_MDB_SOURCE=../../contrib/NDesk.DBus.dll.mdb
 NDESK_DBUS_DLL_SOURCE=../../contrib/NDesk.DBus.dll
+SYNAPSE_CORE_DLL_MDB=
 
 endif
 
@@ -51,9 +51,9 @@ PROGRAMFILES = \
 	$(HYENA_DLL) \
 	$(SYNAPSE_SERVICES_DLL_MDB) \
 	$(SYNAPSE_CORE_DLL) \
-	$(DRAGON_CORE_DLL) \
 	$(NDESK_DBUS_DLL_MDB) \
-	$(NDESK_DBUS_DLL)  
+	$(NDESK_DBUS_DLL) \
+	$(SYNAPSE_CORE_DLL_MDB)  
 
 LINUX_PKGCONFIG = \
 	$(SYNAPSE_SERVICES_PC)  
@@ -63,7 +63,7 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
-FILES = \
+FILES =  \
 	Synapse.Services/NetworkService.cs \
 	Synapse.Services/NotificationService.cs \
 	Synapse.Services/NowPlayingService.cs \
@@ -86,18 +86,17 @@ FILES = \
 
 DATA_FILES = 
 
-RESOURCES = \
-	Synapse.Services.addin.xml 
+RESOURCES = Synapse.Services.addin.xml 
 
 EXTRAS = \
 	synapse.services.pc.in 
 
 REFERENCES =  \
 	$(MONO_ADDINS_LIBS) \
-	System \
-	System.Xml \
+	$(NOTIFY_SHARP_LIBS) \
 	Mono.Posix \
-	$(NOTIFY_SHARP_LIBS)
+	System \
+	System.Xml
 
 DLL_REFERENCES =  \
 	../../contrib/Hyena.dll \

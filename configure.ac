@@ -45,12 +45,23 @@ fi
 
 
 dnl package checks, common for all configs
-PKG_CHECK_MODULES([MONO_ADDINS], [mono-addins])
-PKG_CHECK_MODULES([GTK_SHARP_20], [gtk-sharp-2.0])
-PKG_CHECK_MODULES([NOTIFY_SHARP], [notify-sharp])
-PKG_CHECK_MODULES([GLIB_SHARP_20], [glib-sharp-2.0])
-PKG_CHECK_MODULES([NDESK_DBUS_GLIB_10], [ndesk-dbus-glib-1.0])
 PKG_CHECK_MODULES([QYOTO], [qyoto])
+AC_SUBST(QYOTO_LIBS)
+
+PKG_CHECK_MODULES([NOTIFY_SHARP], [notify-sharp])
+AC_SUBST(NOTIFY_SHARP_LIBS)
+
+PKG_CHECK_MODULES([GLIB_SHARP_20], [glib-sharp-2.0])
+AC_SUBST(GLIB_SHARP_20_LIBS)
+
+PKG_CHECK_MODULES([NDESK_DBUS_GLIB_10], [ndesk-dbus-glib-1.0])
+AC_SUBST(NDESK_DBUS_GLIB_10_LIBS)
+
+PKG_CHECK_MODULES([GTK_SHARP_20], [gtk-sharp-2.0])
+AC_SUBST(GTK_SHARP_20_LIBS)
+
+PKG_CHECK_MODULES([MONO_ADDINS], [mono-addins])
+AC_SUBST(MONO_ADDINS_LIBS)
 
 dnl package checks, per config
 

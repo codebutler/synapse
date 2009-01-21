@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/rules/simple-patchsys.mk
+include /usr/share/cdbs/1/class/gnome.mk
+
+export MONO_SHARED_DIR=$(CURDIR)
+
+install/synapse::
+	find debian/ -type f -name "*.dll" -or -name "*.mdb" -or -name "*.cs" -or -name "*.config" | xargs chmod -x
+	find debian/ -type f -name "*.exe" | xargs chmod +x
+
+binary-predeb/synapse::
+	dh_clideps
+
+clean::
+	rm -rf $(MONO_SHARED_DIR)/.wapi

@@ -9,8 +9,7 @@ ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-
 ASSEMBLY = ../../build/Debug/addins/Banshee.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
-	../../build/Debug/Synapse.Core.dll \
+PROJECT_REFERENCES = \
 	../../build/Debug/Synapse.Services.dll
 BUILD_DIR = ../../build/Debug/addins
 
@@ -25,9 +24,8 @@ ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize-
 ASSEMBLY = bin/Release/BansheeNowPlayingProvider.dll
 ASSEMBLY_MDB = 
 COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
-	../../build/Release/Dragon.Core.dll \
-	../../build/Release/Dragon.Services.dll
+PROJECT_REFERENCES = \
+	../../build/Release/Synapse.Services.dll
 BUILD_DIR = bin/Release
 
 BANSHEE_DLL_MDB=
@@ -45,7 +43,7 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) 
 
-FILES = \
+FILES =  \
 	AssemblyInfo.cs \
 	BansheeNowPlayingProvider.cs \
 	IPlayerEngineService.cs \
@@ -53,13 +51,11 @@ FILES = \
 
 DATA_FILES = 
 
-RESOURCES = \
-	Banshee.addin.xml 
+RESOURCES = Banshee.addin.xml 
 
 EXTRAS = 
 
-REFERENCES =  \
-	System
+REFERENCES = System
 
 DLL_REFERENCES =  \
 	../../contrib/NDesk.DBus.dll

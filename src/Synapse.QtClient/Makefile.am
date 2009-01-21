@@ -5,11 +5,11 @@ THEMES_DIR = resources/themes
 INSTALLED_THEMES_DIR = $(expanded_datadir)/$(PACKAGE)/themes/
 
 install-data-hook:
-	mkdir -p $(INSTALLED_THEMES_DIR)
-	cd $(THEMES_DIR) && find . -type f -exec $(INSTALL_DATA) -D -v '{}' '$(INSTALLED_THEMES_DIR){}' \; ;
+	mkdir -p $(DESTDIR)$(INSTALLED_THEMES_DIR)
+	cd $(THEMES_DIR) && find . -type f -exec $(INSTALL_DATA) -D -v '{}' '$(DESTDIR)$(INSTALLED_THEMES_DIR){}' \; ;
 
 uninstall-hook:
-	rm -rf $(INSTALLED_THEMES_DIR)
+	rm -rf $(DESTDIR)$(INSTALLED_THEMES_DIR)
 
 # Warning: This is an automatically generated file, do not edit!
 
@@ -19,32 +19,35 @@ ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -unsafe -warn:4 -optimize- -
 ASSEMBLY = ../../build/Debug/Synapse.exe
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = exe
-PROJECT_REFERENCES =  \
+PROJECT_REFERENCES = \
 	../../build/Debug/Synapse.Core.dll \
 	../../build/Debug/Synapse.Services.dll \
-	../../build/Debug/Synapse.Xmpp.dll \
-	../../build/Debug/Synapse.UI.dll
+	../../build/Debug/Synapse.UI.dll \
+	../../build/Debug/Synapse.Xmpp.dll
 BUILD_DIR = ../../build/Debug
 
 SYNAPSE_SERVICES_DLL_SOURCE=../../build/Debug/Synapse.Services.dll
 SYNAPSE_SERVICES_DLL=$(BUILD_DIR)/Synapse.Services.dll
 SYNAPSE_DLL=
 QTWEBKIT_DLL_CONFIG_SOURCE=../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll.config
-DRAGON_CORE_DLL=
 SYNAPSE_CORE_DLL_SOURCE=../../build/Debug/Synapse.Core.dll
 SYNAPSE_CORE_DLL=$(BUILD_DIR)/Synapse.Core.dll
 NDESK_DBUS_DLL_MDB_SOURCE=../../contrib/NDesk.DBus.dll.mdb
 SYNAPSE_UI_DLL_SOURCE=../../build/Debug/Synapse.UI.dll
 SYNAPSE_UI_DLL=$(BUILD_DIR)/Synapse.UI.dll
 MONO_ROCKS_DLL_MDB_SOURCE=../../contrib/Mono.Rocks.dll.mdb
+SYNAPSE_CORE_DLL_MDB_SOURCE=../../build/Debug/Synapse.Core.dll.mdb
+SYNAPSE_CORE_DLL_MDB=$(BUILD_DIR)/Synapse.Core.dll.mdb
 JABBER_NET_DLL_MDB_SOURCE=../../contrib/jabber-net.dll.mdb
 SYNAPSE_UI_DLL_MDB_SOURCE=../../build/Debug/Synapse.UI.dll.mdb
 SYNAPSE_UI_DLL_MDB=$(BUILD_DIR)/Synapse.UI.dll.mdb
 HYENA_GUI_DLL_SOURCE=../../contrib/Hyena.Gui.dll
-DRAGON_SERVICES_DLL=
+SYNAPSE_XMPP_DLL_MDB_SOURCE=../../build/Debug/Synapse.Xmpp.dll.mdb
+SYNAPSE_XMPP_DLL_MDB=$(BUILD_DIR)/Synapse.Xmpp.dll.mdb
 HYENA_GUI_DLL_CONFIG_SOURCE=../../contrib/Hyena.Gui.dll.config
+SYNAPSE_SERVICES_DLL_MDB_SOURCE=../../build/Debug/Synapse.Services.dll.mdb
+SYNAPSE_SERVICES_DLL_MDB=$(BUILD_DIR)/Synapse.Services.dll.mdb
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
-DRAGON_CORE_XMPP_DLL=
 MONO_ROCKS_DLL_SOURCE=../../contrib/Mono.Rocks.dll
 QTWEBKIT_DLL_SOURCE=../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll
 SYNAPSE_XMPP_DLL_SOURCE=../../build/Debug/Synapse.Xmpp.dll
@@ -63,31 +66,28 @@ ASSEMBLY = ../../build/Release/Synapse.exe
 ASSEMBLY_MDB = 
 COMPILE_TARGET = exe
 PROJECT_REFERENCES =  \
-	../../build/Release/Dragon.Core.dll \
-	../../build/Release/Dragon.Services.dll \
-	../Synapse.Xmpp/bin/Release/Dragon.Core.Xmpp.dll \
-	../Synapse.UI/bin/Release/Synapse.dll
+	../../build/Debug/Synapse.Core.dll \
+	../../build/Debug/Synapse.Services.dll \
+	../../build/Debug/Synapse.UI.dll \
+	../../build/Debug/Synapse.Xmpp.dll
 BUILD_DIR = ../../build/Release
 
 SYNAPSE_SERVICES_DLL=
 SYNAPSE_DLL_SOURCE=../Synapse.UI/bin/Release/Synapse.dll
 SYNAPSE_DLL=$(BUILD_DIR)/Synapse.dll
 QTWEBKIT_DLL_CONFIG_SOURCE=../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll.config
-DRAGON_CORE_DLL_SOURCE=../../build/Release/Dragon.Core.dll
-DRAGON_CORE_DLL=$(BUILD_DIR)/Dragon.Core.dll
 SYNAPSE_CORE_DLL=
 NDESK_DBUS_DLL_MDB_SOURCE=../../contrib/NDesk.DBus.dll.mdb
 SYNAPSE_UI_DLL=
 MONO_ROCKS_DLL_MDB_SOURCE=../../contrib/Mono.Rocks.dll.mdb
+SYNAPSE_CORE_DLL_MDB=
 JABBER_NET_DLL_MDB_SOURCE=../../contrib/jabber-net.dll.mdb
 SYNAPSE_UI_DLL_MDB=
 HYENA_GUI_DLL_SOURCE=../../contrib/Hyena.Gui.dll
-DRAGON_SERVICES_DLL_SOURCE=../../build/Release/Dragon.Services.dll
-DRAGON_SERVICES_DLL=$(BUILD_DIR)/Dragon.Services.dll
+SYNAPSE_XMPP_DLL_MDB=
 HYENA_GUI_DLL_CONFIG_SOURCE=../../contrib/Hyena.Gui.dll.config
+SYNAPSE_SERVICES_DLL_MDB=
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
-DRAGON_CORE_XMPP_DLL_SOURCE=../Synapse.Xmpp/bin/Release/Dragon.Core.Xmpp.dll
-DRAGON_CORE_XMPP_DLL=$(BUILD_DIR)/Dragon.Core.Xmpp.dll
 MONO_ROCKS_DLL_SOURCE=../../contrib/Mono.Rocks.dll
 QTWEBKIT_DLL_SOURCE=../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll
 SYNAPSE_XMPP_DLL=
@@ -104,18 +104,18 @@ PROGRAMFILES = \
 	$(SYNAPSE_SERVICES_DLL) \
 	$(SYNAPSE_DLL) \
 	$(QTWEBKIT_DLL_CONFIG) \
-	$(DRAGON_CORE_DLL) \
 	$(SYNAPSE_CORE_DLL) \
 	$(NDESK_DBUS_DLL_MDB) \
 	$(SYNAPSE_UI_DLL) \
 	$(MONO_ROCKS_DLL_MDB) \
+	$(SYNAPSE_CORE_DLL_MDB) \
 	$(JABBER_NET_DLL_MDB) \
 	$(SYNAPSE_UI_DLL_MDB) \
 	$(HYENA_GUI_DLL) \
-	$(DRAGON_SERVICES_DLL) \
+	$(SYNAPSE_XMPP_DLL_MDB) \
 	$(HYENA_GUI_DLL_CONFIG) \
+	$(SYNAPSE_SERVICES_DLL_MDB) \
 	$(HYENA_DLL) \
-	$(DRAGON_CORE_XMPP_DLL) \
 	$(MONO_ROCKS_DLL) \
 	$(QTWEBKIT_DLL) \
 	$(SYNAPSE_XMPP_DLL) \
@@ -131,7 +131,7 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) $(BINARIES) 
 
-FILES = \
+FILES =  \
 	AbstractSimpleFileEngine.cs \
 	AddFriendWindow.cs \
 	AvatarFileEngine.cs \
@@ -190,7 +190,7 @@ FILES = \
 
 DATA_FILES = 
 
-RESOURCES = \
+RESOURCES =  \
 	gtk-gui/gui.stetic \
 	resources/default-avatar.png \
 	resources/effects.js \
@@ -213,22 +213,22 @@ EXTRAS = \
 	synapse.in 
 
 REFERENCES =  \
-	$(MONO_ADDINS_LIBS) \
-	System \
-	System.Xml \
-	$(GTK_SHARP_20_LIBS) \
-	$(QYOTO_LIBS) \
-	$(NDESK_DBUS_GLIB_10_LIBS) \
-	Mono.Posix \
 	$(GLIB_SHARP_20_LIBS) \
+	$(GTK_SHARP_20_LIBS) \
+	$(MONO_ADDINS_LIBS) \
+	$(NDESK_DBUS_GLIB_10_LIBS) \
+	$(QYOTO_LIBS) \
+	Mono.Posix \
+	System \
+	System.Core \
 	System.Drawing \
-	System.Core
+	System.Xml
 
 DLL_REFERENCES =  \
-	../../contrib/jabber-net.dll \
 	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll \
 	../../contrib/Hyena.dll \
 	../../contrib/Hyena.Gui.dll \
+	../../contrib/jabber-net.dll \
 	../../contrib/Mono.Rocks.dll
 
 CLEANFILES = $(PROGRAMFILES) $(BINARIES) 
@@ -257,7 +257,6 @@ $(eval $(call emit-deploy-target,HYENA_GUI_DLL))
 $(eval $(call emit-deploy-wrapper,SYNAPSE,synapse,x))
 $(eval $(call emit-deploy-target,HYENA_GUI_DLL_CONFIG))
 $(eval $(call emit-deploy-target,HYENA_DLL))
-$(eval $(call emit-deploy-target,DRAGON_CORE_XMPP_DLL))
 $(eval $(call emit-deploy-target,MONO_ROCKS_DLL))
 $(eval $(call emit-deploy-target,QTWEBKIT_DLL))
 $(eval $(call emit-deploy-target,NDESK_DBUS_DLL))

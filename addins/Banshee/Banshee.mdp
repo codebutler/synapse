@@ -8,7 +8,7 @@
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
-      <Output directory="bin/Release" assembly="BansheeNowPlayingProvider" />
+      <Output directory="../../build/Release/addins" assembly="Banshee" />
       <Build debugmode="False" target="Library" />
       <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
@@ -23,9 +23,9 @@
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference type="Project" localcopy="False" refto="Synapse.Core" />
-    <ProjectReference type="Project" localcopy="False" refto="Synapse.Services" />
     <ProjectReference type="Assembly" localcopy="False" specificVersion="False" refto="../../contrib/NDesk.DBus.dll" />
+    <ProjectReference type="Project" localcopy="False" refto="Synapse.Services" />
+    <ProjectReference type="Project" localcopy="False" refto="Synapse.Core" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
   <GtkDesignInfo />
@@ -35,7 +35,7 @@
     <ResourcesVar Sync="True" Name="RESOURCES" />
     <OthersVar />
     <GacRefVar Sync="True" Name="REFERENCES" />
-    <AsmRefVar Sync="True" Name="REFERENCES" />
-    <ProjectRefVar Sync="True" Name="REFERENCES" />
+    <AsmRefVar Sync="True" Name="DLL_REFERENCES" />
+    <ProjectRefVar Sync="True" Name="PROJECT_REFERENCES" />
   </MonoDevelop.Autotools.MakefileInfo>
 </Project>

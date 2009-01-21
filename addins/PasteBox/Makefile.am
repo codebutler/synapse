@@ -9,10 +9,9 @@ ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-
 ASSEMBLY = ../../build/Debug/addins/PasteBox.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
+PROJECT_REFERENCES = \
 	../../build/Debug/Synapse.UI.dll \
-	../../build/Debug/Synapse.Services.dll \
-	../../build/Debug/Synapse.Core.dll
+	../../build/Debug/Synapse.Services.dll
 BUILD_DIR = ../../build/Debug/addins
 
 PASTEBOX_DLL_MDB_SOURCE=../../build/Debug/addins/PasteBox.dll.mdb
@@ -27,9 +26,8 @@ ASSEMBLY = bin/Release/PasteBox.dll
 ASSEMBLY_MDB = 
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
-	../../src/Synapse.UI/bin/Release/Synapse.dll \
-	../../build/Release/Dragon.Services.dll \
-	../../build/Release/Dragon.Core.dll
+	../../build/Release/Synapse.UI.dll \
+	../../build/Release/Synapse.Services.dll
 BUILD_DIR = bin/Release
 
 PASTEBOX_DLL_MDB=
@@ -47,7 +45,7 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) 
 
-FILES = \
+FILES =  \
 	ActionHandler.cs \
 	CodePasteFormatter.cs \
 	IPasteFormatter.cs \
@@ -56,18 +54,17 @@ FILES = \
 
 DATA_FILES = 
 
-RESOURCES = \
+RESOURCES =  \
 	PasteBox.addin.xml \
 	SyntaxHighlighter.css \
 	SyntaxHighlighter.js 
 
 EXTRAS = 
 
-REFERENCES =  \
-	$(QYOTO_LIBS)
+REFERENCES = $(QYOTO_LIBS)
 
 DLL_REFERENCES =  \
-	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll
+	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll 
 
 CLEANFILES = $(PROGRAMFILES) 
 

@@ -21,7 +21,7 @@ endif
 if ENABLE_RELEASE
 ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize-
-ASSEMBLY = ../../build/Release/Dragon.Core.dll
+ASSEMBLY = ../../build/Release/Synapse.Core.dll
 ASSEMBLY_MDB = 
 COMPILE_TARGET = library
 PROJECT_REFERENCES = 
@@ -47,7 +47,7 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
-FILES = \
+FILES =  \
 	IEnumerable.cs \
 	Synapse.Core/Pair.cs \
 	Synapse.Core/Paths.cs \
@@ -63,23 +63,21 @@ FILES = \
 
 DATA_FILES = 
 
-RESOURCES = \
-	Synapse.Core.addin.xml 
+RESOURCES = Synapse.Core.addin.xml 
 
 EXTRAS = \
 	synapse.core.pc.in 
 
 REFERENCES =  \
-	System \
-	System.Xml \
 	$(MONO_ADDINS_LIBS) \
 	Mono.Posix \
-	System.Web \
+	System \
 	System.Core \
-	System.Web.Extensions
+	System.Web \
+	System.Web.Extensions \
+	System.Xml
 
-DLL_REFERENCES =  \
-	../../contrib/Hyena.dll
+DLL_REFERENCES = ../../contrib/Hyena.dll
 
 CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 

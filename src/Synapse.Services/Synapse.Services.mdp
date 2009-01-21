@@ -8,7 +8,7 @@
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
-      <Output directory="../../build/Release" assembly="Dragon.Services" />
+      <Output directory="../../build/Release" assembly="Synapse.Services" />
       <Build debugmode="False" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
@@ -53,7 +53,7 @@
     <ResourcesVar Sync="True" Name="RESOURCES" />
     <OthersVar />
     <GacRefVar Sync="True" Name="REFERENCES" />
-    <AsmRefVar Sync="True" Name="REFERENCES" />
-    <ProjectRefVar Sync="True" Name="REFERENCES" />
+    <AsmRefVar Sync="True" Name="DLL_REFERENCES" />
+    <ProjectRefVar Sync="True" Name="PROJECT_REFERENCES" />
   </MonoDevelop.Autotools.MakefileInfo>
 </Project>

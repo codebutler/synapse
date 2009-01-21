@@ -9,7 +9,7 @@ ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-
 ASSEMBLY = ../../build/Debug/addins/Flickr.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
+PROJECT_REFERENCES = \
 	../../build/Debug/Synapse.UI.dll
 BUILD_DIR = ../../build/Debug/addins
 
@@ -25,7 +25,7 @@ ASSEMBLY = bin/Release/Flickr.dll
 ASSEMBLY_MDB = 
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
-	../../src/Synapse.UI/bin/Release/Synapse.dll
+	../../build/Release/Synapse.UI.dll
 BUILD_DIR = bin/Release
 
 FLICKR_DLL_MDB=
@@ -43,22 +43,21 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) 
 
-FILES = \
+FILES =  \
 	AssemblyInfo.cs \
 	FlickrAvatarProvider.cs 
 
 DATA_FILES = 
 
-RESOURCES = \
-	Flickr.addin.xml 
+RESOURCES = Flickr.addin.xml 
 
 EXTRAS = 
 
 REFERENCES =  \
-	System \
-	System.Xml \
 	$(MONO_ADDINS_LIBS) \
-	System.Web
+	System \
+	System.Web \
+	System.Xml
 
 DLL_REFERENCES = 
 

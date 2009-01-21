@@ -9,11 +9,10 @@ ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-
 ASSEMBLY = ../../build/Debug/addins/Twitter.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
-	../../build/Debug/Synapse.Core.dll \
+PROJECT_REFERENCES = \
 	../../build/Debug/Synapse.Services.dll \
-	../../build/Debug/Synapse.Xmpp.dll \
-	../../build/Debug/Synapse.UI.dll
+	../../build/Debug/Synapse.UI.dll \
+	../../build/Debug/Synapse.Xmpp.dll
 BUILD_DIR = ../../build/Debug/addins
 
 TWITTER_DLL_MDB_SOURCE=../../build/Debug/addins/Twitter.dll.mdb
@@ -27,11 +26,10 @@ ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize-
 ASSEMBLY = bin/Release/Twitter.dll
 ASSEMBLY_MDB = 
 COMPILE_TARGET = library
-PROJECT_REFERENCES =  \
-	../../build/Release/Dragon.Core.dll \
-	../../build/Release/Dragon.Services.dll \
-	../../src/Synapse.Xmpp/bin/Release/Dragon.Core.Xmpp.dll \
-	../../src/Synapse.UI/bin/Release/Synapse.dll
+PROJECT_REFERENCES = \
+	../../build/Release/Synapse.Services.dll \
+	../../build/Release/Synapse.UI.dll \
+	../../build/Release/Synapse.Xmpp.dll
 BUILD_DIR = bin/Release
 
 TWITTER_DLL_MDB=
@@ -49,7 +47,7 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) 
 
-FILES = \
+FILES =  \
 	gtk-gui/generated.cs \
 	gtk-gui/Synapse.Addins.TwitterAddin.TwitterAddinPreferencesDialog.cs \
 	TwitterAddinPreferencesDialog.cs \
@@ -60,7 +58,7 @@ FILES = \
 
 DATA_FILES = 
 
-RESOURCES = \
+RESOURCES =  \
 	gtk-gui/gui.stetic \
 	twitm-16.png \
 	twitm-48.png \
@@ -69,14 +67,14 @@ RESOURCES = \
 EXTRAS = 
 
 REFERENCES =  \
-	System.Xml \
-	System.Web \
-	System \
 	$(GTK_SHARP_20_LIBS) \
 	Mono.Posix \
-	System.Core
+	System \
+	System.Core \
+	System.Web \
+	System.Xml
 
-DLL_REFERENCES = 
+DLL_REFERENCES =  
 
 CLEANFILES = $(PROGRAMFILES) 
 

@@ -1,0 +1,28 @@
+Source: synapse
+Section: contrib/net
+Priority: optional
+Maintainer: Eric Butler <eric@extremeboredom.net>
+Build-Depends: cli-common-dev (>= 0.5.7),
+	       mono-devel (>= 2.0.1),
+	       mono-gmcs (>= 2.0.1),
+	       cdbs,
+	       automake,
+	       autotools-dev,
+	       libgtk2.0-cil,
+	       libnotify0.4-cil,
+	       libmono-cairo1.0-cil,
+	       libmono-cairo2.0-cil,
+	       libmono-addins0.2-cil,
+	       libqyoto4.4-cil,
+	       libqtwebkit2.2-cil
+Standards-Version: 3.8.0
+Homepage: http://synapse.im/
+
+Package: synapse
+Architecture: all
+Depends: ${shlibs:Depends},
+	 ${cli:Depends},
+	 ${misc:Depends},
+	 xdg-utils,
+	 dbus
+Description: An XMPP client.
