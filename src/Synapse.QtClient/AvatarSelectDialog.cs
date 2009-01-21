@@ -65,7 +65,7 @@ public partial class AvatarSelectDialog : QDialog
 			tab.Show();
 		}
 
-		if (tabWidget.Children().Count > 0) {
+		if (tabWidget.Count > 0) {
 			var firstTab = (AvatarProviderTab)tabWidget.Widget(0);
 			firstTab.Update(lineEdit.Text);
 		} else {
