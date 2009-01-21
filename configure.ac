@@ -43,7 +43,6 @@ if test -z "$CONFIG_REQUESTED" ; then
 	enable_debug=yes
 fi
 
-
 dnl package checks, common for all configs
 PKG_CHECK_MODULES([QYOTO], [qyoto])
 AC_SUBST(QYOTO_LIBS)
@@ -83,7 +82,6 @@ src/Synapse.UI/Makefile
 addins/Banshee/Makefile
 src/Synapse.Xmpp/synapse.xmpp.pc
 src/Synapse.Xmpp/Makefile
-
 ])
 
 AC_OUTPUT

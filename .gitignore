@@ -16,6 +16,7 @@ missing
 omf.make
 xmldocs.make
 build
+debian/changelog
 debian/stamp*
 debian/synapse*
 debian/files
