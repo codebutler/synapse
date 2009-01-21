@@ -65,6 +65,7 @@ public partial class RosterWidget : QWidget
 		m_ActivityFeedItems = new Dictionary<string, IActivityFeedItem>();
 
 		rosterGrid.ContextMenuPolicy = Qt.ContextMenuPolicy.CustomContextMenu;
+		
 		m_RosterMenu = new QMenu(this);
 		QObject.Connect(m_RosterMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("rosterMenu_triggered(QAction*)"));
 
@@ -88,6 +89,9 @@ public partial class RosterWidget : QWidget
 
 		m_RosterItemMenu = new QMenu(this);
 		QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("rosterItemMenu_triggered(QAction*)"));
+		QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("rosterItemMenu_aboutToShow()"));
+		QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("aboutToHide()"), this, Qt.SLOT("rosterItemMenu_aboutToHide()"));
+
 		m_ViewProfileAction = new QAction("View Profile", m_RosterItemMenu);
 		m_RosterItemMenu.AddAction(m_ViewProfileAction);
 		
@@ -391,6 +395,18 @@ public partial class RosterWidget : QWidget
 			AddFriendWindow window = new AddFriendWindow(account);
 			window.Show();
 		}
+	}
+
+	[Q_SLOT]
+	void rosterItemMenu_aboutToShow ()
+	{
+		rosterGrid.SupressTooltips = true;
+	}
+
+	[Q_SLOT]
+	void rosterItemMenu_aboutToHide ()
+	{
+		rosterGrid.SupressTooltips = false;
 	}
 	#endregion
 }
