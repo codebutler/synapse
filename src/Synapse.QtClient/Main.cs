@@ -54,10 +54,9 @@ namespace Synapse.QtClient
 		{	
 			Log.Information ("Starting Synapse");
 			PlatformHacks.SetProcessName("synapse");
-
+			GLib.Global.ProgramName = "Synapse";
 			Gtk.Application.Init();
 
-			// FIXME: This is seriously unstable.
 			NDesk.DBus.BusG.Init();
 			
 			m_App = new QApplication(args);

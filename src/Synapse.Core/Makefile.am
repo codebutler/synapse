@@ -47,7 +47,7 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
-FILES =  \
+FILES = \
 	IEnumerable.cs \
 	Synapse.Core/Pair.cs \
 	Synapse.Core/Paths.cs \
@@ -63,20 +63,20 @@ FILES =  \
 
 DATA_FILES = 
 
-RESOURCES = Synapse.Core.addin.xml 
+RESOURCES = \
+	Synapse.Core.addin.xml 
 
 EXTRAS = \
 	synapse.core.pc.in 
 
 REFERENCES =  \
-	../../contrib/Hyena.dll \
-	Mono.Posix \
-	-pkg:mono-addins \
 	System \
-	System.Core \
+	System.Xml \
+	$(MONO_ADDINS_LIBS) \
+	Mono.Posix \
 	System.Web \
-	System.Web.Extensions \
-	System.Xml
+	System.Core \
+	System.Web.Extensions
 
 DLL_REFERENCES =  \
 	../../contrib/Hyena.dll

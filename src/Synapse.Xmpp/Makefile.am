@@ -19,15 +19,13 @@ SYNAPSE_SERVICES_DLL=$(BUILD_DIR)/Synapse.Services.dll
 DRAGON_CORE_DLL=
 SYNAPSE_CORE_DLL_SOURCE=../../build/Debug/Synapse.Core.dll
 SYNAPSE_CORE_DLL=$(BUILD_DIR)/Synapse.Core.dll
-SYNAPSE_CORE_DLL_MDB_SOURCE=../../build/Debug/Synapse.Core.dll.mdb
-SYNAPSE_CORE_DLL_MDB=$(BUILD_DIR)/Synapse.Core.dll.mdb
+NDESK_DBUS_DLL_MDB_SOURCE=../../contrib/NDesk.DBus.dll.mdb
 JABBER_NET_DLL_MDB_SOURCE=../../contrib/jabber-net.dll.mdb
 SYNAPSE_XMPP_DLL_MDB_SOURCE=../../build/Debug/Synapse.Xmpp.dll.mdb
 SYNAPSE_XMPP_DLL_MDB=$(BUILD_DIR)/Synapse.Xmpp.dll.mdb
 DRAGON_SERVICES_DLL=
-SYNAPSE_SERVICES_DLL_MDB_SOURCE=../../build/Debug/Synapse.Services.dll.mdb
-SYNAPSE_SERVICES_DLL_MDB=$(BUILD_DIR)/Synapse.Services.dll.mdb
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
+NDESK_DBUS_DLL_SOURCE=../../contrib/NDesk.DBus.dll
 JABBER_NET_DLL_SOURCE=../../contrib/jabber-net.dll
 
 endif
@@ -47,13 +45,13 @@ SYNAPSE_SERVICES_DLL=
 DRAGON_CORE_DLL_SOURCE=../../build/Release/Dragon.Core.dll
 DRAGON_CORE_DLL=$(BUILD_DIR)/Dragon.Core.dll
 SYNAPSE_CORE_DLL=
-SYNAPSE_CORE_DLL_MDB=
+NDESK_DBUS_DLL_MDB_SOURCE=../../contrib/NDesk.DBus.dll.mdb
 JABBER_NET_DLL_MDB_SOURCE=../../contrib/jabber-net.dll.mdb
 SYNAPSE_XMPP_DLL_MDB=
 DRAGON_SERVICES_DLL_SOURCE=../../build/Release/Dragon.Services.dll
 DRAGON_SERVICES_DLL=$(BUILD_DIR)/Dragon.Services.dll
-SYNAPSE_SERVICES_DLL_MDB=
 HYENA_DLL_SOURCE=../../contrib/Hyena.dll
+NDESK_DBUS_DLL_SOURCE=../../contrib/NDesk.DBus.dll
 JABBER_NET_DLL_SOURCE=../../contrib/jabber-net.dll
 
 endif
@@ -65,12 +63,12 @@ PROGRAMFILES = \
 	$(SYNAPSE_SERVICES_DLL) \
 	$(DRAGON_CORE_DLL) \
 	$(SYNAPSE_CORE_DLL) \
-	$(SYNAPSE_CORE_DLL_MDB) \
+	$(NDESK_DBUS_DLL_MDB) \
 	$(JABBER_NET_DLL_MDB) \
 	$(SYNAPSE_XMPP_DLL_MDB) \
 	$(DRAGON_SERVICES_DLL) \
-	$(SYNAPSE_SERVICES_DLL_MDB) \
 	$(HYENA_DLL) \
+	$(NDESK_DBUS_DLL) \
 	$(JABBER_NET_DLL)  
 
 LINUX_PKGCONFIG = \
@@ -81,7 +79,7 @@ RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
-FILES =  \
+FILES = \
 	Synapse.Xmpp.Services/AccountService.cs \
 	Synapse.Xmpp.Services/ActivityFeedService.cs \
 	Synapse.Xmpp/Account.cs \
@@ -100,21 +98,19 @@ FILES =  \
 
 DATA_FILES = 
 
-RESOURCES = Synapse.Xmpp.addin.xml 
+RESOURCES = \
+	Synapse.Xmpp.addin.xml 
 
 EXTRAS = \
 	synapse.xmpp.pc.in 
 
 REFERENCES =  \
-	../../build/Debug/Synapse.Core.dll \
-	../../build/Debug/Synapse.Services.dll \
-	../../contrib/jabber-net.dll \
-	-pkg:mono-addins \
 	System \
-	System.Core \
+	System.Xml \
+	$(MONO_ADDINS_LIBS) \
 	System.Drawing \
 	System.Web \
-	System.Xml
+	System.Core
 
 DLL_REFERENCES =  \
 	../../contrib/jabber-net.dll
@@ -123,16 +119,20 @@ CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG)
 
 include $(top_srcdir)/Makefile.include
 
+NDESK_DBUS_DLL_MDB = $(BUILD_DIR)/NDesk.DBus.dll.mdb
 JABBER_NET_DLL_MDB = $(BUILD_DIR)/jabber-net.dll.mdb
 HYENA_DLL = $(BUILD_DIR)/Hyena.dll
 SYNAPSE_XMPP_PC = $(BUILD_DIR)/synapse.xmpp.pc
+NDESK_DBUS_DLL = $(BUILD_DIR)/NDesk.DBus.dll
 JABBER_NET_DLL = $(BUILD_DIR)/jabber-net.dll
 
 $(eval $(call emit-deploy-target,DRAGON_CORE_DLL))
+$(eval $(call emit-deploy-target,NDESK_DBUS_DLL_MDB))
 $(eval $(call emit-deploy-target,JABBER_NET_DLL_MDB))
 $(eval $(call emit-deploy-target,DRAGON_SERVICES_DLL))
 $(eval $(call emit-deploy-target,HYENA_DLL))
 $(eval $(call emit-deploy-wrapper,SYNAPSE_XMPP_PC,synapse.xmpp.pc))
+$(eval $(call emit-deploy-target,NDESK_DBUS_DLL))
 $(eval $(call emit-deploy-target,JABBER_NET_DLL))
 
 

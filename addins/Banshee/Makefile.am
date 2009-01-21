@@ -6,27 +6,16 @@ EXTRA_DIST =
 if ENABLE_DEBUG
 ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
-ASSEMBLY = ../../build/Debug/BansheeNowPlayingProvider.dll
+ASSEMBLY = ../../build/Debug/addins/Banshee.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.Core.dll \
 	../../build/Debug/Synapse.Services.dll
-BUILD_DIR = ../../build/Debug
+BUILD_DIR = ../../build/Debug/addins
 
-HYENA_DLL_SOURCE=../../contrib/Hyena.dll
-SYNAPSE_SERVICES_DLL_SOURCE=../../build/Debug/Synapse.Services.dll
-SYNAPSE_SERVICES_DLL=$(BUILD_DIR)/Synapse.Services.dll
-BANSHEENOWPLAYINGPROVIDER_DLL_MDB_SOURCE=../../build/Debug/BansheeNowPlayingProvider.dll.mdb
-BANSHEENOWPLAYINGPROVIDER_DLL_MDB=$(BUILD_DIR)/BansheeNowPlayingProvider.dll.mdb
-SYNAPSE_SERVICES_DLL_MDB_SOURCE=../../build/Debug/Synapse.Services.dll.mdb
-SYNAPSE_SERVICES_DLL_MDB=$(BUILD_DIR)/Synapse.Services.dll.mdb
-SYNAPSE_CORE_DLL_SOURCE=../../build/Debug/Synapse.Core.dll
-SYNAPSE_CORE_DLL=$(BUILD_DIR)/Synapse.Core.dll
-DRAGON_SERVICES_DLL=
-DRAGON_CORE_DLL=
-SYNAPSE_CORE_DLL_MDB_SOURCE=../../build/Debug/Synapse.Core.dll.mdb
-SYNAPSE_CORE_DLL_MDB=$(BUILD_DIR)/Synapse.Core.dll.mdb
+BANSHEE_DLL_MDB_SOURCE=../../build/Debug/addins/Banshee.dll.mdb
+BANSHEE_DLL_MDB=$(BUILD_DIR)/Banshee.dll.mdb
 
 endif
 
@@ -41,16 +30,7 @@ PROJECT_REFERENCES =  \
 	../../build/Release/Dragon.Services.dll
 BUILD_DIR = bin/Release
 
-HYENA_DLL_SOURCE=../../contrib/Hyena.dll
-SYNAPSE_SERVICES_DLL=
-BANSHEENOWPLAYINGPROVIDER_DLL_MDB=
-SYNAPSE_SERVICES_DLL_MDB=
-SYNAPSE_CORE_DLL=
-DRAGON_SERVICES_DLL_SOURCE=../../build/Release/Dragon.Services.dll
-DRAGON_SERVICES_DLL=$(BUILD_DIR)/Dragon.Services.dll
-DRAGON_CORE_DLL_SOURCE=../../build/Release/Dragon.Core.dll
-DRAGON_CORE_DLL=$(BUILD_DIR)/Dragon.Core.dll
-SYNAPSE_CORE_DLL_MDB=
+BANSHEE_DLL_MDB=
 
 endif
 
@@ -58,21 +38,14 @@ AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
 
 PROGRAMFILES = \
-	$(HYENA_DLL) \
-	$(SYNAPSE_SERVICES_DLL) \
-	$(BANSHEENOWPLAYINGPROVIDER_DLL_MDB) \
-	$(SYNAPSE_SERVICES_DLL_MDB) \
-	$(SYNAPSE_CORE_DLL) \
-	$(DRAGON_SERVICES_DLL) \
-	$(DRAGON_CORE_DLL) \
-	$(SYNAPSE_CORE_DLL_MDB)  
+	$(BANSHEE_DLL_MDB)  
 
 
 RESGEN=resgen2
 	
 all: $(ASSEMBLY) $(PROGRAMFILES) 
 
-FILES =  \
+FILES = \
 	AssemblyInfo.cs \
 	BansheeNowPlayingProvider.cs \
 	IPlayerEngineService.cs \
@@ -80,27 +53,22 @@ FILES =  \
 
 DATA_FILES = 
 
-RESOURCES = Banshee.addin.xml 
+RESOURCES = \
+	Banshee.addin.xml 
 
 EXTRAS = 
 
 REFERENCES =  \
-	../../build/Debug/Synapse.Core.dll \
-	../../build/Debug/Synapse.Services.dll \
-	../../contrib/NDesk.DBus.dll \
 	System
 
-DLL_REFERENCES = 
+DLL_REFERENCES =  \
+	../../contrib/NDesk.DBus.dll
 
 CLEANFILES = $(PROGRAMFILES) 
 
 include $(top_srcdir)/Makefile.include
 
-HYENA_DLL = $(BUILD_DIR)/Hyena.dll
 
-$(eval $(call emit-deploy-target,HYENA_DLL))
-$(eval $(call emit-deploy-target,DRAGON_SERVICES_DLL))
-$(eval $(call emit-deploy-target,DRAGON_CORE_DLL))
 
 
 $(eval $(call emit_resgen_targets))

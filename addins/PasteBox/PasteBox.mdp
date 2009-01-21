@@ -1,7 +1,7 @@
 <Project name="PasteBox" fileversion="2.0" language="C#" UseParentDirectoryAsNamespace="True" DefaultNamespace="Synapse.PasteBox" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
-      <Output directory="../../build/Debug" assembly="PasteBox" />
+      <Output directory="../../build/Debug/addins" assembly="PasteBox" />
       <Build debugmode="True" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
       <EnvironmentVariables />
@@ -25,11 +25,11 @@
     <File name="SyntaxHighlighter.js" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>
-    <ProjectReference type="Project" localcopy="True" refto="Synapse.UI" />
-    <ProjectReference type="Project" localcopy="True" refto="Synapse.Services" />
-    <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
-    <ProjectReference type="Gac" localcopy="True" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
-    <ProjectReference type="Assembly" localcopy="True" refto="../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll" />
+    <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />
+    <ProjectReference type="Project" localcopy="False" refto="Synapse.Services" />
+    <ProjectReference type="Project" localcopy="False" refto="Synapse.Core" />
+    <ProjectReference type="Gac" localcopy="False" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
+    <ProjectReference type="Assembly" localcopy="False" refto="../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
   <GtkDesignInfo />
