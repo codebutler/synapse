@@ -16,6 +16,8 @@ public partial class EditGroupsWindow : QWidget {
     
     protected QLabel label;
     
+    protected QLabel jidLabel;
+    
     protected Synapse.QtClient.Widgets.EditGroupsWidget groupsWidget;
     
     protected QDialogButtonBox buttonBox;
@@ -40,6 +42,10 @@ public partial class EditGroupsWindow : QWidget {
         this.label.SizePolicy = label_sizePolicy;
         this.label.Text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Edit Groups</span></p></body></html>";
         verticalLayout.AddWidget(this.label);
+        this.jidLabel = new QLabel(this);
+        this.jidLabel.ObjectName = "jidLabel";
+        this.jidLabel.Text = "";
+        verticalLayout.AddWidget(this.jidLabel);
         this.groupsWidget = new Synapse.QtClient.Widgets.EditGroupsWidget(this);
         this.groupsWidget.ObjectName = "groupsWidget";
         verticalLayout.AddWidget(this.groupsWidget);

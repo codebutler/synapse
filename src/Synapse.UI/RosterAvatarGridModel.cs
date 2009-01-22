@@ -109,7 +109,10 @@ namespace Synapse.UI
 		#region Public Methods
 		public IEnumerable<string> GetItemGroups(RosterItem item)
 		{
-			return item.Item.GetGroups().Select(g => g.GroupName);
+			if (item.Item.GetGroups().Length > 0)
+				return item.Item.GetGroups().Select(g => g.GroupName);
+			else
+				return new string[] { "No Group" };			
 		}
 		
 		public int GetGroupOrder (string groupName)
@@ -147,6 +150,8 @@ namespace Synapse.UI
 			lock (m_Items) {
 				foreach (var item in m_Items) {
 					if (item.Item.HasGroup(groupName)) {
+						yield return item;
+					} else if (item.Item.GetGroups().Length == 0 && groupName == "No Group") {
 						yield return item;
 					}
 				}

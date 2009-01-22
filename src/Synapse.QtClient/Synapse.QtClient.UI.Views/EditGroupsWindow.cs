@@ -31,15 +31,23 @@ using Synapse.QtClient.UI.Views;
 using jabber.protocol.iq;
 
 public partial class EditGroupsWindow : QWidget
-{	
+{
+	Account m_Account;
+	Item    m_Item;
+	
 	public EditGroupsWindow (Account account, Item item)
 	{
 		SetupUi();
 
+		m_Account = account;
+		m_Item    = item;
+
 		buttonBox.StandardButtons = (uint)QDialogButtonBox.StandardButton.Ok | (uint)QDialogButtonBox.StandardButton.Cancel;
 
+		jidLabel.Text = item.JID.ToString();
+		
 		groupsWidget.Account = account;
-		groupsWidget.SelectedGroups = item.GetGroups().Select(g => g.Name).ToArray();
+		groupsWidget.SelectedGroups = item.GetGroups().Select(g => g.GroupName).ToArray();
 	}
 
 	public new void Show ()
@@ -53,9 +61,24 @@ public partial class EditGroupsWindow : QWidget
 	{
 		var role = buttonBox.buttonRole(button);
 		var gui = ServiceManager.Get<GuiService>();
-		if (role == QDialogButtonBox.ButtonRole.RejectRole)
-			((MainWindow)gui.MainWindow.View).HideLightbox();
-		else
-			Console.WriteLine("Other!");
+		if (role == QDialogButtonBox.ButtonRole.AcceptRole) {
+			var currentGroups = m_Item.GetGroups().Select(g => g.GroupName);
+			var newGroups = groupsWidget.SelectedGroups;
+
+			foreach (string groupName in currentGroups) {
+				if (!newGroups.Contains(groupName)) {
+					m_Item.RemoveGroup(groupName);
+				}
+			}
+
+			foreach (String groupName in newGroups) {
+				if (!currentGroups.Contains(groupName)) {
+					m_Item.AddGroup(groupName);
+				}
+			}
+				
+			m_Account.Roster.Modify(m_Item);
+		}
+		((MainWindow)gui.MainWindow.View).HideLightbox();
 	}
 }

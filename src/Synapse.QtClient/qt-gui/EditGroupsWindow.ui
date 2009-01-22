@@ -47,6 +47,13 @@ p, li { white-space: pre-wrap; }
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="jidLabel" >
+     <property name="text" >
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="Synapse.QtClient.Widgets.EditGroupsWidget" native="1" name="groupsWidget" />
    </item>
    <item>

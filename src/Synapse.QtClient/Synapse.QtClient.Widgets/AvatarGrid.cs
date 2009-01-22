@@ -155,7 +155,6 @@ namespace Synapse.QtClient.Widgets
 				return m_SupressTooltips;
 			}
 			set {
-				Console.WriteLine("SUPRESS ! " + value);
 				m_SupressTooltips = value;
 				UpdateHoverItem();
 			}
@@ -186,8 +185,17 @@ namespace Synapse.QtClient.Widgets
 				bool groupsChanged = false;
 
 				List<string> toRemove = new List<string>();
+
+				// Check if item was added to any groups
+				foreach (string groupName in model.GetItemGroups(item)) {
+					if (!m_Items[item].ContainsKey(groupName)) {
+						AddItemToGroup(item, groupName, false);
+						groupsChanged = true;
+					}
+				}
 				
-				// Redraw existing items, check if item needs to be removed from any groups.
+				// Check if item needs to be removed from any groups, redraw others.
+				// FIXME: Don't need to redraw items we just added.
 				lock (m_Items) {					
 					foreach (RosterItem<T> gitem in m_Items[item].Values) {
 						RosterItemGroup group = (RosterItemGroup)gitem.ParentItem();
@@ -207,14 +215,6 @@ namespace Synapse.QtClient.Widgets
 				
 				foreach (string groupName in toRemove) {
 					RemoveItemFromGroup(item, groupName, false);
-				}
-				
-				// Check if item was added to any groups
-				foreach (string groupName in model.GetItemGroups(item)) {
-					if (!m_Items[item].ContainsKey(groupName)) {
-						AddItemToGroup(item, groupName, false);
-						groupsChanged = true;
-					}
 				}
 
 				if (visibilityChanged || groupsChanged) {
@@ -460,11 +460,6 @@ namespace Synapse.QtClient.Widgets
 		void AddItem (T item, bool resizeAndReposition)
 		{			
 			var groups = m_Model.GetItemGroups(item);
-
-			// FIXME: Is there some sort of "Standard" name for this?
-			// Otherwise, perhaps they should be drawn outside of any group?
-			if (groups.Count() == 0)
-				groups = new string[] { "No Group" };
 		
 			foreach (string groupName in groups) {
 				AddItemToGroup(item, groupName, resizeAndReposition);
