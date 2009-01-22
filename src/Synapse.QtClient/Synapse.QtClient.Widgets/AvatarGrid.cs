@@ -52,7 +52,7 @@ namespace Synapse.QtClient.Widgets
 
 		bool m_AllGroupsCollapsed = false;
 
-		bool m_SupressTooltips = false;
+		bool m_SuppressTooltips = false;
 		
 		public event AvatarGridItemEventHandler<T> ItemActivated;
 		
@@ -150,12 +150,12 @@ namespace Synapse.QtClient.Widgets
 			set;
 		}
 
-		public bool SupressTooltips {
+		public bool SuppressTooltips {
 			get {
-				return m_SupressTooltips;
+				return m_SuppressTooltips;
 			}
 			set {
-				m_SupressTooltips = value;
+				m_SuppressTooltips = value;
 				UpdateHoverItem();
 			}
 		}
@@ -329,6 +329,7 @@ namespace Synapse.QtClient.Widgets
 					m_AllGroupsCollapsed = value;
 					ResizeAndRepositionGroups();
 				}
+				SuppressTooltips = value;
 			}
 		}
 		
@@ -550,7 +551,7 @@ namespace Synapse.QtClient.Widgets
 
 			// Since we map the point to scene coords, we could accidently 
 			// focus items outside the visible viewport.
-			if (m_SupressTooltips || !this.Viewport().Geometry.Contains(pos) || !this.IsVisible()) {
+			if (m_SuppressTooltips || !this.Viewport().Geometry.Contains(pos) || !this.IsVisible()) {
 				m_TooltipTimer.Stop();
 				m_HoverItem = null;
 				m_InfoPopup.Item = null;

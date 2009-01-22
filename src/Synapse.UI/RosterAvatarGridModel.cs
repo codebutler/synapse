@@ -219,7 +219,10 @@ namespace Synapse.UI
 		protected virtual void OnItemAdded (Account account, Item item)
 		{
 			var ritem = new RosterItem(account, item);
-			m_Items.Add(ritem);
+
+			lock (m_Items) {
+				m_Items.Add(ritem);
+			}
 			
 			var evnt = ItemAdded;
 			if (evnt != null)

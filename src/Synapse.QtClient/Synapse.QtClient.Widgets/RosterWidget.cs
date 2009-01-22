@@ -182,7 +182,7 @@ public partial class RosterWidget : QWidget
 
 		rosterIconSizeSlider.Value = rosterGrid.IconSize;
 
-		addFriendButton.icon = Gui.LoadIcon("add");
+		addFriendButton.icon = Gui.LoadIcon("add", 16);
 	}
 
 	public int AccountsCount {
@@ -290,7 +290,7 @@ public partial class RosterWidget : QWidget
 			return;
 		
 		if (action == m_ViewProfileAction) {
-			m_MenuDownItem.Account.RequestVCard(m_MenuDownItem.Item.JID, null);
+			new UserProfileWindowController(m_MenuDownItem.Account, m_MenuDownItem.Item.JID);
 		} else if (action == m_IMAction) {
 			Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(m_MenuDownItem.Account, m_MenuDownItem.Item.JID);	
 		} else if (m_InviteActions.Contains(action)) {
@@ -402,13 +402,13 @@ public partial class RosterWidget : QWidget
 	[Q_SLOT]
 	void rosterItemMenu_aboutToShow ()
 	{
-		rosterGrid.SupressTooltips = true;
+		rosterGrid.SuppressTooltips = true;
 	}
 
 	[Q_SLOT]
 	void rosterItemMenu_aboutToHide ()
 	{
-		rosterGrid.SupressTooltips = false;
+		rosterGrid.SuppressTooltips = false;
 	}
 	#endregion
 }
