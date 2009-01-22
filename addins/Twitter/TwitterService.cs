@@ -68,8 +68,13 @@ namespace Synapse.Addins.TwitterAddin
 			};
 
 			var feedService = ServiceManager.Get<ActivityFeedService>();
-			feedService.AddTemplate("tweet", "tweets", "tweet", "resource:/twitter/twitm-16.png", replyAction, retweetAction);			
-			feedService.AddTemplate("direct-tweet", "direct tweets", "direct tweet", "resource:/twitter/twitm-16.png", replyAction);
+			feedService.AddTemplate("tweet", "tweets", "tweet", new Dictionary<string, object> {
+				{ "IconUrl", "resource:/twitter/twitm-16.png" }
+			}, replyAction, retweetAction);
+
+			feedService.AddTemplate("direct-tweet", "direct tweets", "direct tweet", new Dictionary<string, object> {
+				{ "IconUrl", "resource:/twitter/twitm-16.png" }
+			}, replyAction);
 
 			m_Timer = new Timer(240000);
 			m_Timer.Elapsed += HandleElapsed;

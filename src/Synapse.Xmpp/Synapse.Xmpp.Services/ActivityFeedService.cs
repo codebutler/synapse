@@ -50,6 +50,7 @@ namespace Synapse.Xmpp.Services
 			
 			Application.Client.Started +=  delegate {
 				PostItem(null, null, "synapse", "Welcome to Synapse!", null);
+				PostItem(ServiceManager.Get<AccountService>().Accounts[0], new JID("eric@extremeboredom.net"), "invite", "foo@conference.extremeboredom.net", "hay");
 			};
 
 			var nodes = AddinManager.GetExtensionNodes("/Synapse/Xmpp/ActivityFeed/ShoutHandlers");
@@ -81,22 +82,16 @@ namespace Synapse.Xmpp.Services
 
 		public void AddTemplate (string name, string singularText, string pluralText, params NotificationAction[] actions)
 		{
-			AddTemplate(name, singularText, pluralText, false, null, actions);
+			AddTemplate(name, singularText, pluralText, new Dictionary<string,object>(), actions);
 		}
 
-		public void AddTemplate (string name, string singularText, string pluralText, string iconUrl, params NotificationAction[] actions)
+		public void AddTemplate (string name, string singularText, string pluralText, Dictionary<string, object> options, params NotificationAction[] actions)
 		{
-			AddTemplate(name, singularText, pluralText, false, iconUrl, actions);
-		}
+			bool desktopNotify    = (options.ContainsKey("DesktopNotify") && ((bool)options["DesktopNotify"]) == true);
+			bool showInMainWindow = (options.ContainsKey("ShowInMainWindow") && ((bool)options["ShowInMainWindow"]) == true);
+			string iconUrl        = (options.ContainsKey("IconUrl") ? (string)options["IconUrl"] : null);
 
-		public void AddTemplate (string name, string singularText, string pluralText, bool desktopNotify, params NotificationAction[] actions)
-		{
-			AddTemplate(name, singularText, pluralText, desktopNotify, null, actions);
-		}
-		
-		public void AddTemplate (string name, string singularText, string pluralText, bool desktopNotify, string iconUrl, params NotificationAction[] actions)
-		{
-			m_Templates.Add(name, new ActivityFeedItemTemplate(name, singularText, pluralText, desktopNotify, iconUrl, actions));
+			m_Templates.Add(name, new ActivityFeedItemTemplate(name, singularText, pluralText, desktopNotify, showInMainWindow, iconUrl, actions));
 		}
 		
 		public void PostItem (Account account, JID from, string type, string actionItem, string content)
@@ -156,18 +151,20 @@ namespace Synapse.Xmpp.Services
 	{
 		string m_Name;
 		string m_SingularText;
-		string m_PlularText;
+		string m_PluralText;
 		bool   m_DesktopNotify;
+		bool   m_ShowInMainWindow;
 		string m_IconUrl;
 		NotificationAction[] m_Actions;
 
-		public ActivityFeedItemTemplate (string name, string singularText, string pluarText, bool desktopNotify,
-		                                 string iconUrl, params NotificationAction[] actions)
+		public ActivityFeedItemTemplate (string name, string singularText, string pluralText, bool desktopNotify,
+		                                 bool showInMainWindow, string iconUrl, params NotificationAction[] actions)
 		{
 			m_Name = name;
 			m_SingularText = singularText;
-			m_PlularText = pluarText;
+			m_PluralText = pluralText;
 			m_DesktopNotify = desktopNotify;
+			m_ShowInMainWindow = showInMainWindow;
 			m_IconUrl = iconUrl;
 			m_Actions = actions;
 		}
@@ -186,13 +183,19 @@ namespace Synapse.Xmpp.Services
 		
 		public string PluralText {
 			get {
-				return m_PlularText;
+				return m_PluralText;
 			}
 		}
 		
 		public bool DesktopNotify {
 			get {
 				return m_DesktopNotify;
+			}
+		}
+
+		public bool ShowInMainWindow {
+			get {
+				return m_ShowInMainWindow;
 			}
 		}
 

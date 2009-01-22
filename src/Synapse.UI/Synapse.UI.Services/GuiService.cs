@@ -67,7 +67,13 @@ namespace Synapse.UI.Services
 					feedItem.Account.JoinMuc(feedItem.ActionItem);
 				}
 			};
-			ServiceManager.Get<ActivityFeedService>().AddTemplate("invite", "invites you to join {0}", "invites you to join {0}", true, new [] { joinMucAction });
+			var service = ServiceManager.Get<ActivityFeedService>();
+			service.AddTemplate("invite", "invites you to join {0}", "invites you to join {0}",
+				new Dictionary<string, object> {
+					{ "DesktopNotify", true },
+					{ "ShowInMainWindow", true }
+				}, joinMucAction
+			);
 		}
 
 		public string ServiceName {
