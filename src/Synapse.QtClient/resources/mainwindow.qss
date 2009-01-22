@@ -60,9 +60,24 @@ QLineEdit#friendSearchLineEdit {
 #friendsTab, 
 #friendsTab QGraphicsView,
 #friendsTab QListView,
-#chatroomsTab QTreeView {
+#chatroomsTab QTreeView,
+#notificationsWidget {
 	color: #CCC;
 	background-color: #333333;
+}
+
+#notificationsWidget > QFrame,
+#notificationsWidget QPushButton {
+	background-color: #222;
+}
+
+#notificationsWidget > QFrame {
+	border: 1px solid #222;
+	border-radius: 6px;
+}
+
+#notificationsWidget QPushButton {
+	border: 0px;
 }
 
 #NoAccountsWidget QGraphicsView {

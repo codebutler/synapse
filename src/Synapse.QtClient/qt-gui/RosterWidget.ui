@@ -30,6 +30,16 @@
     </widget>
    </item>
    <item>
+    <widget class="Synapse.QtClient.Widgets.NotificationsWidget" name="notificationsWidget" >
+     <property name="frameShape" >
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QSplitter" name="splitter" >
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
@@ -541,6 +551,12 @@ p, li { white-space: pre-wrap; }
    <class>Synapse.QtClient.Widgets.AvatarGrid&lt;Synapse.UI.RosterItem></class>
    <extends>QGraphicsView</extends>
    <header>rostergrid.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Synapse.QtClient.Widgets.NotificationsWidget</class>
+   <extends>QFrame</extends>
+   <header>notificationswidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

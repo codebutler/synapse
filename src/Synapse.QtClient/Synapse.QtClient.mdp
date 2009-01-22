@@ -5,8 +5,8 @@
       <Build debugmode="True" target="Exe" />
       <Execution runwithwarnings="True" commandlineparameters="--uninstalled --debug" externalconsole="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
       <EnvironmentVariables>
-        <Variable name="SYNAPSE_DEBUG" value="1" />
         <Variable name="MONO_ADDINS_REGISTRY" value="" />
+        <Variable name="SYNAPSE_DEBUG" value="1" />
       </EnvironmentVariables>
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="True" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
@@ -91,6 +91,7 @@
     <File name="Synapse.QtClient.Widgets/LightboxContainerWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="EditGroupsWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/EditGroupsWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Widgets/NotificationsWidget.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />

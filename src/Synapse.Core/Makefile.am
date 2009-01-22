@@ -49,6 +49,7 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG)
 
 FILES =  \
 	IEnumerable.cs \
+	Synapse.Core/ExtensionMethods.cs \
 	Synapse.Core/Pair.cs \
 	Synapse.Core/Paths.cs \
 	Synapse.Core/PlatformHacks.cs \

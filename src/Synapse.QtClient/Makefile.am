@@ -142,6 +142,7 @@ FILES =  \
 	Synapse.QtClient.Widgets/FadingQLabel.cs \
 	Synapse.QtClient.Widgets/LightboxContainerWidget.cs \
 	Synapse.QtClient.Widgets/NoAccountsWidget.cs \
+	Synapse.QtClient.Widgets/NotificationsWidget.cs \
 	Synapse.QtClient.Widgets/RosterWidget.cs \
 	WindowMover.cs 
 

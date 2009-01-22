@@ -16,6 +16,8 @@ public partial class RosterWidget : QWidget {
     
     protected QWidget m_AccountsContainer;
     
+    protected Synapse.QtClient.Widgets.NotificationsWidget notificationsWidget;
+    
     protected QSplitter splitter;
     
     protected QWidget widget;
@@ -95,6 +97,9 @@ public partial class RosterWidget : QWidget {
         m_AccountsContainer_sizePolicy.SetHeightForWidth(this.m_AccountsContainer.SizePolicy.HasHeightForWidth());
         this.m_AccountsContainer.SizePolicy = m_AccountsContainer_sizePolicy;
         verticalLayout_6.AddWidget(this.m_AccountsContainer);
+        this.notificationsWidget = new Synapse.QtClient.Widgets.NotificationsWidget(this);
+        this.notificationsWidget.ObjectName = "notificationsWidget";
+        verticalLayout_6.AddWidget(this.notificationsWidget);
         this.splitter = new QSplitter(this);
         this.splitter.ObjectName = "splitter";
         this.splitter.Orientation = Qt.Orientation.Vertical;

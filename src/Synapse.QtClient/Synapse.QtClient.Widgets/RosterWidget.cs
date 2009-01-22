@@ -353,6 +353,10 @@ public partial class RosterWidget : QWidget
 		}
 		
 		feedService.NewItem += AddActivityFeedItem;
+
+		// FIXME: This can't stay here, too many other things use this service.
+		// Will need to move this into ActivityFeedService HandleOnClientStarted, 
+		// and implement a queue in here.
 		feedService.FireQueued();
 	}
 
