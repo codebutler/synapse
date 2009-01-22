@@ -28,6 +28,7 @@ using System.Reflection;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using jabber;
+using jabber.protocol;
 using jabber.protocol.client;
 using jabber.protocol.iq;
 
@@ -67,9 +68,23 @@ namespace Synapse.Xmpp
 		public AvatarManager(Account account)
 		{
 			account.Client.OnPresence += HandleOnPresence;
+			account.Client.OnBeforePresenceOut += HandleOnBeforePresenceOut;
 			account.ConnectionStateChanged += HandleConnectionStateChanged;
 			account.MyVCardUpdated += HandleMyVCardUpdated;
 			m_Account = account;	
+		}
+
+		void HandleOnBeforePresenceOut(object sender, Presence pres)
+		{
+			Element vcardUpdateElem = new Element("x", "vcard-temp:x:update", m_Account.Client.Document);
+			Element photoElem = new Element("photo", m_Account.Client.Document);
+			vcardUpdateElem.AppendChild(photoElem);
+			
+			if (GetAvatarHash(m_Account.Jid) != null) {
+				photoElem.InnerText = GetAvatarHash(m_Account.Jid);
+			}
+				
+			pres.AppendChild(vcardUpdateElem);
 		}
 
 		void HandleConnectionStateChanged(Account account)
@@ -123,14 +138,10 @@ namespace Synapse.Xmpp
 					var photos = x.GetElementsByTagName("photo");
 					if (photos.Count > 0) {
 						string bareJid = pres.From.Bare;
-						string hash = photos[0].InnerText;
-						lock (s_HashCache) {
-							if (!s_HashCache.ContainsKey(bareJid) || s_HashCache[bareJid] != hash) {
-								s_HashCache[bareJid] = hash;
-								if (!AvatarExists(hash))
-									UpdateAvatar(bareJid, hash);
-							}
-						}						
+						string hash = photos[0].InnerText;						
+						s_HashCache[bareJid] = hash;						
+						if (!AvatarExists(hash))
+							UpdateAvatar(bareJid, hash);					
 						break;
 					}
 				}
@@ -152,7 +163,7 @@ namespace Synapse.Xmpp
 		
 		void UpdateAvatar(string jid, string expectedHash)
 		{
-			// XXX: Abstract this into a VCardManager
+			// XXX: Use account.RequestVCard
 			VCardIQ iq = new VCardIQ(m_Account.Client.Document);
 			iq.Type = IQType.get;
 			iq.To = jid;
@@ -171,6 +182,10 @@ namespace Synapse.Xmpp
 				if (s_HashCache.ContainsKey(account.Jid.Bare))
 					s_HashCache.Remove(account.Jid.Bare);
 			}
+
+			// Re-send presence
+			if (m_Account.Status != null)
+				m_Account.Status = m_Account.Status;
 			
 			if (AvatarUpdated != null) {
 				AvatarUpdated(account.Jid.Bare, hash);

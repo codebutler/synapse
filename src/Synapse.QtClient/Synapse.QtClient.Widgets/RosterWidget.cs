@@ -54,6 +54,7 @@ public partial class RosterWidget : QWidget
 	QAction               m_ListModeAction;
 	QAction               m_ShowTransportsAction;
 	QAction               m_EditGroupsAction;
+	RosterItem            m_MenuDownItem;
 
 	// Map the JS element ID to the ActivityFeedItem
 	Dictionary<string, IActivityFeedItem> m_ActivityFeedItems;
@@ -263,11 +264,12 @@ public partial class RosterWidget : QWidget
 	[Q_SLOT]
 	void on_rosterGrid_customContextMenuRequested(QPoint point)
 	{
-		if (rosterGrid.HoverItem != null) {
+		m_MenuDownItem = rosterGrid.HoverItem;
+		if (m_MenuDownItem != null) {
 			m_InviteActions.ForEach(a => m_InviteMenu.RemoveAction(a));
-			if (rosterGrid.HoverItem.Account.ConferenceManager.Count > 0) {
+			if (m_MenuDownItem.Account.ConferenceManager.Count > 0) {
 				m_InviteActions.Add(m_InviteMenu.AddSeparator());
-				foreach (var conference in rosterGrid.HoverItem.Account.ConferenceManager.Rooms) {
+				foreach (var conference in m_MenuDownItem.Account.ConferenceManager.Rooms) {
 					QAction action = m_InviteMenu.AddAction(conference.JID);
 					m_InviteActions.Add(action);
 				}
@@ -284,19 +286,19 @@ public partial class RosterWidget : QWidget
 	{
 		// FIXME: Actions should be handled in the controller.
 		
-		// FIXME: Don't use HoverItem, store MousePressItem separately.
-		if (rosterGrid.HoverItem == null)
+		if (m_MenuDownItem == null)
 			return;
 		
 		if (action == m_ViewProfileAction) {
-			rosterGrid.HoverItem.Account.RequestVCard(rosterGrid.HoverItem.Item.JID, null);
+			m_MenuDownItem.Account.RequestVCard(m_MenuDownItem.Item.JID, null);
 		} else if (action == m_IMAction) {
-			Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(rosterGrid.HoverItem.Account, rosterGrid.HoverItem.Item.JID);	
+			Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(m_MenuDownItem.Account, m_MenuDownItem.Item.JID);	
 		} else if (m_InviteActions.Contains(action)) {
 			// FIXME
 			Console.WriteLine("Send Invitation!!");
 		} else if (action == m_EditGroupsAction) {
-			var c = new EditGroupsWindow(rosterGrid.HoverItem.Account, rosterGrid.HoverItem.Item);
+			var win = new EditGroupsWindow(m_MenuDownItem.Account, m_MenuDownItem.Item);
+			win.Show();
 		}
 	}
 	

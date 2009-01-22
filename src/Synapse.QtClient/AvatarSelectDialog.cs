@@ -114,6 +114,7 @@ public partial class AvatarSelectDialog : QDialog
 	void on_browseButton_clicked ()
 	{
 		var dialog = new QFileDialog(this.TopLevelWidget(), "Select Avatar");
+		dialog.fileMode = QFileDialog.FileMode.ExistingFile;
 		if (dialog.Exec() == (int)DialogCode.Accepted && dialog.SelectedFiles().Count > 0) {
 			string fileName = dialog.SelectedFiles()[0];
 

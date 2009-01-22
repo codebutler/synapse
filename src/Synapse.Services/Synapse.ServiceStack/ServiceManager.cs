@@ -75,7 +75,7 @@ namespace Synapse.ServiceStack
 			};
 			
             AddinManager.Initialize (Application.CommandLine.Contains ("uninstalled") 
-                ? "." : Paths.ApplicationData);
+                ? Environment.CurrentDirectory : Paths.ApplicationData);
             
             IProgressStatus monitor = Application.CommandLine.Contains ("debug-addins")
                 ? new ConsoleProgressStatus (true)
