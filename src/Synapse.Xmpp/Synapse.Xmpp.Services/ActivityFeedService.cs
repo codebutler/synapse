@@ -50,7 +50,6 @@ namespace Synapse.Xmpp.Services
 			
 			Application.Client.Started +=  delegate {
 				PostItem(null, null, "synapse", "Welcome to Synapse!", null);
-				PostItem(ServiceManager.Get<AccountService>().Accounts[0], new JID("eric@extremeboredom.net"), "invite", "foo@conference.extremeboredom.net", "hay");
 			};
 
 			var nodes = AddinManager.GetExtensionNodes("/Synapse/Xmpp/ActivityFeed/ShoutHandlers");

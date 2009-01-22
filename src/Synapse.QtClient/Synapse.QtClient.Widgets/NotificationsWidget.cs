@@ -67,7 +67,8 @@ namespace Synapse.QtClient.Widgets
 
 				var service = ServiceManager.Get<ActivityFeedService>();
 				ActivityFeedItemTemplate template = service.Templates[item.Type];
-				
+
+				// FIXME Show item.Content too?
 				var builder = new StringBuilder();
 				builder.AppendFormat("<span style=\"font-size: 9pt;\">");
 				builder.AppendFormat("<b>{0}</b>", item.FromName);
