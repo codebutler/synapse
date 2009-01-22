@@ -23,6 +23,7 @@ using System;
 using Synapse.Xmpp;
 using Synapse.ServiceStack;
 using Synapse.UI.Services;
+using Synapse.QtClient;
 using Synapse.QtClient.UI.Views;
 using Qyoto;
 using jabber;
@@ -37,7 +38,11 @@ public partial class AddFriendWindow : QWidget
 	{
 		SetupUi();
 
-		buttonBox.StandardButtons = (uint)QDialogButtonBox.StandardButton.Ok | (uint)QDialogButtonBox.StandardButton.Cancel;
+		closeButton.icon = Gui.LoadIcon("window-close", 16);
+
+		QPushButton addButton = new QPushButton(Gui.LoadIcon("add", 16), "Add Friend");
+		addButton.SetParent(buttonBox);
+		buttonBox.AddButton(addButton, QDialogButtonBox.ButtonRole.AcceptRole);
 
 		m_Account = account;
 		
@@ -49,6 +54,12 @@ public partial class AddFriendWindow : QWidget
 		GuiService gui = ServiceManager.Get<GuiService>();
 		((MainWindow)gui.MainWindow.View).ShowLightbox(this);
 	}
+
+	[Q_SLOT]
+	void on_enterJidButton_clicked ()
+	{
+		stackedWidget.CurrentIndex = 1;
+	}
 	
 	[Q_SLOT]
 	void on_buttonBox_clicked (QAbstractButton button)
@@ -56,22 +67,25 @@ public partial class AddFriendWindow : QWidget
 		try {
 			var role = buttonBox.buttonRole(button);
 			if (role == QDialogButtonBox.ButtonRole.AcceptRole) {
-				JID jid = new JID(lineEdit.Text);
+				JID jid = new JID(jidLineEdit.Text);
 
 				// FIXME: Start spinner
 				
-				m_Account.AddRosterItem(jid, groupsWidget.SelectedGroups, AddRosterItemComplete);
+				m_Account.AddRosterItem(jid, nameLineEdit.Text, groupsWidget.SelectedGroups, AddRosterItemComplete);
 			} else {
-				Application.Invoke(delegate {
-					var gui = ServiceManager.Get<GuiService>();
-					((MainWindow)gui.MainWindow.View).HideLightbox();
-				});
+				var gui = ServiceManager.Get<GuiService>();
+				((MainWindow)gui.MainWindow.View).HideLightbox();
 			}			
 		} catch (Exception ex) {
-			Application.Invoke(delegate {
-				QMessageBox.Critical(base.TopLevelWidget(), "Failed to add user", ex.Message);
-			});
+			QMessageBox.Critical(base.TopLevelWidget(), "Failed to add user", ex.Message);
 		}
+	}
+
+	[Q_SLOT]
+	void on_closeButton_clicked ()
+	{
+		var gui = ServiceManager.Get<GuiService>();
+		((MainWindow)gui.MainWindow.View).HideLightbox();
 	}
 
 	void AddRosterItemComplete (object sender, IQ response, object data)

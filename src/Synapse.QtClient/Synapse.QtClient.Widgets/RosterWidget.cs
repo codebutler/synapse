@@ -54,6 +54,7 @@ public partial class RosterWidget : QWidget
 	QAction               m_ListModeAction;
 	QAction               m_ShowTransportsAction;
 	QAction               m_EditGroupsAction;
+	QAction               m_RemoveAction;
 	RosterItem            m_MenuDownItem;
 
 	// Map the JS element ID to the ActivityFeedItem
@@ -106,8 +107,9 @@ public partial class RosterWidget : QWidget
 
 		m_EditGroupsAction = new QAction("Edit Groups", m_RosterItemMenu);
 		m_RosterItemMenu.AddAction(m_EditGroupsAction);
-		
-		m_RosterItemMenu.AddAction("Remove");
+
+		m_RemoveAction = new QAction("Remove", m_RosterItemMenu);
+		m_RosterItemMenu.AddAction(m_RemoveAction);
 
 		m_RosterModel = new RosterAvatarGridModel();
 		rosterGrid.Model = m_RosterModel;
@@ -299,6 +301,10 @@ public partial class RosterWidget : QWidget
 		} else if (action == m_EditGroupsAction) {
 			var win = new EditGroupsWindow(m_MenuDownItem.Account, m_MenuDownItem.Item);
 			win.Show();
+		} else if (action == m_RemoveAction) {
+			if (QMessageBox.Question(this.TopLevelWidget(), "Synapse", "Are you sure you want to remove this friend?", (uint)QMessageBox.StandardButton.Yes | (uint)QMessageBox.StandardButton.No) == QMessageBox.StandardButton.Yes) {
+				m_MenuDownItem.Account.RemoveRosterItem(m_MenuDownItem.Item.JID);
+			}
 		}
 	}
 	

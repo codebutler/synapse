@@ -99,6 +99,8 @@ public partial class RosterWidget : QWidget {
         verticalLayout_6.AddWidget(this.m_AccountsContainer);
         this.notificationsWidget = new Synapse.QtClient.Widgets.NotificationsWidget(this);
         this.notificationsWidget.ObjectName = "notificationsWidget";
+        this.notificationsWidget.FrameShape = QFrame.Shape.NoFrame;
+        this.notificationsWidget.FrameShadow = QFrame.Shadow.Raised;
         verticalLayout_6.AddWidget(this.notificationsWidget);
         this.splitter = new QSplitter(this);
         this.splitter.ObjectName = "splitter";

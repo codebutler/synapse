@@ -295,10 +295,14 @@ namespace Synapse.UI
 			};
 			
 			account.Roster.OnRosterItem += delegate(object sender, Item ri) {
-				if (FindRosterItem(account, ri) == null) {
-					OnItemAdded(account, ri);
+				if (ri.Subscription != Subscription.remove) {
+					if (FindRosterItem(account, ri) == null) {
+						OnItemAdded(account, ri);
+					} else {
+						OnItemChanged(account, ri);
+					}
 				} else {
-					OnItemChanged(account, ri);
+					OnItemRemoved(account, ri);
 				}
 			};
 			

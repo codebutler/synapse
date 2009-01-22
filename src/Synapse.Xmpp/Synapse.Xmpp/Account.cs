@@ -590,10 +590,45 @@ namespace Synapse.Xmpp
 				m_Client.Write(iq);
 		}
 
-		public void AddRosterItem (JID jid, string[] groups, IqCB callback)
+		public void AddRosterItem (JID jid, string name, string[] groups, IqCB callback)
 		{
-			// FIXME
-			throw new NotImplementedException();
+			var iq = new IQ(m_Client.Document);
+			iq.Type = IQType.set;
+
+			var item = new Item(m_Client.Document);
+			item.JID = jid;
+			item.Nickname = name;
+			
+			foreach (var groupName in groups) {
+				var group = new Group(m_Client.Document);
+				group.GroupName = groupName;
+				item.AppendChild(group);
+			}
+			
+			iq.AppendChild(item);
+
+			Console.WriteLine(iq.OuterXml);
+
+			m_IQTracker.BeginIQ(iq, delegate (object sender, IQ response, object data) {
+				if (response.Type != IQType.error) {
+					Presence presence = new Presence(m_Client.Document);
+					presence.To = jid;
+					presence.Type = PresenceType.subscribe;
+					m_Client.Write(presence);
+				}
+				callback(sender, iq, data);
+			}, this);
+		}
+
+		public void RemoveRosterItem (JID jid)
+		{
+			RosterIQ iq = new RosterIQ(m_Client.Document);
+			iq.Type = IQType.set;
+			var item = new Item(m_Client.Document);
+			item.JID = jid;
+			item.Subscription = Subscription.remove;
+			iq.Query.AppendChild(item);
+			m_Client.Write(iq);
 		}
 		#endregion
 		
