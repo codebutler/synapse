@@ -50,7 +50,7 @@ namespace Synapse.Addins.TwitterAddin
 			var replyAction = new NotificationAction() {
 				Name = "reply",
 				Label = "Reply",
-				Callback = delegate (object o, EventArgs args) {
+				Callback = delegate (object o, NotificationAction action) {
 					var feedItem = (TwitterActivityFeedItem)o;
 					// FIXME:
 					Console.WriteLine("Reply");
@@ -60,7 +60,7 @@ namespace Synapse.Addins.TwitterAddin
 			var retweetAction = new NotificationAction() {
 				Name = "retweet",
 				Label = "Retweet",
-				Callback = delegate (object o, EventArgs args) {
+				Callback = delegate (object o, NotificationAction action) {
 					var feedItem = (TwitterActivityFeedItem)o;
 					// FIXME:
 					Console.WriteLine("Retweet");

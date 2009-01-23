@@ -27,6 +27,7 @@ using Synapse.Xmpp;
 using Synapse.ServiceStack;
 using Synapse.Services;
 using jabber;
+using jabber.protocol.client;
 using Mono.Addins;
 
 namespace Synapse.Xmpp.Services
@@ -47,6 +48,67 @@ namespace Synapse.Xmpp.Services
 			AddTemplate("music", "is listening to", "are listening to");
 			AddTemplate("microblog", "shouts", "shout");
 			AddTemplate("mood", "is feeling {0}", "are feeling {0}");
+
+			var approveAndAddAction = new NotificationAction {
+				Name = "approve-add",
+				Label = "Approve and Add",
+				Callback = delegate (object o, NotificationAction action) {
+					var feedItem = (XmppActivityFeedItem)o;
+
+					var presence = new Presence(feedItem.Account.Client.Document);
+					presence.To = feedItem.FromJid;
+					presence.Type = PresenceType.subscribed;
+					feedItem.Account.Client.Write(presence);
+
+					// FIXME: Should show AddFriendWindow instead so that nickname/groups can be set.
+					feedItem.Account.AddRosterItem(feedItem.FromJid, null, null, null);
+				}
+			};
+
+			var approveAction = new NotificationAction {
+				Name = "approve",
+				Label = "Approve",
+				Callback = delegate (object o, NotificationAction action) {
+					var feedItem = (XmppActivityFeedItem)o;
+
+					var presence = new Presence(feedItem.Account.Client.Document);
+					presence.To = feedItem.FromJid;
+					presence.Type = PresenceType.subscribed;
+					feedItem.Account.Client.Write(presence);
+				}
+			};
+
+			var denyAction = new NotificationAction {
+				Name = "deny",
+				Label = "Deny",
+				Callback = delegate (object o, NotificationAction action) {
+					var feedItem = (XmppActivityFeedItem)o;
+					var presence = new Presence(feedItem.Account.Client.Document);
+					presence.To = feedItem.FromJid;
+					presence.Type = PresenceType.unsubscribed;
+					feedItem.Account.Client.Write(presence);
+				}
+			};
+			
+			AddTemplate("subscribe", "wants to be friends with you", "want to friends with you", new Dictionary<string, object> {
+				{ "DesktopNotify", true },
+			 	{ "ShowInMainWindow", true }
+			}, approveAndAddAction, approveAction, denyAction);
+			
+			AddTemplate("subscribed", "is now your friend", "are now your friend", new Dictionary<string, object> {
+				{ "DesktopNotify", true },
+			 	{ "ShowInMainWindow", true }
+			});			
+
+			AddTemplate("unsubscribe", "is no longer friends with you", "are no longer friends with you", new Dictionary<string, object> {
+				{ "DesktopNotify", true },
+			 	{ "ShowInMainWindow", true }
+			});
+
+			AddTemplate("unsubscribed", "is no longer your friend", "are no longer your friend", new Dictionary<string, object> {
+				{ "DesktopNotify", true },
+			 	{ "ShowInMainWindow", true }
+			});
 			
 			Application.Client.Started +=  delegate {
 				PostItem(null, null, "synapse", "Welcome to Synapse!", null);
@@ -304,12 +366,18 @@ namespace Synapse.Xmpp.Services
 
 	public abstract class AbstractActivityFeedItem : IActivityFeedItem
 	{
+		public event NotificationActionCallback ActionTriggered;
+		
 		public virtual void TriggerAction (string actionName)
 		{
 			var template = ServiceManager.Get<ActivityFeedService>().Templates[Type];
 			foreach (var action in template.Actions) {
 				if (action.Name == actionName) {
-					action.Callback(this, EventArgs.Empty);
+					action.Callback(this, action);
+
+					if (ActionTriggered != null)
+						ActionTriggered(this, action);
+					
 					return;
 				}
 			}
@@ -348,6 +416,8 @@ namespace Synapse.Xmpp.Services
 
 	public interface IActivityFeedItem
 	{
+		event NotificationActionCallback ActionTriggered;
+		
 		string FromName {
 			get;
 		}

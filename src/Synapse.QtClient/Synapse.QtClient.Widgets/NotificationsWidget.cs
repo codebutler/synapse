@@ -49,8 +49,8 @@ namespace Synapse.QtClient.Widgets
 			if (service.Templates[item.Type].ShowInMainWindow) {
 				Application.Invoke(delegate {
 					this.Layout().AddWidget(new NotificationItemWidget(item, this));
+					this.Show();
 				});
-				this.Show();
 			}
 		}
 
@@ -61,6 +61,7 @@ namespace Synapse.QtClient.Widgets
 			public NotificationItemWidget(IActivityFeedItem item, QWidget parent) : base (parent)
 			{
 				m_Item = item;
+				item.ActionTriggered += HandleActionTriggered;
 
 				QHBoxLayout layout = new QHBoxLayout(this);
 				layout.Margin = 3;
@@ -78,7 +79,7 @@ namespace Synapse.QtClient.Widgets
 				if (template.Actions != null && template.Actions.Length > 0) {
 					builder.Append("<br/>");
 					foreach (var action in template.Actions) {
-						builder.AppendFormat("<a style=\"color: white\" href=\"{0}\">{1}</a>", action.Name, action.Label);
+						builder.AppendFormat("<a style=\"color: white\" href=\"{0}\">{1}</a> ", action.Name, action.Label);
 					}
 				}
 
@@ -99,6 +100,12 @@ namespace Synapse.QtClient.Widgets
 				});
 				closeButton.icon = Gui.LoadIcon("window-close", 16);
 				layout.AddWidget(closeButton, 0);
+			}
+
+			void HandleActionTriggered (object o, NotificationAction action)
+			{
+				this.ParentWidget().Layout().RemoveWidget(this);
+				this.SetParent(null);
 			}
 		}
 	}

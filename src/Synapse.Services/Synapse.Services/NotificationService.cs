@@ -116,7 +116,7 @@ namespace Synapse.Services
 			foreach (var action in actions)
 				notif.AddAction(action.Name, action.Label, delegate {
 					if (action.Callback != null) {
-						action.Callback(actionObject, EventArgs.Empty);
+						action.Callback(actionObject, action);
 					}
 				});
 			
@@ -128,10 +128,13 @@ namespace Synapse.Services
 		}
 	}
 
+	// FIXME: Move this and change first arg type to IActivityFeedItem
+	public delegate void NotificationActionCallback (object sender, NotificationAction action);
+	
 	public class NotificationAction
 	{
 		public string Name { get; set; }
 		public string Label { get; set; }
-		public EventHandler Callback { get; set; }
+		public NotificationActionCallback Callback { get; set; }
 	}
 }

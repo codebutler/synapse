@@ -250,9 +250,25 @@ namespace Synapse.Xmpp
 					StatusChanged(this);
 			}
 
-			if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
-				if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
-					PostActivityFeedItem(pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status);
+			var feed = ServiceManager.Get<ActivityFeedService>();
+			
+			if (pres.Type == PresenceType.error) {
+				// FIXME: Show error
+			} else if (pres.Type == PresenceType.probe) {
+				// FIXME: Do anything here?
+			} else if (pres.Type == PresenceType.subscribe) {
+				feed.PostItem(this, pres.From, "subscribe", null, pres.Status);
+			} else if (pres.Type == PresenceType.subscribed) {
+				feed.PostItem(this, pres.From, "subscribed", null, pres.Status);
+			} else if (pres.Type == PresenceType.unsubscribe) {
+				feed.PostItem(this, pres.From, "unsubscribe", null, pres.Status);
+			} else if (pres.Type == PresenceType.unsubscribed) {
+				feed.PostItem(this, pres.From, "unsubscribed", null, pres.Status);
+			} else if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable || pres.Type == PresenceType.invisible) {
+				if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
+					if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
+						PostActivityFeedItem(pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status);
+					}
 				}
 			}
 		}
@@ -598,16 +614,16 @@ namespace Synapse.Xmpp
 			var item = new Item(m_Client.Document);
 			item.JID = jid;
 			item.Nickname = name;
-			
-			foreach (var groupName in groups) {
-				var group = new Group(m_Client.Document);
-				group.GroupName = groupName;
-				item.AppendChild(group);
+	
+			if (groups != null) {
+				foreach (var groupName in groups) {
+					var group = new Group(m_Client.Document);
+					group.GroupName = groupName;
+					item.AppendChild(group);
+				}
 			}
 			
 			iq.AppendChild(item);
-
-			Console.WriteLine(iq.OuterXml);
 
 			m_IQTracker.BeginIQ(iq, delegate (object sender, IQ response, object data) {
 				if (response.Type != IQType.error) {
@@ -616,7 +632,9 @@ namespace Synapse.Xmpp
 					presence.Type = PresenceType.subscribe;
 					m_Client.Write(presence);
 				}
-				callback(sender, iq, data);
+				if (callback != null) {
+					callback(sender, iq, data);
+				}
 			}, this);
 		}
 
