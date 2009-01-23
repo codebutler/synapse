@@ -450,7 +450,9 @@ namespace Synapse.Xmpp
 
 		public int NumOnlineFriends {
 			get {
-				return m_Roster.Count(jid => m_PresenceManager.IsAvailable(jid));
+				lock (m_Roster) {
+					return m_Roster.Count(jid => m_PresenceManager.IsAvailable(jid));
+				}
 			}
 		}
 		
