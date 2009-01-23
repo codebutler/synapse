@@ -158,6 +158,16 @@ namespace Synapse.UI
 			}
 		}
 
+		public int NumItemsInGroup (string groupName)
+		{
+			return GetItemsInGroup(groupName).Count();
+		}
+
+		public int NumOnlineItemsInGroup (string groupName)
+		{
+			return this.GetItemsInGroup(groupName).Count(item => IsOnline(item));
+		}
+		
 		public object GetImage (RosterItem item)
 		{
 			return AvatarManager.GetAvatar(item.Item.JID);
@@ -180,6 +190,11 @@ namespace Synapse.UI
 			return (String.IsNullOrEmpty(m_TextFilter) || MatchesFilter(item)) &&
 			       (m_ShowTransports || !String.IsNullOrEmpty(item.Item.JID.User)) &&
 				   (showOffline ? true : item.Account.PresenceManager.IsAvailable(item.Item.JID));
+		}
+
+		public bool IsOnline (RosterItem item)
+		{
+			return item.Account.PresenceManager.IsAvailable(item.Item.JID);
 		}
 
 		public string GetPresenceInfo (RosterItem item)

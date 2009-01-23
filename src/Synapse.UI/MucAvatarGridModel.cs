@@ -63,6 +63,16 @@ namespace Synapse.UI
 			}
 		}
 
+		public int NumItemsInGroup (string groupName)
+		{
+			throw new NotImplementedException();
+		}
+
+		public int NumOnlineItemsInGroup (string groupName)
+		{
+			throw new NotImplementedException();
+		}
+		
 		public bool ModelUpdating {
 			get {
 				return false;

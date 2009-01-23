@@ -48,6 +48,9 @@ namespace Synapse.UI
 		
 		bool IsVisible(T item);
 
+		int NumItemsInGroup (string groupName);
+		int NumOnlineItemsInGroup (string groupName);
+
 		bool ModelUpdating { 
 			get; 
 		}

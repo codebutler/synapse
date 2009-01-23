@@ -80,6 +80,16 @@ QLineEdit#friendSearchLineEdit {
 	border: 0px;
 }
 
+#gridHeader {
+	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5D5D5D, stop: 1 #444444);
+}
+
+#gridHeader QPushButton {
+	padding: 0px;
+	width: 16px;
+	height: 16px;
+}
+
 #NoAccountsWidget QGraphicsView {
 	background: transparent;
 }
@@ -194,21 +204,10 @@ QScrollBar::sub-page:vertical {
 	background: none;
 }
 
-QSlider::handle {
-	background: #222222;
-	border: 1px solid #222222;
-	border-radius: 5px;
-	width: 12px;
-}
-
-QSlider::groove {
-	background: #2B2B2B;
-	border: 1px solid #2B2B2B;
-	border-radius: 5px;
-	margin: 3px;
-	height: 12px;
-}
-
 QWidget#lightboxWidget {
 	background: rgba(0, 0, 0, 210);
+}
+
+QMenu QLabel, QToolTip QLabel {
+	color: palette(text);
 }

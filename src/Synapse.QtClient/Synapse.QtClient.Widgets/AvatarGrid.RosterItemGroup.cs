@@ -136,14 +136,10 @@ namespace Synapse.QtClient.Widgets
 
 				string text = null;
 				if (m_Grid.ShowGroupCounts) {
-					int inGroup = 0;
-					int visibleInGroup = 0;
-					foreach (var item in m_Grid.Model.GetItemsInGroup(this.Name)) {
-						inGroup ++;
-						if (m_Grid.Model.IsVisible(item)) // FIXME: This needs to be online, not visible.
-							visibleInGroup ++;
-					}					
-					text = String.Format("{0} ({1}/{2})", m_GroupName, visibleInGroup, inGroup);
+					text = String.Format("{0} ({1}/{2})", 
+					                     m_GroupName,
+					                     m_Grid.Model.NumOnlineItemsInGroup(m_GroupName),
+					                     m_Grid.Model.NumItemsInGroup(m_GroupName));
 				} else {
 					text = m_GroupName;
 				}

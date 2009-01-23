@@ -39,7 +39,7 @@ namespace Synapse.QtClient.Widgets
 			service.NewItem += HandleNewItem;
 
 			QVBoxLayout layout = new QVBoxLayout(this);
-			layout.SetContentsMargins(6, 6, 6, 0);
+			layout.Margin = 6;
 			layout.Spacing = 3;
 		}
 
@@ -95,17 +95,23 @@ namespace Synapse.QtClient.Widgets
 				
 				QPushButton closeButton = new QPushButton(this);
 				QObject.Connect(closeButton, Qt.SIGNAL("clicked()"), delegate {
-					this.ParentWidget().Layout().RemoveWidget(this);
-					this.SetParent(null);
+					Close();
 				});
 				closeButton.icon = Gui.LoadIcon("window-close", 16);
 				layout.AddWidget(closeButton, 0);
 			}
 
-			void HandleActionTriggered (object o, NotificationAction action)
+			public void Close ()
 			{
 				this.ParentWidget().Layout().RemoveWidget(this);
 				this.SetParent(null);
+
+				// FIXME: Hide parent if this is last notification.
+			}
+
+			void HandleActionTriggered (object o, NotificationAction action)
+			{
+				Close();
 			}
 		}
 	}

@@ -165,7 +165,11 @@ RESOURCES =  \
 	resources/octy-22.png \
 	resources/octy-32.png \
 	resources/prototype.js \
-	resources/Template.html 
+	resources/simple-add.png \
+	resources/simple-search.png \
+	resources/Template.html \
+	resources/view-grid.png \
+	resources/view-list.png 
 
 EXTRAS = \
 	synapse.in 

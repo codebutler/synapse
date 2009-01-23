@@ -26,15 +26,21 @@ public partial class RosterWidget : QWidget {
     
     protected QWidget friendsTab;
     
-    protected QLineEdit friendSearchLineEdit;
-    
-    protected Synapse.QtClient.Widgets.AvatarGrid<Synapse.UI.RosterItem> rosterGrid;
-    
-    protected QPushButton addFriendButton;
+    protected QFrame gridHeader;
     
     protected QLabel statsLabel;
     
-    protected QSlider rosterIconSizeSlider;
+    protected QPushButton rosterSearchButton;
+    
+    protected QPushButton rosterViewButton;
+    
+    protected QPushButton addFriendButton;
+    
+    protected QWidget friendSearchContainer;
+    
+    protected QLineEdit friendSearchLineEdit;
+    
+    protected Synapse.QtClient.Widgets.AvatarGrid<Synapse.UI.RosterItem> rosterGrid;
     
     protected QWidget chatroomsTab;
     
@@ -82,8 +88,9 @@ public partial class RosterWidget : QWidget {
     
     protected void SetupUi() {
         base.ObjectName = "RosterWidget";
-        this.Geometry = new QRect(0, 0, 319, 519);
+        this.Geometry = new QRect(0, 0, 345, 494);
         this.WindowTitle = "RosterWidget";
+        this.StyleSheet = "";
         QVBoxLayout verticalLayout_6;
         verticalLayout_6 = new QVBoxLayout(this);
         verticalLayout_6.Spacing = 0;
@@ -116,7 +123,7 @@ public partial class RosterWidget : QWidget {
         this.tabWidget.tabPosition = QTabWidget.TabPosition.South;
         this.tabWidget.tabShape = QTabWidget.TabShape.Rounded;
         this.tabWidget.CurrentIndex = 0;
-        this.tabWidget.UsesScrollButtons = false;
+        this.tabWidget.UsesScrollButtons = true;
         verticalLayout_2.AddWidget(this.tabWidget);
         this.friendsTab = new QWidget(this.tabWidget);
         this.friendsTab.ObjectName = "friendsTab";
@@ -124,27 +131,16 @@ public partial class RosterWidget : QWidget {
         verticalLayout_4 = new QVBoxLayout(this.friendsTab);
         verticalLayout_4.Spacing = 0;
         verticalLayout_4.Margin = 0;
-        QHBoxLayout horizontalLayout_4;
-        horizontalLayout_4 = new QHBoxLayout();
-        verticalLayout_4.AddLayout(horizontalLayout_4);
-        horizontalLayout_4.Margin = 6;
-        this.friendSearchLineEdit = new QLineEdit(this.friendsTab);
-        this.friendSearchLineEdit.ObjectName = "friendSearchLineEdit";
-        horizontalLayout_4.AddWidget(this.friendSearchLineEdit);
-        this.rosterGrid = new Synapse.QtClient.Widgets.AvatarGrid<Synapse.UI.RosterItem>(this.friendsTab);
-        this.rosterGrid.ObjectName = "rosterGrid";
-        this.rosterGrid.FrameShape = QFrame.Shape.NoFrame;
-        this.rosterGrid.Alignment = ((global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeading") | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeft")) | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignTop"));
-        verticalLayout_4.AddWidget(this.rosterGrid);
-        QHBoxLayout horizontalLayout;
-        horizontalLayout = new QHBoxLayout();
-        verticalLayout_4.AddLayout(horizontalLayout);
-        horizontalLayout.Spacing = 6;
-        this.addFriendButton = new QPushButton(this.friendsTab);
-        this.addFriendButton.ObjectName = "addFriendButton";
-        this.addFriendButton.Text = "";
-        horizontalLayout.AddWidget(this.addFriendButton);
-        this.statsLabel = new QLabel(this.friendsTab);
+        this.gridHeader = new QFrame(this.friendsTab);
+        this.gridHeader.ObjectName = "gridHeader";
+        this.gridHeader.AutoFillBackground = true;
+        this.gridHeader.FrameShape = QFrame.Shape.NoFrame;
+        this.gridHeader.FrameShadow = QFrame.Shadow.Raised;
+        QHBoxLayout horizontalLayout_6;
+        horizontalLayout_6 = new QHBoxLayout(this.gridHeader);
+        horizontalLayout_6.Spacing = 3;
+        horizontalLayout_6.Margin = 3;
+        this.statsLabel = new QLabel(this.gridHeader);
         this.statsLabel.ObjectName = "statsLabel";
         QSizePolicy statsLabel_sizePolicy;
         statsLabel_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred);
@@ -153,22 +149,47 @@ public partial class RosterWidget : QWidget {
         statsLabel_sizePolicy.SetHeightForWidth(this.statsLabel.SizePolicy.HasHeightForWidth());
         this.statsLabel.SizePolicy = statsLabel_sizePolicy;
         this.statsLabel.Text = "";
-        horizontalLayout.AddWidget(this.statsLabel);
-        this.rosterIconSizeSlider = new QSlider(this.friendsTab);
-        this.rosterIconSizeSlider.ObjectName = "rosterIconSizeSlider";
-        QSizePolicy rosterIconSizeSlider_sizePolicy;
-        rosterIconSizeSlider_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed);
-        rosterIconSizeSlider_sizePolicy.SetVerticalStretch(0);
-        rosterIconSizeSlider_sizePolicy.SetHorizontalStretch(0);
-        rosterIconSizeSlider_sizePolicy.SetHeightForWidth(this.rosterIconSizeSlider.SizePolicy.HasHeightForWidth());
-        this.rosterIconSizeSlider.SizePolicy = rosterIconSizeSlider_sizePolicy;
-        this.rosterIconSizeSlider.Minimum = 16;
-        this.rosterIconSizeSlider.Maximum = 60;
-        this.rosterIconSizeSlider.SingleStep = 1;
-        this.rosterIconSizeSlider.Orientation = Qt.Orientation.Horizontal;
-        this.rosterIconSizeSlider.InvertedAppearance = false;
-        this.rosterIconSizeSlider.InvertedControls = false;
-        horizontalLayout.AddWidget(this.rosterIconSizeSlider);
+        horizontalLayout_6.AddWidget(this.statsLabel);
+        this.rosterSearchButton = new QPushButton(this.gridHeader);
+        this.rosterSearchButton.ObjectName = "rosterSearchButton";
+        this.rosterSearchButton.FocusPolicy = Qt.FocusPolicy.TabFocus;
+        this.rosterSearchButton.ToolTip = "Search friends";
+        this.rosterSearchButton.Text = "";
+        this.rosterSearchButton.Checkable = true;
+        this.rosterSearchButton.Checked = false;
+        this.rosterSearchButton.Flat = true;
+        horizontalLayout_6.AddWidget(this.rosterSearchButton);
+        this.rosterViewButton = new QPushButton(this.gridHeader);
+        this.rosterViewButton.ObjectName = "rosterViewButton";
+        this.rosterViewButton.FocusPolicy = Qt.FocusPolicy.TabFocus;
+        this.rosterViewButton.ToolTip = "Change view options";
+        this.rosterViewButton.Text = "";
+        this.rosterViewButton.Flat = true;
+        horizontalLayout_6.AddWidget(this.rosterViewButton);
+        this.addFriendButton = new QPushButton(this.gridHeader);
+        this.addFriendButton.ObjectName = "addFriendButton";
+        this.addFriendButton.FocusPolicy = Qt.FocusPolicy.TabFocus;
+        this.addFriendButton.ToolTip = "Add & Invite new friends";
+        this.addFriendButton.Text = "";
+        this.addFriendButton.Flat = true;
+        horizontalLayout_6.AddWidget(this.addFriendButton);
+        verticalLayout_4.AddWidget(this.gridHeader);
+        this.friendSearchContainer = new QWidget(this.friendsTab);
+        this.friendSearchContainer.ObjectName = "friendSearchContainer";
+        QHBoxLayout horizontalLayout;
+        horizontalLayout = new QHBoxLayout(this.friendSearchContainer);
+        horizontalLayout.Spacing = 0;
+        horizontalLayout.Margin = 3;
+        this.friendSearchLineEdit = new QLineEdit(this.friendSearchContainer);
+        this.friendSearchLineEdit.ObjectName = "friendSearchLineEdit";
+        horizontalLayout.AddWidget(this.friendSearchLineEdit);
+        verticalLayout_4.AddWidget(this.friendSearchContainer);
+        this.rosterGrid = new Synapse.QtClient.Widgets.AvatarGrid<Synapse.UI.RosterItem>(this.friendsTab);
+        this.rosterGrid.ObjectName = "rosterGrid";
+        this.rosterGrid.FocusPolicy = Qt.FocusPolicy.StrongFocus;
+        this.rosterGrid.FrameShape = QFrame.Shape.NoFrame;
+        this.rosterGrid.Alignment = ((global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeading") | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeft")) | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignTop"));
+        verticalLayout_4.AddWidget(this.rosterGrid);
         this.tabWidget.AddTab(this.friendsTab, "Friends");
         this.chatroomsTab = new QWidget(this.tabWidget);
         this.chatroomsTab.ObjectName = "chatroomsTab";
@@ -188,7 +209,7 @@ public partial class RosterWidget : QWidget {
         this.m_ShoutButton_2.ObjectName = "m_ShoutButton_2";
         this.m_ShoutButton_2.StyleSheet = "";
         this.m_ShoutButton_2.Text = "Quick Join";
-        this.m_ShoutButton_2.icon = new QIcon("../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png");
+        this.m_ShoutButton_2.icon = new QIcon("../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png");
         this.m_ShoutButton_2.Checkable = true;
         this.m_ShoutButton_2.AutoExclusive = false;
         this.m_ShoutButton_2.Flat = true;
@@ -196,7 +217,7 @@ public partial class RosterWidget : QWidget {
         this.m_PostLinkButton_2 = new QPushButton(this.chatroomsTab);
         this.m_PostLinkButton_2.ObjectName = "m_PostLinkButton_2";
         this.m_PostLinkButton_2.Text = "Browse";
-        this.m_PostLinkButton_2.icon = new QIcon("../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png");
+        this.m_PostLinkButton_2.icon = new QIcon("../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png");
         this.m_PostLinkButton_2.Checkable = true;
         this.m_PostLinkButton_2.AutoExclusive = false;
         this.m_PostLinkButton_2.Flat = true;
@@ -280,7 +301,7 @@ public partial class RosterWidget : QWidget {
         this.m_ShoutButton.ObjectName = "m_ShoutButton";
         this.m_ShoutButton.StyleSheet = "";
         this.m_ShoutButton.Text = "Shout!";
-        this.m_ShoutButton.icon = new QIcon("../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png");
+        this.m_ShoutButton.icon = new QIcon("../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png");
         this.m_ShoutButton.Checkable = true;
         this.m_ShoutButton.AutoExclusive = false;
         this.m_ShoutButton.Flat = true;
@@ -288,7 +309,7 @@ public partial class RosterWidget : QWidget {
         this.m_PostLinkButton = new QPushButton(this.activityTab);
         this.m_PostLinkButton.ObjectName = "m_PostLinkButton";
         this.m_PostLinkButton.Text = "Post Link";
-        this.m_PostLinkButton.icon = new QIcon("../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png");
+        this.m_PostLinkButton.icon = new QIcon("../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png");
         this.m_PostLinkButton.Checkable = true;
         this.m_PostLinkButton.AutoExclusive = false;
         this.m_PostLinkButton.Flat = true;
@@ -296,7 +317,7 @@ public partial class RosterWidget : QWidget {
         this.m_PostFileButton = new QPushButton(this.activityTab);
         this.m_PostFileButton.ObjectName = "m_PostFileButton";
         this.m_PostFileButton.Text = "Post File";
-        this.m_PostFileButton.icon = new QIcon("../../../../../usr/share/icons/gnome/16x16/actions/insert-image.png../../../../../usr/share/icons/gnome/16x16/actions/insert-image.png");
+        this.m_PostFileButton.icon = new QIcon("../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-image.png../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-image.png");
         this.m_PostFileButton.Checkable = true;
         this.m_PostFileButton.AutoExclusive = false;
         this.m_PostFileButton.Flat = true;

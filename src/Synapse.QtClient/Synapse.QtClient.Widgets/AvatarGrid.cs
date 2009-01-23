@@ -338,7 +338,7 @@ namespace Synapse.QtClient.Widgets
 			int iconWidth  = (IconSize + IconPadding);
 			int iconHeight = (IconSize + IconPadding);
 			
-			int groupY = 0;
+			int groupY = IconPadding;
 			int vScroll = this.VerticalScrollBar().Value;
 
 			int newWidth = this.Viewport().Width();

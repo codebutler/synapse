@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
+using System.Linq;
 using Qyoto;
 using Synapse.Core;
 using Synapse.Xmpp;
@@ -36,6 +37,7 @@ using Synapse.QtClient.UI.Views;
 using Synapse.QtClient.Widgets;
 using jabber;
 using jabber.connection;
+using jabber.protocol.client;
 using jabber.protocol.iq;
 using Mono.Rocks;
 
@@ -51,6 +53,7 @@ public partial class RosterWidget : QWidget
 	List<QAction>         m_InviteActions;
 	QAction 			  m_ViewProfileAction;
 	QAction               m_IMAction;
+	QAction               m_GridModeAction;
 	QAction               m_ListModeAction;
 	QAction               m_ShowTransportsAction;
 	QAction               m_EditGroupsAction;
@@ -63,7 +66,28 @@ public partial class RosterWidget : QWidget
 	public RosterWidget (MainWindow parent) : base (parent)
 	{
 		SetupUi();
+		
+		m_RosterModel = new RosterAvatarGridModel();
+		rosterGrid.Model = m_RosterModel;
+		rosterGrid.ItemActivated += HandleItemActivated;
+		rosterGrid.ShowGroupCounts = true;
+		rosterGrid.InstallEventFilter(new KeyPressEater(delegate (QKeyEvent evnt) {
+			if (!String.IsNullOrEmpty(evnt.Text())) {
+				rosterSearchButton.Checked = true;
+				friendSearchLineEdit.Text += evnt.Text();
+				friendSearchLineEdit.SetFocus();
+				return true;
+			}
+			return false;
+		}, this));
 
+		var accountService = ServiceManager.Get<AccountService>();
+		accountService.AccountAdded += HandleAccountAdded;
+		accountService.AccountRemoved += HandleAccountRemoved;
+		foreach (Account account in accountService.Accounts) {
+			HandleAccountAdded(account);
+		}
+		
 		m_ActivityFeedItems = new Dictionary<string, IActivityFeedItem>();
 
 		rosterGrid.ContextMenuPolicy = Qt.ContextMenuPolicy.CustomContextMenu;
@@ -71,17 +95,43 @@ public partial class RosterWidget : QWidget
 		m_RosterMenu = new QMenu(this);
 		QObject.Connect(m_RosterMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("rosterMenu_triggered(QAction*)"));
 
+		var rosterViewActionGroup = new QActionGroup(this);
+		QObject.Connect(rosterViewActionGroup, Qt.SIGNAL("triggered(QAction *)"), this, Qt.SLOT("rosterViewActionGroup_triggered(QAction*)"));
+
+		m_GridModeAction = new QAction("View as Grid", this);
+		m_GridModeAction.SetActionGroup(rosterViewActionGroup);
+		m_GridModeAction.Checkable = true;
+		m_GridModeAction.Checked = true;
+		m_RosterMenu.AddAction(m_GridModeAction);
+
+		m_ListModeAction = new QAction("View as List", this);
+		m_ListModeAction.SetActionGroup(rosterViewActionGroup);
+		m_ListModeAction.Checkable = true;
+		m_RosterMenu.AddAction(m_ListModeAction);
+
+		m_RosterMenu.AddSeparator();
+		
 		m_ShowOfflineAction = new QAction("Show Offline Friends", this);
 		m_ShowOfflineAction.Checkable = true;
 		m_RosterMenu.AddAction(m_ShowOfflineAction);
-
-		m_ListModeAction = new QAction("List Mode", this);
-		m_ListModeAction.Checkable = true;
-		m_RosterMenu.AddAction(m_ListModeAction);
 		
 		m_ShowTransportsAction = new QAction("Show Transports", this);
 		m_ShowTransportsAction.Checkable = true;
 		m_RosterMenu.AddAction(m_ShowTransportsAction);
+
+		m_RosterMenu.AddSeparator();
+
+		var sliderAction = new QWidgetAction(this);
+		
+		var sliderContainer = new QWidget(this);
+		sliderContainer.SetLayout(new QHBoxLayout());
+		sliderContainer.Layout().AddWidget(new QLabel("Zoom:", sliderContainer));
+		var zoomSlider = new QSlider(Orientation.Horizontal, sliderContainer);
+		QObject.Connect(zoomSlider, Qt.SIGNAL("valueChanged(int)"), this, Qt.SLOT("zoomSlider_valueChanged(int)"));
+		zoomSlider.Value = rosterGrid.IconSize;
+		sliderContainer.Layout().AddWidget(zoomSlider);
+		sliderAction.SetDefaultWidget(sliderContainer);
+		m_RosterMenu.AddAction(sliderAction);
 
 		m_InviteActions = new List<QAction>();
 		
@@ -110,25 +160,11 @@ public partial class RosterWidget : QWidget
 
 		m_RemoveAction = new QAction("Remove", m_RosterItemMenu);
 		m_RosterItemMenu.AddAction(m_RemoveAction);
-
-		m_RosterModel = new RosterAvatarGridModel();
-		rosterGrid.Model = m_RosterModel;
-		rosterGrid.ItemActivated += HandleItemActivated;
-		rosterGrid.ShowGroupCounts = true;
-		rosterGrid.InstallEventFilter(new KeyPressEater(delegate (QKeyEvent evnt) {
-			char c = (char)evnt.Key();
-			// FIXME: What I really want is a IsHumanReadable() or something.
-			if (Char.IsLetterOrDigit(c) || Char.IsPunctuation(c)) {
-				friendSearchLineEdit.Text += evnt.Text();
-				friendSearchLineEdit.SetFocus();
-				return true;
-			}
-			return false;
-		}, this));
 		
 		friendSearchLineEdit.InstallEventFilter(new KeyPressEater(delegate (QKeyEvent evnt) {
 			if (evnt.Key() == (int)Key.Key_Escape) {
 				friendSearchLineEdit.Clear();
+				rosterSearchButton.Checked = false;
 				rosterGrid.SetFocus();
 				return true;
 			}
@@ -182,9 +218,19 @@ public partial class RosterWidget : QWidget
 		m_MucModel = new BookmarkedMUCsModel();
 		mucTree.SetModel(m_MucModel);
 
-		rosterIconSizeSlider.Value = rosterGrid.IconSize;
+		friendSearchContainer.Hide();
+		
+		rosterViewButton.icon  = new QIcon(new QPixmap("resource:/view-grid.png"));
+		rosterSearchButton.icon = new QIcon(new QPixmap("resource:/simple-search.png"));
+		addFriendButton.icon = new QIcon(new QPixmap("resource:/simple-add.png"));
 
-		addFriendButton.icon = Gui.LoadIcon("add", 16);
+		UpdateOnlineCount();
+	}
+
+	public new void Show ()
+	{
+		base.Show();
+		rosterGrid.SetFocus();
 	}
 
 	public int AccountsCount {
@@ -225,6 +271,38 @@ public partial class RosterWidget : QWidget
 	{
 		// FIXME: Move to controller.
 		Synapse.ServiceStack.ServiceManager.Get<Synapse.UI.Services.GuiService>().OpenChatWindow(item.Account, item.Item.JID);
+	}
+
+	void HandleAccountAdded (Account account)
+	{
+		account.Client.OnPresence += HandleOnPresence;
+
+		Application.Invoke(delegate {
+			UpdateOnlineCount();
+		});
+	}
+
+	void HandleAccountRemoved (Account account)
+	{
+		account.Client.OnPresence -= HandleOnPresence;
+		
+		Application.Invoke(delegate {
+			UpdateOnlineCount();
+		});
+	}
+
+	void HandleOnPresence (object o, Presence pres)
+	{
+		Application.Invoke(delegate {
+			UpdateOnlineCount();
+		});
+	}
+
+	void UpdateOnlineCount ()
+	{
+		var accountService = ServiceManager.Get<AccountService>();
+		int num = accountService.Accounts.Sum(account => account.NumOnlineFriends);
+		statsLabel.Text = String.Format("{0} friends online", num);
 	}
 	
 	#region Private Slots
@@ -313,15 +391,25 @@ public partial class RosterWidget : QWidget
 	{
 		if (action == m_ShowOfflineAction) {
 			m_RosterModel.ShowOffline = action.Checked;
-		} else if (action == m_ListModeAction) {
-			rosterGrid.ListMode = action.Checked;
 		} else if (action == m_ShowTransportsAction) {
 			m_RosterModel.ShowTransports = action.Checked;
 		}
 	}
 
 	[Q_SLOT]
-	void on_rosterIconSizeSlider_valueChanged (int value)
+	void rosterViewActionGroup_triggered (QAction action)
+	{
+		if (action == m_ListModeAction) {
+			rosterGrid.ListMode = action.Checked;
+			rosterViewButton.icon  = new QIcon(new QPixmap("resource:/view-list.png"));
+		} else if (action == m_GridModeAction) {
+			rosterGrid.ListMode = !action.Checked;
+			rosterViewButton.icon  = new QIcon(new QPixmap("resource:/view-grid.png"));
+		}
+	}
+	
+	[Q_SLOT]
+	void zoomSlider_valueChanged (int value)
 	{
 		rosterGrid.IconSize = value;
 	}
@@ -419,6 +507,20 @@ public partial class RosterWidget : QWidget
 	void rosterItemMenu_aboutToHide ()
 	{
 		rosterGrid.SuppressTooltips = false;
+	}
+
+	[Q_SLOT]
+	void on_rosterSearchButton_toggled (bool active)
+	{
+		friendSearchContainer.SetVisible(active);
+		m_RosterModel.TextFilter = active ? friendSearchLineEdit.Text : String.Empty;
+	}
+
+	[Q_SLOT]
+	void on_rosterViewButton_clicked ()
+	{
+		var buttonPos = rosterViewButton.MapToGlobal(new QPoint(0, rosterViewButton.Height()));
+		m_RosterMenu.Exec(buttonPos);
 	}
 	#endregion
 }

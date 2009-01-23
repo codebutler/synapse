@@ -448,6 +448,12 @@ namespace Synapse.Xmpp
 			}
 		}
 
+		public int NumOnlineFriends {
+			get {
+				return m_Roster.Count(jid => m_PresenceManager.IsAvailable(jid));
+			}
+		}
+		
 		public VCard VCard {
 			get {
 				return m_MyVCard;

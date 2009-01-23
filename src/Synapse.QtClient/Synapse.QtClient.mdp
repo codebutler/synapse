@@ -92,6 +92,10 @@
     <File name="EditGroupsWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/EditGroupsWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/NotificationsWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="resources/view-grid.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="resources/view-list.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="resources/simple-add.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="resources/simple-search.png" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
@@ -118,7 +122,6 @@
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <Deployment.LinuxDeployData scriptName="synapse" />
-  <GtkDesignInfo />
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />
     <DeployFilesVar />
