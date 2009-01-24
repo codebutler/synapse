@@ -169,7 +169,8 @@ namespace Synapse.Xmpp
 			AddFeature(new UserAvatars(this));
 			AddFeature(new ChatStates(this));
 
-			ServiceManager.Get<NetworkService>().StateChange += HandleNetworkStateChanged;
+			if (ServiceManager.Contains<NetworkService>())
+				ServiceManager.Get<NetworkService>().StateChange += HandleNetworkStateChanged;
 		}
 
 		void HandleOnIQ(object sender, IQ iq)

@@ -103,6 +103,8 @@ namespace Synapse.QtClient.Widgets
 
 			public void Close ()
 			{
+				m_Item.ActionTriggered -= HandleActionTriggered;
+				
 				this.ParentWidget().Layout().RemoveWidget(this);
 				this.SetParent(null);
 

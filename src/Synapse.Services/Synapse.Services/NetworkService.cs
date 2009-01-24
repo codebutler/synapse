@@ -64,7 +64,7 @@ namespace Synapse.Services
     
     public delegate void NetworkStateChangeHandler (NetworkState state);
     
-    public class NetworkService : IService, IInitializeService, IRequiredService
+    public class NetworkService : IService, IInitializeService
     {
         private const string BusName    = "org.freedesktop.NetworkManager";
         private const string ObjectPath = "/org/freedesktop/NetworkManager";
