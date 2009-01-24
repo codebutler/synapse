@@ -178,6 +178,8 @@ namespace Synapse.Xmpp
 				byte[] imageData = account.VCard.Photo.BinVal;
 				hash = Util.SHA1(imageData);
 				s_HashCache[account.Jid.Bare] = hash;
+				if (!AvatarExists(hash))
+					UpdateAvatar(account.Jid.Bare, hash);
 			} else {
 				if (s_HashCache.ContainsKey(account.Jid.Bare))
 					s_HashCache.Remove(account.Jid.Bare);
