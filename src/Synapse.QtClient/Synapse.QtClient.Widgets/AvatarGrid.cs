@@ -128,7 +128,12 @@ namespace Synapse.QtClient.Widgets
 				return m_IconWidth;
 			}
 			set {
-				m_IconWidth = value;
+				if (value < 16)
+					m_IconWidth = 16;
+				else if (value > 60)
+					m_IconWidth = 60;
+				else
+					m_IconWidth = value;
 				ResizeAndRepositionGroups();
 			}
 		}

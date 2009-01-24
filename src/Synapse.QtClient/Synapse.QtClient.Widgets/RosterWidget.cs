@@ -128,6 +128,8 @@ public partial class RosterWidget : QWidget
 		sliderContainer.Layout().AddWidget(new QLabel("Zoom:", sliderContainer));
 		var zoomSlider = new QSlider(Orientation.Horizontal, sliderContainer);
 		QObject.Connect(zoomSlider, Qt.SIGNAL("valueChanged(int)"), this, Qt.SLOT("zoomSlider_valueChanged(int)"));
+		zoomSlider.Minimum = 16;
+		zoomSlider.Maximum = 60;
 		zoomSlider.Value = rosterGrid.IconSize;
 		sliderContainer.Layout().AddWidget(zoomSlider);
 		sliderAction.SetDefaultWidget(sliderContainer);
