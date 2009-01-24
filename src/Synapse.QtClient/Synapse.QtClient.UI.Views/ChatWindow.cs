@@ -59,7 +59,7 @@ public partial class ChatWindow : QWidget, IChatWindowView
 			var chatController = (ChatWindowController)controller;
 			rightContainer.Hide();
 			this.WindowTitle = chatController.Account.GetDisplayName(chatController.Jid);
-			this.WindowIcon = new QIcon(new QPixmap(String.Format("avatar:/{0}", Synapse.Xmpp.AvatarManager.GetAvatarHash(chatController.Jid.Bare))));		
+			this.WindowIcon = new QIcon((QPixmap)Synapse.Xmpp.AvatarManager.GetAvatar(chatController.Jid));
 		}
 
 		splitter.SetStretchFactor(1, 0);
