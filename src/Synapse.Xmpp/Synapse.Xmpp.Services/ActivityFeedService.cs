@@ -49,22 +49,6 @@ namespace Synapse.Xmpp.Services
 			AddTemplate("microblog", "shouts", "shout");
 			AddTemplate("mood", "is feeling {0}", "are feeling {0}");
 
-			var approveAndAddAction = new NotificationAction {
-				Name = "approve-add",
-				Label = "Approve and Add",
-				Callback = delegate (object o, NotificationAction action) {
-					var feedItem = (XmppActivityFeedItem)o;
-
-					var presence = new Presence(feedItem.Account.Client.Document);
-					presence.To = feedItem.FromJid;
-					presence.Type = PresenceType.subscribed;
-					feedItem.Account.Client.Write(presence);
-
-					// FIXME: Should show AddFriendWindow instead so that nickname/groups can be set.
-					feedItem.Account.AddRosterItem(feedItem.FromJid, null, null, null);
-				}
-			};
-
 			var approveAction = new NotificationAction {
 				Name = "approve",
 				Label = "Approve",
@@ -75,6 +59,10 @@ namespace Synapse.Xmpp.Services
 					presence.To = feedItem.FromJid;
 					presence.Type = PresenceType.subscribed;
 					feedItem.Account.Client.Write(presence);
+
+					// FIXME: Show some sort of "friendname has been added!" notification?
+					// FIXME: Should show AddFriendWindow instead so that nickname/groups can be set?
+					feedItem.Account.AddRosterItem(feedItem.FromJid, null, null, null);
 				}
 			};
 
@@ -93,7 +81,7 @@ namespace Synapse.Xmpp.Services
 			AddTemplate("subscribe", "wants to be friends with you", "want to friends with you", new Dictionary<string, object> {
 				{ "DesktopNotify", true },
 			 	{ "ShowInMainWindow", true }
-			}, approveAndAddAction, approveAction, denyAction);
+			}, approveAction, denyAction);
 			
 			AddTemplate("subscribed", "is now your friend", "are now your friend", new Dictionary<string, object> {
 				{ "DesktopNotify", true },

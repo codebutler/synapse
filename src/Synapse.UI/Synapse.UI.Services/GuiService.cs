@@ -61,7 +61,7 @@ namespace Synapse.UI.Services
 
 			var joinMucAction = new NotificationAction() {
 				Name = "join", 
-				Label = "Join",
+				Label = "Join Conference",
 				Callback = delegate (object o, NotificationAction action) {
 					var feedItem = (XmppActivityFeedItem)o;
 					feedItem.Account.JoinMuc(feedItem.ActionItem);

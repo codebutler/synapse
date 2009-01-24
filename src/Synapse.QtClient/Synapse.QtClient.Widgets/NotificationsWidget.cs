@@ -93,6 +93,10 @@ namespace Synapse.QtClient.Widgets
 				label.WordWrap = true;
 				layout.AddWidget(label, 1);
 				
+				if (item is XmppActivityFeedItem) {
+					label.ToolTip = String.Format("From: {0}", ((XmppActivityFeedItem)item).FromJid);
+				}
+				
 				QPushButton closeButton = new QPushButton(this);
 				QObject.Connect(closeButton, Qt.SIGNAL("clicked()"), delegate {
 					Close();
@@ -106,9 +110,12 @@ namespace Synapse.QtClient.Widgets
 				m_Item.ActionTriggered -= HandleActionTriggered;
 				
 				this.ParentWidget().Layout().RemoveWidget(this);
-				this.SetParent(null);
 
-				// FIXME: Hide parent if this is last notification.
+				if (this.ParentWidget().Layout().Children().Count == 0) {
+					this.ParentWidget().Hide();
+				}
+				
+				this.SetParent(null);
 			}
 
 			void HandleActionTriggered (object o, NotificationAction action)
