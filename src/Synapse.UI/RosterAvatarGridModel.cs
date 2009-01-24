@@ -110,7 +110,7 @@ namespace Synapse.UI
 		public IEnumerable<string> GetItemGroups(RosterItem item)
 		{
 			if (item.Item.GetGroups().Length > 0)
-				return item.Item.GetGroups().Select(g => g.GroupName);
+				return item.Item.GetGroups().Select(g => g.GroupName).Distinct();
 			else
 				return new string[] { "No Group" };			
 		}

@@ -481,10 +481,10 @@ namespace Synapse.QtClient.Widgets
 				if (!m_Items.ContainsKey(item))
 					m_Items.Add(item, new Dictionary<string, RosterItem<T>>());
 
-				// FIXME: Need to figure out why this happens to some people.
+				// This should *never* happen.
 				if (m_Items[item].ContainsKey(groupName)) {
 					string err = String.Format("FIXME: '{0}' is already in group '{1}'!", m_Model.GetJID(item), groupName);
-					if (item is Item) {
+					if (item is RosterItem) {
 						err += " All Groups: " + String.Join(",", m_Model.GetItemGroups(item).ToArray());
 					}
 				    throw new Exception(err);
