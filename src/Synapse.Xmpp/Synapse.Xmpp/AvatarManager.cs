@@ -202,11 +202,15 @@ namespace Synapse.Xmpp
 			VCard vcard = (VCard)i.FirstChild;
 			string hash = null;
 			if (vcard.Photo != null) {
-				byte[] imageData = vcard.Photo.BinVal;
-				hash = Util.SHA1(imageData);
+				if (vcard.Photo.Image != null) {
+					byte[] imageData = vcard.Photo.BinVal;
+					hash = Util.SHA1(imageData);
 
-				if (expectedHash == null || hash == expectedHash) {
-					vcard.Photo.Image.Save(AvatarFileName(hash), System.Drawing.Imaging.ImageFormat.Png);
+					if (expectedHash == null || hash == expectedHash) {
+						vcard.Photo.Image.Save(AvatarFileName(hash), System.Drawing.Imaging.ImageFormat.Png);
+					}
+				} else {
+					Console.WriteLine("Error with avatar for: " + jid);
 				}
 			}
 			
