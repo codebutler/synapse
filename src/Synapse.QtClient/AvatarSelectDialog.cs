@@ -64,12 +64,16 @@ public partial class AvatarSelectDialog : QDialog
 			tab.Show();
 		}
 
-		if (tabWidget.Count > 0) {
-			var firstTab = (AvatarProviderTab)tabWidget.Widget(0);
-			firstTab.Update(lineEdit.Text);
-		} else {
+		if (tabWidget.Count == 0) {
 			// FIXME: Show a "no providers" message.
 		}
+	}
+
+	public new void Show ()
+	{
+		base.Show();
+		if (tabWidget.Count > 0)
+			((AvatarProviderTab)tabWidget.CurrentWidget()).Update(lineEdit.Text);
 	}
 
 	void HandleAvatarUpdated(string jid, string avatarHash)
