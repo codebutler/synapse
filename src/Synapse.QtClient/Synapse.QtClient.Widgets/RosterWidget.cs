@@ -275,6 +275,7 @@ public partial class RosterWidget : QWidget
 	void HandleAccountAdded (Account account)
 	{
 		account.Client.OnPresence += HandleOnPresence;
+		account.ConnectionStateChanged += HandleConnectionStateChanged;
 
 		Application.Invoke(delegate {
 			UpdateOnlineCount();
@@ -284,6 +285,7 @@ public partial class RosterWidget : QWidget
 	void HandleAccountRemoved (Account account)
 	{
 		account.Client.OnPresence -= HandleOnPresence;
+		account.ConnectionStateChanged -= HandleConnectionStateChanged;
 		
 		Application.Invoke(delegate {
 			UpdateOnlineCount();
@@ -291,6 +293,13 @@ public partial class RosterWidget : QWidget
 	}
 
 	void HandleOnPresence (object o, Presence pres)
+	{
+		Application.Invoke(delegate {
+			UpdateOnlineCount();
+		});
+	}
+
+	void HandleConnectionStateChanged (Account account)
 	{
 		Application.Invoke(delegate {
 			UpdateOnlineCount();
@@ -354,9 +363,6 @@ public partial class RosterWidget : QWidget
 				}
 			}
 			m_RosterItemMenu.Popup(rosterGrid.MapToGlobal(point));
-		} else {
-			m_ShowOfflineAction.Checked = m_RosterModel.ShowOffline;
-			m_RosterMenu.Popup(rosterGrid.MapToGlobal(point));
 		}
 	}
 
@@ -518,8 +524,11 @@ public partial class RosterWidget : QWidget
 	[Q_SLOT]
 	void on_rosterViewButton_clicked ()
 	{
+		m_ShowOfflineAction.Checked = m_RosterModel.ShowOffline;
+		m_ShowTransportsAction.Checked = m_RosterModel.ShowTransports;
+
 		var buttonPos = rosterViewButton.MapToGlobal(new QPoint(0, rosterViewButton.Height()));
-		m_RosterMenu.Exec(buttonPos);
+		m_RosterMenu.Popup(buttonPos);
 	}
 	#endregion
 }

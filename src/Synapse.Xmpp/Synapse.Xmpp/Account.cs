@@ -451,8 +451,12 @@ namespace Synapse.Xmpp
 
 		public int NumOnlineFriends {
 			get {
-				lock (m_Roster) {
-					return m_Roster.Count(jid => m_PresenceManager.IsAvailable(jid));
+				if (m_State != AccountConnectionState.Disconnected) {
+					lock (m_Roster) {
+						return m_Roster.Count(jid => m_PresenceManager.IsAvailable(jid));
+					}
+				} else {
+					return 0;
 				}
 			}
 		}
