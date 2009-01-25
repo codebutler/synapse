@@ -51,7 +51,10 @@ namespace Synapse.UI
 		string m_TextFilter     = null;
 		bool   m_AlwaysShowResource = true;
 
+		// FIXME: Rename these. Maybe get rid of m_Items. Bah, this all sucks.
+		Dictionary<Account, Dictionary<JID, RosterItem>> m_ItemsCache = new Dictionary<Account, Dictionary<JID, RosterItem>>();
 		List<RosterItem> m_Items = new List<RosterItem>();
+		
 		Dictionary<string, int> m_GroupIndexes = new Dictionary<string, int>();
 		
 		public RosterAvatarGridModel()
@@ -233,11 +236,7 @@ namespace Synapse.UI
 		#region Protected Methods
 		protected virtual void OnItemAdded (Account account, Item item)
 		{
-			var ritem = new RosterItem(account, item);
-
-			lock (m_Items) {
-				m_Items.Add(ritem);
-			}
+			var ritem = AddItem(account, item);
 			
 			var evnt = ItemAdded;
 			if (evnt != null)
@@ -252,6 +251,9 @@ namespace Synapse.UI
 				if (rosterItem == null)
 					throw new Exception("Trying to remove an item before it was added. " + item);
 				m_Items.Remove(rosterItem);
+			}
+			lock (m_ItemsCache) {
+				m_ItemsCache[account].Remove(item.JID);
 			}
 			
 			var evnt = ItemRemoved;
@@ -273,13 +275,15 @@ namespace Synapse.UI
 
 		protected virtual void OnRefreshed ()
 		{
-			lock (m_Items) {
-				m_Items.Clear();
-				foreach (Account account in m_AccountService.Accounts) {
-					foreach (JID jid in account.Roster) {
-						var item = account.Roster[jid];
-						var ritem = new RosterItem(account, item);
-						m_Items.Add(ritem);
+			lock (m_ItemsCache) {
+				m_ItemsCache.Clear();
+				lock (m_Items) {
+					m_Items.Clear();
+					foreach (Account account in m_AccountService.Accounts) {
+						foreach (JID jid in account.Roster) {
+							var item = account.Roster[jid];
+							AddItem(account, item);
+						}
 					}
 				}
 			}
@@ -298,6 +302,23 @@ namespace Synapse.UI
 		#endregion
 
 		#region Private Methods
+		RosterItem AddItem (Account account, Item item)
+		{
+			var ritem = new RosterItem(account, item);
+
+			lock (m_Items) {
+				m_Items.Add(ritem);
+			}
+
+			lock (m_ItemsCache) {
+				if (!m_ItemsCache.ContainsKey(account))
+					m_ItemsCache.Add(account, new Dictionary<JID, RosterItem>());
+				m_ItemsCache[account].Add(item.JID, ritem);
+			}
+
+			return ritem;
+		}
+
 		void OnAccountAdded (Account account)
 		{
 			account.Roster.OnRosterBegin += delegate(object sender) {
@@ -361,11 +382,11 @@ namespace Synapse.UI
 
 		RosterItem FindRosterItem (Account account, Item item)
 		{
-			lock (m_Items) {
-				foreach (RosterItem ritem in m_Items)
-					if (ritem.Account == account && ritem.Item.JID.Equals(item.JID))
-					    return ritem;
-				return null;				
+			lock (m_ItemsCache) {
+				if (m_ItemsCache.ContainsKey(account) && m_ItemsCache[account].ContainsKey(item.JID))
+					return m_ItemsCache[account][item.JID];
+				else
+					return null;
 			}
 		}
 		#endregion

@@ -169,21 +169,29 @@ namespace Synapse.QtClient.Widgets
 		#region Model Events
 		private void model_ItemAdded (IAvatarGridModel<T> model, T item)
 		{
-			bool updating = model.ModelUpdating;
-			Application.Invoke(delegate {
-				AddItem(item, !updating);
-			});
+			if (!model.ModelUpdating) {
+				Application.Invoke(delegate {
+					AddItem(item);
+					ResizeAndRepositionGroups();
+				});
+			}
 		}
 		
 		private void model_ItemRemoved (IAvatarGridModel<T> model, T item)
 		{
-			Application.Invoke(delegate {
-				RemoveItem(item);
-			});
+			if (!model.ModelUpdating) {
+				Application.Invoke(delegate {
+					RemoveItem(item);
+				});
+			}
 		}
 		
 		private void model_ItemChanged (IAvatarGridModel<T> model, T item)
 		{
+			if (model.ModelUpdating) {
+				return;
+			}
+
 			var s = Environment.StackTrace;
 			Application.Invoke(delegate {
 				bool visibilityChanged = false;
@@ -194,7 +202,7 @@ namespace Synapse.QtClient.Widgets
 				// Check if item was added to any groups
 				foreach (string groupName in model.GetItemGroups(item)) {
 					if (!m_Items[item].ContainsKey(groupName)) {
-						AddItemToGroup(item, groupName, false);
+						AddItemToGroup(item, groupName);
 						groupsChanged = true;
 					}
 				}
@@ -233,14 +241,17 @@ namespace Synapse.QtClient.Widgets
 			Application.Invoke(delegate {
 				Console.WriteLine("Model Refreshed");
 				
-				foreach (var item in m_Scene.Items()) {
-					if (item is RosterItemGroup)
-						RemoveGroup((RosterItemGroup)item);
+				lock (m_Groups) {
+					foreach (var groupItem in m_Groups.Values.ToArray()) {
+						RemoveGroup(groupItem);
+					}
+					if (m_Groups.Count > 0) {
+						throw new Exception(String.Format("Something went wrong, groups should be empty, had {0}!", m_Groups.Count));
+					}
 				}
-				m_Groups.Clear();
 				
 				foreach (var item in m_Model.Items) {
-					AddItem(item, false);
+					AddItem(item);
 				}
 				
 				ResizeAndRepositionGroups();
@@ -260,7 +271,7 @@ namespace Synapse.QtClient.Widgets
 
 		#region Group Management
 
-		private void AddGroup (string groupName, bool resizeAndReposition)
+		private void AddGroup (string groupName)
 		{
 			lock (m_Groups) {
 				if (!m_Groups.ContainsKey(groupName)) {
@@ -268,9 +279,8 @@ namespace Synapse.QtClient.Widgets
 					group.SetVisible(false);
 					m_Scene.AddItem(group);
 					m_Groups.Add(groupName, group);
-	
-					if (resizeAndReposition)
-						ResizeAndRepositionGroups();
+
+					ResizeAndRepositionGroups();
 				}
 			}
 		}
@@ -463,23 +473,20 @@ namespace Synapse.QtClient.Widgets
 			m_LastTextFilter = m_Model.TextFilter;
 		}
 
-		void AddItem (T item, bool resizeAndReposition)
+		void AddItem (T item)
 		{			
 			var groups = m_Model.GetItemGroups(item);
 		
 			foreach (string groupName in groups) {
-				AddItemToGroup(item, groupName, resizeAndReposition);
+				AddItemToGroup(item, groupName);
 			}
-
-			if (resizeAndReposition)
-				ResizeAndRepositionGroups();
 		}
 
-		void AddItemToGroup (T item, string groupName, bool resizeAndReposition)
-		{			
+		void AddItemToGroup (T item, string groupName)
+		{
 			lock (m_Groups) {
 				if (!m_Groups.ContainsKey(groupName))
-					AddGroup(groupName, resizeAndReposition);
+					AddGroup(groupName);
 			}
 
 			lock (m_Items) {
@@ -500,7 +507,6 @@ namespace Synapse.QtClient.Widgets
 				graphicsItem.SetVisible(false);
 				group.AddToGroup(graphicsItem);
 				m_Items[item].Add(groupName, graphicsItem);
-				group.Update();
 			}
 		}
 
