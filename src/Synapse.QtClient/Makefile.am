@@ -150,8 +150,10 @@ DATA_FILES =
 
 RESOURCES =  \
 	gtk-gui/gui.stetic \
+	resources/collapse.png \
 	resources/default-avatar.png \
 	resources/effects.js \
+	resources/expand.png \
 	resources/feed.html \
 	resources/friend-muclist.html \
 	resources/handle.png \

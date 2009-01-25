@@ -96,6 +96,8 @@
     <File name="resources/view-list.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/simple-add.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/simple-search.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="resources/collapse.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="resources/expand.png" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />

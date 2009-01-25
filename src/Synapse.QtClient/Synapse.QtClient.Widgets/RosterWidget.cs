@@ -58,6 +58,8 @@ public partial class RosterWidget : QWidget
 	QAction               m_EditGroupsAction;
 	QAction               m_RemoveAction;
 	RosterItem            m_MenuDownItem;
+	QIcon                 m_CollapseIcon;
+	QIcon                 m_ExpandIcon;
 
 	// Map the JS element ID to the ActivityFeedItem
 	Dictionary<string, IActivityFeedItem> m_ActivityFeedItems;
@@ -195,9 +197,9 @@ public partial class RosterWidget : QWidget
 		});
 		m_ActivityWebView.Page().MainFrame().Load("resource:/feed.html");
 		
-		friendMucListWebView.Page().MainFrame().Load("resource:/friend-muclist.html");
+		//friendMucListWebView.Page().MainFrame().Load("resource:/friend-muclist.html");
 
-		quickJoinMucContainer.Hide();
+		//quickJoinMucContainer.Hide();
 		shoutContainer.Hide();
 
 		QObject.Connect(shoutLineEdit, Qt.SIGNAL("textChanged(const QString &)"), delegate {
@@ -222,7 +224,12 @@ public partial class RosterWidget : QWidget
 		rosterViewButton.icon  = new QIcon(new QPixmap("resource:/view-grid.png"));
 		rosterSearchButton.icon = new QIcon(new QPixmap("resource:/simple-search.png"));
 		addFriendButton.icon = new QIcon(new QPixmap("resource:/simple-add.png"));
+		addMucBookmarkButton.icon = new QIcon(new QPixmap("resource:/simple-add.png"));
 
+		m_CollapseIcon = new QIcon(new QPixmap("resource:/collapse.png"));
+		m_ExpandIcon = new QIcon(new QPixmap("resource:/expand.png"));
+		toggleJoinMucButton.icon = m_CollapseIcon;
+			
 		UpdateOnlineCount();
 	}
 
@@ -315,18 +322,30 @@ public partial class RosterWidget : QWidget
 	
 	#region Private Slots
 	[Q_SLOT]
+	void on_toggleJoinMucButton_clicked()
+	{
+		if (joinMucContainer.IsVisible()) {
+			joinMucContainer.Hide();
+			toggleJoinMucButton.icon = m_ExpandIcon;
+		} else {
+			joinMucContainer.Show();
+			toggleJoinMucButton.icon = m_CollapseIcon;
+		}			
+	}
+	 
+	[Q_SLOT]
 	void on_m_JoinChatButton_clicked()
 	{
 		Account selectedAccount = Gui.ShowAccountSelectMenu(m_JoinChatButton);
 		if (selectedAccount != null) {
 			JID jid = null;
-			if (JID.TryParse(m_ChatNameEdit.Text, out jid)) {
+			if (JID.TryParse(String.Format("{0}@{1}", mucRoomLineEdit.Text, mucServerLineEdit.Text), out jid)) {
 				if (!String.IsNullOrEmpty(jid.User) && !String.IsNullOrEmpty(jid.Server)) {
 					selectedAccount.JoinMuc(jid);
+					mucRoomLineEdit.Text = String.Empty;
 				} else {
 					QMessageBox.Critical(null, "Synapse", "Invalid JID");
 				}
-				m_ChatNameEdit.Text = String.Empty;
 			} else {
 				QMessageBox.Critical(this.TopLevelWidget(), "Synapse Error", "Invalid conference room");
 			}

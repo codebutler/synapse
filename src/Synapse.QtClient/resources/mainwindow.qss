@@ -60,6 +60,7 @@ QLineEdit#friendSearchLineEdit {
 #friendsTab, 
 #friendsTab QGraphicsView,
 #friendsTab QListView,
+#chatroomsTab,
 #chatroomsTab QTreeView,
 #notificationsWidget {
 	color: #CCC;
@@ -80,11 +81,16 @@ QLineEdit#friendSearchLineEdit {
 	border: 0px;
 }
 
-#gridHeader {
+#gridHeader,
+#joinMucHeader,
+#yourMucsHeader,
+#friendsMucsHeader {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5D5D5D, stop: 1 #444444);
 }
 
-#gridHeader QPushButton {
+#gridHeader QPushButton,
+#yourMucsHeader QPushButton,
+#joinMucHeader QPushButton {
 	padding: 0px;
 	width: 16px;
 	height: 16px;

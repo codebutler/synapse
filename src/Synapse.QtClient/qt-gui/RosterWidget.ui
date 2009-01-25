@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>345</width>
+    <width>352</width>
     <height>494</height>
    </rect>
   </property>
@@ -61,7 +61,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex" >
-          <number>0</number>
+          <number>1</number>
          </property>
          <property name="usesScrollButtons" >
           <bool>true</bool>
@@ -207,123 +207,47 @@
             <number>0</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5" >
-             <property name="spacing" >
-              <number>12</number>
+            <widget class="QFrame" name="joinMucHeader" >
+             <property name="frameShape" >
+              <enum>QFrame::NoFrame</enum>
              </property>
-             <property name="margin" >
-              <number>6</number>
+             <property name="frameShadow" >
+              <enum>QFrame::Raised</enum>
              </property>
-             <item>
-              <spacer name="horizontalSpacer1" >
-               <property name="orientation" >
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0" >
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="m_ShoutButton_2" >
-               <property name="styleSheet" >
-                <string notr="true" />
-               </property>
-               <property name="text" >
-                <string>Quick Join</string>
-               </property>
-               <property name="icon" >
-                <iconset>
-                 <normaloff>../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png</normaloff>../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png</iconset>
-               </property>
-               <property name="checkable" >
-                <bool>true</bool>
-               </property>
-               <property name="autoExclusive" >
-                <bool>false</bool>
-               </property>
-               <property name="flat" >
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="m_PostLinkButton_2" >
-               <property name="text" >
-                <string>Browse</string>
-               </property>
-               <property name="icon" >
-                <iconset>
-                 <normaloff>../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png</normaloff>../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png</iconset>
-               </property>
-               <property name="checkable" >
-                <bool>true</bool>
-               </property>
-               <property name="autoExclusive" >
-                <bool>false</bool>
-               </property>
-               <property name="flat" >
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_21" >
-               <property name="orientation" >
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0" >
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="QWidget" native="1" name="quickJoinMucContainer" >
-             <layout class="QGridLayout" name="gridLayout_2" >
-              <property name="leftMargin" >
-               <number>6</number>
+             <layout class="QHBoxLayout" name="horizontalLayout_5" >
+              <property name="spacing" >
+               <number>3</number>
               </property>
-              <property name="topMargin" >
-               <number>0</number>
+              <property name="margin" >
+               <number>3</number>
               </property>
-              <property name="rightMargin" >
-               <number>6</number>
-              </property>
-              <property name="bottomMargin" >
-               <number>6</number>
-              </property>
-              <property name="horizontalSpacing" >
-               <number>6</number>
-              </property>
-              <property name="verticalSpacing" >
-               <number>0</number>
-              </property>
-              <item row="0" column="0" >
-               <widget class="QLabel" name="label" >
+              <item>
+               <widget class="QLabel" name="label_7" >
+                <property name="sizePolicy" >
+                 <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text" >
-                 <string>Join Conference Room:</string>
+                 <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Bitstream Vera Sans'; font-size:9pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'DejaVu Sans';">Join or Create Conference&lt;/p>&lt;/body>&lt;/html></string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0" >
-               <widget class="QLineEdit" name="m_ChatNameEdit" >
-                <property name="maxLength" >
-                 <number>150</number>
+              <item>
+               <widget class="QPushButton" name="toggleJoinMucButton" >
+                <property name="focusPolicy" >
+                 <enum>Qt::TabFocus</enum>
                 </property>
-               </widget>
-              </item>
-              <item row="1" column="1" >
-               <widget class="QPushButton" name="m_JoinChatButton" >
                 <property name="text" >
-                 <string>Join</string>
+                 <string/>
+                </property>
+                <property name="flat" >
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -331,83 +255,217 @@
             </widget>
            </item>
            <item>
-            <widget class="QSplitter" name="splitter_2" >
-             <property name="orientation" >
-              <enum>Qt::Vertical</enum>
+            <widget class="QWidget" native="1" name="joinMucContainer" >
+             <layout class="QVBoxLayout" name="verticalLayout_5" >
+              <property name="leftMargin" >
+               <number>0</number>
+              </property>
+              <property name="topMargin" >
+               <number>0</number>
+              </property>
+              <property name="rightMargin" >
+               <number>0</number>
+              </property>
+              <property name="bottomMargin" >
+               <number>6</number>
+              </property>
+              <item>
+               <layout class="QGridLayout" name="gridLayout" >
+                <property name="leftMargin" >
+                 <number>6</number>
+                </property>
+                <property name="topMargin" >
+                 <number>6</number>
+                </property>
+                <property name="rightMargin" >
+                 <number>6</number>
+                </property>
+                <item row="0" column="0" >
+                 <widget class="QLabel" name="label_2" >
+                  <property name="text" >
+                   <string>Room:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" >
+                 <widget class="QLabel" name="label_5" >
+                  <property name="text" >
+                   <string>Server:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1" >
+                 <widget class="QLineEdit" name="mucServerLineEdit" />
+                </item>
+                <item row="0" column="1" >
+                 <widget class="QLineEdit" name="mucRoomLineEdit" />
+                </item>
+                <item row="2" column="0" >
+                 <widget class="QLabel" name="label_6" >
+                  <property name="text" >
+                   <string>Nickname:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1" >
+                 <widget class="QLineEdit" name="mucNicknameLineEdit" />
+                </item>
+                <item row="3" column="0" >
+                 <widget class="QLabel" name="label" >
+                  <property name="text" >
+                   <string>Password:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1" >
+                 <widget class="QLineEdit" name="mucPasswordLineEdit" />
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_4" >
+                <property name="leftMargin" >
+                 <number>6</number>
+                </property>
+                <property name="rightMargin" >
+                 <number>6</number>
+                </property>
+                <property name="bottomMargin" >
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QPushButton" name="pushButton" >
+                  <property name="text" >
+                   <string>Browse...</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_3" >
+                  <property name="orientation" >
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0" >
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="m_JoinChatButton" >
+                  <property name="text" >
+                   <string>Join</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="yourMucsHeader" >
+             <property name="frameShape" >
+              <enum>QFrame::NoFrame</enum>
              </property>
-             <widget class="QWidget" native="1" name="widget_3" >
-              <layout class="QVBoxLayout" name="verticalLayout_7" >
-               <property name="spacing" >
-                <number>6</number>
-               </property>
-               <property name="margin" >
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QLabel" name="label_4" >
-                 <property name="text" >
-                  <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+             <property name="frameShadow" >
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_7" >
+              <property name="spacing" >
+               <number>3</number>
+              </property>
+              <property name="margin" >
+               <number>3</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_4" >
+                <property name="sizePolicy" >
+                 <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text" >
+                 <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
 &lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
 p, li { white-space: pre-wrap; }
-&lt;/style>&lt;/head>&lt;body style=" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;">
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Friends&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QWebView" name="friendMucListWebView" >
-                 <property name="url" >
-                  <url>
-                   <string>about:blank</string>
-                  </url>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" native="1" name="widget_2" >
-              <layout class="QVBoxLayout" name="verticalLayout_5" >
-               <property name="spacing" >
-                <number>6</number>
-               </property>
-               <property name="leftMargin" >
-                <number>0</number>
-               </property>
-               <property name="topMargin" >
-                <number>6</number>
-               </property>
-               <property name="rightMargin" >
-                <number>0</number>
-               </property>
-               <property name="bottomMargin" >
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QLabel" name="label_3" >
-                 <property name="text" >
-                  <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Bitstream Vera Sans'; font-size:9pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'DejaVu Sans';">Your Conferences&lt;/p>&lt;/body>&lt;/html></string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="addMucBookmarkButton" >
+                <property name="focusPolicy" >
+                 <enum>Qt::TabFocus</enum>
+                </property>
+                <property name="text" >
+                 <string/>
+                </property>
+                <property name="flat" >
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTreeView" name="mucTree" >
+             <property name="frameShape" >
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="animated" >
+              <bool>true</bool>
+             </property>
+             <property name="headerHidden" >
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="friendsMucsHeader" >
+             <property name="frameShape" >
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow" >
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_8" >
+              <property name="spacing" >
+               <number>3</number>
+              </property>
+              <property name="margin" >
+               <number>3</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_3" >
+                <property name="text" >
+                 <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
 &lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
 p, li { white-space: pre-wrap; }
-&lt;/style>&lt;/head>&lt;body style=" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;">
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Bookmarks&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QTreeView" name="mucTree" >
-                 <property name="frameShape" >
-                  <enum>QFrame::NoFrame</enum>
-                 </property>
-                 <property name="animated" >
-                  <bool>true</bool>
-                 </property>
-                 <property name="headerHidden" >
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Bitstream Vera Sans'; font-size:9pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'DejaVu Sans';">Friends' Conferences&lt;/p>&lt;/body>&lt;/html></string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTreeView" name="friendsMucTree" >
+             <property name="frameShape" >
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="animated" >
+              <bool>true</bool>
+             </property>
+             <property name="headerHidden" >
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
           </layout>
@@ -574,6 +632,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
       </layout>
+      <zorder>tabWidget</zorder>
      </widget>
     </widget>
    </item>
@@ -597,6 +656,29 @@ p, li { white-space: pre-wrap; }
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>mucRoomLineEdit</tabstop>
+  <tabstop>mucServerLineEdit</tabstop>
+  <tabstop>mucNicknameLineEdit</tabstop>
+  <tabstop>mucPasswordLineEdit</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>m_JoinChatButton</tabstop>
+  <tabstop>addMucBookmarkButton</tabstop>
+  <tabstop>mucTree</tabstop>
+  <tabstop>friendsMucTree</tabstop>
+  <tabstop>m_PostLinkButton</tabstop>
+  <tabstop>m_PostFileButton</tabstop>
+  <tabstop>shoutLineEdit</tabstop>
+  <tabstop>m_ActivityWebView</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>rosterSearchButton</tabstop>
+  <tabstop>rosterViewButton</tabstop>
+  <tabstop>m_ShoutButton</tabstop>
+  <tabstop>addFriendButton</tabstop>
+  <tabstop>rosterGrid</tabstop>
+  <tabstop>friendSearchLineEdit</tabstop>
+  <tabstop>toggleJoinMucButton</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -612,22 +694,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel" >
      <x>294</x>
      <y>80</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_ShoutButton_2</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>quickJoinMucContainer</receiver>
-   <slot>setShown(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>125</x>
-     <y>34</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>220</x>
-     <y>75</y>
     </hint>
    </hints>
   </connection>

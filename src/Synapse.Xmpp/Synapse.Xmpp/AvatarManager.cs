@@ -210,7 +210,7 @@ namespace Synapse.Xmpp
 						vcard.Photo.Image.Save(AvatarFileName(hash), System.Drawing.Imaging.ImageFormat.Png);
 					}
 				} else {
-					Console.WriteLine("Error with avatar for: " + jid);
+					Console.WriteLine(String.Format("Error with avatar for: {0}. Expected hash: {1}", jid, expectedHash));
 				}
 			}
 			
