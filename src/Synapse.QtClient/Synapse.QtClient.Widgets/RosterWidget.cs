@@ -43,7 +43,6 @@ using Mono.Rocks;
 
 public partial class RosterWidget : QWidget
 {
-	MainWindow            m_ParentWindow;
 	BookmarkedMUCsModel   m_MucModel;
 	RosterAvatarGridModel m_RosterModel;
 	QMenu                 m_RosterMenu;
@@ -63,7 +62,7 @@ public partial class RosterWidget : QWidget
 	// Map the JS element ID to the ActivityFeedItem
 	Dictionary<string, IActivityFeedItem> m_ActivityFeedItems;
 	
-	public RosterWidget (MainWindow parent) : base (parent)
+	public RosterWidget (QWidget parent) : base (parent)
 	{
 		SetupUi();
 		
@@ -127,10 +126,10 @@ public partial class RosterWidget : QWidget
 		sliderContainer.SetLayout(new QHBoxLayout());
 		sliderContainer.Layout().AddWidget(new QLabel("Zoom:", sliderContainer));
 		var zoomSlider = new QSlider(Orientation.Horizontal, sliderContainer);
-		QObject.Connect(zoomSlider, Qt.SIGNAL("valueChanged(int)"), this, Qt.SLOT("zoomSlider_valueChanged(int)"));
 		zoomSlider.Minimum = 16;
 		zoomSlider.Maximum = 60;
 		zoomSlider.Value = rosterGrid.IconSize;
+		QObject.Connect(zoomSlider, Qt.SIGNAL("valueChanged(int)"), this, Qt.SLOT("zoomSlider_valueChanged(int)"));
 		sliderContainer.Layout().AddWidget(zoomSlider);
 		sliderAction.SetDefaultWidget(sliderContainer);
 		m_RosterMenu.AddAction(sliderAction);
@@ -196,8 +195,6 @@ public partial class RosterWidget : QWidget
 		});
 		m_ActivityWebView.Page().MainFrame().Load("resource:/feed.html");
 		
-		m_ParentWindow = parent;
-
 		friendMucListWebView.Page().MainFrame().Load("resource:/friend-muclist.html");
 
 		quickJoinMucContainer.Hide();
@@ -243,7 +240,7 @@ public partial class RosterWidget : QWidget
 	
 	public void AddAccount(Account account)
 	{
-		AccountStatusWidget widget = new AccountStatusWidget(account, this, m_ParentWindow);
+		AccountStatusWidget widget = new AccountStatusWidget(account, this, (MainWindow)base.TopLevelWidget());
 		m_AccountsContainer.Layout().AddWidget(widget);
 		widget.Show();
 	}

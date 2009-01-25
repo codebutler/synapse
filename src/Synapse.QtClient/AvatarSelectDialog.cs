@@ -36,12 +36,11 @@ using jabber;
 using jabber.protocol.client;
 using jabber.protocol.iq;
 
-
 public partial class AvatarSelectDialog : QDialog
 {
 	Account m_Account;
 	
-	public AvatarSelectDialog (Account account)
+	public AvatarSelectDialog (Account account, QWidget parent) : base (parent)
 	{
 		if (account == null)
 			throw new ArgumentNullException("account");

@@ -62,19 +62,19 @@ namespace Synapse.QtClient.UI.Views
 			QPixmap pixmap = new QPixmap("resource:/octy-22.png");
 			base.WindowIcon = new QIcon(pixmap);
 			
+			m_NoAccountsStyleSheet = Util.ReadResource("mainwindow-noaccounts.qss");
+			m_StyleSheet = Util.ReadResource("mainwindow.qss");				
+
+			containerWidget.SetStyleSheet(m_StyleSheet);
+
 			QVBoxLayout layout = new QVBoxLayout();
 			layout.SetContentsMargins(0, 0, 0, 0);
 			contentWidget.SetLayout(layout);
 
-			m_NoAccountsStyleSheet = Util.ReadResource("mainwindow-noaccounts.qss");
-			m_StyleSheet = Util.ReadResource("mainwindow.qss");				
-
-			this.SetStyleSheet(m_StyleSheet);
-			
-			m_RosterWidget = new RosterWidget(this);
+			m_RosterWidget = new RosterWidget(contentWidget);
 			contentWidget.Layout().AddWidget(m_RosterWidget);
 			
-			m_NoAccountsWidget = new NoAccountsWidget();
+			m_NoAccountsWidget = new NoAccountsWidget(contentWidget);
 			contentWidget.Layout().AddWidget(m_NoAccountsWidget);
 
 			Gui.CenterWidgetOnScreen(this);

@@ -33,7 +33,7 @@ namespace Synapse.QtClient.UI
 
 		public event DialogValidateEventHandler AddNewAccount;
 		
-		public NoAccountsWidget()
+		public NoAccountsWidget(QWidget parent) : base (parent)
 		{
 			SetupUi();
 			

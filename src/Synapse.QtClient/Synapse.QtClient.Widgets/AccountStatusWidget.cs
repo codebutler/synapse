@@ -55,7 +55,7 @@ public partial class AccountStatusWidget : QWidget
 		
 		m_ParentWindow = parentWindow;
 
-		m_AvatarDialog = new AvatarSelectDialog(account);
+		m_AvatarDialog = new AvatarSelectDialog(account, this.TopLevelWidget());
 		
 		m_AvatarLabel.Cursor = new QCursor(CursorShape.PointingHandCursor);
 		m_AvatarLabel.Clicked += delegate {
