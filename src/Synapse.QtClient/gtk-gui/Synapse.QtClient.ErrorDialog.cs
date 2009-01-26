@@ -38,7 +38,7 @@ namespace Synapse.QtClient {
             // Widget Synapse.QtClient.ErrorDialog
             this.Name = "Synapse.QtClient.ErrorDialog";
             this.Title = Mono.Unix.Catalog.GetString("Synapse Error");
-            this.WindowPosition = ((Gtk.WindowPosition)(3));
+            this.WindowPosition = ((Gtk.WindowPosition)(1));
             this.Resizable = false;
             this.AllowGrow = false;
             this.DefaultWidth = 300;
