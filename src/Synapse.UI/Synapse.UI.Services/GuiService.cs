@@ -58,22 +58,6 @@ namespace Synapse.UI.Services
 		{
 			m_AccountManagers = new Dictionary<Account, AccountChatWindowManager>();
 			Application.Client.Started += OnClientStarted;
-
-			var joinMucAction = new NotificationAction() {
-				Name = "join", 
-				Label = "Join Conference",
-				Callback = delegate (object o, NotificationAction action) {
-					var feedItem = (XmppActivityFeedItem)o;
-					feedItem.Account.JoinMuc(feedItem.ActionItem);
-				}
-			};
-			var service = ServiceManager.Get<ActivityFeedService>();
-			service.AddTemplate("invite", "invites you to join {0}", "invites you to join {0}",
-				new Dictionary<string, object> {
-					{ "DesktopNotify", true },
-					{ "ShowInMainWindow", true }
-				}, joinMucAction
-			);
 		}
 
 		public string ServiceName {

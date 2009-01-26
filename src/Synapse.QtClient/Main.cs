@@ -80,10 +80,9 @@ namespace Synapse.QtClient
 			
 			AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
 			
-			// XXX: I dont like this being here.
+			// XXX: I dont like all of these being here.
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.AccountService>();
-			ServiceManager.RegisterService<Synapse.Xmpp.Services.ActivityFeedService>();
-			
+			ServiceManager.RegisterService<Synapse.Xmpp.Services.ShoutService>();			
 			ServiceManager.RegisterService<GuiService>();
 			ServiceManager.RegisterService<ActionService>();
 			

@@ -52,7 +52,7 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG)
 
 FILES =  \
 	Synapse.Xmpp.Services/AccountService.cs \
-	Synapse.Xmpp.Services/ActivityFeedService.cs \
+	Synapse.Xmpp.Services/ShoutService.cs \
 	Synapse.Xmpp/Account.cs \
 	Synapse.Xmpp/AvatarManager.cs \
 	Synapse.Xmpp/ChatStates.cs \
@@ -65,6 +65,7 @@ FILES =  \
 	Synapse.Xmpp/UserAvatars.cs \
 	Synapse.Xmpp/UserMood.cs \
 	Synapse.Xmpp/UserTune.cs \
+	Synapse.Xmpp/XmppActivityFeedItem.cs \
 	Synapse.Xmpp/XmppUriQueryInfo.cs 
 
 DATA_FILES = 
@@ -76,6 +77,7 @@ EXTRAS = \
 
 REFERENCES =  \
 	$(MONO_ADDINS_LIBS) \
+	$(NOTIFY_SHARP_LIBS) \
 	System \
 	System.Core \
 	System.Drawing \

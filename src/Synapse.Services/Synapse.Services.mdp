@@ -16,7 +16,6 @@
   </Configurations>
   <Contents>
     <File name="Synapse.Services/NetworkService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Services/NotificationService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services/ScreensaverService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services/NowPlayingService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/IService.cs" subtype="Code" buildaction="Compile" />
@@ -35,6 +34,7 @@
     <File name="Synapse.Services.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
     <File name="Synapse.ServiceStack/DBusConnection.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services/SettingsService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Services/ActivityFeedService.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
@@ -46,7 +46,6 @@
     <ProjectReference type="Gac" localcopy="True" refto="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/NDesk.DBus.dll" />
   </References>
-  <GtkDesignInfo />
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />
     <DeployFilesVar />

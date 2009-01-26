@@ -26,9 +26,10 @@ using System.IO;
 using System.Linq;
 using Qyoto;
 using Synapse.Core;
+using Synapse.ServiceStack;
+using Synapse.Services;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
-using Synapse.ServiceStack;
 using Synapse.UI;
 using Synapse.UI.Controllers;
 using Synapse.UI.Services;
@@ -207,7 +208,7 @@ public partial class RosterWidget : QWidget
 		});
 		
 		QObject.Connect(shoutLineEdit, Qt.SIGNAL("returnPressed()"), delegate {
-			var service = ServiceManager.Get<ActivityFeedService>();
+			var service = ServiceManager.Get<ShoutService>();
 			service.Shout(shoutLineEdit.Text);
 			shoutLineEdit.Clear();
 		});

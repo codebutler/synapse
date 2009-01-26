@@ -39,8 +39,8 @@ RESGEN=resgen2
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
 FILES =  \
+	Synapse.Services/ActivityFeedService.cs \
 	Synapse.Services/NetworkService.cs \
-	Synapse.Services/NotificationService.cs \
 	Synapse.Services/NowPlayingService.cs \
 	Synapse.Services/ScreensaverService.cs \
 	Synapse.Services/SettingsService.cs \

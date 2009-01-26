@@ -24,6 +24,7 @@ using System.Text;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Services;
+using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
 using Qyoto;
 
