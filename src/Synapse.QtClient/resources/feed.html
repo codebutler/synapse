@@ -181,7 +181,9 @@
 			};
 
 			ActivityFeedItem.prototype.canMerge = function (otherType, otherActionItem, otherContent) {
-				return (otherType == this.type &&
+			    var template = ActivityFeed.templates[this.type];
+				return (template.mergable == true && 
+				        otherType == this.type &&
 				        otherActionItem == this.actionItem &&
 				        otherContent == this.content && 
 				        (new Date() - this.timestamp) < 60000);
@@ -193,9 +195,15 @@
 				items: [],
 				addTemplate: function (type, singularText, pluralText, iconUrl, actions) {
 					try {
+						var mergable = true;
+						if (pluralText == null) {
+							pluralText = singularText;
+							mergable = false;
+						}
 						this.templates[type] = {
 							singularText: singularText.format('<strong>{0}</strong>'),
 							pluralText: pluralText.format('<strong>{0}</strong>'),
+							mergable: mergable,
 							actions: actions
 						};
 

@@ -69,12 +69,20 @@ namespace Synapse.QtClient.Widgets
 				var service = ServiceManager.Get<ActivityFeedService>();
 				ActivityFeedItemTemplate template = service.Templates[item.Type];
 
-				// FIXME Show item.Content too?
 				var builder = new StringBuilder();
 				builder.AppendFormat("<span style=\"font-size: 9pt;\">");
 				builder.AppendFormat("<b>{0}</b>", item.FromName);
 				builder.Append(" ");
 				builder.AppendFormat(template.SingularText, "<b>{0}</b>".FormatWith(item.ActionItem));
+				
+				if (!item.Content.Blank()) {
+					builder.Append(":");
+					builder.Append("<p style=\"margin-left: 20px; margin-top: 0px; margin-bottom: 0px;\">");
+					builder.Append(item.Content);
+					builder.Append("</p>");
+				} else {
+					builder.Append(".");
+				}
 
 				if (template.Actions != null && template.Actions.Length > 0) {
 					builder.Append("<br/>");
@@ -108,13 +116,12 @@ namespace Synapse.QtClient.Widgets
 			public void Close ()
 			{
 				m_Item.ActionTriggered -= HandleActionTriggered;
-				
-				this.ParentWidget().Layout().RemoveWidget(this);
 
-				if (this.ParentWidget().Layout().Children().Count == 0) {
+				if (this.ParentWidget().Layout().Count() == 1) {
 					this.ParentWidget().Hide();
 				}
 				
+				this.ParentWidget().Layout().RemoveWidget(this);
 				this.SetParent(null);
 			}
 

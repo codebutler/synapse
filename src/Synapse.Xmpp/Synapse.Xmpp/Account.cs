@@ -41,7 +41,6 @@ namespace Synapse.Xmpp
 {
 	public delegate void AccountEventHandler (Account account);
 	public delegate void MessageEventHandler (Account account, Packet packet);
-	public delegate void AccountErrorEventHandler (Account account, Exception ex);
 	
 	public class Account
 	{
@@ -83,8 +82,6 @@ namespace Synapse.Xmpp
 		public event AccountEventHandler ConnectionStateChanged;
 		public event AccountEventHandler StatusChanged;
 		public event EventHandler MyVCardUpdated;
-
-		public event AccountErrorEventHandler Error;
 		
 		public Account (string user, string domain, string resource) : this (user, domain, resource, null)
 		{
@@ -230,9 +227,15 @@ namespace Synapse.Xmpp
 		void HandleOnError(object sender, Exception ex)
 		{
 			Console.Error.WriteLine("An error has occurred with: " + Jid.ToString() + ": " + ex);
+			
 			ConnectionState = AccountConnectionState.Disconnected;
-			if (Error != null)
-				Error(this, ex);
+
+			var feed = ServiceManager.Get<ActivityFeedService>();
+			if (ex is jabber.connection.sasl.AuthenticationFailedException) {
+				feed.PostItem(this, null, "error", Jid.Bare, "Authentication Failed", ex);
+			} else {
+				feed.PostItem(this, null, "unknown-error", Jid.Bare, ex.ToString(), ex);
+			}
 		}
 
 		void HandleOnConnect(object sender, StanzaStream stream)

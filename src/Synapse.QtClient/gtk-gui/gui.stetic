@@ -11,7 +11,7 @@
   <widget class="Gtk.Dialog" id="Synapse.QtClient.ErrorDialog" design-size="277 222">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Synapse Error</property>
-    <property name="WindowPosition">CenterAlways</property>
+    <property name="WindowPosition">Center</property>
     <property name="Resizable">False</property>
     <property name="AllowGrow">False</property>
     <property name="DefaultWidth">300</property>

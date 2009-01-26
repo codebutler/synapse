@@ -29,5 +29,10 @@ namespace Synapse.Core
 		{
 			return String.Format(self, args);
 		}
+
+		public static bool Blank (this string self)
+		{
+			return String.IsNullOrEmpty(self);
+		}
 	}
 }

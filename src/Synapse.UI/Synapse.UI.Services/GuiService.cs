@@ -151,33 +151,8 @@ namespace Synapse.UI.Services
 			
 		void HandleAccountAdded(Account account)
 		{
-			account.Error += HandleAccountError;
-			
 			var manager = new AccountChatWindowManager(account);
 			m_AccountManagers.Add(account, manager);
-		}
-
-		void HandleAccountError(Account account, Exception ex)
-		{
-			string title = String.Format("An error has occurred with {0}:", account.Jid.ToString());
-			ShowError(title, ex);
-		}
-
-		void ShowError (string title, Exception ex)
-		{
-			// FIXME: Show something in the main window because the notification times out.
-			
-			var notifications = ServiceManager.Get<NotificationService>();			
-			var actions = new NotificationAction[] { 
-				new NotificationAction { 
-					Name     = "details",
-					Label    = "Show Details", 
-					Callback = delegate {
-						Application.Client.ShowErrorWindow(title, ex);
-					}
-				}
-			};				
-			notifications.Notify(title, ex.Message, "error", actions);
 		}
 
 		void HandleAccountRemoved(Account account)

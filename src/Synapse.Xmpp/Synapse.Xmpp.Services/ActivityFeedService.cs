@@ -98,6 +98,33 @@ namespace Synapse.Xmpp.Services
 			 	{ "ShowInMainWindow", true }
 			});
 			
+			AddTemplate("error", "Error with {0}", null, new Dictionary<string, object> {
+				{ "DesktopNotify", true },
+			 	{ "ShowInMainWindow", true }
+			});
+			
+			AddTemplate("unknown-error", "Error with {0}", null, new Dictionary<string, object> {
+				{ "DesktopNotify", true },
+			 	{ "ShowInMainWindow", true }
+			}, new [] {
+				new NotificationAction { 
+					Name     = "details",
+					Label    = "Show Details", 
+					Callback = delegate (object o, NotificationAction action) {
+						var item = (XmppActivityFeedItem)o;
+						Exception ex = (Exception)item.Data;
+						Application.Client.ShowErrorWindow("Error with {0}".FormatWith(item.Account.Jid.Bare), ex);
+					}
+				},
+				new NotificationAction {
+					Name = "bug",
+					Label = "Report Bug",
+					Callback = delegate (object o, NotificationAction action) {
+						// FIXME:
+					}
+				}
+			});
+			
 			Application.Client.Started +=  delegate {
 				PostItem(null, null, "synapse", "Welcome to Synapse!", null);
 			};
@@ -148,9 +175,19 @@ namespace Synapse.Xmpp.Services
 			PostItem(account, from, type, actionItem, content, null);
 		}
 		
+		public void PostItem (Account account, JID from, string type, string actionItem, string content, object data)
+		{
+			PostItem(account, from, type, actionItem, content, null, data);
+		}
+
 		public void PostItem (Account account, JID from, string type, string actionItem, string content, string contentUrl)
 		{
-			PostItem(new XmppActivityFeedItem(account, from, type, actionItem, content, contentUrl));
+			PostItem(account, from, type, actionItem, content, contentUrl, null);
+		}
+		
+		public void PostItem (Account account, JID from, string type, string actionItem, string content, string contentUrl, object data)
+		{
+			PostItem(new XmppActivityFeedItem(account, from, type, actionItem, content, contentUrl, data));
 		}
 
 		public void PostItem (IActivityFeedItem item)
@@ -269,13 +306,19 @@ namespace Synapse.Xmpp.Services
 		string   m_ActionItem;
 		string   m_Content;
 		Uri      m_ContentUrl;
-		
+
 		public XmppActivityFeedItem (Account account, JID from, string type, string actionItem, string content)
 			: this (account, from, type, actionItem, content, null)
 		{
 		}
-		
+
 		public XmppActivityFeedItem (Account account, JID from, string type, string actionItem, string content, string contentUrl)
+			: this (account, from, type, actionItem, content, contentUrl, null)
+		{
+		}
+		
+		public XmppActivityFeedItem (Account account, JID from, string type, string actionItem, string content, string contentUrl, object data)
+			: base (data)
 		{
 			if (type == null)
 				throw new ArgumentNullException("type");
@@ -354,6 +397,17 @@ namespace Synapse.Xmpp.Services
 
 	public abstract class AbstractActivityFeedItem : IActivityFeedItem
 	{
+		object m_Data;
+
+		protected AbstractActivityFeedItem ()
+		{
+		}
+		
+		protected AbstractActivityFeedItem (object data)
+		{
+			m_Data = data;
+		}
+		
 		public event NotificationActionCallback ActionTriggered;
 		
 		public virtual void TriggerAction (string actionName)
@@ -370,6 +424,12 @@ namespace Synapse.Xmpp.Services
 				}
 			}
 			throw new Exception("Action not found: " + actionName);
+		}
+
+		public object Data {
+			get {
+				return m_Data;
+			}
 		}
 		
 		public abstract string FromName {
@@ -434,6 +494,10 @@ namespace Synapse.Xmpp.Services
 			get;
 		}
 
+		object Data {
+			get;
+		}
+		
 		void TriggerAction (string actionName);
 	}
 	
