@@ -208,9 +208,7 @@ public partial class RosterWidget : QWidget
 		});
 		
 		QObject.Connect(shoutLineEdit, Qt.SIGNAL("returnPressed()"), delegate {
-			var service = ServiceManager.Get<ShoutService>();
-			service.Shout(shoutLineEdit.Text);
-			shoutLineEdit.Clear();
+			SendShout();
 		});
 
 		QVBoxLayout layout = new QVBoxLayout(m_AccountsContainer);
@@ -226,12 +224,24 @@ public partial class RosterWidget : QWidget
 		rosterSearchButton.icon = new QIcon(new QPixmap("resource:/simple-search.png"));
 		addFriendButton.icon = new QIcon(new QPixmap("resource:/simple-add.png"));
 		addMucBookmarkButton.icon = new QIcon(new QPixmap("resource:/simple-add.png"));
-
+		feedFilterButton.icon = new QIcon(new QPixmap("resource:/simple-search.png"));
+			
 		m_CollapseIcon = new QIcon(new QPixmap("resource:/collapse.png"));
 		m_ExpandIcon = new QIcon(new QPixmap("resource:/expand.png"));
 		toggleJoinMucButton.icon = m_CollapseIcon;
 			
 		UpdateOnlineCount();
+
+		var shoutService = ServiceManager.Get<ShoutService>();
+		if (shoutService.Handlers.Count() > 0) {
+			foreach (IShoutHandler handler in shoutService.Handlers) {
+				QCheckBox check = new ShoutHandlerCheckBox(handler, shoutHandlersContainer);
+				check.Checked = true;
+				shoutHandlersContainer.Layout().AddWidget(check);
+			}
+		} else {
+			shoutHandlersContainer.Hide();
+		}
 	}
 
 	public new void Show ()
@@ -272,6 +282,28 @@ public partial class RosterWidget : QWidget
 				m_ActivityFeedItems.Add(result.ToString(), item);
 			}
 		});
+	}
+
+	void SendShout ()
+	{
+		if (!shoutLineEdit.Text.Blank()) {
+
+			List<IShoutHandler> selectedHandlers = new List<IShoutHandler>();
+			
+			for (int x = 0; x < shoutHandlersContainer.Layout().Count(); x++) {
+				var item = shoutHandlersContainer.Layout().ItemAt(x);
+				if (item is QWidgetItem) {
+					var check = ((ShoutHandlerCheckBox)((QWidgetItem)item).Widget());
+					if (check.Checked) {
+						selectedHandlers.Add(check.Handler);
+					}
+				}
+			}
+			
+			var service = ServiceManager.Get<ShoutService>();
+			service.Shout(shoutLineEdit.Text, selectedHandlers.ToArray());
+			shoutLineEdit.Clear();
+		}
 	}
 	
 	void HandleItemActivated (AvatarGrid<RosterItem> grid, RosterItem item)
@@ -322,6 +354,23 @@ public partial class RosterWidget : QWidget
 	}
 	
 	#region Private Slots
+	[Q_SLOT]
+	void on_sendShoutButton_clicked()
+	{
+		SendShout();
+	}
+	
+	[Q_SLOT]
+	void on_m_ShoutButton_toggled(bool active)
+	{
+	}
+	
+	[Q_SLOT]
+	void on_feedFilterButton_clicked()
+	{
+		Console.WriteLine("Show Filter Menu");
+	}
+	
 	[Q_SLOT]
 	void on_toggleJoinMucButton_clicked()
 	{
@@ -551,4 +600,20 @@ public partial class RosterWidget : QWidget
 		m_RosterMenu.Popup(buttonPos);
 	}
 	#endregion
+
+	class ShoutHandlerCheckBox : QCheckBox
+	{
+		IShoutHandler m_Handler;
+		
+		public ShoutHandlerCheckBox (IShoutHandler handler, QWidget parent) : base (handler.Name, parent)
+		{
+			m_Handler = handler;
+		}
+
+		public IShoutHandler Handler {
+			get {
+				return m_Handler;
+			}	
+		}
+	}
 }

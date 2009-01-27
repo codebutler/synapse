@@ -28,6 +28,12 @@ namespace Synapse.Addins.TwitterAddin
 {
 	public class TwitterShoutHandler : IShoutHandler
 	{
+		public string Name {
+			get {
+				return "Twitter";
+			}
+		}
+		
 		public void Shout (string message)
 		{
 			ThreadPool.QueueUserWorkItem(delegate {

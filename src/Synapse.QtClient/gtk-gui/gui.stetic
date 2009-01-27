@@ -5,7 +5,6 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="../../../build/Debug/Synapse.Services.dll" />
     <widget-library name="../../../build/Debug/Synapse.exe" internal="true" />
   </import>
   <widget class="Gtk.Dialog" id="Synapse.QtClient.ErrorDialog" design-size="277 222">

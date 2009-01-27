@@ -44,15 +44,21 @@ namespace Synapse.Xmpp.Services
 				m_ShoutHandlers.Add(handler);
 			}
 		}
+
+		public IEnumerable<IShoutHandler> Handlers {
+			get {
+				return m_ShoutHandlers.AsReadOnly();
+			}
+		}
 		
-		public void Shout (string message)
+		public void Shout (string message, IShoutHandler[] handlers)
 		{
 			var accountService = ServiceManager.Get<AccountService>();
 			foreach (var account in accountService.Accounts) {
 				account.GetFeature<Microblogging>().Post(message);
 			}
 
-			foreach (var handler in m_ShoutHandlers) {
+			foreach (var handler in handlers) {
 				handler.Shout(message);
 			}
 		}
@@ -66,6 +72,9 @@ namespace Synapse.Xmpp.Services
 		
 	public interface IShoutHandler
 	{
+		string Name {
+			get;
+		}
 		void Shout (string message);
 	}
 

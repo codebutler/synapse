@@ -25,7 +25,6 @@
     <File name="Synapse.QtClient.UI.Views/TrayIconView.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/NoAccountsWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/AccountStatusWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="qt-gui/RosterWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/MainWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.UI.Views/ChatWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/feed.html" subtype="Code" buildaction="EmbedAsResource" />
@@ -65,7 +64,6 @@
     <File name="Synapse.QtClient.Widgets/FadingQLabel.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/NoAccountsWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AccountStatusWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.QtClient.Widgets/RosterWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.UI.Views/ServiceBrowserWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/prototype.js" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/effects.js" subtype="Code" buildaction="EmbedAsResource" />
@@ -98,6 +96,8 @@
     <File name="resources/simple-search.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/collapse.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/expand.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="qt-gui/RosterWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Widgets/RosterWidget.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />

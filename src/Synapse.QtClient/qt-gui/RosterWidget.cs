@@ -88,17 +88,29 @@ public partial class RosterWidget : QWidget {
     
     protected QWidget activityTab;
     
+    protected QFrame activityHeader;
+    
     protected QPushButton m_ShoutButton;
     
     protected QPushButton m_PostLinkButton;
     
     protected QPushButton m_PostFileButton;
     
+    protected QPushButton feedFilterButton;
+    
     protected QWidget shoutContainer;
     
     protected QLineEdit shoutLineEdit;
     
     protected QLabel shoutCharsLabel;
+    
+    protected QWidget widget_2;
+    
+    protected QLabel label_8;
+    
+    protected QWidget shoutHandlersContainer;
+    
+    protected QPushButton sendShoutButton;
     
     protected QWebView m_ActivityWebView;
     
@@ -138,7 +150,7 @@ public partial class RosterWidget : QWidget {
         this.tabWidget.ObjectName = "tabWidget";
         this.tabWidget.tabPosition = QTabWidget.TabPosition.South;
         this.tabWidget.tabShape = QTabWidget.TabShape.Rounded;
-        this.tabWidget.CurrentIndex = 1;
+        this.tabWidget.CurrentIndex = 2;
         this.tabWidget.UsesScrollButtons = true;
         verticalLayout_2.AddWidget(this.tabWidget);
         this.friendsTab = new QWidget(this.tabWidget);
@@ -349,56 +361,95 @@ public partial class RosterWidget : QWidget {
         verticalLayout.Spacing = 0;
         verticalLayout.sizeConstraint = QLayout.SizeConstraint.SetDefaultConstraint;
         verticalLayout.Margin = 0;
-        QHBoxLayout horizontalLayout_2;
-        horizontalLayout_2 = new QHBoxLayout();
-        verticalLayout.AddLayout(horizontalLayout_2);
-        horizontalLayout_2.Spacing = 12;
-        horizontalLayout_2.Margin = 6;
-        QSpacerItem horizontalSpacer;
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
-        horizontalLayout_2.AddItem(horizontalSpacer);
-        this.m_ShoutButton = new QPushButton(this.activityTab);
+        this.activityHeader = new QFrame(this.activityTab);
+        this.activityHeader.ObjectName = "activityHeader";
+        this.activityHeader.FrameShape = QFrame.Shape.NoFrame;
+        this.activityHeader.FrameShadow = QFrame.Shadow.Raised;
+        QHBoxLayout horizontalLayout_9;
+        horizontalLayout_9 = new QHBoxLayout(this.activityHeader);
+        horizontalLayout_9.Spacing = 3;
+        horizontalLayout_9.Margin = 3;
+        this.m_ShoutButton = new QPushButton(this.activityHeader);
         this.m_ShoutButton.ObjectName = "m_ShoutButton";
+        this.m_ShoutButton.FocusPolicy = Qt.FocusPolicy.TabFocus;
         this.m_ShoutButton.StyleSheet = "";
         this.m_ShoutButton.Text = "Shout!";
-        this.m_ShoutButton.icon = new QIcon("../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-text.png");
         this.m_ShoutButton.Checkable = true;
         this.m_ShoutButton.AutoExclusive = false;
         this.m_ShoutButton.Flat = true;
-        horizontalLayout_2.AddWidget(this.m_ShoutButton);
-        this.m_PostLinkButton = new QPushButton(this.activityTab);
+        horizontalLayout_9.AddWidget(this.m_ShoutButton);
+        this.m_PostLinkButton = new QPushButton(this.activityHeader);
         this.m_PostLinkButton.ObjectName = "m_PostLinkButton";
+        this.m_PostLinkButton.FocusPolicy = Qt.FocusPolicy.TabFocus;
         this.m_PostLinkButton.Text = "Post Link";
-        this.m_PostLinkButton.icon = new QIcon("../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-link.png");
         this.m_PostLinkButton.Checkable = true;
         this.m_PostLinkButton.AutoExclusive = false;
         this.m_PostLinkButton.Flat = true;
-        horizontalLayout_2.AddWidget(this.m_PostLinkButton);
-        this.m_PostFileButton = new QPushButton(this.activityTab);
+        horizontalLayout_9.AddWidget(this.m_PostLinkButton);
+        this.m_PostFileButton = new QPushButton(this.activityHeader);
         this.m_PostFileButton.ObjectName = "m_PostFileButton";
+        this.m_PostFileButton.FocusPolicy = Qt.FocusPolicy.TabFocus;
         this.m_PostFileButton.Text = "Post File";
-        this.m_PostFileButton.icon = new QIcon("../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-image.png../../../../../../../../usr/share/icons/gnome/16x16/actions/insert-image.png");
         this.m_PostFileButton.Checkable = true;
         this.m_PostFileButton.AutoExclusive = false;
         this.m_PostFileButton.Flat = true;
-        horizontalLayout_2.AddWidget(this.m_PostFileButton);
+        horizontalLayout_9.AddWidget(this.m_PostFileButton);
         QSpacerItem horizontalSpacer_2;
-        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
-        horizontalLayout_2.AddItem(horizontalSpacer_2);
+        horizontalSpacer_2 = new QSpacerItem(0, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        horizontalLayout_9.AddItem(horizontalSpacer_2);
+        this.feedFilterButton = new QPushButton(this.activityHeader);
+        this.feedFilterButton.ObjectName = "feedFilterButton";
+        this.feedFilterButton.FocusPolicy = Qt.FocusPolicy.TabFocus;
+        this.feedFilterButton.Text = "";
+        this.feedFilterButton.Flat = true;
+        horizontalLayout_9.AddWidget(this.feedFilterButton);
+        verticalLayout.AddWidget(this.activityHeader);
         this.shoutContainer = new QWidget(this.activityTab);
         this.shoutContainer.ObjectName = "shoutContainer";
-        QHBoxLayout horizontalLayout_3;
-        horizontalLayout_3 = new QHBoxLayout(this.shoutContainer);
-        horizontalLayout_3.Spacing = 6;
-        horizontalLayout_3.SetContentsMargins(6, 0, 6, 6);
+        QVBoxLayout verticalLayout_8;
+        verticalLayout_8 = new QVBoxLayout(this.shoutContainer);
+        verticalLayout_8.Margin = 6;
+        QHBoxLayout horizontalLayout_2;
+        horizontalLayout_2 = new QHBoxLayout();
+        verticalLayout_8.AddLayout(horizontalLayout_2);
         this.shoutLineEdit = new QLineEdit(this.shoutContainer);
         this.shoutLineEdit.ObjectName = "shoutLineEdit";
         this.shoutLineEdit.MaxLength = 140;
-        horizontalLayout_3.AddWidget(this.shoutLineEdit);
+        horizontalLayout_2.AddWidget(this.shoutLineEdit);
         this.shoutCharsLabel = new QLabel(this.shoutContainer);
         this.shoutCharsLabel.ObjectName = "shoutCharsLabel";
         this.shoutCharsLabel.Text = "140";
-        horizontalLayout_3.AddWidget(this.shoutCharsLabel);
+        horizontalLayout_2.AddWidget(this.shoutCharsLabel);
+        this.widget_2 = new QWidget(this.shoutContainer);
+        this.widget_2.ObjectName = "widget_2";
+        QHBoxLayout horizontalLayout_10;
+        horizontalLayout_10 = new QHBoxLayout(this.widget_2);
+        horizontalLayout_10.Margin = 0;
+        this.label_8 = new QLabel(this.widget_2);
+        this.label_8.ObjectName = "label_8";
+        this.label_8.Text = "Also Send To:";
+        horizontalLayout_10.AddWidget(this.label_8);
+        this.shoutHandlersContainer = new QWidget(this.widget_2);
+        this.shoutHandlersContainer.ObjectName = "shoutHandlersContainer";
+        QHBoxLayout horizontalLayout_11;
+        horizontalLayout_11 = new QHBoxLayout(this.shoutHandlersContainer);
+        horizontalLayout_11.Spacing = 3;
+        horizontalLayout_11.Margin = 0;
+        horizontalLayout_10.AddWidget(this.shoutHandlersContainer);
+        QSpacerItem horizontalSpacer_4;
+        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        horizontalLayout_10.AddItem(horizontalSpacer_4);
+        verticalLayout_8.AddWidget(this.widget_2);
+        QHBoxLayout horizontalLayout_3;
+        horizontalLayout_3 = new QHBoxLayout();
+        verticalLayout_8.AddLayout(horizontalLayout_3);
+        QSpacerItem horizontalSpacer;
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
+        horizontalLayout_3.AddItem(horizontalSpacer);
+        this.sendShoutButton = new QPushButton(this.shoutContainer);
+        this.sendShoutButton.ObjectName = "sendShoutButton";
+        this.sendShoutButton.Text = "Shout!";
+        horizontalLayout_3.AddWidget(this.sendShoutButton);
         verticalLayout.AddWidget(this.shoutContainer);
         this.m_ActivityWebView = new QWebView(this.activityTab);
         this.m_ActivityWebView.ObjectName = "m_ActivityWebView";
