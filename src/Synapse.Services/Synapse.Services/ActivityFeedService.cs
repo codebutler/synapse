@@ -20,6 +20,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using Synapse.Core;
@@ -40,10 +41,10 @@ namespace Synapse.Services
 		
 		public void Initialize ()
 		{
-			AddTemplate("synapse", "{0}", "{0}");
+			AddTemplate("synapse", null, "{0}", "{0}");
 			
-			Application.Client.Started +=  delegate {
-			//	PostItem(null, null, "synapse", "Welcome to Synapse!", null);
+			Application.Client.Started += delegate {
+				PostItem(new SimpleActivityFeedItem("synapse", "Welcome to Synapse!"));
 			};
 		}
 
@@ -55,18 +56,27 @@ namespace Synapse.Services
 			}
 		}
 
-		public void AddTemplate (string name, string singularText, string pluralText, params NotificationAction[] actions)
-		{
-			AddTemplate(name, singularText, pluralText, new Dictionary<string,object>(), actions);
+		public IEnumerable<string> Categories {
+			get {
+				foreach (string category in m_Templates.Values.Select(t => t.Category).Distinct()) {
+					if (category != null)
+						yield return category;
+				}
+			}
 		}
 
-		public void AddTemplate (string name, string singularText, string pluralText, Dictionary<string, object> options, params NotificationAction[] actions)
+		public void AddTemplate (string name, string category, string singularText, string pluralText, params NotificationAction[] actions)
+		{
+			AddTemplate(name, category, singularText, pluralText, new Dictionary<string,object>(), actions);
+		}
+
+		public void AddTemplate (string name, string category, string singularText, string pluralText, Dictionary<string, object> options, params NotificationAction[] actions)
 		{
 			bool desktopNotify    = (options.ContainsKey("DesktopNotify") && ((bool)options["DesktopNotify"]) == true);
 			bool showInMainWindow = (options.ContainsKey("ShowInMainWindow") && ((bool)options["ShowInMainWindow"]) == true);
 			string iconUrl        = (options.ContainsKey("IconUrl") ? (string)options["IconUrl"] : null);
 
-			m_Templates.Add(name, new ActivityFeedItemTemplate(name, singularText, pluralText, desktopNotify, showInMainWindow, iconUrl, actions));
+			m_Templates.Add(name, new ActivityFeedItemTemplate(name, category, singularText, pluralText, desktopNotify, showInMainWindow, iconUrl, actions));
 		}
 
 		public void PostItem (IActivityFeedItem item)
@@ -123,6 +133,7 @@ namespace Synapse.Services
 	public class ActivityFeedItemTemplate
 	{
 		string m_Name;
+		string m_Category;
 		string m_SingularText;
 		string m_PluralText;
 		bool   m_DesktopNotify;
@@ -130,10 +141,11 @@ namespace Synapse.Services
 		string m_IconUrl;
 		NotificationAction[] m_Actions;
 
-		public ActivityFeedItemTemplate (string name, string singularText, string pluralText, bool desktopNotify,
+		public ActivityFeedItemTemplate (string name, string category, string singularText, string pluralText, bool desktopNotify,
 		                                 bool showInMainWindow, string iconUrl, params NotificationAction[] actions)
 		{
 			m_Name = name;
+			m_Category = category;
 			m_SingularText = singularText;
 			m_PluralText = pluralText;
 			m_DesktopNotify = desktopNotify;
@@ -145,6 +157,12 @@ namespace Synapse.Services
 		public string Name {
 			get {
 				return m_Name;
+			}
+		}
+
+		public string Category {
+			get {
+				return m_Category;
 			}
 		}
 
@@ -181,6 +199,59 @@ namespace Synapse.Services
 		public NotificationAction[] Actions {
 			get {
 				return m_Actions;
+			}
+		}
+	}
+
+	public class SimpleActivityFeedItem : AbstractActivityFeedItem
+	{
+		string m_Type, m_Text;
+					
+		public SimpleActivityFeedItem (string type, string text)
+		{
+			m_Type = type;
+			m_Text = text;
+		}
+
+		public override string Type {
+			get {
+	 			return m_Type;
+			}
+		}
+
+		public override string ActionItem {
+			get {
+				return m_Text;
+			}
+		}
+		
+		public override string Content {
+			get {
+				return String.Empty;
+			}
+		}
+
+		public override Uri ContentUrl {
+			get {
+				return null;
+			}
+		}
+
+		public override string AvatarUrl {
+			get {
+				return "resource:/octy-32.png";
+			}
+		}
+
+		public override string FromUrl {
+			get {
+				return null;
+			}
+		}
+
+		public override string FromName {
+			get {
+				return null;
 			}
 		}
 	}
@@ -250,7 +321,7 @@ namespace Synapse.Services
 			get;
 		}		
 	}
-	
+				
 	public interface IActivityFeedItem
 	{
 		event NotificationActionCallback ActionTriggered;

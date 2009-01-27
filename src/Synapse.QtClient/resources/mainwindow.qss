@@ -84,7 +84,8 @@ QLineEdit#friendSearchLineEdit {
 #gridHeader,
 #joinMucHeader,
 #yourMucsHeader,
-#friendsMucsHeader {
+#friendsMucsHeader,
+#activityHeader {
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #5D5D5D, stop: 1 #444444);
 }
 
@@ -96,6 +97,17 @@ QLineEdit#friendSearchLineEdit {
 	height: 16px;
 }
 
+#feedFilterButton {
+	width: 16px;
+	height: 16px;
+	padding: 0px;
+}
+
+#m_ShoutButton, #m_PostLinkButton, #m_PostFileButton {
+	padding: 0px 3px;
+	height: 16px;
+}
+
 #NoAccountsWidget QGraphicsView {
 	background: transparent;
 }
@@ -103,6 +115,10 @@ QLineEdit#friendSearchLineEdit {
 QPushButton {
 	color: #BBBBBB;
 	border-radius: 5px;
+}
+
+QCheckBox {
+color: #BBBBBB;
 }
 
 QPushButton[flat="false"] {

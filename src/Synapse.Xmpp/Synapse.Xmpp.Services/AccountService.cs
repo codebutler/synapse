@@ -69,9 +69,9 @@ namespace Synapse.Xmpp.Services
 
 			// FIXME: This is not an ideal place for these. Perhaps create an XmppService?
 			var feed = ServiceManager.Get<ActivityFeedService>();
-			feed.AddTemplate("presence", "is now {0}", "are now {0}");
-			feed.AddTemplate("music", "is listening to", "are listening to");
-			feed.AddTemplate("mood", "is feeling {0}", "are feeling {0}");
+			feed.AddTemplate("presence", "Presence Changes", "is now {0}", "are now {0}");
+			feed.AddTemplate("music", "Friend Events", "is listening to", "are listening to");
+			feed.AddTemplate("mood", "Friend Events", "is feeling {0}", "are feeling {0}");
 
 			var joinMucAction = new NotificationAction() {
 				Name = "join", 
@@ -81,7 +81,7 @@ namespace Synapse.Xmpp.Services
 					xmppItem.Account.JoinMuc(xmppItem.ActionItem);
 				}
 			};
-			feed.AddTemplate("invite", "invites you to join {0}", "invites you to join {0}",
+			feed.AddTemplate("invite", null, "invites you to join {0}", "invites you to join {0}",
 				new Dictionary<string, object> {
 					{ "DesktopNotify", true },
 					{ "ShowInMainWindow", true }
@@ -117,32 +117,32 @@ namespace Synapse.Xmpp.Services
 				}
 			};
 			
-			feed.AddTemplate("subscribe", "wants to be friends with you", "want to friends with you", new Dictionary<string, object> {
+			feed.AddTemplate("subscribe", null, "wants to be friends with you", "want to friends with you", new Dictionary<string, object> {
 				{ "DesktopNotify", true },
 			 	{ "ShowInMainWindow", true }
 			}, approveAction, denyAction);
 			
-			feed.AddTemplate("subscribed", "is now your friend", "are now your friend", new Dictionary<string, object> {
+			feed.AddTemplate("subscribed", null, "is now your friend", "are now your friend", new Dictionary<string, object> {
 				{ "DesktopNotify", true },
 			 	{ "ShowInMainWindow", true }
 			});			
 
-			feed.AddTemplate("unsubscribe", "is no longer friends with you", "are no longer friends with you", new Dictionary<string, object> {
+			feed.AddTemplate("unsubscribe", null, "is no longer friends with you", "are no longer friends with you", new Dictionary<string, object> {
 				{ "DesktopNotify", true },
 			 	{ "ShowInMainWindow", true }
 			});
 
-			feed.AddTemplate("unsubscribed", "is no longer your friend", "are no longer your friend", new Dictionary<string, object> {
+			feed.AddTemplate("unsubscribed", null, "is no longer your friend", "are no longer your friend", new Dictionary<string, object> {
 				{ "DesktopNotify", true },
 			 	{ "ShowInMainWindow", true }
 			});
 
-			feed.AddTemplate("account-error", "Error with {0}", null, new Dictionary<string, object> {
+			feed.AddTemplate("account-error", null, "Error with {0}", null, new Dictionary<string, object> {
 				{ "DesktopNotify", true },
 			 	{ "ShowInMainWindow", true }
 			});
 			
-			feed.AddTemplate("unknown-account-error", "Error with {0}", null, new Dictionary<string, object> {
+			feed.AddTemplate("unknown-account-error", null, "Error with {0}", null, new Dictionary<string, object> {
 				{ "DesktopNotify", true },
 			 	{ "ShowInMainWindow", true }
 			}, new [] {

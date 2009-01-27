@@ -71,6 +71,7 @@ REFERENCES =  \
 	$(NOTIFY_SHARP_LIBS) \
 	Mono.Posix \
 	System \
+	System.Core \
 	System.Xml
 
 DLL_REFERENCES =  \

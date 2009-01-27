@@ -45,6 +45,7 @@
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/NDesk.DBus.dll" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />

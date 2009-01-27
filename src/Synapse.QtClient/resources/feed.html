@@ -193,14 +193,28 @@
 				loaded: false,
 				templates: {},
 				items: [],
-				addTemplate: function (type, singularText, pluralText, iconUrl, actions) {
+				categoryStyleTags: {},
+				addTemplate: function (type, category, singularText, pluralText, iconUrl, actions) {
 					try {
 						var mergable = true;
 						if (pluralText == null) {
 							pluralText = singularText;
 							mergable = false;
 						}
+
+						if (category != null) {
+							if (this.categoryStyleTags[category] == null) {
+								var categoryStyle = document.createElement('style');
+								categoryStyle.setAttribute('type', 'text/css');
+								categoryStyle.innerText = '.category-{0} { display: block; }'.format(category);
+								$$('head')[0].appendChild(categoryStyle);
+								this.categoryStyleTags[category] = categoryStyle;
+							}
+						} else {
+							category = "none";
+						}
 						this.templates[type] = {
+							category: category,
 							singularText: singularText.format('<strong>{0}</strong>'),
 							pluralText: pluralText.format('<strong>{0}</strong>'),
 							mergable: mergable,
@@ -222,12 +236,13 @@
 					}
 				},
 				addItem: function (accountJid, type, avatarUrl, fromJid, fromName, fromUrl, actionItem, content, contentUrl) {
-					try {
-						
+					try {						
 						if (this.templates[type] == null) {
 							alert("Unknown Template: " + type);
 							return;
 						}
+
+						var template = this.templates[type];
 	
 						var mergeItem = null;
 						for (var x = this.items.length - 1; x >= 0; x--) {
@@ -250,7 +265,7 @@
 							this.items.push(item);
 	
 							var itemsList = $('items');
-							var li = new Element('li', { id: id });
+							var li = new Element('li', { id: id, 'class': "category-{0}".format(template.category) });
 							li.hide();
 							Element.insert(itemsList, { top: li });
 	
@@ -262,6 +277,16 @@
 						}						
 					} catch (e) {
 						alert("addItem failed: " + e);
+					}
+				},
+				setCategoryVisibility: function (category, visible) {
+					if (this.categoryStyleTags[category] != null) {
+						var categoryStyle = this.categoryStyleTags[category];
+						if (visible) {
+							categoryStyle.innerText = '.category-{0} { display: block; }'.format(category);
+						} else {
+							categoryStyle.innerText = '.category-{0} { display: none; }'.format(category);
+						}
 					}
 				}
 			};

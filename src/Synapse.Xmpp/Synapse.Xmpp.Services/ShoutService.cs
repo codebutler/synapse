@@ -36,7 +36,7 @@ namespace Synapse.Xmpp.Services
 		public void Initialize ()
 		{
 			var feed = ServiceManager.Get<ActivityFeedService>();
-			feed.AddTemplate("shout", "shouts", "shout");
+			feed.AddTemplate("shout", "Friend Events", "shouts", "shout");
 			
 			var nodes = AddinManager.GetExtensionNodes("/Synapse/Xmpp/ActivityFeed/ShoutHandlers");
 			foreach (var node in nodes) {

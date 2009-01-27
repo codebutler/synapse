@@ -61,7 +61,8 @@ public partial class RosterWidget : QWidget
 	RosterItem            m_MenuDownItem;
 	QIcon                 m_CollapseIcon;
 	QIcon                 m_ExpandIcon;
-
+	QMenu                 m_FeedFilterMenu;
+	
 	// Map the JS element ID to the ActivityFeedItem
 	Dictionary<string, IActivityFeedItem> m_ActivityFeedItems;
 	
@@ -242,6 +243,21 @@ public partial class RosterWidget : QWidget
 		} else {
 			shoutHandlersContainer.Hide();
 		}
+
+		m_FeedFilterMenu = new QMenu(this);
+		
+		QObject.Connect(m_FeedFilterMenu, Qt.SIGNAL("triggered(QAction*)"), delegate (QAction action) {
+			string js = Util.CreateJavascriptCall("ActivityFeed.setCategoryVisibility", action.Text.ToLower().Replace(" ", "-"), action.Checked);
+			m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
+		});
+		
+		var feedService = ServiceManager.Get<ActivityFeedService>();
+		foreach (string category in feedService.Categories) {
+			QAction action = new QAction(category, m_FeedFilterMenu);
+			action.Checkable = true;
+			action.Checked = true;
+			m_FeedFilterMenu.AddAction(action);
+		}
 	}
 
 	public new void Show ()
@@ -368,7 +384,8 @@ public partial class RosterWidget : QWidget
 	[Q_SLOT]
 	void on_feedFilterButton_clicked()
 	{
-		Console.WriteLine("Show Filter Menu");
+		var buttonPos = feedFilterButton.MapToGlobal(new QPoint(0, feedFilterButton.Height()));
+		m_FeedFilterMenu.Popup(buttonPos);
 	}
 	
 	[Q_SLOT]
@@ -512,8 +529,10 @@ public partial class RosterWidget : QWidget
 
 		var feedService = ServiceManager.Get<ActivityFeedService>();
 		foreach (var template in feedService.Templates.Values) {
-			string js = Util.CreateJavascriptCall("ActivityFeed.addTemplate", template.Name, template.SingularText,
-			                                      template.PluralText, template.IconUrl, template.Actions);
+			string category = (template.Category == null) ? null : template.Category.ToLower().Replace(" ", "-");
+			string js = Util.CreateJavascriptCall("ActivityFeed.addTemplate", template.Name, category, 
+			                                      template.SingularText, template.PluralText, template.IconUrl, 
+			                                      template.Actions);
 			var ret = m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
 			if (ret.IsNull() || !ret.ToBool()) {
 				throw new Exception("Failed to add template!\n" + js);

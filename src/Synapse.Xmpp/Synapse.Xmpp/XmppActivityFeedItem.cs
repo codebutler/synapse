@@ -95,8 +95,7 @@ namespace Synapse.Xmpp
 
 		public override string AvatarUrl {
 			get {
-				string avatarHash = (m_From != null) ? AvatarManager.GetAvatarHash(m_From) : "octy";
-				return "avatar:/" + avatarHash;
+				return "avatar:/" + AvatarManager.GetAvatarHash(m_From);
 			}
 		}
 
