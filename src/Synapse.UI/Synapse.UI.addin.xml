@@ -16,13 +16,9 @@
 		<ExtensionNode name="Action" type="Synapse.UI.Actions.ExtensionNodes.ActionCodon" />
 	</ExtensionNodeSet>
 
-	<ExtensionNodeSet id="Synapse.UI.Actions.ActionHandlers">
-		<ExtensionNode name="ActionHandler" type="Synapse.UI.Actions.ExtensionNodes.ActionHandlerCodon" />
-	</ExtensionNodeSet>
-
 	<ExtensionPoint path="/Synapse/UI/ActionHandlers">
 		<Descriptions>Handlers for UI actions</Descriptions>
-		<ExtensionNodeSet id="Synapse.UI.Actions.ActionHandlers" />
+		<ExtensionNode name="ActionHandler" />
 	</ExtensionPoint>
 
 	<ExtensionPoint path="/Synapse/UI/Actions">

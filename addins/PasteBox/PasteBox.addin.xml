@@ -29,7 +29,7 @@
 	</Extension>
 
 	<Extension path="/Synapse/UI/ActionHandlers">
-		<ActionHandler type="Synapse.PasteBox.ActionHandler" />
+		<ActionHandler class="Synapse.PasteBox.ActionHandler" />
 	</Extension>
 
 	<Extension path="/Synapse/UI/Actions">

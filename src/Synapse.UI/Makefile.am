@@ -69,7 +69,6 @@ FILES =  \
 	ResourceProviderCodon.cs \
 	RosterAvatarGridModel.cs \
 	Synapse.UI.Actions.ExtensionNodes/ActionCodon.cs \
-	Synapse.UI.Actions.ExtensionNodes/ActionHandlerCodon.cs \
 	Synapse.UI.Actions.ExtensionNodes/ActionItemCodon.cs \
 	Synapse.UI.Actions.ExtensionNodes/SeparatorItemCodon.cs \
 	Synapse.UI.Chat/AbstractChatContent.cs \

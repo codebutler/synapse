@@ -42,11 +42,10 @@ namespace Synapse.UI.Services
 
 			m_SeparatorAction = Application.CreateAction(null, null, null, null);
 			
-			foreach (ActionHandlerCodon node in AddinManager.GetExtensionNodes("/Synapse/UI/ActionHandlers")) {
-				Type type = node.HandlerType;
+			foreach (TypeExtensionNode node in AddinManager.GetExtensionNodes("/Synapse/UI/ActionHandlers")) {
 				object handler = node.CreateInstance();
 				
-				MethodInfo[] methods = node.HandlerType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+				MethodInfo[] methods = handler.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
 				foreach (MethodInfo method in methods) {
 					foreach (object attr in method.GetCustomAttributes(true)) {
 						if (attr is ActionHandlerAttribute) {
