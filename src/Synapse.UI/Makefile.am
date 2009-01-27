@@ -58,8 +58,6 @@ RESGEN=resgen2
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
 FILES =  \
-	AbstractController.cs \
-	AccountChatWindowManager.cs \
 	ActionHandlerAttribute.cs \
 	AssemblyInfo.cs \
 	EventHandlers.cs \
@@ -67,9 +65,6 @@ FILES =  \
 	IAddinPreferencesFactory.cs \
 	IAvatarGridModel.cs \
 	IAvatarProvider.cs \
-	IController.cs \
-	IDialogView.cs \
-	IView.cs \
 	MucAvatarGridModel.cs \
 	ResourceProviderCodon.cs \
 	RosterAvatarGridModel.cs \
@@ -78,41 +73,22 @@ FILES =  \
 	Synapse.UI.Actions.ExtensionNodes/ActionItemCodon.cs \
 	Synapse.UI.Actions.ExtensionNodes/SeparatorItemCodon.cs \
 	Synapse.UI.Chat/AbstractChatContent.cs \
+	Synapse.UI.Chat/AbstractChatHandler.cs \
 	Synapse.UI.Chat/ChatContentContext.cs \
 	Synapse.UI.Chat/ChatContentEvent.cs \
 	Synapse.UI.Chat/ChatContentMessage.cs \
 	Synapse.UI.Chat/ChatContentNotification.cs \
 	Synapse.UI.Chat/ChatContentStatus.cs \
 	Synapse.UI.Chat/ChatContentTyping.cs \
-	Synapse.UI.Controllers/AbstractChatWindowController.cs \
-	Synapse.UI.Controllers/ChatWindowController.cs \
-	Synapse.UI.Controllers/DebugWindowController.cs \
-	Synapse.UI.Controllers/MainWindowController.cs \
-	Synapse.UI.Controllers/MucWindowController.cs \
-	Synapse.UI.Controllers/PreferencesWindowController.cs \
-	Synapse.UI.Controllers/ServiceBrowserWindowController.cs \
-	Synapse.UI.Controllers/TabbedChatsWindowController.cs \
-	Synapse.UI.Controllers/TrayIconController.cs \
-	Synapse.UI.Controllers/UserProfileWindowController.cs \
+	Synapse.UI.Chat/ChatHandler.cs \
+	Synapse.UI.Chat/IChatHandler.cs \
+	Synapse.UI.Chat/MucHandler.cs \
 	Synapse.UI.Services/ActionService.cs \
-	Synapse.UI.Services/GuiService.cs \
-	Synapse.UI.Views/IChatWindowView.cs \
-	Synapse.UI.Views/IDebugWindowView.cs \
-	Synapse.UI.Views/IMainWindowView.cs \
-	Synapse.UI.Views/IPreferencesWindowView.cs \
-	Synapse.UI.Views/IServiceBrowserWindowView.cs \
-	Synapse.UI.Views/ITabbedChatsWindowView.cs \
-	Synapse.UI.Views/ITrayIconView.cs \
-	Synapse.UI.Views/IUserProfileWindowView.cs \
-	template4dotnet.cs \
-	ViewFactory.cs 
+	template4dotnet.cs 
 
 DATA_FILES = 
 
-RESOURCES =  \
-	resources/profile.html \
-	resources/ServiceDiscovery.html \
-	Synapse.UI.addin.xml 
+RESOURCES = Synapse.UI.addin.xml 
 
 EXTRAS = \
 	synapse.ui.pc.in 

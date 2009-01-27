@@ -1,7 +1,7 @@
 //
-// UserProfileWindow.cs
+// IChatHandler.cs
 // 
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -20,23 +20,27 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Qyoto;
-using Synapse.UI.Views;
-using Synapse.UI.Controllers;
-using jabber.protocol.iq;
+using Synapse.Xmpp;
 
-// FIXME: Rename to UserProfileWindow!
-public partial class ProfileWindow : IUserProfileWindowView, IDisposable
+namespace Synapse.UI.Chat
 {
-	public ProfileWindow (UserProfileWindowController controller) : base ()
+	public delegate void ChatContentEventHandler (IChatHandler handler, AbstractChatContent content);
+	
+	public interface IChatHandler : IDisposable
 	{
-		SetupUi();
+		event ChatContentEventHandler NewContent;
+		event EventHandler ReadyChanged;
+		
+		Account Account {
+			get;
+		}
 
-		webView.SetHtml("<p>Loading...</p>");
-	}
+		bool Ready {
+			get;
+		}
 
-	public void Populate (string html)
-	{
-		webView.SetHtml(html);
+		void Start ();
+		
+		void Send (string html);
 	}
 }

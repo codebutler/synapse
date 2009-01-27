@@ -1,5 +1,5 @@
 //
-// ServiceBrowserWindowController.cs
+// ServiceBrowserWindow.cs
 // 
 // Copyright (C) 2008 Eric Butler
 //
@@ -18,61 +18,91 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 using System;
-using System.Reflection;
-using Synapse.ServiceStack;
 using Synapse.Core;
+using Synapse.ServiceStack;
 using Synapse.Xmpp;
-using Synapse.UI.Views;
+using Synapse.QtClient;
+using Synapse.QtClient.Widgets;
+using Qyoto;
 using jabber;
 using jabber.connection;
 using TemplateEngine;
 
-namespace Synapse.UI.Controllers
+namespace Synapse.QtClient.Windows
 {
-	public class ServiceBrowserWindowController : AbstractController<IServiceBrowserWindowView>
+	public partial class ServiceBrowserWindow : QWidget
 	{
-		Account m_Account;
+		QToolBar m_Toolbar;
+		QAction  m_BackAction;
+		QAction  m_ForwardAction;
+		QAction  m_ReloadAction;
+		QAction  m_StopAction;
+		QAction  m_HomeAction;
+		QAction  m_GoAction;
 		
-		public ServiceBrowserWindowController (Account account)
+		QComboBox m_AddresCombo;
+
+		Account m_Account;
+		Uri     m_HomeUri;
+		
+		public ServiceBrowserWindow (Account account)
 		{
+			SetupUi();
+
 			m_Account = account;
+			m_HomeUri = new Uri(String.Format("xmpp:{0}?disco", account.Jid.Server));
 			
-			Application.InvokeAndBlock(delegate {
-				InitializeView();
-				View.UrlRequested += HandleViewUrlRequested;
-				View.Show();
-			});
+			this.WindowTitle = String.Format("XMPP Browser - {0}", account.Jid);
+	
+			m_BackAction    = new QAction(Gui.LoadIcon("back", 16), "Back", this);
+			m_ForwardAction = new QAction(Gui.LoadIcon("forward", 16), "Forward", this);
+			m_ReloadAction  = new QAction(Gui.LoadIcon("reload", 16), "Reload", this);
+			m_StopAction    = new QAction(Gui.LoadIcon("stop", 16), "Stop", this);
+			m_HomeAction    = new QAction(Gui.LoadIcon("go-home", 16), "Home", this);
+			m_GoAction      = new QAction("Go", this);
 
-			OpenUri(HomeUri);
+			m_BackAction.Enabled = false;
+			m_ForwardAction.Enabled = false;
+			
+			m_StopAction.Visible = false;
+			
+			m_Toolbar = new QToolBar(this);
+			m_Toolbar.AddAction(m_BackAction);
+			m_Toolbar.AddAction(m_ForwardAction);
+			m_Toolbar.AddAction(m_ReloadAction);
+			m_Toolbar.AddAction(m_StopAction);
+			m_Toolbar.AddAction(m_HomeAction);
+
+			m_AddresCombo = new QComboBox(m_Toolbar);
+			m_AddresCombo.SetSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed);
+			m_AddresCombo.Editable = true;
+			m_Toolbar.AddWidget(m_AddresCombo);
+			
+			m_Toolbar.AddAction(m_GoAction);
+
+			QObject.Connect(m_Toolbar, Qt.SIGNAL("actionTriggered(QAction*)"), this, Qt.SLOT("toolbar_actionTriggered(QAction*)"));
+			
+			((QBoxLayout)this.Layout()).InsertWidget(0, m_Toolbar);
+
+			webView.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
+
+			RequestUrl(m_HomeUri);
 		}
-
-		public Uri HomeUri {
-			get {
-				return new Uri(String.Format("xmpp:{0}?disco", m_Account.Jid.Server));
-			}
-		}
-
+		
 		public Account Account {
 			get {
 				return m_Account;
 			}
 		}
 
-		public void OpenUri (Uri uri)
+		public void RequestUrl (Uri uri)
 		{
-			Application.Invoke(delegate {
-				View.RequestUrl(uri);
-			});
-		}
+			// FIXME: Actually we want to show this as a lightbox or something.
+			LoadContent(uri, "Loading...");
 
-		private void HandleViewUrlRequested (Uri uri)
-		{
 			if (m_Account.ConnectionState != AccountConnectionState.Connected) {
-				Application.Invoke(delegate {
-					View.LoadContent(uri, "You are not connected.");
-				});
+				LoadContent(uri, "You are not connected.");
 				return;
 			}
 			
@@ -94,16 +124,38 @@ namespace Synapse.UI.Controllers
 				break;
 			default:
 				throw new Exception("Unsupported query type: " + queryType);
+			}			
+		}
+		
+		void LoadContent (Uri uri, string html)
+		{
+			m_AddresCombo.LineEdit().Text = uri.ToString();
+			webView.SetHtml(html, new QUrl(uri.ToString()));
+		}
+
+		[Q_SLOT]
+		void toolbar_actionTriggered(QAction action)
+		{
+			if (action == m_GoAction) {
+				RequestUrl(new Uri(m_AddresCombo.LineEdit().Text));
+			} else if (action == m_HomeAction) {
+				RequestUrl(m_HomeUri);
 			}
 		}
 
-		private void ReceivedFeatures (DiscoManager manager, DiscoNode node, object state)
+		[Q_SLOT]
+		void on_webView_linkClicked (QUrl url)
+		{
+			RequestUrl(new Uri(url.ToString()));
+		}
+
+		void ReceivedFeatures (DiscoManager manager, DiscoNode node, object state)
 		{
 			// Now query for items...
 			m_Account.DiscoManager.BeginGetItems(node, new DiscoNodeHandler(ReceivedItems), null);
 		}
 
-		private void ReceivedItems (DiscoManager manager, DiscoNode node, object state)
+		void ReceivedItems (DiscoManager manager, DiscoNode node, object state)
 		{
 			string jid = node.JID.ToString();
 			string nodeName = String.Empty;
@@ -142,7 +194,7 @@ namespace Synapse.UI.Controllers
 			
 			Application.Invoke(delegate {
 				Uri uri = new Uri(String.Format("xmpp:{0}?disco;node={1}", node.JID.ToString(), node.Node));
-				View.LoadContent(uri, template.getContent());
+				LoadContent(uri, template.getContent());
 			});
 		}
 	}

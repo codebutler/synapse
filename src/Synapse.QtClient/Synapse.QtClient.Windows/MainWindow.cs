@@ -26,14 +26,14 @@ using System.Reflection;
 using Qyoto;
 using Synapse.Core;
 using Synapse.UI;
-using Synapse.UI.Views;
-using Synapse.UI.Controllers;
 using Synapse.ServiceStack;
 using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
+using Synapse.QtClient.Widgets;
 
-namespace Synapse.QtClient.UI.Views
+namespace Synapse.QtClient.Windows
 {
-	public partial class MainWindow : QWidget, IMainWindowView
+	public partial class MainWindow : QWidget
 	{
 		NoAccountsWidget m_NoAccountsWidget;
 		RosterWidget     m_RosterWidget;
@@ -41,19 +41,7 @@ namespace Synapse.QtClient.UI.Views
 		string m_StyleSheet;
 		string m_NoAccountsStyleSheet;
 		
-		public event PresenceChangedEventHandler PresenceChanged;
-		
-		public event DialogValidateEventHandler AddNewAccount
-		{
-			add {
-				m_NoAccountsWidget.AddNewAccount += value;
-			}
-			remove {
-				m_NoAccountsWidget.AddNewAccount -= value;
-			}
-		}
-
-		public MainWindow(MainWindowController controller)
+		public MainWindow()
 		{
 			SetupUi();
 			base.WindowFlags = (uint)Qt.WindowType.FramelessWindowHint;
@@ -80,6 +68,14 @@ namespace Synapse.QtClient.UI.Views
 			Gui.CenterWidgetOnScreen(this);
 
 			headerLabel.InstallEventFilter(new WindowMover(this));
+
+			AccountService accountService = ServiceManager.Get<AccountService>();
+			accountService.AccountAdded   += AddAccount;
+			accountService.AccountRemoved += RemoveAccount;
+
+			foreach (Account account in accountService.Accounts) {
+				AddAccount(account);
+			}
 		}
 		
 		public new void Show ()
@@ -102,14 +98,18 @@ namespace Synapse.QtClient.UI.Views
 		
 		public void AddAccount(Account account)
 		{
-			m_RosterWidget.AddAccount(account);
-			HideShowNoAccountsWidget();
+			Application.Invoke(delegate {
+				m_RosterWidget.AddAccount(account);
+				HideShowNoAccountsWidget();
+			});
 		}
 
 		public void RemoveAccount(Account account)
 		{
-			m_RosterWidget.RemoveAccount(account);
-			HideShowNoAccountsWidget();
+			Application.Invoke(delegate {
+				m_RosterWidget.RemoveAccount(account);
+				HideShowNoAccountsWidget();
+			});
 		}
 
 		public void ShowLightbox (QWidget widget)
@@ -135,12 +135,6 @@ namespace Synapse.QtClient.UI.Views
 				m_RosterWidget.Hide();
 				m_NoAccountsWidget.Show();
 			}
-		}
-
-		internal void RaisePresenceChanged (Account account, string presence, string statusText)
-		{
-			if (PresenceChanged != null)
-				PresenceChanged(account, presence, statusText);
 		}
 	}
 }

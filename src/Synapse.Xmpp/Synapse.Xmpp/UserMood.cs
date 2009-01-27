@@ -66,9 +66,7 @@ namespace Synapse.Xmpp
 			
 			// Only show in feed if we know this is a recent event.
 			if (mood["timestamp"] != null && DateTime.Now.Subtract(DateTime.Parse(mood["timestamp"].InnerText)).TotalSeconds <= 60) {
-				Application.Invoke(delegate {
-					m_Account.PostActivityFeedItem(from.ToString(), "mood", mood.MoodName, mood.Text);
-				});
+				m_Account.PostActivityFeedItem(from.ToString(), "mood", mood.MoodName, mood.Text);
 			}			
 		}
 

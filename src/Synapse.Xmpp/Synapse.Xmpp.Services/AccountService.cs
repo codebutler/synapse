@@ -154,14 +154,14 @@ namespace Synapse.Xmpp.Services
 						Exception ex = (Exception)item.Data;
 						Application.Client.ShowErrorWindow("Error with {0}".FormatWith(xmppItem.Account.Jid.Bare), ex);
 					}
-				},
+				} /*,
 				new NotificationAction {
 					Name = "bug",
 					Label = "Report Bug",
 					Callback = delegate (IActivityFeedItem item, NotificationAction action) {
 						// FIXME:
 					}
-				}
+				} */
 			});
 		}
 

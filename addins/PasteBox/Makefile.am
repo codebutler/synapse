@@ -7,6 +7,7 @@ ASSEMBLY = ../../build/Debug/addins/PasteBox.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
+	../../build/Debug/Synapse.exe \
 	../../build/Debug/Synapse.Services.dll \
 	../../build/Debug/Synapse.UI.dll 
 BUILD_DIR = ../../build/Debug/addins

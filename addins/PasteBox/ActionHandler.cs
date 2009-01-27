@@ -21,7 +21,7 @@
 
 using System;
 using Synapse.UI;
-using Synapse.UI.Views;
+using Synapse.QtClient.Windows;
 using Qyoto;
 
 namespace Synapse.PasteBox
@@ -32,7 +32,7 @@ namespace Synapse.PasteBox
 		public void ShowPasteBox (object o, EventArgs args)
 		{
 			QAction action = (QAction)o;
-			IChatWindowView parentWindow = (IChatWindowView)action.ParentWidget();
+			ChatWindow parentWindow = (ChatWindow)action.ParentWidget();
 			Console.WriteLine("SENDER: " + parentWindow);
 
 			var blah = ((QWidget)parentWindow).Window();

@@ -1,8 +1,7 @@
-
 //
-// ChatWindowController.cs
+// AbstractChatHandler.cs
 // 
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -23,40 +22,46 @@
 using System;
 using System.Xml;
 using Synapse.Core;
-using Synapse.ServiceStack;
 using Synapse.Xmpp;
-using Synapse.UI.Views;
-using Synapse.UI.Chat;
 using jabber;
-using jabber.connection;
 using jabber.protocol.client;
 
-namespace Synapse.UI.Controllers
-{	
-	public abstract class AbstractChatWindowController : AbstractController<IChatWindowView>
+namespace Synapse.UI.Chat
+{
+	public abstract class AbstractChatHandler : IChatHandler
 	{
-		AbstractChatContent m_PreviousContent;
-		ChatContentTyping   m_RemoteTypingState;
+		public event ChatContentEventHandler NewContent;
+		public event EventHandler ReadyChanged;
 		
-		protected Account m_Account;
-		
-		public abstract event EventHandler Closed;
+		Account m_Account;
+		bool m_Ready = true;
 
+		protected AbstractChatHandler (Account account)
+		{
+			m_Account = account;
+		}
+		
 		public Account Account {
 			get {
 				return m_Account;
 			}
 		}
 
-		public ChatContentTyping RemoteTypingState {
+		public bool Ready {
 			get {
-				return m_RemoteTypingState;
+				return m_Ready;
 			}
-			set {
-				m_RemoteTypingState = value;
+			protected set {
+				m_Ready = value;
+				if (ReadyChanged != null)
+					ReadyChanged(this, EventArgs.Empty);
 			}
 		}
 
+		public abstract void Start ();
+		public abstract void Send (string html);
+		public abstract void Dispose ();
+	
 		// FIXME: I don't really like this method being here.
 		public void AppendMessage (Message msg)
 		{
@@ -73,9 +78,9 @@ namespace Synapse.UI.Controllers
 				from = m_Account.User;
 				fromJid = m_Account.Jid;
 			} else {
-				if (this is MucWindowController) {
+				if (this is MucHandler) {
 					// FIXME: Abstract this...
-					var participant = ((MucWindowController)this).Room.Participants[msg.From];
+					var participant = ((MucHandler)this).Room.Participants[msg.From];
 					if (participant != null) {
 						fromJid = (!String.IsNullOrEmpty(participant.RealJID)) ? participant.RealJID : participant.NickJID;
 						from = participant.Nick;
@@ -106,12 +111,13 @@ namespace Synapse.UI.Controllers
 					} else {
 						Console.WriteLine(String.Format("Unknown chatstate from {0}: {1}", from, child.Name));
 					}
-
+	
+					/* FIXME:
 					if (state != null) {
 						var typingContent = new ChatContentTyping(m_Account, null, null, state.Value);
 						
 						RemoteTypingState = typingContent;
-
+	
 						// FIXME: It might be nice to offer this as an option, 
 						// but without a JS method to remove the last object, 
 						// it doesnt work well at all.
@@ -119,6 +125,7 @@ namespace Synapse.UI.Controllers
 					} else {
 						RemoteTypingState = null;
 					}
+					*/
 				}
 			}
 			
@@ -135,37 +142,24 @@ namespace Synapse.UI.Controllers
 					body = body.Replace("\r\n", "<br/>");
 					body = body.Replace("\n", "<br/>");
 				}
-
+	
 				// FIXME: Add support for delayed message timestamps.
 				DateTime date = DateTime.Now;
 				
 				var content = new ChatContentMessage(m_Account, fromJid, msg.To, date);
 				content.IsOutgoing = (msg.From == null);
 				content.MessageHtml = body;
-				AppendContent(content);
+				
+				NewContent(this, content);
 			}
 		}
-
-		public void AppendStatus (string message)
+	
+		protected void AppendStatus (string message)
 		{
 			var content = new ChatContentStatus(m_Account, null, null, DateTime.Now, String.Empty);
 			content.MessageHtml = message;
-			AppendContent(content);
-		}
 
-		void AppendContent (AbstractChatContent content)
-		{			
-			bool isSimilar   = m_PreviousContent != null && content.IsSimilarToContent(m_PreviousContent);
-			//bool replaceLast = m_PreviousContent is ChatContentStatus && 
-			//	               content is ChatContentStatus && 
-			//	               ((ChatContentStatus)m_PreviousContent).CoalescingKey == ((ChatContentStatus)content).CoalescingKey;
-			bool replaceLast = m_PreviousContent is ChatContentTyping;
-			
-			m_PreviousContent = content;
-			
-			Application.Invoke(delegate {
-				base.View.AppendContent(content, isSimilar, false, replaceLast);
-			});
+			NewContent(this, content);
 		}
 	}
 }

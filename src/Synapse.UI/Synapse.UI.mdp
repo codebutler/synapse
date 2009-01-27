@@ -15,25 +15,10 @@
   </Configurations>
   <Contents>
     <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
-    <File name="IController.cs" subtype="Code" buildaction="Compile" />
-    <File name="IView.cs" subtype="Code" buildaction="Compile" />
-    <File name="ViewFactory.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers/MainWindowController.cs" subtype="Code" buildaction="Compile" />
-    <File name="AbstractController.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Views/IMainWindowView.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers/TrayIconController.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Views/ITrayIconView.cs" subtype="Code" buildaction="Compile" />
-    <File name="IDialogView.cs" subtype="Code" buildaction="Compile" />
     <File name="EventHandlers.cs" subtype="Code" buildaction="Compile" />
     <File name="IAvatarGridModel.cs" subtype="Code" buildaction="Compile" />
     <File name="RosterAvatarGridModel.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers/MucWindowController.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers/DebugWindowController.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Views/IDebugWindowView.cs" subtype="Code" buildaction="Compile" />
     <File name="MucAvatarGridModel.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Views/IChatWindowView.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers/AbstractChatWindowController.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers/ChatWindowController.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
     <File name="Synapse.UI.Actions.ExtensionNodes/ActionCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="ActionHandlerAttribute.cs" subtype="Code" buildaction="Compile" />
@@ -41,21 +26,9 @@
     <File name="Synapse.UI.Actions.ExtensionNodes/ActionItemCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Actions.ExtensionNodes/SeparatorItemCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="IActionItemCodon.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers/UserProfileWindowController.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Views/IUserProfileWindowView.cs" subtype="Code" buildaction="Compile" />
-    <File name="resources/profile.html" subtype="Code" buildaction="EmbedAsResource" />
     <File name="ResourceProviderCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Services/ActionService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Services/GuiService.cs" subtype="Code" buildaction="Compile" />
-    <File name="AccountChatWindowManager.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Views/IServiceBrowserWindowView.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers/ServiceBrowserWindowController.cs" subtype="Code" buildaction="Compile" />
-    <File name="resources/ServiceDiscovery.html" subtype="Code" buildaction="EmbedAsResource" />
     <File name="template4dotnet.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers/TabbedChatsWindowController.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Views/ITabbedChatsWindowView.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Views/IPreferencesWindowView.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Controllers/PreferencesWindowController.cs" subtype="Code" buildaction="Compile" />
     <File name="IAddinPreferencesFactory.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Chat/AbstractChatContent.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Chat/ChatContentStatus.cs" subtype="Code" buildaction="Compile" />
@@ -65,6 +38,10 @@
     <File name="Synapse.UI.Chat/ChatContentNotification.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Chat/ChatContentEvent.cs" subtype="Code" buildaction="Compile" />
     <File name="IAvatarProvider.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/ChatHandler.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/MucHandler.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/IChatHandler.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/AbstractChatHandler.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -78,7 +55,6 @@
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Xmpp" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
-  <GtkDesignInfo />
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />
     <DeployFilesVar />

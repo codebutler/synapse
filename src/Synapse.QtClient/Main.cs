@@ -35,6 +35,8 @@ using Synapse.Xmpp.Services;
 using Qyoto;
 using QtWebKit;
 
+using Synapse.QtClient.Windows;
+
 namespace Synapse.QtClient
 {
 	using System.Collections.Generic;
@@ -82,8 +84,7 @@ namespace Synapse.QtClient
 			
 			// XXX: I dont like all of these being here.
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.AccountService>();
-			ServiceManager.RegisterService<Synapse.Xmpp.Services.ShoutService>();			
-			ServiceManager.RegisterService<GuiService>();
+			ServiceManager.RegisterService<Synapse.Xmpp.Services.ShoutService>();
 			ServiceManager.RegisterService<ActionService>();
 			
 			QWebSettings.GlobalSettings().SetAttribute(QWebSettings.WebAttribute.DeveloperExtrasEnabled, true);
@@ -96,7 +97,18 @@ namespace Synapse.QtClient
 			Application.Run();
 				
 			Application.Client.Invoke(delegate {
+				/* Create the UI */
+				Gui.MainWindow = new MainWindow();
+				Gui.DebugWindow = new DebugWindow();
+				Gui.PreferencesWindow = new PreferencesWindow();
+				Gui.TrayIcon = new TrayIcon();
+				Gui.TabbedChatsWindow = new TabbedChatsWindow();
+				
 				OnStarted();
+
+				Gui.TrayIcon.Show();
+
+				Gui.MainWindow.Show();
 			});
 
 			QApplication.Exec();
@@ -191,11 +203,13 @@ namespace Synapse.QtClient
 			this.InvokeAndBlock(delegate {
 				ErrorDialog dialog = new ErrorDialog(errorTitle, error);
 				dialog.Show();
+				dialog.Run();
 			});
 		}
 			
 		public override void Dispose ()
 		{
+			Gui.TrayIcon.Dispose();
 			QCoreApplication.Quit();
 		}
 	}

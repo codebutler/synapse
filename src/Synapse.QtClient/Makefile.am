@@ -121,15 +121,6 @@ FILES =  \
 	QtTraceListener.cs \
 	ResizableGraphicsPixmapItem.cs \
 	ResourceFileEngine.cs \
-	Synapse.QtClient.UI.Views/ChatWindow.cs \
-	Synapse.QtClient.UI.Views/DebugWindow.cs \
-	Synapse.QtClient.UI.Views/EditGroupsWindow.cs \
-	Synapse.QtClient.UI.Views/MainWindow.cs \
-	Synapse.QtClient.UI.Views/PreferencesWindow.cs \
-	Synapse.QtClient.UI.Views/ProfileWindow.cs \
-	Synapse.QtClient.UI.Views/ServiceBrowserWindow.cs \
-	Synapse.QtClient.UI.Views/TabbedChatsWindow.cs \
-	Synapse.QtClient.UI.Views/TrayIconView.cs \
 	Synapse.QtClient.Widgets/AccountStatusWidget.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.FadeInOutAnimation.cs \
@@ -144,6 +135,15 @@ FILES =  \
 	Synapse.QtClient.Widgets/NoAccountsWidget.cs \
 	Synapse.QtClient.Widgets/NotificationsWidget.cs \
 	Synapse.QtClient.Widgets/RosterWidget.cs \
+	Synapse.QtClient.Windows/ChatWindow.cs \
+	Synapse.QtClient.Windows/DebugWindow.cs \
+	Synapse.QtClient.Windows/EditGroupsWindow.cs \
+	Synapse.QtClient.Windows/MainWindow.cs \
+	Synapse.QtClient.Windows/PreferencesWindow.cs \
+	Synapse.QtClient.Windows/ProfileWindow.cs \
+	Synapse.QtClient.Windows/ServiceBrowserWindow.cs \
+	Synapse.QtClient.Windows/TabbedChatsWindow.cs \
+	TrayIcon.cs \
 	WindowMover.cs 
 
 DATA_FILES = 
@@ -166,7 +166,9 @@ RESOURCES =  \
 	resources/octy.svg \
 	resources/octy-22.png \
 	resources/octy-32.png \
+	resources/profile.html \
 	resources/prototype.js \
+	resources/ServiceDiscovery.html \
 	resources/simple-add.png \
 	resources/simple-search.png \
 	resources/Template.html \

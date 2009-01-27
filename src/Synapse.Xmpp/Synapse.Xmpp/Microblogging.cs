@@ -73,9 +73,7 @@ namespace Synapse.Xmpp
 				var publishedDate = DateTime.Parse(entry["published"].InnerText);
 				if ((DateTime.Now - publishedDate).TotalSeconds <= 60) {
 					string title = entry["title"].InnerText;
-					Application.Invoke(delegate {
-						m_Account.PostActivityFeedItem(from, "shout", null, title);
-					});
+					m_Account.PostActivityFeedItem(from, "shout", null, title);
 				}
 			}
 		}

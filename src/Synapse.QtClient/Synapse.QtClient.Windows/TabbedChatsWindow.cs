@@ -22,20 +22,28 @@
 using System;
 using System.Reflection;
 using System.IO;
+using System.Collections.Generic;
 using Qyoto;
 using Synapse.ServiceStack;
+using Synapse.UI.Chat;
 using Synapse.UI.Services;
-using Synapse.UI.Controllers;
-using Synapse.UI.Views;
+using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 using Mono.Rocks;
-
-namespace Synapse.QtClient
+using jabber;
+using jabber.protocol.client;
+using jabber.client;
+using jabber.connection;
+	
+namespace Synapse.QtClient.Windows
 {
-	public class TabbedChatsWindow : QWidget, ITabbedChatsWindowView
+	public class TabbedChatsWindow : QWidget
 	{
 		QTabWidget m_Tabs;
 		
-		public TabbedChatsWindow(TabbedChatsWindowController controller)
+		Dictionary<Account, AccountChatWindowManager> m_AccountManagers = new Dictionary<Account, AccountChatWindowManager>();
+		
+		public TabbedChatsWindow()
 		{
 			// FIXME: This doesn't work very well in most themes...
 			//this.SetStyleSheet("QTabWidget::pane { border: 0px; }");
@@ -127,14 +135,40 @@ namespace Synapse.QtClient
 				else
 					m_Tabs.CurrentIndex -= 1;
 			});
+
+			var accountService = ServiceManager.Get<AccountService>();
+			accountService.AccountAdded += HandleAccountAdded;
+			accountService.AccountRemoved += HandleAccountRemoved;
+			foreach (Account account in accountService.Accounts)
+				HandleAccountAdded(account);
+		}
+
+		public void StartChat (Account account, JID jid)
+		{
+			m_AccountManagers[account].OpenChatWindow(jid, true);
 		}
 		
-		public void AddChatWindow (AbstractChatWindowController window, bool focus)
+		public ChatWindow CurrentChat {
+			get {
+				return m_Tabs.CurrentWidget() as ChatWindow;
+			}
+		}
+
+		void HandleAccountAdded (Account account)
 		{
-			var view = (QWidget)window.View;
-			
+			m_AccountManagers.Add(account, new AccountChatWindowManager(account));
+		}
+
+		void HandleAccountRemoved (Account account)
+		{
+			m_AccountManagers[account].Dispose();
+			m_AccountManagers.Remove(account);
+		}
+		
+		void AddChatWindow (ChatWindow window, bool focus)
+		{
 			int oldIndex = m_Tabs.CurrentIndex;
-			m_Tabs.InsertTab(oldIndex + 1, view, view.WindowIcon, view.WindowTitle);
+			m_Tabs.InsertTab(oldIndex + 1, window, window.WindowIcon, window.WindowTitle);
 
 			if (focus) {
 				FocusChatWindow(window);
@@ -144,41 +178,34 @@ namespace Synapse.QtClient
 			
 			TabAdded();
 
-			window.View.UrgencyHintChanged += HandleChatUrgencyHintChanged;
+			window.UrgencyHintChanged += HandleChatUrgencyHintChanged;
 		}
 
-		public void FocusChatWindow (AbstractChatWindowController window)
+		void FocusChatWindow (ChatWindow window)
 		{
-			window.View.Show();
-			int newIndex = m_Tabs.IndexOf((QWidget)window.View);
+			window.Show();
+			int newIndex = m_Tabs.IndexOf(window);
 			m_Tabs.SetCurrentIndex(newIndex);
 			if (this.Minimized)
-				this.ShowNormal();
-			
-			((QWidget)window.View).SetFocus();
+				this.ShowNormal();			
+			window.SetFocus();
 		}
 
-		public void RemoveChatWindow (AbstractChatWindowController window)
+		void RemoveChatWindow (ChatWindow window)
 		{
-			int index = m_Tabs.IndexOf((QWidget)window.View);
+			int index = m_Tabs.IndexOf(window);
 			m_Tabs.RemoveTab(index);
 			TabClosed();
 
-			window.View.UrgencyHintChanged -= HandleChatUrgencyHintChanged;
+			window.UrgencyHintChanged -= HandleChatUrgencyHintChanged;
 		}
-
-		public IChatWindowView CurrentChat {
-			get {
-				return m_Tabs.CurrentWidget() as IChatWindowView;
-			}
-		}
-
+		
 		void HandleChatUrgencyHintChanged (object sender, EventArgs args)
 		{
 			bool urgencyHint = false;
 			
 			for (int i = 0; i < m_Tabs.Count; i++) {
-				IChatWindowView chat = m_Tabs.Widget(i) as IChatWindowView;
+				ChatWindow chat = m_Tabs.Widget(i) as ChatWindow;
 				if (chat != null) {
 					if (chat.UrgencyHint) {
 						m_Tabs.SetTabIcon(i, Gui.LoadIcon("dialog-warning", 16));
@@ -278,6 +305,103 @@ namespace Synapse.QtClient
 
 				// FIXME: Need something better here.
 				this.WindowIcon = Gui.LoadIcon("text-x-generic");
+			}
+		}
+
+		class AccountChatWindowManager : IDisposable
+		{
+			Account m_Account;
+			Dictionary<Room, ChatWindow> m_MucWindows;
+			Dictionary<string, ChatWindow> m_ChatWindows;
+			
+			public AccountChatWindowManager (Account account)
+			{
+				m_MucWindows  = new Dictionary<Room, ChatWindow>();
+				m_ChatWindows = new Dictionary<string, ChatWindow>();
+				
+				m_Account = account;
+				account.ConferenceManager.OnJoin += HandleOnJoin;
+				account.Client.OnMessage += HandleOnMessage;
+				account.Client.OnPresence += HandleOnPresence;
+			}
+
+			public void Dispose ()
+			{
+				m_Account.ConferenceManager.OnJoin -= HandleOnJoin;
+				m_Account.Client.OnMessage -= HandleOnMessage;
+				m_Account.Client.OnPresence -= HandleOnPresence;
+			}
+				
+			public ChatWindow OpenChatWindow (JID jid, bool focus)
+			{
+				ChatWindow window = null;
+				if (!m_ChatWindows.ContainsKey(jid.Bare)) {
+					window = new ChatWindow(new ChatHandler(m_Account, jid));
+					window.Closed += HandleChatWindowClosed;
+					m_ChatWindows.Add(jid.Bare, window);
+	
+					Gui.TabbedChatsWindow.AddChatWindow(window, focus);
+				} else {
+					window = m_ChatWindows[jid.Bare];
+					if (focus) {
+						Gui.TabbedChatsWindow.FocusChatWindow(window);
+					}
+				}
+				return window;
+			}
+
+			void HandleOnJoin(Room room)
+			{
+				Application.Invoke(delegate {
+					if (!m_MucWindows.ContainsKey(room)) {
+						var window = new ChatWindow(new MucHandler(m_Account, room));
+						window.Closed += HandleMucWindowClosed;
+						m_MucWindows[room] = window;
+						Gui.TabbedChatsWindow.AddChatWindow(window, true);
+					}
+				});
+			}
+	
+			void HandleOnMessage (object sender, Message message)
+			{
+				Application.Invoke(delegate {
+					if (message.Type == MessageType.chat) {
+						// Make sure we don't open a new window if all we've got is a chatstate.
+						// Some people like a "psycic" mode though, so this should be configurable.
+						if (m_ChatWindows.ContainsKey(message.From.Bare) || (message.Body != null || message.Html != null )) {
+							ChatWindow window = OpenChatWindow(message.From, false);
+							((ChatHandler)window.Handler).AppendMessage(message);
+						}
+					}
+				});
+			}
+			
+			void HandleOnPresence (object o, Presence presence)
+			{
+				Application.Invoke(delegate {
+					if (m_ChatWindows.ContainsKey(presence.From.Bare)) {
+						var window = m_ChatWindows[presence.From.Bare];
+						((ChatHandler)window.Handler).SetPresence(presence);
+					}
+				});
+			}
+
+			void HandleChatWindowClosed(object sender, EventArgs e)
+			{
+				Application.Invoke(delegate {
+					var window = (ChatWindow)sender;
+					m_ChatWindows.Remove(((ChatHandler)window.Handler).Jid.Bare);	
+					Gui.TabbedChatsWindow.RemoveChatWindow(window);
+				});
+			}
+			
+			void HandleMucWindowClosed(object sender, EventArgs e)
+			{
+				Application.Invoke(delegate {
+					ChatWindow window = ((ChatWindow)sender);
+					m_MucWindows.Remove(((MucHandler)window.Handler).Room);				
+					Gui.TabbedChatsWindow.RemoveChatWindow(window);
+				});
 			}
 		}
 	}

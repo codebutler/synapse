@@ -55,6 +55,8 @@ namespace Synapse.QtClient
 		string m_ContextOutHtml     = null;
 		string m_NextContextOutHtml = null;
 		string m_FileTransferHtml   = null;
+
+		bool m_ThemeLoaded = false;
 		
 		string m_ThemeName              = null;
 		string m_VariantName            = null;
@@ -124,6 +126,12 @@ namespace Synapse.QtClient
 		public void AppendContent(AbstractChatContent content, bool contentIsSimilar, bool willAddMoreContentObjects, 
 		                          bool replaceLastContent)
 		{
+			if (content == null)
+				throw new ArgumentNullException("content");
+			
+			if (!m_ThemeLoaded)
+				throw new Exception("Call LoadTheme() first!");
+
 			Page().MainFrame().EvaluateJavaScript(ScriptForAppendingContent(content,
 			                                                                contentIsSimilar,
 			                                                                willAddMoreContentObjects,
@@ -132,7 +140,8 @@ namespace Synapse.QtClient
 				
 		public void LoadTheme(string themeName, string variantName)
 		{
-			Console.WriteLine("Loading Theme...");
+			m_ThemeLoaded = false;
+
 			string themeDirectory = System.IO.Path.Combine(ThemesDirectory, themeName) + ".AdiumMessageStyle";
 			if (!Directory.Exists(themeDirectory)) {
 				throw new DirectoryNotFoundException(themeDirectory);
@@ -223,7 +232,7 @@ namespace Synapse.QtClient
 			
 			OnJavaScriptWindowObjectCleared();
 
-			Console.WriteLine("Loaded!");
+			m_ThemeLoaded = true;
 		}
 		#endregion
 		
@@ -343,11 +352,22 @@ namespace Synapse.QtClient
 			} else {
 				template = m_StatusHtml;
 			}
+
+			if (String.IsNullOrEmpty(template)) {
+				throw new Exception("Failed to get template for content: " + content.Type);
+			}
+
 			return template;
 		}
 
 		string FillKeywords (string inString, AbstractChatContent content, bool contentIsSimilar)
 		{
+			if (inString == null)
+				throw new ArgumentNullException("inString");
+
+			if (content == null)
+				throw new ArgumentNullException("content");
+			
 			inString = inString.Replace("%time%", content.Date.ToShortTimeString());
 			inString = inString.Replace("%shortTime%", content.Date.ToString("%h:%m"));
 

@@ -25,12 +25,38 @@ using Synapse.ServiceStack;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
 using Qyoto;
-using Gtk;
+
+using Synapse.QtClient.Windows;
 
 namespace Synapse.QtClient
 {
 	public static class Gui
 	{
+		public static MainWindow MainWindow {
+			get;
+			set;
+		}
+		
+		public static TrayIcon TrayIcon {
+			get;
+			set;
+		}
+
+		public static PreferencesWindow PreferencesWindow {
+			get;
+			set;
+		}
+
+		public static DebugWindow DebugWindow {
+			get;
+			set;
+		}
+
+		public static TabbedChatsWindow TabbedChatsWindow {
+			get;
+			set;
+		}
+		
 		public static Account ShowAccountSelectMenu (QWidget attachWidget)
 		{
 			AccountService accountService = ServiceManager.Get<AccountService>();
@@ -73,16 +99,16 @@ namespace Synapse.QtClient
 
 		public static QIcon LoadIcon (string name)
 		{
-			if (IconTheme.Default == null)
+			if (Gtk.IconTheme.Default == null)
 				throw new InvalidOperationException("No Default IconTheme");
 
 			QIcon icon = new QIcon();
-			int[] sizes = IconTheme.Default.GetIconSizes(name);
+			int[] sizes = Gtk.IconTheme.Default.GetIconSizes(name);
 			if (sizes.Length == 0) {
 				Console.WriteLine(String.Format("Icon not found: {0}", name));
 			} else {
 				foreach (int size in sizes) {
-					var iconInfo = IconTheme.Default.LookupIcon(name, size, 0);
+					var iconInfo = Gtk.IconTheme.Default.LookupIcon(name, size, 0);
 					icon.AddFile(iconInfo.Filename, new QSize(size, size), QIcon.Mode.Normal, QIcon.State.On);
 				}
 			}
@@ -91,10 +117,10 @@ namespace Synapse.QtClient
 		
 		public static QIcon LoadIcon (string name, int size)
 		{
-			if (IconTheme.Default == null)
+			if (Gtk.IconTheme.Default == null)
 				throw new InvalidOperationException("No Default IconTheme");
 			
-			var iconInfo = IconTheme.Default.LookupIcon(name, size, 0);
+			var iconInfo = Gtk.IconTheme.Default.LookupIcon(name, size, 0);
 			if (iconInfo != null) {
 				return new QIcon(iconInfo.Filename);
 			} else {

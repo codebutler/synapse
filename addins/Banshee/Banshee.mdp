@@ -25,10 +25,8 @@
     <ProjectReference type="Gac" localcopy="False" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Assembly" localcopy="False" specificVersion="False" refto="../../contrib/NDesk.DBus.dll" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Services" />
-    <ProjectReference type="Project" localcopy="False" refto="Synapse.Core" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
-  <GtkDesignInfo />
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />
     <DeployFilesVar />

@@ -237,6 +237,9 @@ namespace Synapse.Core
 		public static string ReadResource (string name)
 		{
 			var stream = Assembly.GetCallingAssembly().GetManifestResourceStream(name);
+			if (stream == null) {
+				throw new Exception("Resource not found: {0} in {1}.".FormatWith(name, Assembly.GetCallingAssembly().FullName));
+			}
 			using (StreamReader reader = new StreamReader(stream)) {
 				return reader.ReadToEnd();
 			}

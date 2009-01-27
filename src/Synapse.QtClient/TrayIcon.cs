@@ -23,12 +23,10 @@ using System;
 using Qyoto;
 using Synapse.ServiceStack;
 using Synapse.UI.Services;
-using Synapse.UI.Views;
-using Synapse.UI.Controllers;
 	
-namespace Synapse.QtClient.UI.Views
+namespace Synapse.QtClient
 {
-	public class TrayIconView : QObject, ITrayIconView
+	public class TrayIcon : QObject, IDisposable
 	{
 		QSystemTrayIcon m_Icon;
 		
@@ -42,7 +40,7 @@ namespace Synapse.QtClient.UI.Views
 		QAction m_QuitAction;
 		QAction m_ShowDebugWindowAction;
 		
-		public TrayIconView(TrayIconController controller)
+		public TrayIcon ()
 		{
 			m_ShowMainWindowAction = new QAction("Show Synapse", this);
 			m_ShowMainWindowAction.Checkable = true;
@@ -109,9 +107,8 @@ namespace Synapse.QtClient.UI.Views
 
 		void HandleMenuAboutToShow ()
 		{
-			var gui = ServiceManager.Get<GuiService>();
-			m_ShowMainWindowAction.Checked = gui.MainWindow.View.IsVisible();
-			m_ShowDebugWindowAction.Checked = gui.DebugWindow.View.IsVisible();
+			m_ShowMainWindowAction.Checked = Gui.MainWindow.IsVisible();
+			m_ShowDebugWindowAction.Checked = Gui.DebugWindow.IsVisible();
 		}
 
 		[Q_SLOT]
@@ -123,39 +120,35 @@ namespace Synapse.QtClient.UI.Views
 		[Q_SLOT]
 		void HandleShowMainWindowActionTriggered ()
 		{
-			var mainWindow = ServiceManager.Get<GuiService>().MainWindow;
 			if (m_ShowMainWindowAction.Checked)
-				mainWindow.View.Show();
+				Gui.MainWindow.Show();
 			else
-				mainWindow.View.Hide();	
+				Gui.MainWindow.Hide();
 		}
 
 		[Q_SLOT]
 		void HandleShowDebugWindowActionTriggered ()
 		{
-			var debugWindow = ServiceManager.Get<GuiService>().DebugWindow;
 			if (m_ShowDebugWindowAction.Checked)
-				debugWindow.View.Show();
+				Gui.DebugWindow.Show();
 			else
-				debugWindow.View.Hide();	
+				Gui.DebugWindow.Hide();	
 		}
 		
 		[Q_SLOT]
 		void HandleShowPreferencesActionTriggered ()
 		{
-			var preferencesWindow = ServiceManager.Get<GuiService>().PreferencesWindow;
-			preferencesWindow.Show();
+			Gui.PreferencesWindow.Show();
 		}
 		
 		[Q_SLOT]
 		void HandleTrayActivated(QSystemTrayIcon.ActivationReason reason)
 		{
 			if (reason == QSystemTrayIcon.ActivationReason.Trigger) {
-				var mainWindow = ServiceManager.Get<GuiService>().MainWindow;				
-				if (mainWindow.View.IsVisible())
-					mainWindow.View.Hide();
+				if (Gui.MainWindow.IsVisible())
+					Gui.MainWindow.Hide();
 				else
-					mainWindow.View.Show();
+					Gui.MainWindow.Show();
 			}
 		}
 	}

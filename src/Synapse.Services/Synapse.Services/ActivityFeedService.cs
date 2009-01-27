@@ -45,6 +45,7 @@ namespace Synapse.Services
 			
 			Application.Client.Started += delegate {
 				PostItem(new SimpleActivityFeedItem("synapse", "Welcome to Synapse!"));
+				FireQueued();
 			};
 		}
 
@@ -81,7 +82,7 @@ namespace Synapse.Services
 
 		public void PostItem (IActivityFeedItem item)
 		{
-			if (NewItem == null) {
+			if (!Application.Client.IsStarted) {
 				lock (m_Queue)
 					m_Queue.Enqueue(item);
 			} else {
@@ -98,12 +99,16 @@ namespace Synapse.Services
 					text.Append(".");
 				} else {
 					text.Append(":");
-				}			
+				}
 				DesktopNotify(template, item, text.ToString());
 			}
 		}		
-			
-		public void FireQueued () 
+		
+		public string ServiceName {
+			get { return "ActivityFeedService"; }
+		}
+		
+		void FireQueued () 
 		{
 			if (NewItem == null) {
 				throw new InvalidOperationException("No event handler for NewItem");
@@ -114,19 +119,17 @@ namespace Synapse.Services
 			}
 		}
 
-		public string ServiceName {
-			get { return "ActivityFeedService"; }
-		}
-
 		void DesktopNotify (ActivityFeedItemTemplate template, IActivityFeedItem item, string text)
 		{
-			Notification notif = new Notification(text, item.Content);
-			foreach (var action in template.Actions) {
-				notif.AddAction(action.Name, action.Label, delegate {
-					item.TriggerAction(action.Name);
-				});
-			}			
-			notif.Show ();
+			Application.Invoke(delegate {
+				Notification notif = new Notification(text, item.Content);
+				foreach (var action in template.Actions) {
+					notif.AddAction(action.Name, action.Label, delegate {
+						item.TriggerAction(action.Name);
+					});
+				}			
+				notif.Show ();
+			});
 		}
 	}
 

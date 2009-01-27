@@ -20,26 +20,25 @@
   </Configurations>
   <Contents>
     <File name="Main.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.QtClient.UI.Views/MainWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/MainWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/mainwindow.qss" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="Synapse.QtClient.UI.Views/TrayIconView.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/NoAccountsWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/AccountStatusWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/MainWindow.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.QtClient.UI.Views/ChatWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/ChatWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/feed.html" subtype="Code" buildaction="EmbedAsResource" />
     <File name="PList.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/Template.html" subtype="Code" buildaction="EmbedAsResource" />
     <File name="qt-gui/DebugWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="KeyPressEater.cs" subtype="Code" buildaction="Compile" />
     <File name="BookmarkedMUCsModel.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.QtClient.UI.Views/DebugWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/DebugWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/mainwindow-noaccounts.qss" subtype="Code" buildaction="EmbedAsResource" />
     <File name="QtTraceListener.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/ChatWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/default-avatar.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/newtab.html" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="Synapse.QtClient.UI.Views/ProfileWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/ProfileWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/ProfileWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="WindowMover.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/PreferencesWindow.cs" subtype="Code" buildaction="Compile" />
@@ -50,7 +49,7 @@
     <File name="resources/handle.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="AvatarFileEngine.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/ServiceBrowserWindow.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.QtClient.UI.Views/TabbedChatsWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/TabbedChatsWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AvatarGrid.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AvatarGrid.InfoPopup.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AvatarGrid.FadeInOutAnimation.cs" subtype="Code" buildaction="Compile" />
@@ -64,14 +63,14 @@
     <File name="Synapse.QtClient.Widgets/FadingQLabel.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/NoAccountsWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AccountStatusWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.QtClient.UI.Views/ServiceBrowserWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/ServiceBrowserWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/prototype.js" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/effects.js" subtype="Code" buildaction="EmbedAsResource" />
     <File name="gtk-gui/gui.stetic" subtype="Code" buildaction="EmbedAsResource" resource_id="gui.stetic" />
     <File name="gtk-gui/generated.cs" subtype="Code" buildaction="Compile" />
     <File name="ErrorDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="gtk-gui/Synapse.QtClient.ErrorDialog.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.QtClient.UI.Views/EditGroupsWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/EditGroupsWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/EditGroupsWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/friend-muclist.html" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/music-16.png" subtype="Code" buildaction="EmbedAsResource" />
@@ -79,7 +78,7 @@
     <File name="EditAccountDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/EditAccountDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="JSDebugObject.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.QtClient.UI.Views/PreferencesWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/PreferencesWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="AvatarSelectDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/AvatarSelectDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AvatarLabel.cs" subtype="Code" buildaction="Compile" />
@@ -98,6 +97,9 @@
     <File name="resources/expand.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="qt-gui/RosterWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/RosterWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="TrayIcon.cs" subtype="Code" buildaction="Compile" />
+    <File name="resources/profile.html" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="resources/ServiceDiscovery.html" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
@@ -135,19 +137,19 @@
   </MonoDevelop.Autotools.MakefileInfo>
   <QyotoDesignInfo>
     <Forms>
-      <QyotoForm UiFileName="accountstatuswidget.ui" />
-      <QyotoForm UiFileName="notconnectedwidget.ui" Namespace="Synapse.QtClient.UI" />
-      <QyotoForm UiFileName="RosterWidget.ui" />
-      <QyotoForm UiFileName="mainwindow.ui" Namespace="Synapse.QtClient.UI.Views" />
-      <QyotoForm UiFileName="ChatWindow.ui" />
-      <QyotoForm UiFileName="DebugWindow.ui" Namespace="Synapse.QtClient.UI.Views" />
-      <QyotoForm UiFileName="ProfileWindow.ui" />
-      <QyotoForm UiFileName="PreferencesWindow.ui" />
-      <QyotoForm UiFileName="ServiceBrowserWindow.ui" Namespace="Synapse.QtClient" />
-      <QyotoForm UiFileName="EditGroupsWindow.ui" />
+      <QyotoForm UiFileName="accountstatuswidget.ui" Namespace="Synapse.QtClient.Widgets" />
+      <QyotoForm UiFileName="notconnectedwidget.ui" Namespace="Synapse.QtClient.Widgets" />
+      <QyotoForm UiFileName="RosterWidget.ui" Namespace="Synapse.QtClient.Widgets" />
+      <QyotoForm UiFileName="mainwindow.ui" Namespace="Synapse.QtClient.Windows" />
+      <QyotoForm UiFileName="ChatWindow.ui" Namespace="Synapse.QtClient.Windows" />
+      <QyotoForm UiFileName="DebugWindow.ui" Namespace="Synapse.QtClient.Windows" />
+      <QyotoForm UiFileName="ProfileWindow.ui" Namespace="Synapse.QtClient.Windows" />
+      <QyotoForm UiFileName="PreferencesWindow.ui" Namespace="Synapse.QtClient.Windows" />
+      <QyotoForm UiFileName="ServiceBrowserWindow.ui" Namespace="Synapse.QtClient.Windows" />
+      <QyotoForm UiFileName="EditGroupsWindow.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="EditAccountDialog.ui" />
       <QyotoForm UiFileName="AvatarSelectDialog.ui" />
-      <QyotoForm UiFileName="AddFriend.ui" />
+      <QyotoForm UiFileName="AddFriend.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="EditGroupsWidget.ui" Namespace="Synapse.QtClient.Widgets" />
     </Forms>
   </QyotoDesignInfo>

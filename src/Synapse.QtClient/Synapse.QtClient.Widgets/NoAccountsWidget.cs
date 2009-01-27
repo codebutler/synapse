@@ -24,14 +24,12 @@ using Synapse.UI;
 using Synapse.ServiceStack;
 using Qyoto;
 
-namespace Synapse.QtClient.UI
+namespace Synapse.QtClient.Widgets
 {	
 	public partial class NoAccountsWidget : QWidget
 	{
 		QGraphicsScene m_Scene;
 		QTimeLine      m_TimeLine;
-
-		public event DialogValidateEventHandler AddNewAccount;
 		
 		public NoAccountsWidget(QWidget parent) : base (parent)
 		{
@@ -100,12 +98,27 @@ namespace Synapse.QtClient.UI
 		[Q_SLOT]
 		private void on_saveAccountButton_clicked()
 		{
-			if (AddNewAccount != null) {
-				DialogValidationResult result = AddNewAccount();
-				if (!result.IsValid) {
-					// FIXME: Show errors
-				}
+			/*
+			DialogValidationResult result = new DialogValidationResult();
+			JID jid = null;
+			
+			if (String.IsNullOrEmpty(View.Login))
+				result.Errors.Add("Login", "may not be empty");
+			else
+				if (!JID.TryParse(View.Login, out jid))
+					result.Errors.Add("Login", "is not valid Jabber ID");
+			
+			if (String.IsNullOrEmpty(View.Password))
+				result.Errors.Add("Password", "may not be empty");
+			
+			if (result.IsValid) {
+				Account account = new Account(jid.User, jid.Server, "Synapse");
+				account.Password = View.Password;
+				AccountService service = ServiceManager.Get<AccountService>();
+				service.AddAccount(account);
 			}
+			return result;
+			*/
 		}		
 	}
 }

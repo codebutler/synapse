@@ -27,12 +27,11 @@
   <References>
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Services" />
-    <ProjectReference type="Project" localcopy="False" refto="Synapse.Core" />
     <ProjectReference type="Gac" localcopy="False" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
     <ProjectReference type="Assembly" localcopy="False" refto="../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll" />
+    <ProjectReference type="Project" localcopy="True" refto="Synapse.QtClient" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
-  <GtkDesignInfo />
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />
     <DeployFilesVar />

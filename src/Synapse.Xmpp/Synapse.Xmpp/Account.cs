@@ -234,7 +234,7 @@ namespace Synapse.Xmpp
 			if (ex is jabber.connection.sasl.AuthenticationFailedException) {
 				feed.PostItem(this, null, "account-error", Jid.Bare, "Authentication Failed", ex);
 			} else {
-				feed.PostItem(this, null, "unknown-account-error", Jid.Bare, ex.ToString(), ex);
+				feed.PostItem(this, null, "unknown-account-error", Jid.Bare, ex.Message, ex);
 			}
 		}
 

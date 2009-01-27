@@ -1,5 +1,5 @@
 //
-// UserProfileWindowController.cs
+// UserProfileWindow.cs
 // 
 // Copyright (C) 2008 Eric Butler
 //
@@ -20,26 +20,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Reflection;
-using System.IO;
+using Qyoto;
+using Synapse.Core;
 using Synapse.ServiceStack;
-using Synapse.UI.Views;
 using Synapse.Xmpp;
 using jabber;
-using jabber.protocol.client;
 using jabber.protocol.iq;
+using jabber.protocol.client;
+using TemplateEngine;
 
-namespace Synapse.UI.Controllers
+namespace Synapse.QtClient.Windows
 {
-	public class UserProfileWindowController : AbstractController<IUserProfileWindowView>
+	// FIXME: Rename to UserProfileWindow!
+	public partial class ProfileWindow
 	{
-		public UserProfileWindowController(Account account, JID jid)
+		public ProfileWindow (Account account, JID jid) : base ()
 		{
-			Application.InvokeAndBlock(delegate {
-				base.InitializeView();
-				base.View.Show();
-			});
-
+			SetupUi();
+	
+			webView.SetHtml("<p>Loading...</p>");
+	
 			account.RequestVCard(jid, delegate (object sender, IQ iq, object data) {
 				if (iq.Type == IQType.result)
 					Populate((VCard)iq.FirstChild);
@@ -47,18 +47,15 @@ namespace Synapse.UI.Controllers
 					Populate(null);
 			});
 		}
-
-		private void Populate (VCard vcard)
+	
+		void Populate (VCard vcard)
 		{
 			string template = null;
 			
 			if (vcard == null) {
 				template = "Unable to view profile.";
-			} else {				
-				var asm = Assembly.GetExecutingAssembly();
-				using (var reader = new StreamReader(asm.GetManifestResourceStream("profile.html"))) {
-					template = reader.ReadToEnd();
-				}
+			} else {
+				template = Util.ReadResource("profile.html");
 	
 				// FIXME: This is just a quick hack. Really need to do all the replacement at once.
 				template = template.Replace("@@NAME@@", vcard.FullName);
@@ -119,11 +116,11 @@ namespace Synapse.UI.Controllers
 					template = template.Replace("@@WORK_PHONE@@", String.Empty);
 			}
 			Application.Invoke(delegate {
-				base.View.Populate(template);				
+				webView.SetHtml(template);
 			});
 		}
-
-		private string FormatAddress (VCard.VAddress address)
+		
+		string FormatAddress (VCard.VAddress address)
 		{
 			if (address == null)
 				return string.Empty;
