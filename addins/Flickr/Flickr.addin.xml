@@ -6,7 +6,7 @@
 	   version   = "0.1">
 
 	<Dependencies>
-		<Addin id="UI" version="1.0" />
+		<Addin id="UI" version="0.1" />
 	</Dependencies>
 
 	<Extension path="/Synapse/UI/AvatarProviders">

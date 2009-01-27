@@ -1,7 +1,7 @@
 //
-// ExtensionMethods.cs
+// IActionItemCodon.cs
 // 
-// Copyright (C) 2009 Eric Butler
+// Copyright (C) 2008 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -21,18 +21,10 @@
 
 using System;
 
-namespace Synapse.Core
+namespace Synapse.UI.Actions.ExtensionNodes
 {
-	public static class StringExtensions
+	public interface IActionItemCodon
 	{
-		public static string FormatWith (this string self, params object[] args)
-		{
-			return String.Format(self, args);
-		}
-
-		public static bool Blank (this string self)
-		{
-			return String.IsNullOrEmpty(self);
-		}
+		object CreateInstance (object parent);
 	}
 }

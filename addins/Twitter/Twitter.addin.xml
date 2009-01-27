@@ -6,9 +6,9 @@
 	   version   = "0.1">
 
 	<Dependencies>
-		<Addin id="Services" version="1.0" />
-		<Addin id="Xmpp" version="1.0" />
-		<Addin id="UI" version="1.0" />
+		<Addin id="Services" version="0.1" />
+		<Addin id="Xmpp" version="0.1" />
+		<Addin id="UI" version="0.1" />
 	</Dependencies>
 
 	<Extension path="/Synapse/ServiceManager/Service">

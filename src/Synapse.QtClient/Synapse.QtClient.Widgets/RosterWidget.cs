@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using Qyoto;
 using Synapse.Core;
+using Synapse.Core.ExtensionMethods;
 using Synapse.ServiceStack;
 using Synapse.Services;
 using Synapse.Xmpp;

@@ -1,7 +1,7 @@
 //
-// ActionHandlerAttribute.cs
-// 
-// Copyright (C) 2008 Eric Butler
+// AssemblyInfo.cs
+//
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -19,20 +19,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
-namespace Synapse.UI
-{
-	public class ActionHandlerAttribute : Attribute
-	{
-		public string ActionId {
-			get; set;
-		}
-		
-		public ActionHandlerAttribute(string actionId)
-		{
-			ActionId = actionId;
-		}
-	}
-}
+[assembly: AssemblyTitle("Twitter")]
+[assembly: AssemblyDescription("Twitter addin for Synapse.")]
+[assembly: AssemblyProduct("Synapse")]
+[assembly: AssemblyCopyright("(C) 2009 Eric Butler")]
+
+[assembly: AssemblyVersion("0.1.*.*")]

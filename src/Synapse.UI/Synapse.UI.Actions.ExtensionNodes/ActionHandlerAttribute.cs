@@ -1,7 +1,7 @@
 //
-// AssemblyInfo.cs
-//
-// Copyright (C) 2008-2009 Eric Butler
+// ActionHandlerAttribute.cs
+// 
+// Copyright (C) 2008 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -19,12 +19,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitle("Synapse.UI")]
-[assembly: AssemblyDescription("Common UI classes.")]
-[assembly: AssemblyProduct("Synapse")]
-[assembly: AssemblyCopyright("(C) 2008-2009 Eric Butler")]
-
-[assembly: AssemblyVersion("0.1.*.*")]
+namespace Synapse.UI.Actions.ExtensionNodes
+{
+	public class ActionHandlerAttribute : Attribute
+	{
+		public string ActionId {
+			get; set;
+		}
+		
+		public ActionHandlerAttribute(string actionId)
+		{
+			ActionId = actionId;
+		}
+	}
+}

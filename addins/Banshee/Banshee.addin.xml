@@ -6,7 +6,7 @@
 	   version   = "0.1">
 
 	<Dependencies>
-		<Addin id="Services" version="1.0" />
+		<Addin id="Services" version="0.1" />
 	</Dependencies>
 
 	<Extension path="/Synapse/Services/NowPlaying/Providers">

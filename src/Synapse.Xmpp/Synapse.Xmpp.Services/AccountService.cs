@@ -30,6 +30,7 @@ using Mono.Addins;
 
 using Synapse.ServiceStack;
 using Synapse.Core;
+using Synapse.Core.ExtensionMethods;
 using Synapse.Services;
 using Synapse.Xmpp;
 

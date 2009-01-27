@@ -1,7 +1,7 @@
 //
-// AssemblyInfo.cs
-//
-// Copyright (C) 2008-2009 Eric Butler
+// ExtensionMethods.cs
+// 
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -19,12 +19,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
-using System.Runtime.CompilerServices;
+using System;
 
-[assembly: AssemblyTitle("Synapse.UI")]
-[assembly: AssemblyDescription("Common UI classes.")]
-[assembly: AssemblyProduct("Synapse")]
-[assembly: AssemblyCopyright("(C) 2008-2009 Eric Butler")]
+namespace Synapse.Core.ExtensionMethods
+{
+	public static class StringExtensions
+	{
+		public static string FormatWith (this string self, params object[] args)
+		{
+			return String.Format(self, args);
+		}
 
-[assembly: AssemblyVersion("0.1.*.*")]
+		public static bool Blank (this string self)
+		{
+			return String.IsNullOrEmpty(self);
+		}
+	}
+}

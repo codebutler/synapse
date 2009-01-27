@@ -91,6 +91,7 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(BINARIES)
 FILES =  \
 	AbstractSimpleFileEngine.cs \
 	AddFriendWindow.cs \
+	AssemblyInfo.cs \
 	AvatarFileEngine.cs \
 	AvatarSelectDialog.cs \
 	BookmarkedMUCsModel.cs \

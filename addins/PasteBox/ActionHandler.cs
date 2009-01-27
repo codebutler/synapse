@@ -23,6 +23,7 @@ using System;
 using Synapse.UI;
 using Synapse.QtClient.Windows;
 using Qyoto;
+using Synapse.UI.Actions.ExtensionNodes;
 
 namespace Synapse.PasteBox
 {

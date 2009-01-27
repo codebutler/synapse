@@ -28,6 +28,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Reflection;
 using System.Web.Script.Serialization;
+using Synapse.Core.ExtensionMethods;
 
 namespace Synapse.Core
 {

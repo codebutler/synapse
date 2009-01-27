@@ -35,6 +35,7 @@
     <File name="Synapse.ServiceStack/DBusConnection.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services/SettingsService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services/ActivityFeedService.cs" subtype="Code" buildaction="Compile" />
+    <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />

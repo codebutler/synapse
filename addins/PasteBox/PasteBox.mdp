@@ -23,6 +23,7 @@
     <File name="IPasteFormatter.cs" subtype="Code" buildaction="Compile" />
     <File name="SyntaxHighlighter.css" subtype="Code" buildaction="EmbedAsResource" />
     <File name="SyntaxHighlighter.js" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />

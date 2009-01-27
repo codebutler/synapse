@@ -27,6 +27,7 @@ RESGEN=resgen2
 all: $(ASSEMBLY) $(PROGRAMFILES) 
 
 FILES =  \
+	AssemblyInfo.cs \
 	gtk-gui/generated.cs \
 	gtk-gui/Synapse.Addins.TwitterAddin.TwitterAddinPreferencesDialog.cs \
 	TwitterAddinPreferencesDialog.cs \

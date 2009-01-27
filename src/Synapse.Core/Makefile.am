@@ -48,8 +48,9 @@ RESGEN=resgen2
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
 FILES =  \
-	IEnumerable.cs \
-	Synapse.Core/ExtensionMethods.cs \
+	AssemblyInfo.cs \
+	Synapse.Core.ExtensionMethods/IEnumerable.cs \
+	Synapse.Core.ExtensionMethods/StringExtensions.cs \
 	Synapse.Core/Pair.cs \
 	Synapse.Core/Paths.cs \
 	Synapse.Core/PlatformHacks.cs \

@@ -58,10 +58,7 @@ RESGEN=resgen2
 all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 
 FILES =  \
-	ActionHandlerAttribute.cs \
 	AssemblyInfo.cs \
-	EventHandlers.cs \
-	IActionItemCodon.cs \
 	IAddinPreferencesFactory.cs \
 	IAvatarGridModel.cs \
 	IAvatarProvider.cs \
@@ -69,7 +66,9 @@ FILES =  \
 	ResourceProviderCodon.cs \
 	RosterAvatarGridModel.cs \
 	Synapse.UI.Actions.ExtensionNodes/ActionCodon.cs \
+	Synapse.UI.Actions.ExtensionNodes/ActionHandlerAttribute.cs \
 	Synapse.UI.Actions.ExtensionNodes/ActionItemCodon.cs \
+	Synapse.UI.Actions.ExtensionNodes/IActionItemCodon.cs \
 	Synapse.UI.Actions.ExtensionNodes/SeparatorItemCodon.cs \
 	Synapse.UI.Chat/AbstractChatContent.cs \
 	Synapse.UI.Chat/AbstractChatHandler.cs \

@@ -5,7 +5,7 @@
 	copyright = "GPLv3"
 	url       = "http://synapse.im/"
 	isroot    = "true"
-	version   = "1.0">
+	version   = "0.1">
 
 	<ExtensionNodeSet id="Synapse.UI.Actions.ItemSet">
 		<ExtensionNode name="SeparatorItem" type="Synapse.UI.Actions.ExtensionNodes.SeparatorItemCodon" />

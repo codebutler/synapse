@@ -28,6 +28,7 @@ all: $(ASSEMBLY) $(PROGRAMFILES)
 
 FILES =  \
 	ActionHandler.cs \
+	AssemblyInfo.cs \
 	CodePasteFormatter.cs \
 	IPasteFormatter.cs \
 	PasteBoxDialog.cs \

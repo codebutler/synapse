@@ -4,7 +4,7 @@
 		author    = "Eric Butler"
 		copyright = "GPL-3"
 		url       = "http://www.synapse.im"
-		version   = "1.0">
+		version   = "0.1">
 
 	<ExtensionPoint path="/Synapse/ServiceManager/Service">
 		<ExtensionNode name="Service" />
