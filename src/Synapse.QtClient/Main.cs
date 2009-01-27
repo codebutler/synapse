@@ -122,21 +122,8 @@ namespace Synapse.QtClient
 			string crashFileName = Path.Combine(desktopPath, String.Format("synapse-crash-{0}.log", DateTime.Now.ToFileTime()));
 			string crashLog = args.ExceptionObject.ToString();
 			Util.WriteToFile(crashFileName, crashLog);
-			
-			/*
-			ManualResetEvent mutex = new ManualResetEvent(false);
-			Application.Invoke(delegate {
-				QApplication.Quit();
-				new QApplication(new string[0]);
-				try {
-				QMessageBox.Critical(null, "Unhandled Exception", e.ExceptionObject.ToString(), 
-				                     (uint)QMessageBox.StandardButton.Abort);
-				mutex.Set();
-				Thread.CurrentThread.Abort();
-				} catch (Exception eee) { Console.Error.WriteLine("WTF !!!! " + eee); }
-			});
-			mutex.WaitOne();
-			*/
+
+			ShowErrorWindow("Oh no! An unhandled error has occured and Synapse must close.", (Exception)args.ExceptionObject);
 			
 			Environment.Exit(-1);
 		}

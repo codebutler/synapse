@@ -39,8 +39,6 @@ namespace Synapse.QtClient {
             this.Name = "Synapse.QtClient.ErrorDialog";
             this.Title = Mono.Unix.Catalog.GetString("Synapse Error");
             this.WindowPosition = ((Gtk.WindowPosition)(1));
-            this.Resizable = false;
-            this.AllowGrow = false;
             this.DefaultWidth = 300;
             this.DefaultHeight = 300;
             this.HasSeparator = false;
@@ -116,8 +114,6 @@ namespace Synapse.QtClient {
             w1.Add(this.hbox1);
             Gtk.Box.BoxChild w9 = ((Gtk.Box.BoxChild)(w1[this.hbox1]));
             w9.Position = 0;
-            w9.Expand = false;
-            w9.Fill = false;
             // Internal child Synapse.QtClient.ErrorDialog.ActionArea
             Gtk.HButtonBox w10 = this.ActionArea;
             w10.Name = "dialog1_ActionArea";
