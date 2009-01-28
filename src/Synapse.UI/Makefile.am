@@ -63,6 +63,7 @@ FILES =  \
 	IAvatarGridModel.cs \
 	IAvatarProvider.cs \
 	MucAvatarGridModel.cs \
+	ResourceCodon.cs \
 	ResourceProviderCodon.cs \
 	RosterAvatarGridModel.cs \
 	Synapse.UI.Actions.ExtensionNodes/ActionCodon.cs \

@@ -37,6 +37,7 @@ FILES =  \
 DATA_FILES = 
 
 RESOURCES =  \
+	ConversationHeader.html \
 	PasteBox.addin.xml \
 	SyntaxHighlighter.css \
 	SyntaxHighlighter.js 

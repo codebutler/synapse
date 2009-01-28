@@ -12,10 +12,6 @@
 		<ExtensionNode name="ActionItem" type="Synapse.UI.Actions.ExtensionNodes.ActionItemCodon" />
 	</ExtensionNodeSet>
 
-	<ExtensionNodeSet id="Synapse.UI.Actions.ActionSet">
-		<ExtensionNode name="Action" type="Synapse.UI.Actions.ExtensionNodes.ActionCodon" />
-	</ExtensionNodeSet>
-
 	<ExtensionPoint path="/Synapse/UI/ActionHandlers">
 		<Descriptions>Handlers for UI actions</Descriptions>
 		<ExtensionNode name="ActionHandler" />
@@ -23,7 +19,7 @@
 
 	<ExtensionPoint path="/Synapse/UI/Actions">
 		<Description>User interface actions</Description>
-		<ExtensionNodeSet id="Synapse.UI.Actions.ActionSet" />
+		<ExtensionNode name="Action" type="Synapse.UI.Actions.ExtensionNodes.ActionCodon" />
 	</ExtensionPoint>
 
 	<ExtensionPoint path="/Synapse/UI/AddinPreferences">
@@ -46,5 +42,9 @@
 
 	<ExtensionPoint path="/Synapse/UI/AvatarProviders">
 		<ExtensionNode name="AvatarProvider" />
+	</ExtensionPoint>
+
+	<ExtensionPoint path="/Synapse/UI/ConversationHtmlHeaders">
+		<ExtensionNode name="ConversationHeader" type="Synapse.UI.ResourceCodon" />
 	</ExtensionPoint>
 </Addin>

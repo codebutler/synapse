@@ -26,13 +26,16 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 using IO = System.IO;
 using Qyoto;
 using Synapse.Core;
+using Synapse.UI;
 using Synapse.UI.Chat;
 using Synapse.Xmpp;
+using Mono.Addins;
 
 namespace Synapse.QtClient
 {
@@ -483,6 +486,16 @@ namespace Synapse.QtClient
 			}
 			
 			html = html.Replace("==bodyBackground==", bgStyle);
+
+			// FIXME: This is not so great.
+			if (html.IndexOf("<head>") < 0)
+				throw new Exception("<head> not found!");
+
+			StringBuilder extraHeaders = new StringBuilder();
+			foreach (ResourceCodon node in AddinManager.GetExtensionNodes("/Synapse/UI/ConversationHtmlHeaders")) {
+				extraHeaders.Append(node.GetResourceString());
+			}
+			html = html.Insert(html.IndexOf("</head>"), extraHeaders.ToString());
 			
 			return html;
 		}

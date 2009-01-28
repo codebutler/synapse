@@ -46,4 +46,8 @@
 	<Extension path="/Synapse/UI/ResourceProviders">
 		<ResourceProvider id="pastebox"/>
 	</Extension>
+
+	<Extension path="/Synapse/UI/ConversationHtmlHeaders">
+		<ConversationHeader name="ConversationHeader.html" />
+	</Extension>
 </Addin>
