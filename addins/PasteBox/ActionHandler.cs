@@ -25,20 +25,15 @@ using Synapse.QtClient.Windows;
 using Qyoto;
 using Synapse.UI.Actions.ExtensionNodes;
 
-namespace Synapse.PasteBox
+namespace Synapse.Addins.PasteBox
 {
 	public class ActionHandler
-	{	
-		[ActionHandler("Synapse.PasteBox.Actions.ShowPasteBox")]
+	{
+		[ActionHandler("Synapse.Addins.PasteBox.Actions.ShowPasteBox")]
 		public void ShowPasteBox (object o, EventArgs args)
 		{
 			QAction action = (QAction)o;
-			ChatWindow parentWindow = (ChatWindow)action.ParentWidget();
-			Console.WriteLine("SENDER: " + parentWindow);
-
-			var blah = ((QWidget)parentWindow).Window();
-			Console.WriteLine(blah);
-			var dialog = new PasteBoxDialog(blah);
+			var dialog = new PasteBoxDialog(action.ParentWidget());
 			dialog.Show();
 		}
 	}

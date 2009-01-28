@@ -21,7 +21,7 @@
 
 using System;
 
-namespace Synapse.PasteBox
+namespace Synapse.Addins.PasteBox
 {	
 	public interface IPasteFormatter
 	{

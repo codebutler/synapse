@@ -20,17 +20,51 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
+using Synapse.UI.Chat;
+using Synapse.QtClient.Windows;
 using Qyoto;
+using Mono.Addins;
 
-public partial class PasteBoxDialog : QDialog
+namespace Synapse.Addins.PasteBox
 {
-	public PasteBoxDialog (QWidget parent) : base (parent)
+	public partial class PasteBoxDialog : QDialog
 	{
-		SetupUi();
+		Dictionary<string, IPasteFormatter> m_Formatters = new Dictionary<string, IPasteFormatter>();
+		
+		public PasteBoxDialog (QWidget parent) : base (parent)
+		{
+			SetupUi();
+	
+			buttonBox.StandardButtons = (uint) QDialogButtonBox.StandardButton.Ok | (uint) QDialogButtonBox.StandardButton.Cancel;
+			
+			ChatWindow chatWindow = (ChatWindow)parent;
+			toLabel.Text = (chatWindow.Handler is ChatHandler) ? ((ChatHandler)chatWindow.Handler).Jid.ToString() : ((MucHandler)chatWindow.Handler).Room.JID.ToString();
+	
+			foreach (PasteFormatCodon node in AddinManager.GetExtensionNodes("/Synapse/PasteBox/PasteFormatters")) {
+				m_Formatters.Add(node.Name, node.CreateInstance());
+				typeComboBox.AddItem(node.Name, node.MimeType);
+			}
+		}
 
-		//foo = new FooFileManager();
-		//webView.Page().MainFrame().SetHtml("<img src='synapse:/foo.png' />");
-		//webView.Page().MainFrame().Load("http://www.google.com/");
-		//webView.Load("synapse:/foo.txt");
+		[Q_SLOT]
+		void on_typeComboBox_currentIndexChanged (int index)
+		{
+			UpdatePreview();
+		}
+		
+		[Q_SLOT]
+		void on_tabWidget_currentChanged (int index)
+		{
+			if (index == 1) {
+				UpdatePreview();
+			}
+		}
+
+		void UpdatePreview ()
+		{
+			string name = typeComboBox.CurrentText;
+			webView.SetHtml(m_Formatters[name].FormatAsHtml(textEdit.PlainText));
+		}
 	}
 }

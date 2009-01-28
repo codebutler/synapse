@@ -32,6 +32,7 @@ FILES =  \
 	CodePasteFormatter.cs \
 	IPasteFormatter.cs \
 	PasteBoxDialog.cs \
+	PasteFormatCodon.cs \
 	qt-gui/PasteBoxDialog.cs 
 
 DATA_FILES = 
@@ -43,7 +44,9 @@ RESOURCES =  \
 
 EXTRAS = 
 
-REFERENCES = $(QYOTO_LIBS)
+REFERENCES =  \
+	$(MONO_ADDINS_LIBS) \
+	$(QYOTO_LIBS)
 
 DLL_REFERENCES = ../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll 
 

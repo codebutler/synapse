@@ -11,36 +11,37 @@
 
 	<ExtensionPoint path="/Synapse/PasteBox/PasteFormatters">
 		<Description>Formatters for message text</Description>
+		<ExtensionNode name="PasteFormat" type="Synapse.Addins.PasteBox.PasteFormatCodon" />
 	</ExtensionPoint>
 
 	<Extension path="/Synapse/PasteBox/PasteFormatters">
-		<PasteFormat name="C++"        type="text/x-c++src"          class="Synapse.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="C#"         type="text/x-csharp"          class="Synapse.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="CSS"        type="text/css"               class="Synapse.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="Pascal"     type="text/x-pascal"          class="Synapse.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="Java"       type="text/x-java"            class="Synapse.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="JavaScript" type="application/javascript" class="Synapse.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="PHP"        type="application/x-php"      class="Synapse.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="Python"     type="text/x-python"          class="Synapse.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="Ruby"       type="application/x-ruby"     class="Synapse.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="SQL"        type="text/x-sql"             class="Synapse.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="VB"         type="text/x-vb"              class="Synapse.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="XML/HTML"   type="application/xml"        class="Synapse.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="C++"        mimeType="text/x-c++src"          class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="C#"         mimeType="text/x-csharp"          class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="CSS"        mimeType="text/css"               class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="Pascal"     mimeType="text/x-pascal"          class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="Java"       mimeType="text/x-java"            class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="JavaScript" mimeType="application/javascript" class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="PHP"        mimeType="application/x-php"      class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="Python"     mimeType="text/x-python"          class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="Ruby"       mimeType="application/x-ruby"     class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="SQL"        mimeType="text/x-sql"             class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="VB"         mimeType="text/x-vb"              class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+		<PasteFormat name="XML/HTML"   mimeType="application/xml"        class="Synapse.Addins.PasteBox.CodePasteFormatter" />
 	</Extension>
 
 	<Extension path="/Synapse/UI/ActionHandlers">
-		<ActionHandler class="Synapse.PasteBox.ActionHandler" />
+		<ActionHandler class="Synapse.Addins.PasteBox.ActionHandler" />
 	</Extension>
 
 	<Extension path="/Synapse/UI/Actions">
-		<Action id="Synapse.PasteBox.Actions.ShowPasteBox"
+		<Action id="Synapse.Addins.PasteBox.Actions.ShowPasteBox"
 			  icon="editpaste"
 			_label="Paste Lots of Text" />
 	</Extension>
 	
 	<Extension path="/Synapse/UI/ChatWindow/FormattingToolbar">
 		<SeparatorItem />
-		<ActionItem id="Synapse.PasteBox.Actions.ShowPasteBox" />
+		<ActionItem id="Synapse.Addins.PasteBox.Actions.ShowPasteBox" />
 	</Extension>
 
 	<Extension path="/Synapse/UI/ResourceProviders">

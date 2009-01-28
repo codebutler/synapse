@@ -1,4 +1,4 @@
-<Project name="PasteBox" fileversion="2.0" language="C#" UseParentDirectoryAsNamespace="True" DefaultNamespace="Synapse.PasteBox" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
+<Project name="PasteBox" fileversion="2.0" language="C#" DefaultNamespace="Synapse.Addins.PasteBox" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug/addins" assembly="PasteBox" />
@@ -24,6 +24,7 @@
     <File name="SyntaxHighlighter.css" subtype="Code" buildaction="EmbedAsResource" />
     <File name="SyntaxHighlighter.js" subtype="Code" buildaction="EmbedAsResource" />
     <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
+    <File name="PasteFormatCodon.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />
@@ -31,6 +32,7 @@
     <ProjectReference type="Gac" localcopy="False" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
     <ProjectReference type="Assembly" localcopy="False" refto="../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll" />
     <ProjectReference type="Project" localcopy="True" refto="Synapse.QtClient" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
@@ -44,7 +46,7 @@
   </MonoDevelop.Autotools.MakefileInfo>
   <QyotoDesignInfo>
     <Forms>
-      <QyotoForm UiFileName="PasteBoxDialog.ui" />
+      <QyotoForm UiFileName="PasteBoxDialog.ui" Namespace="Synapse.Addins.PasteBox" />
     </Forms>
   </QyotoDesignInfo>
 </Project>
