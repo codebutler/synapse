@@ -67,7 +67,7 @@ namespace Synapse.UI.Chat
 
 		public bool IsSimilarToContent(AbstractChatContent otherContent)
 		{
-			if (this.Source == otherContent.Source && this.Type == otherContent.Type) {
+			if (this.Source == otherContent.Source && this.Type == otherContent.Type && this.IsOutgoing == otherContent.IsOutgoing) {
 				TimeSpan span = otherContent.Date.Subtract(this.Date);
 				return (span.TotalSeconds < 300);
 			}

@@ -161,7 +161,7 @@ namespace Synapse.UI.Chat
 				DateTime date = DateTime.Now;
 				
 				var content = new ChatContentMessage(m_Account, fromJid, msg.To, date);
-				content.IsOutgoing = (msg.From == null);
+				content.IsOutgoing = !incoming;
 				content.MessageHtml = body;
 				
 				NewContent(this, content);
