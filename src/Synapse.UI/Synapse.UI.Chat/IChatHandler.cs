@@ -20,6 +20,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Xml;
 using Synapse.Xmpp;
 
 namespace Synapse.UI.Chat
@@ -42,5 +43,6 @@ namespace Synapse.UI.Chat
 		void Start ();
 		
 		void Send (string html);
+		void Send (XmlElement contentElement);
 	}
 }

@@ -22,6 +22,9 @@
 using System;
 using System.Xml;
 using Synapse.Core;
+using Synapse.ServiceStack;
+using Synapse.UI;
+using Synapse.UI.Services;
 using Synapse.Xmpp;
 using jabber;
 using jabber.protocol.client;
@@ -60,6 +63,7 @@ namespace Synapse.UI.Chat
 
 		public abstract void Start ();
 		public abstract void Send (string html);
+		public abstract void Send (XmlElement element);
 		public abstract void Dispose ();
 	
 		// FIXME: I don't really like this method being here.
@@ -99,7 +103,7 @@ namespace Synapse.UI.Chat
 					TypingState? state = null;
 					if (child.Name == "active") {
 						state = TypingState.Active;
-						
+					
 					} else if (child.Name == "composing") {
 						state = TypingState.Composing;
 					} else if (child.Name == "paused") {
@@ -131,18 +135,28 @@ namespace Synapse.UI.Chat
 			
 			if (msg.Body != null || msg.Html != null) {			
 				string body = null;
-				if (!String.IsNullOrEmpty(msg.Html)) {
-					// FIXME: Better sanitize this somehow...
-					body = msg.Html;
-				} else {
-					body = Util.EscapeHtml(msg.Body);
-					body = Util.Linkify(body);
-					body = body.Replace("  ", " &nbsp;");
-					body = body.Replace("\t", " &nbsp;&nbsp;&nbsp;");
-					body = body.Replace("\r\n", "<br/>");
-					body = body.Replace("\n", "<br/>");
+
+				var guiService = ServiceManager.Get<GuiService>();
+				foreach (var formatter in guiService.MessageDisplayFormatters) {
+					body = formatter.FormatMessage(msg);
+					if (body != null)
+						break;
 				}
-	
+				
+				if (body == null) {		
+					if (!String.IsNullOrEmpty(msg.Html)) {
+						// FIXME: Better sanitize this somehow...
+						body = msg.Html;
+					} else {
+						body = Util.EscapeHtml(msg.Body);
+						body = Util.Linkify(body);
+						body = body.Replace("  ", " &nbsp;");
+						body = body.Replace("\t", " &nbsp;&nbsp;&nbsp;");
+						body = body.Replace("\r\n", "<br/>");
+						body = body.Replace("\n", "<br/>");
+					}
+				}
+					
 				// FIXME: Add support for delayed message timestamps.
 				DateTime date = DateTime.Now;
 				

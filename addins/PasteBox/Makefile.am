@@ -7,6 +7,7 @@ ASSEMBLY = ../../build/Debug/addins/PasteBox.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
+	../../build/Debug/Synapse.Core.dll \
 	../../build/Debug/Synapse.exe \
 	../../build/Debug/Synapse.Services.dll \
 	../../build/Debug/Synapse.UI.dll 
@@ -29,27 +30,30 @@ all: $(ASSEMBLY) $(PROGRAMFILES)
 FILES =  \
 	ActionHandler.cs \
 	AssemblyInfo.cs \
-	CodePasteFormatter.cs \
-	IPasteFormatter.cs \
+	CodeMessageDisplayFormatter.cs \
+	IPasteFormatPreviewer.cs \
 	PasteBoxDialog.cs \
-	PasteFormatCodon.cs \
+	PasteBoxService.cs \
 	qt-gui/PasteBoxDialog.cs 
 
 DATA_FILES = 
 
 RESOURCES =  \
 	ConversationHeader.html \
-	PasteBox.addin.xml \
-	SyntaxHighlighter.css \
-	SyntaxHighlighter.js 
+	PasteBox.addin.xml 
 
 EXTRAS = 
 
 REFERENCES =  \
 	$(MONO_ADDINS_LIBS) \
-	$(QYOTO_LIBS)
+	$(QYOTO_LIBS) \
+	System.Core \
+	System.Xml
 
-DLL_REFERENCES = ../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll 
+DLL_REFERENCES =  \
+	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll \
+	../../contrib/jabber-net.dll \
+	../../contrib/Wilco.SyntaxHighlighter.dll 
 
 CLEANFILES = $(PROGRAMFILES) 
 

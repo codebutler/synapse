@@ -81,8 +81,10 @@ FILES =  \
 	Synapse.UI.Chat/ChatContentTyping.cs \
 	Synapse.UI.Chat/ChatHandler.cs \
 	Synapse.UI.Chat/IChatHandler.cs \
+	Synapse.UI.Chat/IMessageFormatter.cs \
 	Synapse.UI.Chat/MucHandler.cs \
 	Synapse.UI.Services/ActionService.cs \
+	Synapse.UI.Services/GuiService.cs \
 	template4dotnet.cs 
 
 DATA_FILES = 

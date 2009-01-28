@@ -41,6 +41,8 @@
     <File name="Synapse.UI.Actions.ExtensionNodes/IActionItemCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Actions.ExtensionNodes/ActionHandlerAttribute.cs" subtype="Code" buildaction="Compile" />
     <File name="ResourceCodon.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Services/GuiService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.UI.Chat/IMessageFormatter.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

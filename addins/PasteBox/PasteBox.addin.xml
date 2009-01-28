@@ -6,27 +6,12 @@
 	   version   = "0.1">
 
 	<Dependencies>
+		<Addin id="Services" version="0.1" />
 		<Addin id="UI" version="0.1" />
 	</Dependencies>
 
-	<ExtensionPoint path="/Synapse/PasteBox/PasteFormatters">
-		<Description>Formatters for message text</Description>
-		<ExtensionNode name="PasteFormat" type="Synapse.Addins.PasteBox.PasteFormatCodon" />
-	</ExtensionPoint>
-
-	<Extension path="/Synapse/PasteBox/PasteFormatters">
-		<PasteFormat name="C++"        mimeType="text/x-c++src"          class="Synapse.Addins.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="C#"         mimeType="text/x-csharp"          class="Synapse.Addins.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="CSS"        mimeType="text/css"               class="Synapse.Addins.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="Pascal"     mimeType="text/x-pascal"          class="Synapse.Addins.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="Java"       mimeType="text/x-java"            class="Synapse.Addins.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="JavaScript" mimeType="application/javascript" class="Synapse.Addins.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="PHP"        mimeType="application/x-php"      class="Synapse.Addins.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="Python"     mimeType="text/x-python"          class="Synapse.Addins.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="Ruby"       mimeType="application/x-ruby"     class="Synapse.Addins.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="SQL"        mimeType="text/x-sql"             class="Synapse.Addins.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="VB"         mimeType="text/x-vb"              class="Synapse.Addins.PasteBox.CodePasteFormatter" />
-		<PasteFormat name="XML/HTML"   mimeType="application/xml"        class="Synapse.Addins.PasteBox.CodePasteFormatter" />
+	<Extension path="/Synapse/ServiceManager/Service">
+		<Service class="Synapse.Addins.PasteBox.PasteBoxService" />
 	</Extension>
 
 	<Extension path="/Synapse/UI/ActionHandlers">
@@ -50,5 +35,9 @@
 
 	<Extension path="/Synapse/UI/ConversationHtmlHeaders">
 		<ConversationHeader name="ConversationHeader.html" />
+	</Extension>
+
+	<Extension path="/Synapse/UI/Chat/MessageDisplayFormatters">
+		<MessageDisplayFormatter class="Synapse.Addins.PasteBox.CodeMessageDisplayFormatter" />
 	</Extension>
 </Addin>

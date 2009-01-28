@@ -1,7 +1,7 @@
 //
-// IPasteFormatter.cs
+// CodeMessageDisplayFormatter.cs
 // 
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -20,11 +20,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Xml;
+using Synapse.ServiceStack;
+using Synapse.UI.Chat;
+using jabber.protocol.client;
 
 namespace Synapse.Addins.PasteBox
 {	
-	public interface IPasteFormatter
+	public class CodeMessageDisplayFormatter : IMessageFormatter
 	{
-		string FormatAsHtml (string pastedText);
+		public string FormatMessage (Message message)
+		{
+			XmlElement bodyElement = message["body"];
+			if (bodyElement != null && !String.IsNullOrEmpty(bodyElement.GetAttribute("language", PasteBoxService.CODE_NS))) {
+				var service = ServiceManager.Get<PasteBoxService>();
+				return service.FormatMessageBody(bodyElement);
+			} else {
+				return null;
+			}
+		}
 	}
 }

@@ -20,7 +20,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Text;
 using System.Collections.Generic;
+using System.Xml;
+using Synapse.Core;
+using Synapse.ServiceStack;
 using Synapse.UI.Chat;
 using Synapse.QtClient.Windows;
 using Qyoto;
@@ -29,9 +33,7 @@ using Mono.Addins;
 namespace Synapse.Addins.PasteBox
 {
 	public partial class PasteBoxDialog : QDialog
-	{
-		Dictionary<string, IPasteFormatter> m_Formatters = new Dictionary<string, IPasteFormatter>();
-		
+	{		
 		public PasteBoxDialog (QWidget parent) : base (parent)
 		{
 			SetupUi();
@@ -40,11 +42,13 @@ namespace Synapse.Addins.PasteBox
 			
 			ChatWindow chatWindow = (ChatWindow)parent;
 			toLabel.Text = (chatWindow.Handler is ChatHandler) ? ((ChatHandler)chatWindow.Handler).Jid.ToString() : ((MucHandler)chatWindow.Handler).Room.JID.ToString();
-	
-			foreach (PasteFormatCodon node in AddinManager.GetExtensionNodes("/Synapse/PasteBox/PasteFormatters")) {
-				m_Formatters.Add(node.Name, node.CreateInstance());
-				typeComboBox.AddItem(node.Name, node.MimeType);
+
+			var service = ServiceManager.Get<PasteBoxService>();
+			foreach (var highlighter in service.Highlighters) {
+				typeComboBox.AddItem(highlighter.FullName, highlighter.Name);
 			}
+
+			QObject.Connect(this, Qt.SIGNAL("accepted()"), this, Qt.SLOT("dialog_accepted()"));
 		}
 
 		[Q_SLOT]
@@ -61,10 +65,22 @@ namespace Synapse.Addins.PasteBox
 			}
 		}
 
+		[Q_SLOT]
+		void dialog_accepted ()
+		{	
+			var handler = ((ChatWindow)this.ParentWidget()).Handler;
+			
+			var mimeType = typeComboBox.ItemData(typeComboBox.CurrentIndex).ToString();
+			
+			var service = ServiceManager.Get<PasteBoxService>();
+			service.SendMessage(handler, mimeType, textEdit.PlainText);
+		}
+
 		void UpdatePreview ()
 		{
-			string name = typeComboBox.CurrentText;
-			webView.SetHtml(m_Formatters[name].FormatAsHtml(textEdit.PlainText));
+			string mimeType = typeComboBox.ItemData(typeComboBox.CurrentIndex);			
+			var service = ServiceManager.Get<PasteBoxService>();
+			webView.SetHtml(service.GeneratePreview(mimeType, textEdit.PlainText));
 		}
 	}
 }

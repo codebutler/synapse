@@ -19,13 +19,11 @@
     <File name="ActionHandler.cs" subtype="Code" buildaction="Compile" />
     <File name="PasteBoxDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/PasteBoxDialog.cs" subtype="Code" buildaction="Compile" />
-    <File name="CodePasteFormatter.cs" subtype="Code" buildaction="Compile" />
-    <File name="IPasteFormatter.cs" subtype="Code" buildaction="Compile" />
-    <File name="SyntaxHighlighter.css" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="SyntaxHighlighter.js" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="IPasteFormatPreviewer.cs" subtype="Code" buildaction="Compile" />
     <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
-    <File name="PasteFormatCodon.cs" subtype="Code" buildaction="Compile" />
-    <File name="ConversationHeader.html" subtype="Code" buildaction="EmbedAsResource" resource_id="ConversationHeader.html" />
+    <File name="CodeMessageDisplayFormatter.cs" subtype="Code" buildaction="Compile" />
+    <File name="PasteBoxService.cs" subtype="Code" buildaction="Compile" />
+    <File name="ConversationHeader.html" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />
@@ -34,6 +32,11 @@
     <ProjectReference type="Assembly" localcopy="False" refto="../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll" />
     <ProjectReference type="Project" localcopy="True" refto="Synapse.QtClient" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/jabber-net.dll" />
+    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Wilco.SyntaxHighlighter.dll" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">

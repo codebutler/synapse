@@ -20,6 +20,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Xml;
 using Synapse.Xmpp;
 using jabber;
 using jabber.protocol.client;
@@ -76,6 +77,22 @@ namespace Synapse.UI.Chat
 				base.Account.Client.Write(message);
 				base.AppendMessage(false, message);
 			}			
+		}
+
+		public override void Send (XmlElement contentElement)
+		{
+			Message message = new Message(base.Account.Client.Document);
+			message.Type = MessageType.chat;
+			message.To = m_Jid;
+
+			message.AppendChild(contentElement);
+
+			var activeElem = base.Account.Client.Document.CreateElement("active");
+			activeElem.SetAttribute("xmlns", "http://jabber.org/protocol/chatstates");
+			message.AppendChild(activeElem);
+
+			base.Account.Client.Write(message);
+			base.AppendMessage(false, message);
 		}
 
 		public override void Dispose ()

@@ -108,6 +108,8 @@ namespace Synapse.Addins.PasteBox {
             this.buttonBox.ObjectName = "buttonBox";
             this.buttonBox.StandardButtons = global::Qyoto.Qyoto.GetCPPEnumValue("QDialogButtonBox", "NoButton");
             horizontalLayout_3.AddWidget(this.buttonBox);
+            QObject.Connect(buttonBox, Qt.SIGNAL("accepted()"), this, Qt.SLOT("accept()"));
+            QObject.Connect(buttonBox, Qt.SIGNAL("rejected()"), this, Qt.SLOT("reject()"));
             QMetaObject.ConnectSlotsByName(this);
         }
     }

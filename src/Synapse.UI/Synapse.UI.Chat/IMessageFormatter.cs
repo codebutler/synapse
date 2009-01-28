@@ -1,7 +1,7 @@
 //
-// CodePasteFormatter.cs
+// IMessageFormatter.cs
 // 
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -20,21 +20,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using jabber.protocol.client;
 
-namespace Synapse.Addins.PasteBox
-{	
-	public class CodePasteFormatter : IPasteFormatter
+namespace Synapse.UI.Chat
+{
+	public interface IMessageFormatter
 	{
-		string m_MimeType;
-		
-		public CodePasteFormatter (string mimeType)
-		{
-			m_MimeType = mimeType;
-		}
-		
-		public string FormatAsHtml (string pastedText)
-		{
-			return "<pre>" + pastedText + "</pre>";
-		}
+		string FormatMessage (Message message);
 	}
 }

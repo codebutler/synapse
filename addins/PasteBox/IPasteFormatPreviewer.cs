@@ -1,6 +1,10 @@
-// PasteFormatCodon.cs
+//
+// IPasteFormatter.cs
 // 
-// Copyright (C) 2009 [name of author]
+// Copyright (C) 2008 Eric Butler
+//
+// Authors:
+//   Eric Butler <eric@extremeboredom.net>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,40 +18,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
 
 using System;
-using Mono.Addins;
 
 namespace Synapse.Addins.PasteBox
-{
-	public class PasteFormatCodon : ExtensionNode
+{	
+	public interface IPasteFormatter
 	{
-		[NodeAttribute("name", "Name")]
-		string m_Name;
-
-		[NodeAttribute("mimeType", "Mime Type")]
-		string m_MimeType;
-
-
-		[NodeAttribute("class", "Class")]
-		string m_Class;
-		
-		public string Name {
-			get {
-				return m_Name;
-			}
-		}
-
-		public string MimeType {
-			get {
-				return m_MimeType;
-			}
-		}
-
-		public new IPasteFormatter CreateInstance ()
-		{
-			return (IPasteFormatter)Activator.CreateInstance(Addin.GetType(m_Class), m_MimeType);
-		}
+		string Preview (string pastedText);
 	}
 }

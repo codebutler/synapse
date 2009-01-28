@@ -20,6 +20,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Xml;
 using Synapse.Xmpp;
 using jabber;
 using jabber.connection;
@@ -56,6 +57,17 @@ namespace Synapse.UI.Chat
 				// FIXME: Send this as HTML
 				m_Room.PublicMessage(text);
 			}
+		}
+
+		public override void Send (XmlElement contentElement)
+		{
+			Message m = new Message(base.Account.Client.Document);
+			m.To = m_Room.JID;
+			m.Type = MessageType.groupchat;
+            
+			m.AppendChild(contentElement);
+			
+			base.Account.Client.Write(m);
 		}
 		
 		public Room Room {

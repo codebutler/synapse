@@ -85,6 +85,7 @@ namespace Synapse.QtClient
 			// XXX: I dont like all of these being here.
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.AccountService>();
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.ShoutService>();
+			ServiceManager.RegisterService<GuiService>();
 			ServiceManager.RegisterService<ActionService>();
 			
 			QWebSettings.GlobalSettings().SetAttribute(QWebSettings.WebAttribute.DeveloperExtrasEnabled, true);

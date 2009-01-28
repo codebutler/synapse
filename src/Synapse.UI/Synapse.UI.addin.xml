@@ -47,4 +47,8 @@
 	<ExtensionPoint path="/Synapse/UI/ConversationHtmlHeaders">
 		<ExtensionNode name="ConversationHeader" type="Synapse.UI.ResourceCodon" />
 	</ExtensionPoint>
+
+	<ExtensionPoint path="/Synapse/UI/Chat/MessageDisplayFormatters">
+		<ExtensionNode name="MessageDisplayFormatter" />
+	</ExtensionPoint>
 </Addin>
