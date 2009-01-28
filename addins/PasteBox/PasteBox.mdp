@@ -25,6 +25,7 @@
     <File name="SyntaxHighlighter.js" subtype="Code" buildaction="EmbedAsResource" />
     <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
     <File name="PasteFormatCodon.cs" subtype="Code" buildaction="Compile" />
+    <File name="ConversationHeader.html" subtype="Code" buildaction="EmbedAsResource" resource_id="ConversationHeader.html" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />

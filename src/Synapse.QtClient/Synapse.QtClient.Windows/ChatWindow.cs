@@ -111,6 +111,19 @@ namespace Synapse.QtClient.Windows
 				toolbar.AddAction((QAction)node.CreateInstance(this));
 			}		
 			
+			var spacerWidget = new QWidget(toolbar);
+			spacerWidget.SetSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed);
+			toolbar.AddWidget(spacerWidget);
+
+			var toContainer = new QWidget(toolbar);
+			var layout = new QHBoxLayout(toContainer);
+			layout.SetContentsMargins(0, 0, 4, 0);
+
+			layout.AddWidget(new QLabel("To:", toContainer));
+			layout.AddWidget(new QComboBox(toContainer));
+			
+			toolbar.AddWidget(toContainer);
+
 			((QVBoxLayout)bottomContainer.Layout()).InsertWidget(0, toolbar);
 			
 			m_ConversationWidget.LoadTheme("Mockie", "Orange - Icon Left");

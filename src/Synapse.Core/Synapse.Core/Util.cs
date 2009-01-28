@@ -249,7 +249,11 @@ namespace Synapse.Core
 		public static string Linkify (string text)
 		{
 			Regex rx = new Regex(WEB_URL_PATTERN, RegexOptions.IgnoreCase);
-            return rx.Replace(text, "<a href=\"$0\">$0</a>");
+            return rx.Replace(text, delegate (Match match) {
+				string url = match.Captures[0].Value;
+				string fixedUrl = url.Contains("://") ? url : "http://" + url;
+				return String.Format("<a href=\"{0}\" title=\"{0}\">{1}</a>", fixedUrl, url);
+			});
 		}
 		
         private const string WEB_URL_PATTERN = "((?:(https?)://(?:(?:[a-zA-Z0-9\\$\\-_\\.\\+!\\*'\\(\\)"

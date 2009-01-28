@@ -2,11 +2,10 @@
 <stetic-interface>
   <configuration>
     <images-root-path>..</images-root-path>
-    <target-gtk-version>2.12.1</target-gtk-version>
+    <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="../../../build/Debug/Synapse.Services.dll" />
-    <widget-library name="../../../build/Debug/Twitter.dll" internal="true" />
+    <widget-library name="../../../build/Debug/addins/Twitter.dll" internal="true" />
   </import>
   <widget class="Gtk.Dialog" id="Synapse.Addins.TwitterAddin.TwitterAddinPreferencesDialog" design-size="312 163">
     <property name="MemberName" />

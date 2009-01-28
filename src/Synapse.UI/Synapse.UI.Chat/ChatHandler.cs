@@ -39,7 +39,7 @@ namespace Synapse.UI.Chat
 		public override void Start()
 		{
 			base.Account.ConnectionStateChanged += HandleConnectionStateChanged;
-			HandleConnectionStateChanged(base.Account);
+			base.Ready = (base.Account.ConnectionState == AccountConnectionState.Connected);
 		}
 		
 		public JID Jid {
@@ -68,6 +68,11 @@ namespace Synapse.UI.Chat
 				message.Type = MessageType.chat;
 				message.To = m_Jid;
 				message.Body = text;
+
+				var activeElem = base.Account.Client.Document.CreateElement("active");
+				activeElem.SetAttribute("xmlns", "http://jabber.org/protocol/chatstates");
+				message.AppendChild(activeElem);
+
 				base.Account.Client.Write(message);
 				base.AppendMessage(false, message);
 			}			
