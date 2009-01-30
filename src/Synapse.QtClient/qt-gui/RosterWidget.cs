@@ -117,7 +117,7 @@ namespace Synapse.QtClient.Widgets {
         
         protected void SetupUi() {
             base.ObjectName = "RosterWidget";
-            this.Geometry = new QRect(0, 0, 352, 494);
+            this.Geometry = new QRect(0, 0, 352, 473);
             this.WindowTitle = "RosterWidget";
             this.StyleSheet = "";
             QVBoxLayout verticalLayout_6;
@@ -364,6 +364,12 @@ namespace Synapse.QtClient.Widgets {
             verticalLayout.Margin = 0;
             this.activityHeader = new QFrame(this.activityTab);
             this.activityHeader.ObjectName = "activityHeader";
+            QSizePolicy activityHeader_sizePolicy;
+            activityHeader_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum);
+            activityHeader_sizePolicy.SetVerticalStretch(0);
+            activityHeader_sizePolicy.SetHorizontalStretch(0);
+            activityHeader_sizePolicy.SetHeightForWidth(this.activityHeader.SizePolicy.HasHeightForWidth());
+            this.activityHeader.SizePolicy = activityHeader_sizePolicy;
             this.activityHeader.FrameShape = QFrame.Shape.NoFrame;
             this.activityHeader.FrameShadow = QFrame.Shadow.Raised;
             QHBoxLayout horizontalLayout_9;
@@ -454,6 +460,12 @@ namespace Synapse.QtClient.Widgets {
             verticalLayout.AddWidget(this.shoutContainer);
             this.m_ActivityWebView = new QWebView(this.activityTab);
             this.m_ActivityWebView.ObjectName = "m_ActivityWebView";
+            QSizePolicy m_ActivityWebView_sizePolicy;
+            m_ActivityWebView_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding);
+            m_ActivityWebView_sizePolicy.SetVerticalStretch(0);
+            m_ActivityWebView_sizePolicy.SetHorizontalStretch(0);
+            m_ActivityWebView_sizePolicy.SetHeightForWidth(this.m_ActivityWebView.SizePolicy.HasHeightForWidth());
+            this.m_ActivityWebView.SizePolicy = m_ActivityWebView_sizePolicy;
             this.m_ActivityWebView.Url = new QUrl("about:blank");
             verticalLayout.AddWidget(this.m_ActivityWebView);
             this.tabWidget.AddTab(this.activityTab, "Activity");

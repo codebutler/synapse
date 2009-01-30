@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>352</width>
-    <height>494</height>
+    <height>473</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -486,6 +486,12 @@ p, li { white-space: pre-wrap; }
            </property>
            <item>
             <widget class="QFrame" name="activityHeader" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="frameShape" >
               <enum>QFrame::NoFrame</enum>
              </property>
@@ -685,6 +691,12 @@ p, li { white-space: pre-wrap; }
            </item>
            <item>
             <widget class="QWebView" name="m_ActivityWebView" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="url" >
               <url>
                <string>about:blank</string>
@@ -697,7 +709,6 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
       </layout>
-      <zorder>tabWidget</zorder>
      </widget>
     </widget>
    </item>
