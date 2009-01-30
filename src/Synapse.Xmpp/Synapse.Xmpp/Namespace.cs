@@ -52,5 +52,10 @@ namespace Synapse.Xmpp
 		// XEP-0085: Chat State Notifications
 		// http://xmpp.org/extensions/xep-0085.html
 		public const string ChatStates = "http://jabber.org/protocol/chatstates";
+
+		public const string Tune = "http://jabber.org/protocol/tune";
+		public const string Mood = "http://jabber.org/protocol/mood";
+
+		public const string WebIdentities = "http://synapse.im/protocol/webidentities";
 	}
 }

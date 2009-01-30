@@ -77,6 +77,8 @@ namespace Synapse.Xmpp
 		PropertyCollection              m_Properties = new PropertyCollection();
 
 		Dictionary<JID, Presence> m_UserPresenceCache;
+
+		List<StreamTypeInfo> m_StreamTypes = new List<StreamTypeInfo>();
 		
 		public event AccountEventHandler Changed; // XXX: is this used?
 		public event AccountEventHandler ConnectionStateChanged;
@@ -183,8 +185,9 @@ namespace Synapse.Xmpp
 
 		void HandleOnStreamInit(object sender, ElementStream stream)
 		{
-			stream.AddType("tune", "http://jabber.org/protocol/tune", typeof(UserTune.Tune));
-			stream.AddType("mood", "http://jabber.org/protocol/mood", typeof(UserMood.Mood));
+			foreach (StreamTypeInfo info in m_StreamTypes) {
+				stream.AddType(info.LocalName, info.Namespace, info.Type);
+			}
 		}
 
 		void HandleNetworkStateChanged (NetworkState state)
@@ -225,19 +228,9 @@ namespace Synapse.Xmpp
 
 				m_MyVCard = vcard;
 
-				bool updated = false;
-				var providers = ServiceManager.Get<XmppService>().VCardFieldProviders;
-				foreach (var vcardProvider in providers) {
-					if (vcardProvider.PopulateVCard(m_MyVCard)) {
-						updated = true;
-					}
-				}
-
 				if (noVCard) {
 					// FIXME: Raise an event telling user to fill out profile!
 					Console.WriteLine("No VCard!");
-				} else if (updated) {
-					SaveVCard();
 				} else {
 					if (MyVCardUpdated != null) {
 						MyVCardUpdated(this, EventArgs.Empty);
@@ -691,6 +684,11 @@ namespace Synapse.Xmpp
 			m_Client.Write(iq);
 		}
 		#endregion
+
+		public void AddStreamType (string localName, string @namespace, Type type)
+		{
+			m_StreamTypes.Add(new StreamTypeInfo(localName, @namespace, type));
+		}
 		
 		protected virtual void OnStateChanged ()
 		{

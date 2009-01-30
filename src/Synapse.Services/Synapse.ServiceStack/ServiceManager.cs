@@ -97,7 +97,7 @@ namespace Synapse.ServiceStack
         {
 			RegisterService<SettingsService>();
 			RegisterService<DBusServiceManager>();
-			//RegisterService<ScreensaverService>();
+			RegisterService<ScreensaverService>();
 			RegisterService<NowPlayingService>();
 			RegisterService<NetworkService>();
 			RegisterService<ActivityFeedService>();

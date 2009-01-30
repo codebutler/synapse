@@ -27,8 +27,8 @@ using Synapse.ServiceStack;
 
 namespace Synapse.Services
 {
-	public delegate void ActiveChangedHandler (object sender, bool isActive);
-	public delegate void SessionIdleChangedHandler (object sender, bool isSessionIdle);
+	public delegate void ActiveChangedHandler (bool new_value);
+	public delegate void SessionIdleChangedHandler (bool new_value);
 	
 	public class ScreensaverService : IService, IInitializeService
 	{
@@ -196,35 +196,35 @@ namespace Synapse.Services
 		{
 			if (!Bus.Session.NameHasOwner (BusName))
 				throw new ApplicationException(String.Format("Name {0} has no owner", BusName));
-			
+
 			m_screenSaver = Bus.Session.GetObject<IScreenSaver> (BusName, new ObjectPath (ObjectPath));
 			
 			/* connect to the active changed event and forward it */
-			m_screenSaver.ActiveChanged += delegate (object sender, bool isActive) {
+			m_screenSaver.ActiveChanged += delegate (bool isActive) {
 				ActiveChangedHandler handler = ActiveChanged;
 				if (handler != null)
-					handler (this, isActive);
+					handler (isActive);
 			};
 			
 			/* connect to the session idle event and forward it */
-			m_screenSaver.SessionIdleChanged += delegate (object sender, bool isSessionIdle) {
+			m_screenSaver.SessionIdleChanged += delegate (bool isSessionIdle) {
 				SessionIdleChangedHandler handler = SessionIdleChanged;
 				if (handler != null)
-					handler (this, isSessionIdle);
+					handler (isSessionIdle);
 			};
 			
 			/* connect to the begin auth and forward it */
 			m_screenSaver.AuthenticationRequestBegin += delegate () {
 				EventHandler handler = AuthenticationRequestBegin;
 				if (handler != null)
-					handler (this, new EventArgs ());
+					handler (this, EventArgs.Empty);
 			};
 			
 			/* connect to the end auth and forward it */
 			m_screenSaver.AuthenticationRequestEnd += delegate () {
 				EventHandler handler = AuthenticationRequestEnd;
 				if (handler != null)
-					handler (this, new EventArgs ());
+					handler (this, EventArgs.Empty);
 			};
 		}
 		

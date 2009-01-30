@@ -54,6 +54,7 @@ FILES =  \
 	AssemblyInfo.cs \
 	Synapse.Xmpp.Services/AccountService.cs \
 	Synapse.Xmpp.Services/ShoutService.cs \
+	Synapse.Xmpp.Services/XmppService.cs \
 	Synapse.Xmpp/Account.cs \
 	Synapse.Xmpp/AvatarManager.cs \
 	Synapse.Xmpp/ChatStates.cs \
@@ -63,6 +64,7 @@ FILES =  \
 	Synapse.Xmpp/Microblogging.cs \
 	Synapse.Xmpp/Namespace.cs \
 	Synapse.Xmpp/PersonalEventing.cs \
+	Synapse.Xmpp/StreamTypeInfo.cs \
 	Synapse.Xmpp/UserAvatars.cs \
 	Synapse.Xmpp/UserMood.cs \
 	Synapse.Xmpp/UserTune.cs \

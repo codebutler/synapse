@@ -37,10 +37,8 @@ namespace Synapse.Xmpp
 		public UserMood(Account account)
 		{
 			m_Account = account;
-			account.GetFeature<PersonalEventing>().RegisterHandler(
-				"http://jabber.org/protocol/mood",
-				ReceivedMood
-			);
+			account.AddStreamType("mood", Namespace.Mood, typeof(UserMood.Mood));
+			account.GetFeature<PersonalEventing>().RegisterHandler(Namespace.Mood, ReceivedMood);
 		}
 
 		public void PublishMood (string mood, string reason)
@@ -55,7 +53,7 @@ namespace Synapse.Xmpp
 			moodElement.Text = reason;
 			itemElement.AppendChild(moodElement);
 			
-			m_Account.GetFeature<PersonalEventing>().Publish("http://jabber.org/protocol/mood", itemElement);
+			m_Account.GetFeature<PersonalEventing>().Publish(Namespace.Mood, itemElement);
 		}
 		
 		void ReceivedMood (JID from, string node, PubSubItem item)
@@ -73,15 +71,15 @@ namespace Synapse.Xmpp
 		public string[] FeatureNames {
 			get {
 				return new string[] { 
-					"http://jabber.org/protocol/mood",
-					"http://jabber.org/protocol/mood+notify"
+					Namespace.Mood,
+					Namespace.Mood + "+notify"
 				};
 			}
 		}
 
 		public class Mood : Element
 		{
-			public Mood (XmlDocument doc, string moodName) : base ("mood", "http://jabber.org/protocol/mood", doc)
+			public Mood (XmlDocument doc, string moodName) : base ("mood", Namespace.Mood, doc)
 			{
 				this.AppendChild(doc.CreateElement(moodName));
 					

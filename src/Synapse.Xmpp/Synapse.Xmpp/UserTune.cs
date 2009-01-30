@@ -43,12 +43,11 @@ namespace Synapse.Xmpp
 		public UserTune(Account account)
 		{
 			m_Account = account;
-			account.GetFeature<PersonalEventing>().RegisterHandler(
-				"http://jabber.org/protocol/tune",
-				ReceivedTune
-			);
+			account.GetFeature<PersonalEventing>().RegisterHandler(Namespace.Tune, ReceivedTune);
 			
 			ServiceManager.Get<NowPlayingService>().TrackChanged += TrackChanged;
+
+			account.AddStreamType("tune", Namespace.Tune, typeof(UserTune.Tune));
 		}
 
 		public Tune this [string bareJid] {
@@ -76,13 +75,10 @@ namespace Synapse.Xmpp
 		{			
 			NowPlayingService nowPlaying = ServiceManager.Get<NowPlayingService>();
 			
-			XmlDocument doc = m_Account.Client.Document;
-			
-			PubSubItem itemElement = new PubSubItem(doc);
+			PubSubItem itemElement = new PubSubItem(m_Account.Client.Document);
 			itemElement.SetAttribute("id", "current");
-			doc.AppendChild(itemElement);
 
-			Tune tune = new Tune(doc);
+			Tune tune = new Tune(m_Account.Client.Document);
 			itemElement.AppendChild(tune);
 
 			if (nowPlaying.IsPlaying) {
@@ -95,21 +91,21 @@ namespace Synapse.Xmpp
 				tune.Uri    = nowPlaying.CurrentTrackUri;				
 			}
 		    
-			m_Account.GetFeature<PersonalEventing>().Publish("http://jabber.org/protocol/tune", itemElement);
+			m_Account.GetFeature<PersonalEventing>().Publish(Namespace.Tune, itemElement);
 		}
 		
 		public string[] FeatureNames {
 			get {
-				return new string[] { 
-					"http://jabber.org/protocol/tune",
-					"http://jabber.org/protocol/tune+notify"
+				return new string[] {
+					Namespace.Tune,
+					Namespace.Tune + "+notify"
 				};
 			}
 		}
 
 		public class Tune : Element
 		{
-			public Tune (XmlDocument doc) : base ("tune", "http://jabber.org/protocol/tune", doc)
+			public Tune (XmlDocument doc) : base ("tune", Namespace.Tune, doc)
 			{
 				// FIXME: Abstract this, I suspect I'll be using it many places.
 				XmlElement timestampElement = new Element("timestamp", "http://synapse.im/protocol/timestamp", doc);
