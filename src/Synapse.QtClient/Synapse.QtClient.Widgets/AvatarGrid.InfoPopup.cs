@@ -99,7 +99,7 @@ namespace Synapse.QtClient.Widgets
 						return;
 					
 					m_Item = value;
-					if (m_Item != null) {
+					if (m_Item != null) {						
 						QPixmap pixmap = (QPixmap)m_Grid.Model.GetImage(m_Item.Item);
 						m_PixmapItem.Rect = new QRect(0, 0, m_Grid.IconSize, m_Grid.IconSize);
 						m_PixmapItem.Pixmap = pixmap;
@@ -124,14 +124,26 @@ namespace Synapse.QtClient.Widgets
 						m_Scene.SceneRect = m_Scene.ItemsBoundingRect();
 
 						var itemRect = m_Item.SceneBoundingRect();
-						
-						var point = m_Grid.MapToGlobal(m_Grid.MapFromScene(itemRect.X(), itemRect.Y()));
-						int x = point.X();
-						int y = point.Y();
 
-						x -= (60 / 2) - (m_Grid.IconSize / 2) + 6;
-						y -= (60 / 2) - (m_Grid.IconSize / 2) + 6;						
+						var gridItemPoint = m_Grid.MapToGlobal(m_Grid.MapFromScene(itemRect.X(), itemRect.Y()));
 						
+						var desktop = QApplication.Desktop();
+						var screenGeometry = desktop.ScreenGeometry(desktop.ScreenNumber(Gui.MainWindow));
+						if (gridItemPoint.X() + base.Width() > screenGeometry.Width()) {	
+							((QHBoxLayout)base.Layout()).SetDirection(QBoxLayout.Direction.RightToLeft);
+						} else {
+							((QHBoxLayout)base.Layout()).SetDirection(QBoxLayout.Direction.LeftToRight);
+						}
+
+						// FIXME: I cannot figure out how to make this work without doing this.
+						// Is there some method that does a complete re-layout?
+						base.Hide();
+						base.Show();
+						
+						var avatarPoint = m_GraphicsView.MapToParent(m_GraphicsView.MapFromScene(m_PixmapItem.X(), m_PixmapItem.Y()));
+						
+						int x = gridItemPoint.X() - avatarPoint.X();
+						int y = gridItemPoint.Y() - avatarPoint.Y();						
 						this.Move(x, y);
 					} else {
 						this.Hide();
