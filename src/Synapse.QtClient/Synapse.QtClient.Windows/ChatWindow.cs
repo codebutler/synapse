@@ -126,10 +126,13 @@ namespace Synapse.QtClient.Windows
 			layout.AddWidget(new QLabel("To:", toContainer));
 			layout.AddWidget(m_ToComboBox);
 			
-			toolbar.AddWidget(toContainer);
+			QAction toWidgetAction = (QWidgetAction)toolbar.AddWidget(toContainer);
 
 			m_ToComboBox.AddItem("Automatic", "auto");
 			m_ToComboBox.InsertSeparator(1);
+
+			((QVBoxLayout)bottomContainer.Layout()).InsertWidget(0, toolbar);
+			
 			if (handler is ChatHandler) {
 				var chatHandler = (ChatHandler)handler;
 				handler.Account.Client.OnPresence += delegate(object sender, Presence pres) {
@@ -172,10 +175,8 @@ namespace Synapse.QtClient.Windows
 					}
 				}				
 			} else {
-				toContainer.Hide();
+				toWidgetAction.Visible = false;
 			}
-			
-			((QVBoxLayout)bottomContainer.Layout()).InsertWidget(0, toolbar);
 			
 			m_ConversationWidget.LoadTheme("Mockie", "Orange - Icon Left");
 
@@ -252,8 +253,8 @@ namespace Synapse.QtClient.Windows
 				if (m_Handler is ChatHandler) {
 					Application.Invoke(delegate {
 						m_ConversationWidget.AppendContent(content, isSimilar, false, replaceLast);
-								
-						if (!IsActive) {
+						
+						if (content is ChatContentMessage && !IsActive) {
 							UrgencyHint = true;
 						}
 						
