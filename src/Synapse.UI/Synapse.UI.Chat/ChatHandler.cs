@@ -48,15 +48,20 @@ namespace Synapse.UI.Chat
 				return m_Jid;
 			}
 		}
+
+		public string Resource {
+			get;
+			set;
+		}
 		
 		public void SetPresence (Presence presence)
 		{
 			string message = null;
 			string fromName = base.Account.GetDisplayName(presence.From);
 			if (!String.IsNullOrEmpty(presence.Status)) {
-				message = String.Format("{0} is now {1}: {2}.", fromName, Helper.GetPresenceDisplay(presence), presence.Status);
+				message = String.Format("{0} ({1}) is now {2}: {3}.", fromName, Helper.GetResourceDisplay(presence), Helper.GetPresenceDisplay(presence), presence.Status);
 			} else {
-				message = String.Format("{0} is now {1}.", fromName, Helper.GetPresenceDisplay(presence));
+				message = String.Format("{0} ({1}) is now {2}.", fromName, Helper.GetResourceDisplay(presence), Helper.GetPresenceDisplay(presence));
 			}
 			
 			base.AppendStatus(message);
@@ -67,7 +72,7 @@ namespace Synapse.UI.Chat
 			if (!String.IsNullOrEmpty(text)) {
 				Message message = new Message(base.Account.Client.Document);
 				message.Type = MessageType.chat;
-				message.To = m_Jid;
+				message.To = new JID(m_Jid.User, m_Jid.Server, Resource);
 				message.Body = text;
 
 				var activeElem = base.Account.Client.Document.CreateElement("active");

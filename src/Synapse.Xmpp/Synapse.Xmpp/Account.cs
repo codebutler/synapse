@@ -121,7 +121,7 @@ namespace Synapse.Xmpp
 			m_Client.OnError        += HandleOnError;
 			m_Client.OnPresence 	+= HandleOnPresence;
 			m_Client.OnInvalidCertificate += delegate { return true; }; // XXX:
-
+			m_Client.OnBeforePresenceOut += HandleOnBeforePresenceOut;			
 			m_Client.OnStreamInit += HandleOnStreamInit;
 			
 			m_Roster = new RosterManager();
@@ -168,6 +168,13 @@ namespace Synapse.Xmpp
 
 			if (ServiceManager.Contains<NetworkService>())
 				ServiceManager.Get<NetworkService>().StateChange += HandleNetworkStateChanged;
+		}
+
+		void HandleOnBeforePresenceOut(object sender, Presence pres)
+		{
+			var e = new Element("ResourceDisplay", "http://synapse.im/protocol/resourcedisplay", m_Client.Document);
+			e.InnerText = m_Resource;
+			pres.AppendChild(e);
 		}
 
 		void HandleOnIQ(object sender, IQ iq)

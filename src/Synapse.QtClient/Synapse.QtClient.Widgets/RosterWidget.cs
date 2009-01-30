@@ -315,7 +315,7 @@ namespace Synapse.QtClient.Widgets
 	
 		void SendShout ()
 		{
-			if (!shoutLineEdit.Text.Blank()) {
+			if (!String.IsNullOrEmpty(shoutLineEdit.Text)) {
 	
 				List<IShoutHandler> selectedHandlers = new List<IShoutHandler>();
 				

@@ -100,36 +100,23 @@ namespace Synapse.UI.Chat
 			
 			foreach (XmlNode child in msg) {
 				if (child.NamespaceURI == Namespace.ChatStates) {
-					TypingState? state = null;
-					if (child.Name == "active") {
-						state = TypingState.Active;
-					
-					} else if (child.Name == "composing") {
+					TypingState state = TypingState.None;
+					if (child.LocalName == "active") {
+						state = TypingState.Active;					
+					} else if (child.LocalName == "composing") {
 						state = TypingState.Composing;
-					} else if (child.Name == "paused") {
+					} else if (child.LocalName == "paused") {
 						state = TypingState.Paused;
-					} else if (child.Name == "inactive") {
+					} else if (child.LocalName == "inactive") {
 						state = TypingState.Inactive;
-					} else if (child.Name == "gone") {
+					} else if (child.LocalName == "gone") {
 						state = TypingState.Gone;
 					} else {
-						Console.WriteLine(String.Format("Unknown chatstate from {0}: {1}", from, child.Name));
+						Console.WriteLine(String.Format("Unknown chatstate from {0}: {1}", from, child.LocalName));
 					}
 	
-					/* FIXME:
-					if (state != null) {
-						var typingContent = new ChatContentTyping(m_Account, null, null, state.Value);
-						
-						RemoteTypingState = typingContent;
-	
-						// FIXME: It might be nice to offer this as an option, 
-						// but without a JS method to remove the last object, 
-						// it doesnt work well at all.
-						//AppendContent(content);
-					} else {
-						RemoteTypingState = null;
-					}
-					*/
+					var typingContent = new ChatContentTyping(m_Account, null, null, state);
+					NewContent(this, typingContent);
 				}
 			}
 			

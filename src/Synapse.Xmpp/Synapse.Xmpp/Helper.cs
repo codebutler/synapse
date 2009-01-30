@@ -53,5 +53,15 @@ namespace Synapse.Xmpp
 				throw new ArgumentException("presence type not supported: " + presence.Type);
 			}
 		}
+
+		public static string GetResourceDisplay (Presence presence)
+		{
+			if (presence["ResourceDisplay"] != null && !String.IsNullOrEmpty(presence["ResourceDisplay"].InnerText))
+				return presence["ResourceDisplay"].InnerText;		
+			else if (!String.IsNullOrEmpty(presence.From.Resource))
+				return presence.From.Resource;
+			else
+				return "Unknown";		
+		}
 	}
 }

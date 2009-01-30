@@ -207,7 +207,7 @@ namespace Synapse.UI
 			if (presences.Length > 1) {
 				foreach (var presence in presences) {
 					builder.AppendFormat("\n{0}: {1}",
-					                     presence.From.Resource,
+					                     Helper.GetResourceDisplay(presence),
 					                     Helper.GetPresenceDisplay(presence));
 					if (!String.IsNullOrEmpty(presence.Status)) {
 						builder.Append(" - ");

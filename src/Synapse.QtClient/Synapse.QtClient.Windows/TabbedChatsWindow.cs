@@ -154,6 +154,14 @@ namespace Synapse.QtClient.Windows
 			}
 		}
 
+		public void SetTabTitle (QWidget tab, string title)
+		{
+			int index = m_Tabs.IndexOf(tab);
+			m_Tabs.SetTabText(index, title);
+			if (m_Tabs.CurrentIndex == index)
+				this.WindowTitle = title;
+		}
+
 		void HandleAccountAdded (Account account)
 		{
 			m_AccountManagers.Add(account, new AccountChatWindowManager(account));
@@ -187,7 +195,9 @@ namespace Synapse.QtClient.Windows
 			int newIndex = m_Tabs.IndexOf(window);
 			m_Tabs.SetCurrentIndex(newIndex);
 			if (this.Minimized)
-				this.ShowNormal();			
+				this.ShowNormal();
+			this.ActivateWindow();
+			this.Raise();
 			window.SetFocus();
 		}
 

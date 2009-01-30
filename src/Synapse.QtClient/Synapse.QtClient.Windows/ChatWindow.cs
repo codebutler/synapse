@@ -48,6 +48,8 @@ namespace Synapse.QtClient.Windows
 		QAction m_UnderlineAction;
 		QAction m_ItalicAction;
 		QAction m_StrikethroughAction;
+
+		QComboBox m_ToComboBox;
 	
 		IChatHandler m_Handler;
 	
@@ -119,11 +121,60 @@ namespace Synapse.QtClient.Windows
 			var layout = new QHBoxLayout(toContainer);
 			layout.SetContentsMargins(0, 0, 4, 0);
 
+			m_ToComboBox = new QComboBox(toContainer);
+			
 			layout.AddWidget(new QLabel("To:", toContainer));
-			layout.AddWidget(new QComboBox(toContainer));
+			layout.AddWidget(m_ToComboBox);
 			
 			toolbar.AddWidget(toContainer);
 
+			m_ToComboBox.AddItem("Automatic", "auto");
+			m_ToComboBox.InsertSeparator(1);
+			if (handler is ChatHandler) {
+				var chatHandler = (ChatHandler)handler;
+				handler.Account.Client.OnPresence += delegate(object sender, Presence pres) {
+					if (pres.From.Bare != chatHandler.Jid.Bare || pres.Priority == "-1") {
+						return;
+					}
+					Application.Invoke(delegate {
+						if (!String.IsNullOrEmpty(pres.From.Resource)) {
+							if (pres.Type == PresenceType.available) {
+								string text = String.Format("{0} ({1})", Helper.GetResourceDisplay(pres), Helper.GetPresenceDisplay(pres));
+								int i = m_ToComboBox.FindData(pres.From.Resource);
+								if (i == -1) {
+									m_ToComboBox.AddItem(text, pres.From.Resource);
+								} else {
+									m_ToComboBox.SetItemText(i, text);
+								}
+							} else if (pres.Type == PresenceType.unavailable) {
+								int i = m_ToComboBox.FindData(pres.From.Resource);
+								if (i > -1) {
+									m_ToComboBox.RemoveItem(i);
+									m_ToComboBox.CurrentIndex = 0;
+								}
+							}
+						}
+
+						string title = null;
+						if (handler.Account.PresenceManager[pres.From.BareJID] == null) {
+							title = String.Format("{0} (Offline)", chatHandler.Account.GetDisplayName(chatHandler.Jid));
+						} else {
+							title = chatHandler.Account.GetDisplayName(chatHandler.Jid);	
+						}
+						Gui.TabbedChatsWindow.SetTabTitle(this, title);
+					});
+				};
+				
+				foreach (var presence in chatHandler.Account.PresenceManager.GetAll(chatHandler.Jid)) {
+					if (presence.Priority != "-1" && !String.IsNullOrEmpty(presence.From.Resource)) {
+						string text = String.Format("{0} ({1})", Helper.GetResourceDisplay(presence), Helper.GetPresenceDisplay(presence));
+						m_ToComboBox.AddItem(text, presence.From.Resource);
+					}
+				}				
+			} else {
+				toContainer.Hide();
+			}
+			
 			((QVBoxLayout)bottomContainer.Layout()).InsertWidget(0, toolbar);
 			
 			m_ConversationWidget.LoadTheme("Mockie", "Orange - Icon Left");
@@ -177,20 +228,43 @@ namespace Synapse.QtClient.Windows
 		
 		void HandleNewContent (IChatHandler handler, AbstractChatContent content)
 		{			
-			bool isSimilar   = m_PreviousContent != null && content.IsSimilarToContent(m_PreviousContent);
-			//bool replaceLast = m_PreviousContent is ChatContentStatus && 
-			//	               content is ChatContentStatus && 
-			//	               ((ChatContentStatus)m_PreviousContent).CoalescingKey == ((ChatContentStatus)content).CoalescingKey;
-			bool replaceLast = m_PreviousContent is ChatContentTyping;
-			
-			m_PreviousContent = content;
-			
-			Application.Invoke(delegate {
-				m_ConversationWidget.AppendContent(content, isSimilar, false, replaceLast);	
-				if (content is ChatContentMessage && !IsActive) {
-					UrgencyHint = true;
+			if (content is ChatContentTyping) {
+				var typingContent = (ChatContentTyping)content;
+				if (m_Handler is ChatHandler) {
+					var chatHandler = (ChatHandler)m_Handler;
+					string title = null;
+					if (typingContent.TypingState != TypingState.None && typingContent.TypingState != TypingState.Active) {
+						title = String.Format("{0} ({1})", chatHandler.Account.GetDisplayName(chatHandler.Jid), typingContent.TypingState.ToString());
+					} else {
+						title = chatHandler.Account.GetDisplayName(chatHandler.Jid);
+					}
+					Gui.TabbedChatsWindow.SetTabTitle(this, title);
 				}
-			});
+			} else {
+				bool isSimilar   = m_PreviousContent != null && content.IsSimilarToContent(m_PreviousContent);
+				//bool replaceLast = m_PreviousContent is ChatContentStatus && 
+				//	               content is ChatContentStatus && 
+				//	               ((ChatContentStatus)m_PreviousContent).CoalescingKey == ((ChatContentStatus)content).CoalescingKey;
+				bool replaceLast = m_PreviousContent is ChatContentTyping;
+				
+				m_PreviousContent = content;
+				
+				if (m_Handler is ChatHandler) {
+					Application.Invoke(delegate {
+						m_ConversationWidget.AppendContent(content, isSimilar, false, replaceLast);
+								
+						if (!IsActive) {
+							UrgencyHint = true;
+						}
+						
+						if (content is ChatContentMessage && (content.Source.Bare == ((ChatHandler)m_Handler).Jid.Bare)) {
+							// Select this resource so our replies go to it.
+							int i = m_ToComboBox.FindData(((ChatContentMessage)content).Source.Resource);
+							m_ToComboBox.CurrentIndex = (i > -1) ? i : 0;
+						}
+					});
+				}
+			}
 		}
 		
 		bool HandleKeyEvent(QKeyEvent kevent)
@@ -199,6 +273,13 @@ namespace Synapse.QtClient.Windows
 				// FIXME: Need to clean this HTML up...
 				// string html = textEdit.Html;
 				string html = textEdit.PlainText;
+				
+				
+				if (m_Handler is ChatHandler) {
+					string resource = m_ToComboBox.ItemData(m_ToComboBox.CurrentIndex);
+					((ChatHandler)m_Handler).Resource = (resource == "auto") ? null : resource;
+				}
+				
 				m_Handler.Send(html);
 				textEdit.Clear();
 				return true;

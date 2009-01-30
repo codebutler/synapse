@@ -37,6 +37,12 @@ namespace Synapse.UI.Chat
 			m_TypingState = state;
 		}
 
+		public TypingState TypingState {
+			get {
+				return m_TypingState;
+			}
+		}
+		
 		public override ChatContentType Type {
 			get {
 				return ChatContentType.Typing;
@@ -73,6 +79,7 @@ namespace Synapse.UI.Chat
 		Composing,
 		Paused,
 		Inactive,
-		Gone
+		Gone,
+		None
 	}
 }

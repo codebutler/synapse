@@ -29,10 +29,5 @@ namespace Synapse.Core.ExtensionMethods
 		{
 			return String.Format(self, args);
 		}
-
-		public static bool Blank (this string self)
-		{
-			return String.IsNullOrEmpty(self);
-		}
 	}
 }

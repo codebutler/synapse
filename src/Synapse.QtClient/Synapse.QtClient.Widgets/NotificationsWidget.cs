@@ -77,7 +77,7 @@ namespace Synapse.QtClient.Widgets
 				builder.Append(" ");
 				builder.AppendFormat(template.SingularText, "<b>{0}</b>".FormatWith(item.ActionItem));
 				
-				if (!item.Content.Blank()) {
+				if (!String.IsNullOrEmpty(item.Content)) {
 					builder.Append(":");
 					builder.Append("<p style=\"margin-left: 20px; margin-top: 0px; margin-bottom: 0px;\">");
 					builder.Append(item.Content);
