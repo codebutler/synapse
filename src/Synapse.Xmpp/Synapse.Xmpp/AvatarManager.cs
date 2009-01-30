@@ -69,7 +69,6 @@ namespace Synapse.Xmpp
 		{
 			account.Client.OnPresence += HandleOnPresence;
 			account.Client.OnBeforePresenceOut += HandleOnBeforePresenceOut;
-			account.ConnectionStateChanged += HandleConnectionStateChanged;
 			account.MyVCardUpdated += HandleMyVCardUpdated;
 			m_Account = account;	
 		}
@@ -85,13 +84,6 @@ namespace Synapse.Xmpp
 			}
 				
 			pres.AppendChild(vcardUpdateElem);
-		}
-
-		void HandleConnectionStateChanged(Account account)
-		{
-			if (account.ConnectionState == AccountConnectionState.Connected) {
-				UpdateAvatar(account.Jid.Bare, null);
-			}
 		}
 
 		public static string GetAvatarHash (JID jid)
@@ -163,11 +155,7 @@ namespace Synapse.Xmpp
 		
 		void UpdateAvatar(string jid, string expectedHash)
 		{
-			// XXX: Use account.RequestVCard
-			VCardIQ iq = new VCardIQ(m_Account.Client.Document);
-			iq.Type = IQType.get;
-			iq.To = jid;
-			m_Account.Client.Tracker.BeginIQ(iq, HandleReceivedAvatar, new [] { jid, expectedHash, }); 
+			m_Account.RequestVCard(jid, HandleReceivedAvatar, new [] { jid, expectedHash, });
 		}
 
 		void HandleMyVCardUpdated(object sender, EventArgs e)

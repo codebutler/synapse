@@ -45,7 +45,7 @@ namespace Synapse.QtClient.Windows
 					Populate((VCard)iq.FirstChild);
 				else
 					Populate(null);
-			});
+			}, null);
 		}
 	
 		void Populate (VCard vcard)

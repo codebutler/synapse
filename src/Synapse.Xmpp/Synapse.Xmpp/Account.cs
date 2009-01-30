@@ -36,6 +36,7 @@ using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Services;
 using Synapse.Xmpp.Services;
+using Mono.Addins;
 
 namespace Synapse.Xmpp
 {
@@ -70,7 +71,6 @@ namespace Synapse.Xmpp
 		BookmarkManager   m_BookmarkManager;
 		PresenceManager   m_PresenceManager;
 		IQTracker         m_IQTracker;
-
 		AvatarManager     m_AvatarManager;
 		
 		Dictionary<Type, IDiscoverable> m_Features   = new Dictionary<Type, IDiscoverable>();
@@ -151,8 +151,6 @@ namespace Synapse.Xmpp
 			m_AvatarManager = new AvatarManager(this);
 
 			m_IQTracker = new IQTracker(m_Client);
-
-			m_Client.OnIQ += HandleOnIQ;
 			
 			// XXX: Don't hard-code this.
 			m_CapsManager.AddIdentity("Synapse 0.1", "client", "pc", "en_US");
@@ -175,19 +173,6 @@ namespace Synapse.Xmpp
 			var e = new Element("ResourceDisplay", "http://synapse.im/protocol/resourcedisplay", m_Client.Document);
 			e.InnerText = m_Resource;
 			pres.AppendChild(e);
-		}
-
-		void HandleOnIQ(object sender, IQ iq)
-		{
-			if (iq.Type == IQType.result && iq.FirstChild != null && 
-			    iq.FirstChild.Name == "vCard" && iq.From.Equals(this.Jid.BareJID)) 
-			{
-				var vcard = (VCard)iq.FirstChild;
-				m_MyVCard = vcard;
-
-				if (MyVCardUpdated != null)
-					MyVCardUpdated(this, EventArgs.Empty);
-			}
 		}
 
 		void HandleOnInvite(object sender, Message msg)
@@ -229,6 +214,36 @@ namespace Synapse.Xmpp
 			}
 			
 			m_ConnectedAt = DateTime.Now;
+
+			// Request own vcard.
+			RequestVCard(Jid, delegate (object o, IQ iq, object data) {
+				VCard vcard = (VCard) iq["vCard"];
+				bool noVCard = false;
+				if (iq.Type == IQType.error || vcard.ChildNodes.Count == 0) {
+					noVCard = true;
+				}
+
+				m_MyVCard = vcard;
+
+				bool updated = false;
+				var providers = ServiceManager.Get<XmppService>().VCardFieldProviders;
+				foreach (var vcardProvider in providers) {
+					if (vcardProvider.PopulateVCard(m_MyVCard)) {
+						updated = true;
+					}
+				}
+
+				if (noVCard) {
+					// FIXME: Raise an event telling user to fill out profile!
+					Console.WriteLine("No VCard!");
+				} else if (updated) {
+					SaveVCard();
+				} else {
+					if (MyVCardUpdated != null) {
+						MyVCardUpdated(this, EventArgs.Empty);
+					}
+				}
+			}, null);
 		}
 
 		void HandleOnError(object sender, Exception ex)
@@ -548,8 +563,13 @@ namespace Synapse.Xmpp
 
 			var vcard = m_Client.Document.ImportNode(m_MyVCard, true);
 			iq.AppendChild(vcard);
-			
-			m_Client.Write(iq);
+
+			m_IQTracker.BeginIQ(iq, delegate (object o, IQ result, object cbArg) {
+				if (result.Type == IQType.error) {
+					Console.WriteLine("Failed to set VCard!");
+				}
+			}, null);
+			                    
 
 			if (MyVCardUpdated != null)
 				MyVCardUpdated(this, EventArgs.Empty);
@@ -617,14 +637,13 @@ namespace Synapse.Xmpp
 				throw new UserException("Already in this room");
 		}
 
-		public void RequestVCard (JID jid, IqCB callback)
+		public void RequestVCard (JID jid, IqCB callback, object state)
 		{			
 			VCardIQ iq = new VCardIQ(this.Client.Document);
 			iq.Type = IQType.get;
-			iq.To = jid;
-			iq.AddChild(new VCard(this.Client.Document));
+			iq.To = jid.Bare;
 			if (callback != null)
-				m_IQTracker.BeginIQ(iq, callback, this);
+				m_IQTracker.BeginIQ(iq, callback, state);
 			else
 				m_Client.Write(iq);
 		}
