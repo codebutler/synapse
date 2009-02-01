@@ -165,6 +165,7 @@ namespace Synapse.Xmpp
 			AddFeature(new UserTune(this));
 			AddFeature(new UserAvatars(this));
 			AddFeature(new ChatStates(this));
+			AddFeature(new UserWebIdentities(this));
 
 			if (ServiceManager.Contains<NetworkService>())
 				ServiceManager.Get<NetworkService>().StateChange += HandleNetworkStateChanged;

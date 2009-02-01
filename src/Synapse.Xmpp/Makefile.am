@@ -69,7 +69,8 @@ FILES =  \
 	Synapse.Xmpp/UserMood.cs \
 	Synapse.Xmpp/UserTune.cs \
 	Synapse.Xmpp/XmppActivityFeedItem.cs \
-	Synapse.Xmpp/XmppUriQueryInfo.cs 
+	Synapse.Xmpp/XmppUriQueryInfo.cs  \
+	Synapse.Xmpp/UserWebIdentities.cs
 
 DATA_FILES = 
 

@@ -26,6 +26,7 @@ using System.Web;
 using System.Net;
 using System.Collections.Generic;
 using Synapse.ServiceStack;
+using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
 using Synapse.Services;
 using Twitter;
@@ -83,6 +84,11 @@ namespace Synapse.Addins.TwitterAddin
 			m_Twitter.Username = settingsService.Get<string>("Twitter.Username");
 			m_Twitter.Password = settingsService.Get<string>("Twitter.Password");
 
+			var accountService = ServiceManager.Get<AccountService>();
+			foreach (Account account in accountService.Accounts) {
+				account.GetFeature<UserWebIdentities>().SetIdentity("twitter", m_Twitter.Username);
+			}
+			
 			Application.Client.Started += delegate {
 				StartStop();
 			};
@@ -98,6 +104,11 @@ namespace Synapse.Addins.TwitterAddin
 				
 				m_Twitter.Username = value;
 				StartStop();
+			
+				var accountService = ServiceManager.Get<AccountService>();
+				foreach (Account account in accountService.Accounts) {
+					account.GetFeature<UserWebIdentities>().SetIdentity("twitter", value);
+				}
 			}
 		}
 
