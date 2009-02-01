@@ -3,4 +3,4 @@ Description: Synapse.Core
 Version: 
 
 Requires: 
-Libs: -r:@expanded_libdir@/@PACKAGE@/Dragon.Core.dll
+Libs: -r:@expanded_libdir@/@PACKAGE@/Synapse.Core.dll

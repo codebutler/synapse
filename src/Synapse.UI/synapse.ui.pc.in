@@ -3,4 +3,4 @@ Description: Synapse.UI
 Version: 
 
 Requires: 
-Libs: -r:@expanded_libdir@/@PACKAGE@/Synapse.dll
+Libs: -r:@expanded_libdir@/@PACKAGE@/Synapse.UI.dll

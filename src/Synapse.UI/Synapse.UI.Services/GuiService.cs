@@ -32,16 +32,18 @@ namespace Synapse.UI.Services
 {
 	public class GuiService : IService, IRequiredService, IInitializeService
 	{
-		List<IMessageFormatter> m_MessageDisplayFormatters = new List<IMessageFormatter>();
+		List<IMessageDisplayFormatter> m_MessageDisplayFormatters = new List<IMessageDisplayFormatter>();
 		
 		public void Initialize ()
 		{
 			foreach (TypeExtensionNode node in AddinManager.GetExtensionNodes("/Synapse/UI/Chat/MessageDisplayFormatters")) {
-				m_MessageDisplayFormatters.Add((IMessageFormatter)node.CreateInstance());
+				var formatter = (IMessageDisplayFormatter)node.CreateInstance();
+				Console.WriteLine("FORMATTER: " + formatter);
+				m_MessageDisplayFormatters.Add(formatter);
 			}
 		}
 
-		public IEnumerable<IMessageFormatter> MessageDisplayFormatters {
+		public IEnumerable<IMessageDisplayFormatter> MessageDisplayFormatters {
 			get {
 				return m_MessageDisplayFormatters.AsReadOnly();
 			}

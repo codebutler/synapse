@@ -56,6 +56,6 @@ namespace Synapse.Xmpp
 		public const string Tune = "http://jabber.org/protocol/tune";
 		public const string Mood = "http://jabber.org/protocol/mood";
 
-		public const string WebIdentities = "http://synapse.im/protocol/webidentities";
+		public const string WebIdentities = "http://synapse.im/protocol/web-identities";
 	}
 }

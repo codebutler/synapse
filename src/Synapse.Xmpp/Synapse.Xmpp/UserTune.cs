@@ -1,10 +1,10 @@
 //
 // UserTune.cs
 //
-// Copyright (C) Eric Butler
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
-//   Eric Butler
+//   Eric Butler <eric@extremeboredom.net>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by

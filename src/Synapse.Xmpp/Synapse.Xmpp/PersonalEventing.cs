@@ -38,10 +38,26 @@ namespace Synapse.Xmpp
 	{
 		Account m_Account;
 		Dictionary<string, PubsubHandler> m_Handlers = new Dictionary<string, PubsubHandler>();
+
+		Queue<IQ> m_Queue = new Queue<IQ>();
 		
 		public PersonalEventing(Account account)
 		{
 			m_Account = account;
+			account.ConnectionStateChanged +=HandleConnectionStateChanged; 
+		}
+
+		void HandleConnectionStateChanged(Account account)
+		{
+			if (account.ConnectionState == AccountConnectionState.Connected) {
+				lock (m_Queue) {
+					if (m_Queue.Count > 0) {
+						while (m_Queue.Count > 0) {
+							account.Send(m_Queue.Dequeue());
+						}
+					}
+				}
+			}
 		}
 		
 		public void RegisterHandler (string node, PubsubHandler handler)
@@ -64,10 +80,13 @@ namespace Synapse.Xmpp
 			pubsub.AddChild(publish);
 			iq.AddChild(pubsub);
 
-			if (m_Account.ConnectionState == AccountConnectionState.Connected)
+			if (m_Account.ConnectionState == AccountConnectionState.Connected) {
 				m_Account.Send(iq);
-			//else
-				// FIXME: Queue and send on connect.
+			} else {
+				lock (m_Queue) {
+					m_Queue.Enqueue(iq);
+				}
+			}
 		}
 		
 		public string[] FeatureNames {

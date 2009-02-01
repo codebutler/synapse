@@ -492,11 +492,16 @@ namespace Synapse.QtClient
 				throw new Exception("<head> not found!");
 
 			StringBuilder extraHeaders = new StringBuilder();
+
+			extraHeaders.Append("<script type=\"text/javascript\" src=\"resource:/prototype.js\"></script>");
+			extraHeaders.Append("<script type=\"text/javascript\" src=\"resource:/effects.js\"></script>");
+			
 			foreach (ResourceCodon node in AddinManager.GetExtensionNodes("/Synapse/UI/ConversationHtmlHeaders")) {
 				extraHeaders.Append(node.GetResourceString());
 			}
-			html = html.Insert(html.IndexOf("</head>"), extraHeaders.ToString());
 			
+			html = html.Insert(html.IndexOf("</head>"), extraHeaders.ToString());
+
 			return html;
 		}
 		              

@@ -3,4 +3,4 @@ Description: Synapse.Services
 Version: 
 
 Requires: 
-Libs: -r:@expanded_libdir@/@PACKAGE@/Dragon.Services.dll
+Libs: -r:@expanded_libdir@/@PACKAGE@/Synapse.Services.dll
