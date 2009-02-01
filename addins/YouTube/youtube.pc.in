@@ -1,0 +1,6 @@
+Name: YouTube
+Description: YouTube
+Version: 
+
+Requires: 
+Libs: -r:@expanded_libdir@/@PACKAGE@/YouTube.dll

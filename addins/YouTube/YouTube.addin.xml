@@ -1,0 +1,20 @@
+<Addin id        = "YouTube"
+	   namespace = "Synapse"
+	   name      = "YouTube"
+	   author    = "Eric Butler"
+	   copyright = "GPLv3"
+	   version   = "0.1">
+
+	<Dependencies>
+		<Addin id="Services" version="0.1" />
+		<Addin id="UI" version="0.1" />
+	</Dependencies>
+
+	<Extension path="/Synapse/UI/Chat/MessageDisplayFormatters">
+		<MessageDisplayFormatter class="Synapse.Addins.YouTube.YouTubeMessageDisplayFormatter" />
+	</Extension>
+
+	<Extension path="/Synapse/UI/ConversationHtmlHeaders">
+		<ConversationHeader name="ConversationHeader.html" />
+	</Extension>
+</Addin>

@@ -67,21 +67,22 @@ dnl package checks, per config
 
 AC_CONFIG_FILES([
 Makefile
-addins/Makefile
 src/Synapse.Services/Makefile
 src/Synapse.Core/Makefile
-addins/Twitter/Makefile
-src/Synapse.Services/synapse.services.pc
-src/Synapse.UI/synapse.ui.pc
-addins/PasteBox/Makefile
-src/Synapse.QtClient/synapse
 src/Synapse.Core/synapse.core.pc
-src/Synapse.QtClient/Makefile
-addins/Flickr/Makefile
-src/Synapse.UI/Makefile
-addins/Banshee/Makefile
+src/Synapse.Services/synapse.services.pc
 src/Synapse.Xmpp/synapse.xmpp.pc
 src/Synapse.Xmpp/Makefile
+src/Synapse.UI/Makefile
+src/Synapse.UI/synapse.ui.pc
+src/Synapse.QtClient/synapse
+src/Synapse.QtClient/Makefile
+addins/Makefile
+addins/Twitter/Makefile
+addins/PasteBox/Makefile
+addins/Flickr/Makefile
+addins/Banshee/Makefile
+addins/YouTube/Makefile
 ])
 
 AC_OUTPUT

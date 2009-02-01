@@ -122,25 +122,26 @@ namespace Synapse.UI.Chat
 			
 			if (msg.Body != null || msg.Html != null) {			
 				string body = null;
+			
+				if (!String.IsNullOrEmpty(msg.Html)) {
+					// FIXME: Better sanitize this somehow...
+					body = msg.Html;
+				} else {
+					body = Util.EscapeHtml(msg.Body);
+					body = Util.Linkify(body);
+					body = body.Replace("  ", " &nbsp;");
+					body = body.Replace("\t", " &nbsp;&nbsp;&nbsp;");
+					body = body.Replace("\r\n", "<br/>");
+					body = body.Replace("\n", "<br/>");
+				}
 
 				var guiService = ServiceManager.Get<GuiService>();
 				foreach (var formatter in guiService.MessageDisplayFormatters) {
-					body = formatter.FormatMessage(msg);
-					if (body != null)
-						break;
-				}
-				
-				if (body == null) {		
-					if (!String.IsNullOrEmpty(msg.Html)) {
-						// FIXME: Better sanitize this somehow...
-						body = msg.Html;
-					} else {
-						body = Util.EscapeHtml(msg.Body);
-						body = Util.Linkify(body);
-						body = body.Replace("  ", " &nbsp;");
-						body = body.Replace("\t", " &nbsp;&nbsp;&nbsp;");
-						body = body.Replace("\r\n", "<br/>");
-						body = body.Replace("\n", "<br/>");
+					if (formatter.SupportsMessage(body, msg)) {
+						body = formatter.FormatMessage(body, msg);
+						if (formatter.StopAfter) {
+							break;
+						}
 					}
 				}
 					

@@ -27,16 +27,23 @@ using jabber.protocol.client;
 
 namespace Synapse.Addins.PasteBox
 {	
-	public class CodeMessageDisplayFormatter : IMessageFormatter
+	public class CodeMessageDisplayFormatter : IMessageDisplayFormatter
 	{
-		public string FormatMessage (Message message)
+		public bool SupportsMessage (string bodyHtml, Message message)
 		{
 			XmlElement bodyElement = message["body"];
-			if (bodyElement != null && !String.IsNullOrEmpty(bodyElement.GetAttribute("language", PasteBoxService.CODE_NS))) {
-				var service = ServiceManager.Get<PasteBoxService>();
-				return service.FormatMessageBody(bodyElement);
-			} else {
-				return null;
+			return (bodyElement != null && !String.IsNullOrEmpty(bodyElement.GetAttribute("language", PasteBoxService.CODE_NS)));
+		}
+		
+		public string FormatMessage (string bodyHtml, Message message)
+		{		
+			var service = ServiceManager.Get<PasteBoxService>();
+			return service.FormatMessageBody(message["body"]);
+		}
+
+		public bool StopAfter {
+			get {
+				return true;
 			}
 		}
 	}

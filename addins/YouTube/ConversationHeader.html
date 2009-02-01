@@ -1,0 +1,144 @@
+<style type="text/css">
+	.youtube {
+		width: 130px;
+		height: 97px;
+		-webkit-background-size: 100% 100%;
+		vertical-align: bottom;
+		position: relative;
+		cursor: pointer;
+		margin: 3px;
+	}
+	.youtube .play {
+		height: 100%;
+		background: 6px 6px url('http://mail.google.com/mail/im/mini-play.png') no-repeat;
+		opacity: 0.7;
+	}
+	.youtube:hover {
+		border: 3px solid blue;
+		margin: 0px;
+	}
+	.youtube .desc {
+		position: absolute;
+		bottom: 0px;
+		background: black;
+		color: white;
+		font-size: x-small;
+		overflow: hidden;
+		opacity: 0.7;
+		width: 100%;
+	}
+	.youtube .desc div {
+		max-height: 2.5em;
+		padding: 3px 0px 3px 3px;
+	}
+	a.close {
+		display: block;
+		background: black;
+		color: white;
+		height: 20px;
+		font-size: small;	
+		text-align: right;
+		padding-right: 6px;
+		text-decoration: none;
+	}
+</style>
+
+<script type="text/javascript">
+	function showVideo (elem, videoId) {
+		var playElem = elem.getElementsByClassName('play')[0];
+		playElem.hide();
+		
+		var descElem = elem.getElementsByClassName('desc')[0];
+		descElem.hide();
+		
+		elem.onclick = null;
+		
+		var aspectRatio = elem.getWidth() / elem.getHeight();
+		
+		// FIXME: This is not good. Border/Padding could be specified using 
+		// a different unit.
+		var parentInnerWidth = elem.parentNode.getWidth() 
+			- elem.parentNode.style.borderLeftWidth.replace('px', '')
+			- elem.parentNode.style.borderRightWidth.replace('px', '')
+			- elem.parentNode.style.paddingLeft.replace('px', '')
+			- elem.parentNode.style.paddingRight.replace('px', '');
+		
+		var width = Math.min(parentInnerWidth - 6, 300);
+		var height = Math.round(width / aspectRatio);
+		
+		AnimateResize(elem, width, height + 20, function () {
+			var closeLink = new Element('a', { href: '#', 'class': 'close' });
+			closeLink.update('Close');
+			closeLink.onclick = function () {
+				hideVideo(elem, videoId);
+			};
+			elem.appendChild(closeLink);
+				
+			var embed = new Element('embed', { src:               "http://www.youtube.com/v/" + videoId + "&hl=en&fs=1&autoplay=1",
+				                               type:              "application/x-shockwave-flash",
+				                               allowscriptaccess: "always",
+				                               allowfullscreen:   "true",
+				                               width:             width,
+				                               height:            height });
+			elem.appendChild(embed);
+		});
+	}
+	
+	function hideVideo (elem, videoId)
+	{		
+		var playElem = elem.getElementsByClassName('play')[0];
+		playElem.show();
+		
+		var descElem = elem.getElementsByClassName('desc')[0];
+		descElem.show();
+
+		var closeLink = elem.getElementsByClassName('close')[0];
+		closeLink.remove();
+
+		var embedElem = elem.getElementsByTagName('embed')[0];
+		embedElem.remove();
+	
+		// JS brain damage alert: 
+		// Setting elem.onclick right away causes it to be triggered right away!
+		window.setTimeout(function () {
+			elem.onclick = function () {
+				showVideo(elem, videoId);
+			}
+		}, 1);
+		
+		AnimateResize(elem, 130, 97, null);
+	}
+	
+	function AnimateResize (elem, width, height, onComplete)
+	{
+		elem.style.width = elem.getWidth() + 'px';
+		elem.style.height = elem.getHeight() + 'px';
+		
+		var intervalId = window.setInterval(function () {
+			var pxWidth = parseInt(elem.style.width.replace('px',''));
+			
+			if (pxWidth < width) {
+				pxWidth += Math.min(10, width - pxWidth);
+				elem.style.width = pxWidth + "px";
+			} else if (pxWidth > width) {
+				pxWidth -= Math.min(10, pxWidth - width);
+				elem.style.width = pxWidth + "px";
+			}
+			
+			var pxHeight = parseInt(elem.style.height.replace('px',''));
+			if (pxHeight < height) {
+				pxHeight += Math.min(10, height - pxHeight);
+				elem.style.height = pxHeight + "px";
+			} else if (pxHeight > height) {
+				pxHeight -= Math.min(10, pxHeight - height);
+				elem.style.height = pxHeight + "px";
+			}
+			
+			if (pxWidth == width && pxHeight == height) {
+				clearInterval(intervalId);
+				if (typeof(onComplete) == 'function')
+					onComplete ();
+			}
+		}, 1);
+	}
+</script>

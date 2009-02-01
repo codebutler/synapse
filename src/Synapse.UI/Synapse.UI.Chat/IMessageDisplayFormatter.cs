@@ -24,8 +24,12 @@ using jabber.protocol.client;
 
 namespace Synapse.UI.Chat
 {
-	public interface IMessageFormatter
+	public interface IMessageDisplayFormatter
 	{
-		string FormatMessage (Message message);
+		bool SupportsMessage (string bodyHtml, Message rawMessage);
+		string FormatMessage (string bodyHtml, Message rawMessage);
+		bool StopAfter {
+			get;
+		}
 	}
 }
