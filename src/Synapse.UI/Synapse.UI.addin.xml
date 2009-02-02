@@ -7,28 +7,8 @@
 	isroot    = "true"
 	version   = "0.1">
 
-	<ExtensionNodeSet id="Synapse.UI.Actions.ItemSet">
-		<ExtensionNode name="SeparatorItem" type="Synapse.UI.Actions.ExtensionNodes.SeparatorItemCodon" />
-		<ExtensionNode name="ActionItem" type="Synapse.UI.Actions.ExtensionNodes.ActionItemCodon" />
-	</ExtensionNodeSet>
-
-	<ExtensionPoint path="/Synapse/UI/ActionHandlers">
-		<Descriptions>Handlers for UI actions</Descriptions>
-		<ExtensionNode name="ActionHandler" />
-	</ExtensionPoint>
-
-	<ExtensionPoint path="/Synapse/UI/Actions">
-		<Description>User interface actions</Description>
-		<ExtensionNode name="Action" type="Synapse.UI.Actions.ExtensionNodes.ActionCodon" />
-	</ExtensionPoint>
-
 	<ExtensionPoint path="/Synapse/UI/AddinPreferences">
 		<ExtensionNode name="AddinPreferencesFactory" />
-	</ExtensionPoint>
-
-	<ExtensionPoint path="/Synapse/UI/ChatWindow/FormattingToolbar">
-		<Description>Message format toolbar in conversation windows</Description>
-		<ExtensionNodeSet id="Synapse.UI.Actions.ItemSet" />
 	</ExtensionPoint>
 
 	<ExtensionNodeSet id="Synapse.UI.ResourceProviderSet">

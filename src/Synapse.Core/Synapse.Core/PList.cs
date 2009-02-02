@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace Synapse.QtClient
+namespace Synapse.Core
 {
 	public class PList
 	{

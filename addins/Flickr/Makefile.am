@@ -39,12 +39,13 @@ RESOURCES = Flickr.addin.xml
 EXTRAS = 
 
 REFERENCES =  \
-	$(MONO_ADDINS_LIBS) \
 	System \
 	System.Web \
 	System.Xml
 
-DLL_REFERENCES = ../../contrib/jabber-net.dll 
+DLL_REFERENCES =  \
+	../../contrib/jabber-net.dll \
+	../../contrib/Mono.Addins.dll 
 
 CLEANFILES = $(PROGRAMFILES) 
 

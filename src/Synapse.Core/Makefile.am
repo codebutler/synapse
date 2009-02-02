@@ -54,6 +54,7 @@ FILES =  \
 	Synapse.Core/Pair.cs \
 	Synapse.Core/Paths.cs \
 	Synapse.Core/PlatformHacks.cs \
+	Synapse.Core/PList.cs \
 	Synapse.Core/PropertyCollection.cs \
 	Synapse.Core/ReadOnlyDictionary.cs \
 	Synapse.Core/SerializableDictionary.cs \
@@ -71,7 +72,6 @@ EXTRAS = \
 	synapse.core.pc.in 
 
 REFERENCES =  \
-	$(MONO_ADDINS_LIBS) \
 	Mono.Posix \
 	System \
 	System.Core \
@@ -79,7 +79,9 @@ REFERENCES =  \
 	System.Web.Extensions \
 	System.Xml
 
-DLL_REFERENCES = ../../contrib/Hyena.dll
+DLL_REFERENCES =  \
+	../../contrib/Hyena.dll \
+	../../contrib/Mono.Addins.dll
 
 CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 

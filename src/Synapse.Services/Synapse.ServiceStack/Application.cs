@@ -114,11 +114,6 @@ namespace Synapse.ServiceStack
 		{
 			return s_Client.CreateImage(fileName);
 		}
-
-		public static object CreateAction (string id, string label, string icon, object parent)
-		{
-			return s_Client.CreateAction(id, label, icon, parent);
-		}
 		
         public static bool ShuttingDown {
             get { return shutting_down; }

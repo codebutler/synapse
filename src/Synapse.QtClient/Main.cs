@@ -87,7 +87,6 @@ namespace Synapse.QtClient
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.AccountService>();
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.ShoutService>();
 			ServiceManager.RegisterService<GuiService>();
-			ServiceManager.RegisterService<ActionService>();
 			
 			QWebSettings.GlobalSettings().SetAttribute(QWebSettings.WebAttribute.DeveloperExtrasEnabled, true);
 			
@@ -170,21 +169,6 @@ namespace Synapse.QtClient
 		public override object CreateImage (byte[] data)
 		{
 			throw new NotImplementedException();
-		}
-
-		public override object CreateAction (string id, string label, string icon, object parent)
-		{
-			if (id == null) {
-				QAction action = new QAction(null);
-				action.SetSeparator(true);
-				return action;
-			} else {
-				QAction action = new QAction(Gui.LoadIcon(icon, 16), label, (QObject)parent);
-				QObject.Connect(action, Qt.SIGNAL("triggered(bool)"), delegate (bool chkd) {
-					ServiceManager.Get<ActionService>().TriggerAction(id, action);
-				});
-				return action;
-			}
 		}
 
 		public override void ShowErrorWindow (string errorTitle, Exception error)

@@ -28,13 +28,13 @@ RESGEN=resgen2
 all: $(ASSEMBLY) $(PROGRAMFILES) 
 
 FILES =  \
-	ActionHandler.cs \
 	AssemblyInfo.cs \
 	CodeMessageDisplayFormatter.cs \
 	IPasteFormatPreviewer.cs \
 	PasteBoxDialog.cs \
 	PasteBoxService.cs \
-	qt-gui/PasteBoxDialog.cs 
+	qt-gui/PasteBoxDialog.cs \
+	ShowPasteBoxAction.cs 
 
 DATA_FILES = 
 
@@ -45,7 +45,6 @@ RESOURCES =  \
 EXTRAS = 
 
 REFERENCES =  \
-	$(MONO_ADDINS_LIBS) \
 	$(QYOTO_LIBS) \
 	System.Core \
 	System.Xml
@@ -53,6 +52,7 @@ REFERENCES =  \
 DLL_REFERENCES =  \
 	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll \
 	../../contrib/jabber-net.dll \
+	../../contrib/Mono.Addins.dll \
 	../../contrib/Wilco.SyntaxHighlighter.dll 
 
 CLEANFILES = $(PROGRAMFILES) 

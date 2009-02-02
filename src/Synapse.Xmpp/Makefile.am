@@ -68,9 +68,9 @@ FILES =  \
 	Synapse.Xmpp/UserAvatars.cs \
 	Synapse.Xmpp/UserMood.cs \
 	Synapse.Xmpp/UserTune.cs \
+	Synapse.Xmpp/UserWebIdentities.cs \
 	Synapse.Xmpp/XmppActivityFeedItem.cs \
-	Synapse.Xmpp/XmppUriQueryInfo.cs  \
-	Synapse.Xmpp/UserWebIdentities.cs
+	Synapse.Xmpp/XmppUriQueryInfo.cs
 
 DATA_FILES = 
 
@@ -80,7 +80,6 @@ EXTRAS = \
 	synapse.xmpp.pc.in 
 
 REFERENCES =  \
-	$(MONO_ADDINS_LIBS) \
 	$(NOTIFY_SHARP_LIBS) \
 	System \
 	System.Core \
@@ -88,7 +87,9 @@ REFERENCES =  \
 	System.Web \
 	System.Xml
 
-DLL_REFERENCES = ../../contrib/jabber-net.dll
+DLL_REFERENCES =  \
+	../../contrib/jabber-net.dll \
+	../../contrib/Mono.Addins.dll
 
 CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 

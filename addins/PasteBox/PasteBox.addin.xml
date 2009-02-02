@@ -8,25 +8,16 @@
 	<Dependencies>
 		<Addin id="Services" version="0.1" />
 		<Addin id="UI" version="0.1" />
+		<Addin id="QtClient" version="0.1" />
 	</Dependencies>
 
 	<Extension path="/Synapse/ServiceManager/Service">
 		<Service class="Synapse.Addins.PasteBox.PasteBoxService" />
 	</Extension>
-
-	<Extension path="/Synapse/UI/ActionHandlers">
-		<ActionHandler class="Synapse.Addins.PasteBox.ActionHandler" />
-	</Extension>
-
-	<Extension path="/Synapse/UI/Actions">
-		<Action id="Synapse.Addins.PasteBox.Actions.ShowPasteBox"
-			  icon="editpaste"
-			_label="Paste Lots of Text" />
-	</Extension>
 	
-	<Extension path="/Synapse/UI/ChatWindow/FormattingToolbar">
-		<SeparatorItem />
-		<ActionItem id="Synapse.Addins.PasteBox.Actions.ShowPasteBox" />
+	<Extension path="/Synapse/QtClient/ChatWindow/FormattingToolbar">
+		<Separator />
+		<Action class="Synapse.Addins.PasteBox.ShowPasteBoxAction" />
 	</Extension>
 
 	<Extension path="/Synapse/UI/ResourceProviders">

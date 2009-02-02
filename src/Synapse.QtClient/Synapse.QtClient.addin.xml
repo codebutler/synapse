@@ -1,0 +1,29 @@
+<Addin id     = "QtClient"
+	namespace = "Synapse"
+	name      = "Synapse Qt Client"
+	author    = "Eric Butler"
+	copyright = "GPLv3"
+	url       = "http://synapse.im/"
+	isroot    = "true"
+	version   = "0.1">
+	
+	<ExtensionNodeSet id="Synapse.QtClient.ActionSet">
+		<ExtensionNode name="Separator" type="Synapse.QtClient.ExtensionNodes.SeparatorCodon" />
+		<ExtensionNode name="Action" type="Synapse.QtClient.ExtensionNodes.ActionCodon" />
+	</ExtensionNodeSet>
+
+	<ExtensionPoint path="/Synapse/QtClient/ActionHandlers">
+		<Descriptions>Handlers for UI actions</Descriptions>
+		<ExtensionNode name="ActionHandler" />
+	</ExtensionPoint>
+
+	<ExtensionPoint path="/Synapse/QtClient/Actions">
+		<Description>User interface actions</Description>
+		<ExtensionNode name="Action" type="Synapse.UI.Actions.ExtensionNodes.ActionCodon" />
+	</ExtensionPoint>
+	
+	<ExtensionPoint path="/Synapse/QtClient/ChatWindow/FormattingToolbar">
+		<Description>Message format toolbar in conversation windows</Description>
+		<ExtensionNodeSet id="Synapse.QtClient.ActionSet" />
+	</ExtensionPoint>
+</Addin>

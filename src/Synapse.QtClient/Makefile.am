@@ -90,13 +90,9 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(BINARIES)
 
 FILES =  \
 	AbstractSimpleFileEngine.cs \
-	AddFriendWindow.cs \
 	AssemblyInfo.cs \
 	AvatarFileEngine.cs \
-	AvatarSelectDialog.cs \
 	BookmarkedMUCsModel.cs \
-	EditAccountDialog.cs \
-	EditGroupsWidget.cs \
 	ErrorDialog.cs \
 	gtk-gui/generated.cs \
 	gtk-gui/Synapse.QtClient.ErrorDialog.cs \
@@ -104,7 +100,6 @@ FILES =  \
 	JSDebugObject.cs \
 	KeyPressEater.cs \
 	Main.cs \
-	PList.cs \
 	qt-gui/AccountStatusWidget.cs \
 	qt-gui/AddFriendWindow.cs \
 	qt-gui/AvatarSelectDialog.cs \
@@ -122,6 +117,9 @@ FILES =  \
 	QtTraceListener.cs \
 	ResizableGraphicsPixmapItem.cs \
 	ResourceFileEngine.cs \
+	Synapse.QtClient.ExtensionNodes/ActionCodon.cs \
+	Synapse.QtClient.ExtensionNodes/IActionCodon.cs \
+	Synapse.QtClient.ExtensionNodes/SeparatorCodon.cs \
 	Synapse.QtClient.Widgets/AccountStatusWidget.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.FadeInOutAnimation.cs \
@@ -131,13 +129,17 @@ FILES =  \
 	Synapse.QtClient.Widgets/AvatarGrid.Scene.cs \
 	Synapse.QtClient.Widgets/AvatarLabel.cs \
 	Synapse.QtClient.Widgets/ConversationWidget.cs \
+	Synapse.QtClient.Widgets/EditGroupsWidget.cs \
 	Synapse.QtClient.Widgets/FadingQLabel.cs \
 	Synapse.QtClient.Widgets/LightboxContainerWidget.cs \
 	Synapse.QtClient.Widgets/NoAccountsWidget.cs \
 	Synapse.QtClient.Widgets/NotificationsWidget.cs \
 	Synapse.QtClient.Widgets/RosterWidget.cs \
+	Synapse.QtClient.Windows/AddFriendWindow.cs \
+	Synapse.QtClient.Windows/AvatarSelectDialog.cs \
 	Synapse.QtClient.Windows/ChatWindow.cs \
 	Synapse.QtClient.Windows/DebugWindow.cs \
+	Synapse.QtClient.Windows/EditAccountDialog.cs \
 	Synapse.QtClient.Windows/EditGroupsWindow.cs \
 	Synapse.QtClient.Windows/MainWindow.cs \
 	Synapse.QtClient.Windows/PreferencesWindow.cs \
@@ -174,7 +176,8 @@ RESOURCES =  \
 	resources/simple-search.png \
 	resources/Template.html \
 	resources/view-grid.png \
-	resources/view-list.png 
+	resources/view-list.png \
+	Synapse.QtClient.addin.xml 
 
 EXTRAS = \
 	synapse.in 
@@ -182,7 +185,6 @@ EXTRAS = \
 REFERENCES =  \
 	$(GLIB_SHARP_20_LIBS) \
 	$(GTK_SHARP_20_LIBS) \
-	$(MONO_ADDINS_LIBS) \
 	$(NDESK_DBUS_GLIB_10_LIBS) \
 	$(QYOTO_LIBS) \
 	Mono.Posix \
@@ -194,8 +196,8 @@ REFERENCES =  \
 DLL_REFERENCES =  \
 	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll \
 	../../contrib/Hyena.dll \
-	../../contrib/Hyena.Gui.dll \
 	../../contrib/jabber-net.dll \
+	../../contrib/Mono.Addins.dll \
 	../../contrib/Mono.Rocks.dll
 
 CLEANFILES = $(PROGRAMFILES) $(BINARIES) 
@@ -214,6 +216,7 @@ MONO_ROCKS_DLL = $(BUILD_DIR)/Mono.Rocks.dll
 QTWEBKIT_DLL = $(BUILD_DIR)/qtwebkit.dll
 NDESK_DBUS_DLL = $(BUILD_DIR)/NDesk.DBus.dll
 JABBER_NET_DLL = $(BUILD_DIR)/jabber-net.dll
+MONO_ADDINS_DLL = $(BUILD_DIR)/Mono.Addins.dll
 
 $(eval $(call emit-deploy-target,SYNAPSE_DLL))
 $(eval $(call emit-deploy-target,QTWEBKIT_DLL_CONFIG))
@@ -228,6 +231,7 @@ $(eval $(call emit-deploy-target,MONO_ROCKS_DLL))
 $(eval $(call emit-deploy-target,QTWEBKIT_DLL))
 $(eval $(call emit-deploy-target,NDESK_DBUS_DLL))
 $(eval $(call emit-deploy-target,JABBER_NET_DLL))
+$(eval $(call emit-deploy-target,MONO_ROCKS_DLL))
 
 
 $(eval $(call emit_resgen_targets))

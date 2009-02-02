@@ -66,11 +66,6 @@ FILES =  \
 	ResourceCodon.cs \
 	ResourceProviderCodon.cs \
 	RosterAvatarGridModel.cs \
-	Synapse.UI.Actions.ExtensionNodes/ActionCodon.cs \
-	Synapse.UI.Actions.ExtensionNodes/ActionHandlerAttribute.cs \
-	Synapse.UI.Actions.ExtensionNodes/ActionItemCodon.cs \
-	Synapse.UI.Actions.ExtensionNodes/IActionItemCodon.cs \
-	Synapse.UI.Actions.ExtensionNodes/SeparatorItemCodon.cs \
 	Synapse.UI.Chat/AbstractChatContent.cs \
 	Synapse.UI.Chat/AbstractChatHandler.cs \
 	Synapse.UI.Chat/ChatContentContext.cs \
@@ -83,7 +78,6 @@ FILES =  \
 	Synapse.UI.Chat/IChatHandler.cs \
 	Synapse.UI.Chat/IMessageDisplayFormatter.cs \
 	Synapse.UI.Chat/MucHandler.cs \
-	Synapse.UI.Services/ActionService.cs \
 	Synapse.UI.Services/GuiService.cs \
 	template4dotnet.cs 
 
@@ -95,7 +89,6 @@ EXTRAS = \
 	synapse.ui.pc.in 
 
 REFERENCES =  \
-	$(MONO_ADDINS_LIBS) \
 	System \
 	System.Core \
 	System.Web \
@@ -103,7 +96,8 @@ REFERENCES =  \
 
 DLL_REFERENCES =  \
 	../../contrib/Hyena.dll \
-	../../contrib/jabber-net.dll
+	../../contrib/jabber-net.dll \
+	../../contrib/Mono.Addins.dll
 
 CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 

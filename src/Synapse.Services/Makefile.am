@@ -68,7 +68,6 @@ EXTRAS = \
 	synapse.services.pc.in 
 
 REFERENCES =  \
-	$(MONO_ADDINS_LIBS) \
 	$(NOTIFY_SHARP_LIBS) \
 	Mono.Posix \
 	System \
@@ -77,6 +76,7 @@ REFERENCES =  \
 
 DLL_REFERENCES =  \
 	../../contrib/Hyena.dll \
+	../../contrib/Mono.Addins.dll \
 	../../contrib/NDesk.DBus.dll
 
 CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 

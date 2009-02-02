@@ -1,5 +1,5 @@
 //
-// IActionItemCodon.cs
+// IActionCodon.cs
 // 
 // Copyright (C) 2008 Eric Butler
 //
@@ -20,11 +20,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using Qyoto;
 
-namespace Synapse.UI.Actions.ExtensionNodes
+namespace Synapse.QtClient.ExtensionNodes
 {
-	public interface IActionItemCodon
+	public interface IActionCodon
 	{
-		object CreateInstance (object parent);
+		QAction CreateInstance (QWidget parent);
 	}
 }

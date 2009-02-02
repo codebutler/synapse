@@ -1,7 +1,7 @@
 //
-// EditAccountDialog.cs
+// ActionHandler.cs
 // 
-// Copyright (C) 2009 Eric Butler
+// Copyright (C) 2008 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -19,14 +19,35 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 using System;
+
+using Synapse.UI;
+using Synapse.QtClient;
+using Synapse.QtClient.Windows;
+
 using Qyoto;
 
-public partial class EditAccountDialog : QDialog
+namespace Synapse.Addins.PasteBox
 {
-	public EditAccountDialog ()
+	public class ShowPasteBoxAction : QAction
 	{
-		SetupUi();
+		ChatWindow m_ChatWindow;
+		
+		public ShowPasteBoxAction (QWidget parent) : base (parent)
+		{
+			m_ChatWindow = (ChatWindow)parent;
+			
+			QObject.Connect(this, Qt.SIGNAL("triggered(bool)"), this, Qt.SLOT("on_triggered(bool)"));
+			
+			base.Text = "Insert Code";
+			base.icon = Gui.LoadIcon("editpaste", 16);
+		}
+		
+		[Q_SLOT]
+		void on_triggered (bool isChecked)
+		{
+			var dialog = new PasteBoxDialog(m_ChatWindow);
+			dialog.Show();
+		}
 	}
 }

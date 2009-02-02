@@ -21,18 +21,22 @@
 
 using System;
 using System.Xml;
+
 using Qyoto;
+
 using Synapse.ServiceStack;
-using Synapse.UI.Services;
 using Synapse.UI;
-using Synapse.UI.Actions.ExtensionNodes;
+using Synapse.UI.Services;
 using Synapse.UI.Chat;
 using Synapse.Xmpp;
 using Synapse.QtClient;
+using Synapse.QtClient.ExtensionNodes;
+
 using jabber;
 using jabber.connection;
 using jabber.protocol.client;
 using jabber.protocol.iq;
+
 using Mono.Addins;
 
 namespace Synapse.QtClient.Windows
@@ -109,7 +113,7 @@ namespace Synapse.QtClient.Windows
 			m_StrikethroughAction.Checkable = true;
 			toolbar.AddAction(m_StrikethroughAction);
 			
-			foreach (IActionItemCodon node in AddinManager.GetExtensionNodes("/Synapse/UI/ChatWindow/FormattingToolbar")) {
+			foreach (IActionCodon node in AddinManager.GetExtensionNodes("/Synapse/QtClient/ChatWindow/FormattingToolbar")) {
 				toolbar.AddAction((QAction)node.CreateInstance(this));
 			}		
 			

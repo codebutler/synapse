@@ -1,5 +1,5 @@
 //
-// ActionCodon.cs
+// SeparatorItemCodon.cs
 // 
 // Copyright (C) 2008 Eric Butler
 //
@@ -23,51 +23,31 @@ using System;
 using System.Collections.Generic;
 
 using Synapse.ServiceStack;
+using Synapse.UI.Services;
 using Mono.Addins;
 
-namespace Synapse.UI.Actions.ExtensionNodes
-{	
-	public class ActionCodon : TypeExtensionNode
-	{
-		[NodeAttribute("_label", true, "Label", Localizable=true)]
-		string m_Label;
+using Qyoto;
 
-		[NodeAttribute("icon", "blahblah")]
-		string m_Icon;
+namespace Synapse.QtClient.ExtensionNodes
+{	
+	public class SeparatorCodon : InstanceExtensionNode, IActionCodon
+	{
+		static QAction s_SeparatorAction;
+		
+		static SeparatorCodon ()
+		{
+			s_SeparatorAction = new QAction(null);
+			s_SeparatorAction.SetSeparator(true);
+		}
+		
+		public QAction CreateInstance (QWidget parent)
+		{
+			return (QAction)CreateInstance();
+		}
 		
 		public override object CreateInstance ()
 		{
-			return new ActionTemplate(Id, m_Label, m_Icon);
-		}
-	}	
-
-	public class ActionTemplate
-	{
-		string m_Id, m_Label, m_Icon;
-		
-		public ActionTemplate (string id, string label, string icon)
-		{
-			m_Id    = id;
-			m_Label = label;
-			m_Icon  = icon;
-		}
-		
-		public string Id { 
-			get {
-				return m_Id;
-			}
-		}
-		
-		public string Label { 
-			get {
-				return m_Label;
-			}
-		}
-		
-		public string Icon { 
-			get {
-				return m_Icon;
-			}
+			return s_SeparatorAction;
 		}
 	}
 }

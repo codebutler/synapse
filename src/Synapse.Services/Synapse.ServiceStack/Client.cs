@@ -84,8 +84,6 @@ namespace Synapse.ServiceStack
 		
 		public abstract object CreateImage (string fileName);
 
-		public abstract object CreateAction (string id, string label, string icon, object parent);
-
 		public abstract void ShowErrorWindow (string title, Exception error);
 		
         protected void OnStarted ()

@@ -54,7 +54,7 @@ REFERENCES =  \
 	System.Web \
 	System.Xml
 
-DLL_REFERENCES = 
+DLL_REFERENCES = ../../contrib/Mono.Addins.dll 
 
 CLEANFILES = $(PROGRAMFILES) 
 

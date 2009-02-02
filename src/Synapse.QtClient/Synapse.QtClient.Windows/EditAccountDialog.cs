@@ -1,7 +1,7 @@
 //
-// SeparatorItemCodon.cs
+// EditAccountDialog.cs
 // 
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -19,25 +19,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 using System;
-using System.Collections.Generic;
+using Qyoto;
 
-using Synapse.ServiceStack;
-using Synapse.UI.Services;
-using Mono.Addins;
-
-namespace Synapse.UI.Actions.ExtensionNodes
-{	
-	public class SeparatorItemCodon : InstanceExtensionNode, IActionItemCodon
+namespace Synapse.QtClient.Windows
+{
+	public partial class EditAccountDialog : QDialog
 	{
-		public object CreateInstance (object parent)
+		public EditAccountDialog ()
 		{
-			return CreateInstance();
-		}
-		
-		public override object CreateInstance ()
-		{
-			return ServiceManager.Get<ActionService>().GetSeparatorAction();
+			SetupUi();
 		}
 	}
 }

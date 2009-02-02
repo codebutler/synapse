@@ -1,5 +1,5 @@
 //
-// ActionItemCodon.cs
+// ActionCodon.cs
 // 
 // Copyright (C) 2008 Eric Butler
 //
@@ -21,17 +21,21 @@
 
 using System;
 using System.Collections.Generic;
+
 using Synapse.ServiceStack;
 using Synapse.UI.Services;
+
 using Mono.Addins;
 
-namespace Synapse.UI.Actions.ExtensionNodes
+using Qyoto;
+
+namespace Synapse.QtClient.ExtensionNodes
 {	
-	public class ActionItemCodon : TypeExtensionNode, IActionItemCodon
+	public class ActionCodon : TypeExtensionNode, IActionCodon
 	{
-		public object CreateInstance (object parent)
+		public QAction CreateInstance (QWidget parent)
 		{
-			return ServiceManager.Get<ActionService>().CreateAction(Id, parent);
+			return (QAction)Activator.CreateInstance(this.Type, parent);
 		}
 	}
 }
