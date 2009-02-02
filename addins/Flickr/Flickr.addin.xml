@@ -12,4 +12,8 @@
 	<Extension path="/Synapse/UI/AvatarProviders">
 		<AvatarProvider class="Synapse.Addins.Flickr.FlickrAvatarProvider" />
 	</Extension>
+	
+	<Extension path="/Synapse/UI/Chat/MessageDisplayFormatters">
+		<MessageDisplayFormatter class="Synapse.Addins.Flickr.FlickrMessageDisplayFormatter" />
+	</Extension>
 </Addin>

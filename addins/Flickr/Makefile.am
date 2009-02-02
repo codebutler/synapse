@@ -6,7 +6,10 @@ ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-
 ASSEMBLY = ../../build/Debug/addins/Flickr.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
-PROJECT_REFERENCES = ../../build/Debug/Synapse.UI.dll 
+PROJECT_REFERENCES =  \
+	../../build/Debug/Synapse.Core.dll \
+	../../build/Debug/Synapse.Services.dll \
+	../../build/Debug/Synapse.UI.dll 
 BUILD_DIR = ../../build/Debug/addins
 
 FLICKR_DLL_MDB_SOURCE=../../build/Debug/addins/Flickr.dll.mdb
@@ -25,7 +28,9 @@ all: $(ASSEMBLY) $(PROGRAMFILES)
 
 FILES =  \
 	AssemblyInfo.cs \
-	FlickrAvatarProvider.cs 
+	Flickr.cs \
+	FlickrAvatarProvider.cs \
+	FlickrMessageDisplayFormatter.cs 
 
 DATA_FILES = 
 
@@ -39,7 +44,7 @@ REFERENCES =  \
 	System.Web \
 	System.Xml
 
-DLL_REFERENCES = 
+DLL_REFERENCES = ../../contrib/jabber-net.dll 
 
 CLEANFILES = $(PROGRAMFILES) 
 

@@ -31,9 +31,6 @@ namespace Synapse.Addins.Flickr
 {
 	public class FlickrAvatarProvider : IAvatarProvider
 	{
-		static readonly string FLICKR_API_KEY           = "a31c83238d37147b4df54c7e117a8add";
-		static readonly string FLICKR_PHOTOS_SEARCH_URL = "http://api.flickr.com/services/rest/?method=flickr.photos.search";
-
 		public string Name {
 			get {
 				return "Flickr";
@@ -42,7 +39,7 @@ namespace Synapse.Addins.Flickr
 		
 		public void BeginGetAvatars (string searchText, AvatarCallback callback)
 		{
-			Uri url = new Uri(FLICKR_PHOTOS_SEARCH_URL + "&sort=relevance&api_key=" + FLICKR_API_KEY + "&text=" + HttpUtility.UrlEncode(searchText));
+			Uri url = new Uri(Flickr.FLICKR_PHOTOS_SEARCH_URL + "&sort=relevance&api_key=" + Flickr.FLICKR_API_KEY + "&text=" + HttpUtility.UrlEncode(searchText));
 			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
 			request.BeginGetResponse(delegate (IAsyncResult result) {
 				var response = request.EndGetResponse(result);
@@ -53,8 +50,7 @@ namespace Synapse.Addins.Flickr
 
 				var doc = new XmlDocument();
 				doc.LoadXml(xml);
-
-
+				
 				List<AvatarInfo> infos = new List<AvatarInfo>();
 				
 				foreach (XmlElement element in doc.SelectNodes("/rsp/photos/photo")) {
