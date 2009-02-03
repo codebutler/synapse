@@ -276,18 +276,22 @@ namespace Synapse.Services
 		
 		public virtual void TriggerAction (string actionName)
 		{
-			var template = ServiceManager.Get<ActivityFeedService>().Templates[Type];
-			foreach (var action in template.Actions) {
-				if (action.Name == actionName) {
-					action.Callback(this, action);
-
-					if (ActionTriggered != null)
-						ActionTriggered(this, action);
-					
-					return;
+			try {
+				var template = ServiceManager.Get<ActivityFeedService>().Templates[Type];
+				foreach (var action in template.Actions) {
+					if (action.Name == actionName) {
+						action.Callback(this, action);
+	
+						if (ActionTriggered != null)
+							ActionTriggered(this, action);
+						
+						return;
+					}
 				}
+				throw new Exception("Action not found: " + actionName);
+			} catch (UserException ex) {
+				Application.Client.ShowErrorWindow(ex.Message, null);
 			}
-			throw new Exception("Action not found: " + actionName);
 		}
 
 		public object Data {

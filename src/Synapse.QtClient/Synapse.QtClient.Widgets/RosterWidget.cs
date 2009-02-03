@@ -491,8 +491,13 @@ namespace Synapse.QtClient.Widgets
 			} else if (action == m_IMAction) {
 				Gui.TabbedChatsWindow.StartChat(m_MenuDownItem.Account, m_MenuDownItem.Item.JID);
 			} else if (m_InviteActions.Contains(action)) {
-				// FIXME
-				Console.WriteLine("Send Invitation!!");
+				foreach (Room room in m_MenuDownItem.Account.ConferenceManager.Rooms) {
+					if (room.JID.Bare == action.Text) {
+						Console.WriteLine("Invite: " + m_MenuDownItem.Item.JID);
+						room.Invite(m_MenuDownItem.Item.JID, String.Empty);
+						return;
+					}
+				}
 			} else if (action == m_EditGroupsAction) {
 				var win = new EditGroupsWindow(m_MenuDownItem.Account, m_MenuDownItem.Item);
 				win.Show();

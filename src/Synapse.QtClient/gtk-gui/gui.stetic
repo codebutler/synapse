@@ -7,10 +7,12 @@
   <import>
     <widget-library name="../../../build/Debug/Synapse.exe" internal="true" />
   </import>
-  <widget class="Gtk.Dialog" id="Synapse.QtClient.ErrorDialog" design-size="490 144">
+  <widget class="Gtk.Dialog" id="Synapse.QtClient.ErrorDialog" design-size="200 120">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Synapse Error</property>
     <property name="WindowPosition">Center</property>
+    <property name="Resizable">False</property>
+    <property name="AllowGrow">False</property>
     <property name="DefaultWidth">300</property>
     <property name="DefaultHeight">300</property>
     <property name="Buttons">1</property>
@@ -70,9 +72,10 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.Expander" id="expander1">
+                  <widget class="Gtk.Expander" id="expander">
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
+                    <signal name="Activated" handler="expander_Activated" />
                     <child>
                       <widget class="Gtk.ScrolledWindow" id="GtkScrolledWindow">
                         <property name="MemberName" />

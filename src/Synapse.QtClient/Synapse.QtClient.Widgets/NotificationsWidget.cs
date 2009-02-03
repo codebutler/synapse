@@ -100,6 +100,7 @@ namespace Synapse.QtClient.Widgets
 					m_Item.TriggerAction(link);
 				});
 
+				label.MinimumWidth = 1;
 				label.WordWrap = true;
 				layout.AddWidget(label, 1);
 				

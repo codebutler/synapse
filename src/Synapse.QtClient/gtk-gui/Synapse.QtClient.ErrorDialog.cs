@@ -23,7 +23,7 @@ namespace Synapse.QtClient {
         
         private Gtk.Label messageLabel;
         
-        private Gtk.Expander expander1;
+        private Gtk.Expander expander;
         
         private Gtk.ScrolledWindow GtkScrolledWindow;
         
@@ -39,6 +39,8 @@ namespace Synapse.QtClient {
             this.Name = "Synapse.QtClient.ErrorDialog";
             this.Title = Mono.Unix.Catalog.GetString("Synapse Error");
             this.WindowPosition = ((Gtk.WindowPosition)(1));
+            this.Resizable = false;
+            this.AllowGrow = false;
             this.DefaultWidth = 300;
             this.DefaultHeight = 300;
             this.HasSeparator = false;
@@ -87,10 +89,10 @@ namespace Synapse.QtClient {
             w4.Expand = false;
             w4.Fill = false;
             // Container child vbox1.Gtk.Box+BoxChild
-            this.expander1 = new Gtk.Expander(null);
-            this.expander1.CanFocus = true;
-            this.expander1.Name = "expander1";
-            // Container child expander1.Gtk.Container+ContainerChild
+            this.expander = new Gtk.Expander(null);
+            this.expander.CanFocus = true;
+            this.expander.Name = "expander";
+            // Container child expander.Gtk.Container+ContainerChild
             this.GtkScrolledWindow = new Gtk.ScrolledWindow();
             this.GtkScrolledWindow.Name = "GtkScrolledWindow";
             this.GtkScrolledWindow.ShadowType = ((Gtk.ShadowType)(1));
@@ -99,14 +101,14 @@ namespace Synapse.QtClient {
             this.detailTextView.CanFocus = true;
             this.detailTextView.Name = "detailTextView";
             this.GtkScrolledWindow.Add(this.detailTextView);
-            this.expander1.Add(this.GtkScrolledWindow);
+            this.expander.Add(this.GtkScrolledWindow);
             this.GtkLabel = new Gtk.Label();
             this.GtkLabel.Name = "GtkLabel";
             this.GtkLabel.LabelProp = Mono.Unix.Catalog.GetString("More Information");
             this.GtkLabel.UseUnderline = true;
-            this.expander1.LabelWidget = this.GtkLabel;
-            this.vbox1.Add(this.expander1);
-            Gtk.Box.BoxChild w7 = ((Gtk.Box.BoxChild)(this.vbox1[this.expander1]));
+            this.expander.LabelWidget = this.GtkLabel;
+            this.vbox1.Add(this.expander);
+            Gtk.Box.BoxChild w7 = ((Gtk.Box.BoxChild)(this.vbox1[this.expander]));
             w7.Position = 2;
             this.hbox1.Add(this.vbox1);
             Gtk.Box.BoxChild w8 = ((Gtk.Box.BoxChild)(this.hbox1[this.vbox1]));
@@ -136,6 +138,7 @@ namespace Synapse.QtClient {
                 this.Child.ShowAll();
             }
             this.Show();
+            this.expander.Activated += new System.EventHandler(this.expander_Activated);
             this.buttonOk.Clicked += new System.EventHandler(this.OnButtonOkClicked);
         }
     }

@@ -31,13 +31,23 @@ namespace Synapse.QtClient
 			this.Build();
 			
 			titleLabel.Markup = String.Format("<b>{0}</b>", Markup.EscapeText(errorTitle));
-			messageLabel.Text = error.Message;
-			detailTextView.Buffer.Text = error.ToString();
+			if (error != null) {
+				messageLabel.Text = error.Message;
+				detailTextView.Buffer.Text = error.ToString();
+			} else {
+				messageLabel.Text = String.Empty;
+				expander.Hide();
+			}
 		}
 		
 		protected virtual void OnButtonOkClicked (object sender, System.EventArgs e)
 		{
 			this.Destroy();
+		}
+
+		protected virtual void expander_Activated (object sender, System.EventArgs e)
+		{
+			base.Resizable = expander.Expanded;
 		}		
 	}
 }

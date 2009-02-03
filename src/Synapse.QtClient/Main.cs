@@ -117,14 +117,14 @@ namespace Synapse.QtClient
 
 		void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
 		{
-			Console.Error.WriteLine("UNHANDLED EXCEPTION: " + args.ExceptionObject);
-
+			Exception ex = (Exception)args.ExceptionObject;
+			Console.Error.WriteLine("UNHANDLED EXCEPTION: " + ex);
 			string desktopPath = Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
 			string crashFileName = Path.Combine(desktopPath, String.Format("synapse-crash-{0}.log", DateTime.Now.ToFileTime()));
 			string crashLog = args.ExceptionObject.ToString();
 			Util.WriteToFile(crashFileName, crashLog);
 
-			ShowErrorWindow("Oh no! An unhandled error has occured and Synapse must close.", (Exception)args.ExceptionObject);
+			ShowErrorWindow("Oh no! An unhandled error has occured and Synapse must close.", ex);
 			
 			Environment.Exit(-1);
 		}

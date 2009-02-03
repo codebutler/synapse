@@ -180,8 +180,13 @@ namespace Synapse.Xmpp
 
 		void HandleOnInvite(object sender, Message msg)
 		{
-			var invite = (Invite)msg.X.FirstChild;
-			PostActivityFeedItem(invite.From, "invite", msg.From, invite.Reason);
+			if (msg.Type == MessageType.normal) {
+				var invite = (Invite)msg.X.FirstChild;
+				PostActivityFeedItem(invite.From, "invite", msg.From, invite.Reason);
+			} else if (msg.Type == MessageType.error) {
+				var feed = ServiceManager.Get<ActivityFeedService>();
+				feed.PostItem(this, null, "account-error", Jid.Bare, String.Format("Failed to send conference invitation: {0}.", msg["error"].FirstChild.Name));
+			}
 		}
 
 		void HandleOnStreamInit(object sender, ElementStream stream)
