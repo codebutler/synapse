@@ -15,7 +15,7 @@
 		<Service class="Synapse.Addins.PasteBox.PasteBoxService" />
 	</Extension>
 	
-	<Extension path="/Synapse/QtClient/ChatWindow/FormattingToolbar">
+	<Extension path="/Synapse/QtClient/ChatWindow/InsertActions">
 		<Separator />
 		<Action class="Synapse.Addins.PasteBox.ShowPasteBoxAction" />
 	</Extension>

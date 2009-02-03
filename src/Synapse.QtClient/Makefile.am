@@ -97,6 +97,7 @@ FILES =  \
 	gtk-gui/generated.cs \
 	gtk-gui/Synapse.QtClient.ErrorDialog.cs \
 	Gui.cs \
+	IUpdateableAction.cs \
 	JSDebugObject.cs \
 	KeyPressEater.cs \
 	Main.cs \

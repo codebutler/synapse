@@ -7,6 +7,7 @@ ASSEMBLY = ../../build/Debug/addins/Twitter.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
+	../../build/Debug/Synapse.exe \
 	../../build/Debug/Synapse.Services.dll \
 	../../build/Debug/Synapse.UI.dll \
 	../../build/Debug/Synapse.Xmpp.dll 
@@ -34,7 +35,8 @@ FILES =  \
 	TwitterAddinPreferencesFactory.cs \
 	TwitterService.cs \
 	TwitterShoutHandler.cs \
-	TwitterXmlApi.cs 
+	TwitterXmlApi.cs \
+	ViewOnTwitterAction.cs 
 
 DATA_FILES = 
 
@@ -48,6 +50,7 @@ EXTRAS =
 
 REFERENCES =  \
 	$(GTK_SHARP_20_LIBS) \
+	$(QYOTO_LIBS) \
 	Mono.Posix \
 	System \
 	System.Core \

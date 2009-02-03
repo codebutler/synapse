@@ -62,12 +62,16 @@ namespace Synapse.Xmpp
 			}
 		}
 
-		public string GetIdentity (JID jid, string name)
+		public string GetIdentity (JID bareJid, string name)
 		{
-			if (m_IdentityCache.ContainsKey(jid))
-				return m_IdentityCache[jid].GetIdentity(name);
-			else
-				return null;
+			if (bareJid.Equals(m_Account.Jid.BareJID)) {
+				return GetIdentity(name);
+			} else {
+				if (m_IdentityCache.ContainsKey(bareJid))
+					return m_IdentityCache[bareJid].GetIdentity(name);
+				else
+					return null;
+			}
 		}
 		
 		public string[] FeatureNames {

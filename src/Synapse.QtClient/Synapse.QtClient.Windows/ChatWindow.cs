@@ -113,8 +113,18 @@ namespace Synapse.QtClient.Windows
 			m_StrikethroughAction.Checkable = true;
 			toolbar.AddAction(m_StrikethroughAction);
 			
-			foreach (IActionCodon node in AddinManager.GetExtensionNodes("/Synapse/QtClient/ChatWindow/FormattingToolbar")) {
-				toolbar.AddAction((QAction)node.CreateInstance(this));
+			
+			toolbar.AddSeparator();
+			
+			var insertMenu = new QMenu(this);			
+			var button = new QToolButton(this);
+			button.Text = "Insert";
+			button.PopupMode = QToolButton.ToolButtonPopupMode.InstantPopup;
+			button.SetMenu(insertMenu);
+			toolbar.AddWidget(button);
+			
+			foreach (IActionCodon node in AddinManager.GetExtensionNodes("/Synapse/QtClient/ChatWindow/InsertActions")) {
+				insertMenu.AddAction((QAction)node.CreateInstance(this));
 			}		
 			
 			var spacerWidget = new QWidget(toolbar);

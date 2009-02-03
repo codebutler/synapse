@@ -35,11 +35,13 @@ using Synapse.UI;
 using Synapse.UI.Services;
 using Synapse.QtClient;
 using Synapse.QtClient.Windows;
+using Synapse.QtClient.ExtensionNodes;
 using jabber;
 using jabber.connection;
 using jabber.protocol.client;
 using jabber.protocol.iq;
 using Mono.Rocks;
+using Mono.Addins;
 
 namespace Synapse.QtClient.Widgets
 {
@@ -162,6 +164,11 @@ namespace Synapse.QtClient.Widgets
 			m_RosterItemMenu.AddAction("Send File...");
 			m_RosterItemMenu.AddMenu(m_InviteMenu);
 			m_RosterItemMenu.AddAction("View History");
+			
+			foreach (IActionCodon node in AddinManager.GetExtensionNodes("/Synapse/QtClient/Roster/FriendActions")) {
+				m_RosterItemMenu.AddAction((QAction)node.CreateInstance(this));
+			}
+			
 			m_RosterItemMenu.AddSeparator();
 	
 			m_EditGroupsAction = new QAction("Edit Groups", m_RosterItemMenu);
@@ -313,6 +320,12 @@ namespace Synapse.QtClient.Widgets
 			});
 		}
 	
+		public RosterItem SelectedItem {
+			get {
+				return m_MenuDownItem;
+			}
+		}
+		
 		void SendShout ()
 		{
 			if (!String.IsNullOrEmpty(shoutLineEdit.Text)) {
@@ -607,6 +620,12 @@ namespace Synapse.QtClient.Widgets
 		void rosterItemMenu_aboutToShow ()
 		{
 			rosterGrid.SuppressTooltips = true;
+
+			foreach (var action in m_RosterItemMenu.Actions()) {
+				if (action is IUpdateableAction) {
+					((IUpdateableAction)action).Update();
+				}
+			}
 		}
 	
 		[Q_SLOT]

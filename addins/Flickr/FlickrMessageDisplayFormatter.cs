@@ -65,7 +65,7 @@ namespace Synapse.Addins.Flickr
 				
 				string title = element["title"].InnerText;
 				
-				return String.Format("<a href=\"{0}\"><img width=\"75\" height=\"75\" src=\"{1}\" title=\"{2}\" /></a>", linkUrl, thumbUrl, title);				
+				return String.Format("<br/><a href=\"{0}\"><img width=\"75\" height=\"75\" src=\"{1}\" title=\"{2}\" /></a><br/>", linkUrl, thumbUrl, title);
 				
 			} catch (Exception ex) {
 				Console.Error.WriteLine(ex);

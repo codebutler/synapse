@@ -1,7 +1,7 @@
 //
-// ActionHandler.cs
+// ViewOnTwitterAction.cs
 // 
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -21,33 +21,40 @@
 
 using System;
 
+using Synapse.Xmpp;
+
 using Synapse.UI;
 using Synapse.QtClient;
 using Synapse.QtClient.Windows;
+using Synapse.QtClient.Widgets;
 
 using Qyoto;
 
-namespace Synapse.Addins.PasteBox
-{
-	public class ShowPasteBoxAction : QAction
+namespace Synapse.Addins.TwitterAddin
+{	
+	public class ViewOnTwitterAction : QAction, IUpdateableAction
 	{
-		ChatWindow m_ChatWindow;
-		
-		public ShowPasteBoxAction (QWidget parent) : base (parent)
+		public ViewOnTwitterAction(QWidget parent) : base (parent)
 		{
-			m_ChatWindow = (ChatWindow)parent;
+			base.Text = "View on Twitter";
+			base.icon = new QIcon(new QPixmap("resource:/twitter/twitm-16.png"));
 			
 			QObject.Connect(this, Qt.SIGNAL("triggered(bool)"), this, Qt.SLOT("on_triggered(bool)"));
-			
-			base.Text = "Code Snippet...";
-			base.icon = Gui.LoadIcon("stock_script", 16);
 		}
-				
+		
+		public void Update ()
+		{
+			RosterItem item = ((RosterWidget)base.Parent()).SelectedItem;
+			string twitterId = item.Account.GetFeature<UserWebIdentities>().GetIdentity(item.Item.JID, "twitter");
+			base.Visible = !String.IsNullOrEmpty(twitterId);
+		}
+		
 		[Q_SLOT]
 		void on_triggered (bool isChecked)
 		{
-			var dialog = new PasteBoxDialog(m_ChatWindow);
-			dialog.Show();
+			RosterItem item = ((RosterWidget)base.Parent()).SelectedItem;
+			string twitterId = item.Account.GetFeature<UserWebIdentities>().GetIdentity(item.Item.JID, "twitter");
+			Gui.Open("http://twitter.com/" + twitterId);
 		}
 	}
 }

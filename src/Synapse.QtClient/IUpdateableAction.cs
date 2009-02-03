@@ -1,9 +1,10 @@
-// Runtime.cs
+//
+// IUpdateableAction.cs
+// 
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
-//   Christian Hergert <chris@dronelabs.com>
-//
-// Copyright (c) 2008 Christian Hergert
+//   Eric Butler <eric@extremeboredom.net>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,26 +21,10 @@
 
 using System;
 
-using Hyena;
-using Mono.Addins;
-
-using Synapse.ServiceStack;
-
-namespace Synapse.Core
+namespace Synapse.QtClient
 {
-	public class Runtime
+	public interface IUpdateableAction
 	{
-		public delegate void ApplicationStartedEventHandler();
-		public static event ApplicationStartedEventHandler ApplicationStarted;
-		
-		public static void Start ()
-		{
-			ServiceManager.DefaultInitialize();
-
-			var applicationStarted = Runtime.ApplicationStarted;
-			if (applicationStarted != null) {
-				applicationStarted();
-			}
-		}
+		void Update ();
 	}
 }

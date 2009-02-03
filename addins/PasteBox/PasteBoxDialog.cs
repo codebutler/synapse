@@ -26,6 +26,7 @@ using System.Xml;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.UI.Chat;
+using Synapse.QtClient;
 using Synapse.QtClient.Windows;
 using Qyoto;
 using Mono.Addins;
@@ -49,6 +50,8 @@ namespace Synapse.Addins.PasteBox
 			}
 
 			QObject.Connect(this, Qt.SIGNAL("accepted()"), this, Qt.SLOT("dialog_accepted()"));
+			
+			Gui.CenterWidgetOnScreen(this);
 		}
 
 		[Q_SLOT]

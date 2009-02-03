@@ -22,8 +22,12 @@
 		<ExtensionNode name="Action" type="Synapse.UI.Actions.ExtensionNodes.ActionCodon" />
 	</ExtensionPoint>
 	
-	<ExtensionPoint path="/Synapse/QtClient/ChatWindow/FormattingToolbar">
-		<Description>Message format toolbar in conversation windows</Description>
+	<ExtensionPoint path="/Synapse/QtClient/ChatWindow/InsertActions">
+		<Description>Insert menu on toolbar in conversation windows.</Description>
+		<ExtensionNodeSet id="Synapse.QtClient.ActionSet" />
+	</ExtensionPoint>
+	
+	<ExtensionPoint path="/Synapse/QtClient/Roster/FriendActions">
 		<ExtensionNodeSet id="Synapse.QtClient.ActionSet" />
 	</ExtensionPoint>
 </Addin>

@@ -27,6 +27,7 @@
     <File name="TwitterAddinPreferencesFactory.cs" subtype="Code" buildaction="Compile" />
     <File name="twitm-16.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
+    <File name="ViewOnTwitterAction.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -42,6 +43,8 @@
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Services" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Project" localcopy="True" refto="Synapse.QtClient" />
+    <ProjectReference type="Gac" localcopy="True" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
@@ -53,4 +56,5 @@
     <AsmRefVar Sync="True" Name="DLL_REFERENCES" />
     <ProjectRefVar Sync="True" Name="PROJECT_REFERENCES" />
   </MonoDevelop.Autotools.MakefileInfo>
+  <QyotoDesignInfo />
 </Project>

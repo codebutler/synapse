@@ -9,6 +9,7 @@
 		<Addin id="Services" version="0.1" />
 		<Addin id="Xmpp" version="0.1" />
 		<Addin id="UI" version="0.1" />
+		<Addin id="QtClient" version="0.1" />
 	</Dependencies>
 
 	<Extension path="/Synapse/ServiceManager/Service">
@@ -18,12 +19,16 @@
 	<Extension path="/Synapse/Xmpp/ActivityFeed/ShoutHandlers">
 		<ShoutHandler class="Synapse.Addins.TwitterAddin.TwitterShoutHandler" />
 	</Extension>
-
+	
 	<Extension path="/Synapse/UI/AddinPreferences">
 		<AddinPreferencesFactory class="Synapse.Addins.TwitterAddin.TwitterAddinPreferencesFactory" />
 	</Extension>
 
 	<Extension path="/Synapse/UI/ResourceProviders">
 		<ResourceProvider id="twitter"/>
+	</Extension>
+	
+	<Extension path="/Synapse/QtClient/Roster/FriendActions">
+		<Action id="Synapse.Addins.TwitterAddin.ViewOnTwitterAction" />
 	</Extension>
 </Addin>
