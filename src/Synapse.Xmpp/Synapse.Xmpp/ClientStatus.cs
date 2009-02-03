@@ -20,6 +20,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Text.RegularExpressions;
 
 namespace Synapse.Xmpp
 {
@@ -43,7 +44,7 @@ namespace Synapse.Xmpp
 			case null:
 				Type = ClientStatusType.Available;
 				break;
-			case "Free to Chat":
+			case "Free To Chat":
 			case "chat":
 				Type = ClientStatusType.FreeToChat;
 				break;
@@ -78,6 +79,12 @@ namespace Synapse.Xmpp
 		public ClientStatusType Type {
 			get;
 			set;
+		}
+
+		public string TypeDisplayName {
+			get {
+				return Regex.Replace(this.Type.ToString(), @"(\B[A-Z])", @" $1");
+			}
 		}
 
 		public string StatusText {

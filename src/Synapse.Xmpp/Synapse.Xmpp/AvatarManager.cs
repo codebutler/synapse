@@ -162,7 +162,7 @@ namespace Synapse.Xmpp
 		{
 			Account account = (Account)sender;
 			string hash = null;
-			if (account.VCard.Photo.BinVal != null) {
+			if (account.VCard != null && account.VCard.Photo != null && account.VCard.Photo.BinVal != null) {
 				byte[] imageData = account.VCard.Photo.BinVal;
 				hash = Util.SHA1(imageData);
 				s_HashCache[account.Jid.Bare] = hash;

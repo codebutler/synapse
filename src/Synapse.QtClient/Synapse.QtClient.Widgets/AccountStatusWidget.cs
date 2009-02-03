@@ -100,7 +100,7 @@ namespace Synapse.QtClient.Widgets
 			group.AddAction(m_AvailableAction);
 			m_AvailableAction.Checkable = true;
 			
-			m_FreeToChatAction = m_PresenceMenu.AddAction("Free to Chat");
+			m_FreeToChatAction = m_PresenceMenu.AddAction("Free To Chat");
 			group.AddAction(m_FreeToChatAction);
 			m_FreeToChatAction.Checkable = true;
 			
@@ -129,9 +129,10 @@ namespace Synapse.QtClient.Widgets
 				string text = null;
 				string statusText = null;
 				if (account.Status != null) {
-					text = account.Status.Type.ToString();
-					if (!String.IsNullOrEmpty(account.Status.StatusText))
+					text = account.Status.TypeDisplayName;
+					if (!String.IsNullOrEmpty(account.Status.StatusText)) {
 						statusText = account.Status.StatusText;
+					}
 				} else {
 					text = account.ConnectionState.ToString();
 				}

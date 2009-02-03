@@ -57,6 +57,8 @@ namespace Synapse.Xmpp
 						}
 					}
 				}
+			} else if (account.ConnectionState == AccountConnectionState.Disconnected) {
+				m_Queue.Clear();
 			}
 		}
 		

@@ -489,7 +489,7 @@ namespace Synapse.Xmpp
 		public ClientStatus Status {
 			set {
 				m_PendingStatus = null;
-				
+
 				if (value.Type != ClientStatusType.Offline && this.ConnectionState != AccountConnectionState.Connected) {
 					m_PendingStatus = value;
 					Connect();
@@ -516,6 +516,10 @@ namespace Synapse.Xmpp
 					this.Disconnect();
 					break;
 				}
+
+				m_Status = value;
+				if (StatusChanged != null)
+					StatusChanged(this);
 			}
 			get {
 				return m_Status;

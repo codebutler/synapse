@@ -48,8 +48,12 @@ namespace Synapse.Xmpp
 
 		public void SetIdentity (string name, string value)
 		{
-			m_MyIdentities[name] = value;
-			UpdateServer();
+			lock (m_MyIdentities) {
+				if (!m_MyIdentities.ContainsKey(name) || m_MyIdentities[name] != name) {
+					m_MyIdentities[name] = value;
+					UpdateServer();
+				}
+			}
 		}
 
 		public string GetIdentity (string name)
@@ -107,8 +111,7 @@ namespace Synapse.Xmpp
 				}
 			}
 
-			PubSubItem itemElement = new PubSubItem(m_Account.Client.Document);
-			itemElement.SetAttribute("id", "current");
+			var itemElement = new Element("item", m_Account.Client.Document);
 			itemElement.AppendChild(identities);
 			
 			m_Account.GetFeature<PersonalEventing>().Publish(Namespace.WebIdentities, itemElement);
