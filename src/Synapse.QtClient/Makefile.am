@@ -129,6 +129,7 @@ FILES =  \
 	Synapse.QtClient.Widgets/AvatarGrid.RosterItemGroup.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.Scene.cs \
 	Synapse.QtClient.Widgets/AvatarLabel.cs \
+	Synapse.QtClient.Widgets/ConversationTextEdit.cs \
 	Synapse.QtClient.Widgets/ConversationWidget.cs \
 	Synapse.QtClient.Widgets/EditGroupsWidget.cs \
 	Synapse.QtClient.Widgets/FadingQLabel.cs \

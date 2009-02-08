@@ -53,7 +53,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTextEdit" name="textEdit" >
+         <widget class="Synapse.QtClient.Widgets.ConversationTextEdit" name="textEdit" >
           <property name="frameShape" >
            <enum>QFrame::NoFrame</enum>
           </property>
@@ -91,6 +91,11 @@
    <class>Synapse.QtClient.Widgets.AvatarGrid&lt;jabber.connection.RoomParticipant></class>
    <extends>QGraphicsView</extends>
    <header>rostergrid.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Synapse.QtClient.Widgets.ConversationTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>conversationtextedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

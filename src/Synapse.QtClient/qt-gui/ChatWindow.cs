@@ -23,7 +23,7 @@ namespace Synapse.QtClient.Windows {
         
         protected QWidget bottomContainer;
         
-        protected QTextEdit textEdit;
+        protected Synapse.QtClient.Widgets.ConversationTextEdit textEdit;
         
         protected QWidget rightContainer;
         
@@ -58,7 +58,7 @@ namespace Synapse.QtClient.Windows {
             verticalLayout = new QVBoxLayout(this.bottomContainer);
             verticalLayout.Spacing = 0;
             verticalLayout.Margin = 0;
-            this.textEdit = new QTextEdit(this.bottomContainer);
+            this.textEdit = new Synapse.QtClient.Widgets.ConversationTextEdit(this.bottomContainer);
             this.textEdit.ObjectName = "textEdit";
             this.textEdit.FrameShape = QFrame.Shape.NoFrame;
             verticalLayout.AddWidget(this.textEdit);
