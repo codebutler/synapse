@@ -337,6 +337,12 @@ namespace Synapse.Xmpp
 			}
 		}
 
+		public IQTracker IQTracker {
+			get {
+				return m_IQTracker;
+			}
+		}
+		
 		public bool AutoConnect {
 			get {
 				return m_AutoConnect;

@@ -63,6 +63,7 @@ FILES =  \
 	Synapse.Xmpp/IDiscoverable.cs \
 	Synapse.Xmpp/Microblogging.cs \
 	Synapse.Xmpp/Namespace.cs \
+	Synapse.Xmpp/OAuth.cs \
 	Synapse.Xmpp/PersonalEventing.cs \
 	Synapse.Xmpp/StreamTypeInfo.cs \
 	Synapse.Xmpp/UserAvatars.cs \
@@ -89,7 +90,9 @@ REFERENCES =  \
 
 DLL_REFERENCES =  \
 	../../contrib/jabber-net.dll \
-	../../contrib/Mono.Addins.dll
+	../../contrib/Mono.Addins.dll \
+	../../contrib/OAuth.dll \
+	../../contrib/OAuthXmpp.dll
 
 CLEANFILES = $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
 

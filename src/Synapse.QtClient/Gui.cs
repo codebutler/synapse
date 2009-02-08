@@ -128,12 +128,5 @@ namespace Synapse.QtClient
 				return new QIcon();
 			}			
 		}
-
-		public static void Open (string uri)
-		{
-			uri = "\"" + uri.Replace("\"", "\\\"") + "\"";
-			var info = new System.Diagnostics.ProcessStartInfo("xdg-open", uri);
-			System.Diagnostics.Process.Start(info);
-		}
 	}
 }

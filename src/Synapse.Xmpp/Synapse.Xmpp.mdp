@@ -35,6 +35,7 @@
     <File name="Synapse.Xmpp.Services/XmppService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/UserWebIdentities.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/StreamTypeInfo.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp/OAuth.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -47,6 +48,8 @@
     <ProjectReference type="Gac" localcopy="True" refto="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/OAuth.dll" />
+    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/OAuthXmpp.dll" />
   </References>
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />

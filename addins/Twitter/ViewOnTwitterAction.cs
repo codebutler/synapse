@@ -21,8 +21,8 @@
 
 using System;
 
+using Synapse.Core;
 using Synapse.Xmpp;
-
 using Synapse.UI;
 using Synapse.QtClient;
 using Synapse.QtClient.Windows;
@@ -54,7 +54,7 @@ namespace Synapse.Addins.TwitterAddin
 		{
 			RosterItem item = ((RosterWidget)base.Parent()).SelectedItem;
 			string twitterId = item.Account.GetFeature<UserWebIdentities>().GetIdentity(item.Item.JID, "twitter");
-			Gui.Open("http://twitter.com/" + twitterId);
+			Util.Open("http://twitter.com/" + twitterId);
 		}
 	}
 }

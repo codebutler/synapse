@@ -418,7 +418,7 @@ namespace Synapse.QtClient
 		
 		void HandleLinkClicked (QUrl url)
 		{
-			Gui.Open(url);
+			Util.Open(url);
 		}
 		
 		string FormatBaseTemplate(PList themeProperties, string basePath, string mainPath, string variantPath, string headerHtml, string footerHtml)

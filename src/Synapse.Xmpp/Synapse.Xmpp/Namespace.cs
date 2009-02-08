@@ -57,5 +57,9 @@ namespace Synapse.Xmpp
 		public const string Mood = "http://jabber.org/protocol/mood";
 
 		public const string WebIdentities = "http://synapse.im/protocol/web-identities";
+		
+		// XEP-0235: OAuth Over XMPP
+		// http://xmpp.org/extensions/xep-0235.html
+		public const string OAuth = "urn:xmpp:tmp:oauth";
 	}
 }

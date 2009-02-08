@@ -246,6 +246,13 @@ namespace Synapse.Core
 			}
 		}
 
+		public static void Open (string uri)
+		{
+			uri = "\"" + uri.Replace("\"", "\\\"") + "\"";
+			var info = new System.Diagnostics.ProcessStartInfo("xdg-open", uri);
+			System.Diagnostics.Process.Start(info);
+		}
+		
 		public static string Linkify (string text)
 		{
 			Regex rx = new Regex(WEB_URL_PATTERN, RegexOptions.IgnoreCase);

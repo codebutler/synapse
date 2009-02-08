@@ -35,6 +35,8 @@ namespace Synapse.Xmpp.Services
 	{
 		public void Initialize ()
 		{			
+			global::OAuth.Xmpp.RequestProxies.XmppRequestProxy.Register();
+			
 			// FIXME: This is not an ideal place for these. Perhaps create an XmppService?
 			var feed = ServiceManager.Get<ActivityFeedService>();
 			feed.AddTemplate("presence", "Presence Changes", "is now {0}", "are now {0}");

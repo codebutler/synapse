@@ -584,7 +584,7 @@ namespace Synapse.QtClient.Widgets
 			try {
 				Uri uri = new Uri(url.ToString());
 				if (uri.Scheme == "http" || uri.Scheme == "https") {
-					Gui.Open(uri.ToString());
+					Util.Open(uri.ToString());
 				} else {
 					if (uri.Scheme == "xmpp") {
 						JID jid = new JID(uri.AbsolutePath);
