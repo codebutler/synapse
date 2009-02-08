@@ -7,7 +7,7 @@
   <import>
     <widget-library name="../../../build/Debug/Synapse.exe" internal="true" />
   </import>
-  <widget class="Gtk.Dialog" id="Synapse.QtClient.ErrorDialog" design-size="200 120">
+  <widget class="Gtk.Dialog" id="Synapse.QtClient.ErrorDialog" design-size="205 146">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Synapse Error</property>
     <property name="WindowPosition">Center</property>
@@ -50,6 +50,7 @@
                     <property name="Xalign">0</property>
                     <property name="LabelProp" translatable="yes">&lt;b&gt;Primary Message&lt;/b&gt;</property>
                     <property name="UseMarkup">True</property>
+                    <property name="Wrap">True</property>
                   </widget>
                   <packing>
                     <property name="Position">0</property>
@@ -63,6 +64,7 @@
                     <property name="MemberName" />
                     <property name="Xalign">0</property>
                     <property name="LabelProp" translatable="yes">Secondary Message</property>
+                    <property name="Wrap">True</property>
                   </widget>
                   <packing>
                     <property name="Position">1</property>

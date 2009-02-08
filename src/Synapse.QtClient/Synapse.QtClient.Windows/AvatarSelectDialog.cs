@@ -127,13 +127,17 @@ namespace Synapse.QtClient.Windows
 			if (dialog.Exec() == (int)DialogCode.Accepted && dialog.SelectedFiles().Count > 0) {
 				string fileName = dialog.SelectedFiles()[0];
 	
-				byte[] buffer = null;
-				Image image = Image.FromFile(fileName);
-				using (MemoryStream stream = new MemoryStream()) {
-					image.Save(stream, image.RawFormat);
-					buffer = stream.GetBuffer();
-				}			
-				SetAvatar(buffer, image.RawFormat);
+				try {
+					byte[] buffer = null;
+					Image image = Image.FromFile(fileName);
+					using (MemoryStream stream = new MemoryStream()) {
+						image.Save(stream, image.RawFormat);
+						buffer = stream.GetBuffer();
+					}			
+					SetAvatar(buffer, image.RawFormat);
+				} catch (Exception ex) {
+					Application.Client.ShowErrorWindow("Failed to set avatar. The file you selected may be an unsupported image type or may be damaged.", ex);
+				}
 			}
 		}
 		
@@ -147,11 +151,18 @@ namespace Synapse.QtClient.Windows
 		{
 			QPixmap pixmap = new QPixmap();
 			
+			// FIXME: Handle this more gracefully, or prevent it from happening (see Account#HandleOnAuthenticate).
+			if (m_Account.VCard == null) {
+				throw new Exception("No VCard!");
+			}
+			
 			if (buffer == null) {
 				pixmap = new QPixmap("resource:/default-avatar.png");
 				
-				m_Account.VCard.Photo.BinVal    = null;
-				m_Account.VCard.Photo.ImageType = null;
+				if (m_Account.VCard.Photo != null) {
+					m_Account.VCard.Photo.BinVal    = null;
+					m_Account.VCard.Photo.ImageType = null;
+				}
 			} else {
 				if (format == null)
 					throw new ArgumentNullException("format");
@@ -161,6 +172,10 @@ namespace Synapse.QtClient.Windows
 				// The image height and width SHOULD be between thirty-two (32) and ninety-six (96) pixels; the recommended size is sixty-four (64) pixels high and sixty-four (64) pixels wide.
 				// The image SHOULD be square.
 	
+				if (m_Account.VCard.Photo == null) {
+					m_Account.VCard.Photo = new VCard.VPhoto(m_Account.Client.Document);
+				}
+				
 				m_Account.VCard.Photo.ImageType = format;
 				m_Account.VCard.Photo.BinVal = buffer;
 			}

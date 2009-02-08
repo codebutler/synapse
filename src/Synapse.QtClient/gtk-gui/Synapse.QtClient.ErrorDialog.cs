@@ -73,6 +73,7 @@ namespace Synapse.QtClient {
             this.titleLabel.Xalign = 0F;
             this.titleLabel.LabelProp = Mono.Unix.Catalog.GetString("<b>Primary Message</b>");
             this.titleLabel.UseMarkup = true;
+            this.titleLabel.Wrap = true;
             this.vbox1.Add(this.titleLabel);
             Gtk.Box.BoxChild w3 = ((Gtk.Box.BoxChild)(this.vbox1[this.titleLabel]));
             w3.Position = 0;
@@ -83,6 +84,7 @@ namespace Synapse.QtClient {
             this.messageLabel.Name = "messageLabel";
             this.messageLabel.Xalign = 0F;
             this.messageLabel.LabelProp = Mono.Unix.Catalog.GetString("Secondary Message");
+            this.messageLabel.Wrap = true;
             this.vbox1.Add(this.messageLabel);
             Gtk.Box.BoxChild w4 = ((Gtk.Box.BoxChild)(this.vbox1[this.messageLabel]));
             w4.Position = 1;
