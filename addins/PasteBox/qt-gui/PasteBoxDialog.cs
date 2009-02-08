@@ -40,7 +40,7 @@ namespace Synapse.Addins.PasteBox {
         protected void SetupUi() {
             base.ObjectName = "PasteBoxDialog";
             this.Geometry = new QRect(0, 0, 400, 300);
-            this.WindowTitle = "PasteBoxDialog";
+            this.WindowTitle = "Insert Code Snippet";
             QVBoxLayout verticalLayout;
             verticalLayout = new QVBoxLayout(this);
             verticalLayout.Margin = 6;
