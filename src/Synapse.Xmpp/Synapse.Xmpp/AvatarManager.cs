@@ -189,7 +189,7 @@ namespace Synapse.Xmpp
 
 			VCard vcard = (VCard)i.FirstChild;
 			string hash = null;
-			if (vcard.Photo != null) {
+			if (vcard != null && vcard.Photo != null) {
 				if (vcard.Photo.Image != null) {
 					byte[] imageData = vcard.Photo.BinVal;
 					hash = Util.SHA1(imageData);
