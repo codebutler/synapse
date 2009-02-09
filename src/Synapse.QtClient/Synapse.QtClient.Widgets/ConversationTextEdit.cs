@@ -26,6 +26,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 
 using Synapse.Core;
 
@@ -41,7 +42,32 @@ namespace Synapse.QtClient.Widgets
 		
 		public new string ToHtml ()
 		{
+			var builder = new StringBuilder();
 			
+			builder.Append("<body xmlns='http://www.w3.org/1999/xhtml'>");
+			
+			var document = base.Document();
+			
+			var block = document.Begin();
+			while (block.IsValid()) {			
+				builder.Append("<p>");
+				
+				/*			
+				QTextBlock.iterator it;
+				for (it = block.Begin(); !it.AtEnd(); it = it.Next()) {
+					QTextFragment fragment = it.Fragment();
+					
+				}			
+				*/
+				
+				builder.Append("</b>");
+				
+				block = block.Next();
+			}
+			
+			builder.Append("</body>");
+			
+			return builder.ToString();
 		}
 		
 		protected override bool CanInsertFromMimeData (Qyoto.QMimeData source)
