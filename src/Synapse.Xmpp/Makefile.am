@@ -53,6 +53,7 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG)
 FILES =  \
 	AssemblyInfo.cs \
 	Synapse.Xmpp.Services/AccountService.cs \
+	Synapse.Xmpp.Services/GeoService.cs \
 	Synapse.Xmpp.Services/ShoutService.cs \
 	Synapse.Xmpp.Services/XmppService.cs \
 	Synapse.Xmpp/Account.cs \

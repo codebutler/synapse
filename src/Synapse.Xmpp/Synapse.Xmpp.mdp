@@ -1,9 +1,10 @@
-<Project name="Synapse.Xmpp" fileversion="2.0" language="C#" UseParentDirectoryAsNamespace="True" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
+<Project name="Synapse.Xmpp" fileversion="2.0" language="C#" DefaultNamespace="Synapse.Xmpp" UseParentDirectoryAsNamespace="True" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug" assembly="Synapse.Xmpp" />
       <Build debugmode="True" target="Library" />
       <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
+      <EnvironmentVariables />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
@@ -35,6 +36,7 @@
     <File name="Synapse.Xmpp.Services/XmppService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/UserWebIdentities.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/StreamTypeInfo.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp.Services/GeoService.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
