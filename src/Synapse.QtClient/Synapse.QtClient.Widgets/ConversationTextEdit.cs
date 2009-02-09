@@ -41,7 +41,7 @@ namespace Synapse.QtClient.Widgets
 		
 		public new string ToHtml ()
 		{
-			
+			throw new NotImplementedException();
 		}
 		
 		protected override bool CanInsertFromMimeData (Qyoto.QMimeData source)
