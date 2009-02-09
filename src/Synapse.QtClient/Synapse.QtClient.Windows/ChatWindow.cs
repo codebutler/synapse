@@ -92,40 +92,71 @@ namespace Synapse.QtClient.Windows
 	
 			QToolBar toolbar = new QToolBar(this);
 			toolbar.IconSize = new QSize(16, 16);
+						
+			var formatMenu = new QMenu(this);			
+			var formatMenuButton = new QToolButton(this);
+			formatMenuButton.ToolButtonStyle = ToolButtonStyle.ToolButtonTextBesideIcon;
+			formatMenuButton.Text = "Format";
+			formatMenuButton.icon = Gui.LoadIcon("fonts", 16);
+			formatMenuButton.PopupMode = QToolButton.ToolButtonPopupMode.InstantPopup;
+			formatMenuButton.SetMenu(formatMenu);
+			toolbar.AddWidget(formatMenuButton);
 	
 			m_BoldAction = new QAction(Gui.LoadIcon("format-text-bold", 16), "Bold", this);
 			m_BoldAction.Shortcut = "Ctrl+B";
 			m_BoldAction.Checkable = true;
-			toolbar.AddAction(m_BoldAction);
+			formatMenu.AddAction(m_BoldAction);
 			
 			m_ItalicAction = new QAction(Gui.LoadIcon("format-text-italic", 16), "Italic", this);
 			m_ItalicAction.Shortcut = "Ctrl+I";
 			m_ItalicAction.Checkable = true;
-			toolbar.AddAction(m_ItalicAction);
+			formatMenu.AddAction(m_ItalicAction);
 			
 			m_UnderlineAction = new QAction(Gui.LoadIcon("format-text-underline", 16), "Underline", this);
 			m_UnderlineAction.Shortcut = "Ctrl+U";
 			m_UnderlineAction.Checkable = true;
-			toolbar.AddAction(m_UnderlineAction);
+			formatMenu.AddAction(m_UnderlineAction);
 	
 			m_StrikethroughAction = new QAction(Gui.LoadIcon("format-text-strikethrough", 16), "Strikethrough", this);
 			m_StrikethroughAction.Shortcut = "Ctrl+S";
 			m_StrikethroughAction.Checkable = true;
-			toolbar.AddAction(m_StrikethroughAction);
+			formatMenu.AddAction(m_StrikethroughAction);
 			
+			formatMenu.AddSeparator();
 			
-			toolbar.AddSeparator();
+			formatMenu.AddAction(Gui.LoadIcon("edit-clear", 16), "Clear Formatting");
 			
 			var insertMenu = new QMenu(this);			
-			var button = new QToolButton(this);
-			button.Text = "Insert";
-			button.PopupMode = QToolButton.ToolButtonPopupMode.InstantPopup;
-			button.SetMenu(insertMenu);
-			toolbar.AddWidget(button);
+			var insertMenuButton = new QToolButton(this);
+			insertMenuButton.ToolButtonStyle = ToolButtonStyle.ToolButtonTextBesideIcon;
+			insertMenuButton.Text = "Insert";
+			insertMenuButton.icon = Gui.LoadIcon("image", 16);
+			insertMenuButton.PopupMode = QToolButton.ToolButtonPopupMode.InstantPopup;
+			insertMenuButton.SetMenu(insertMenu);
+			toolbar.AddWidget(insertMenuButton);
+			
+			insertMenu.AddAction(Gui.LoadIcon("insert-image", 16), "Photo...");
+			insertMenu.AddAction(Gui.LoadIcon("insert-link", 16), "Link...");
 			
 			foreach (IActionCodon node in AddinManager.GetExtensionNodes("/Synapse/QtClient/ChatWindow/InsertActions")) {
 				insertMenu.AddAction((QAction)node.CreateInstance(this));
 			}		
+			
+			toolbar.AddSeparator();
+			
+			var activitiesMenu = new QMenu(this);			
+			var activitiesMenuButton = new QToolButton(this);
+			activitiesMenuButton.ToolButtonStyle = ToolButtonStyle.ToolButtonTextBesideIcon;
+			activitiesMenuButton.Text = "Activities";
+			activitiesMenuButton.icon = Gui.LoadIcon("applications-games", 16); // FIXME: Not a good icon.
+			activitiesMenuButton.PopupMode = QToolButton.ToolButtonPopupMode.InstantPopup;
+			activitiesMenuButton.SetMenu(activitiesMenu);
+			toolbar.AddWidget(activitiesMenuButton);
+			
+			activitiesMenu.AddAction(Gui.LoadIcon("internet-group-chat", 16), "Invite to Conference...");
+			activitiesMenu.AddSeparator();
+			activitiesMenu.AddAction(Gui.LoadIcon("applications-graphics", 16), "Launch Whiteboard...");
+			activitiesMenu.AddAction(Gui.LoadIcon("desktop", 16), "Share Desktop...");
 			
 			var spacerWidget = new QWidget(toolbar);
 			spacerWidget.SetSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed);
@@ -191,6 +222,9 @@ namespace Synapse.QtClient.Windows
 			} else {
 				toWidgetAction.Visible = false;
 			}
+			
+			// FIXME: Make this a menu with "View Profile" and "View History".
+			toolbar.AddAction(Gui.LoadIcon("info", 16), "View Profile");
 			
 			m_ConversationWidget.LoadTheme("Mockie", "Orange - Icon Left");
 
