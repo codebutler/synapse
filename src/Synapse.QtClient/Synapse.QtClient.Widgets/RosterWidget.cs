@@ -201,7 +201,7 @@ namespace Synapse.QtClient.Widgets
 				this.AddAction(action);
 			});
 	
-			var jsWindowObject = new JSDebugObject(this);
+			var jsWindowObject = new SynapseJSObject(this);
 			m_ActivityWebView.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
 			QObject.Connect(m_ActivityWebView, Qt.SIGNAL("linkClicked(QUrl)"), this, Qt.SLOT("HandleActivityLinkClicked(QUrl)"));
 			QObject.Connect(m_ActivityWebView.Page(), Qt.SIGNAL("loadFinished(bool)"), this, Qt.SLOT("activityPage_loadFinished(bool)"));

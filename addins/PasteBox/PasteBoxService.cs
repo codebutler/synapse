@@ -100,16 +100,32 @@ namespace Synapse.Addins.PasteBox
 			}
 				
 			var builder = new StringBuilder();
-			builder.AppendFormat("<div class=\"code\">");
+			builder.AppendFormat("<div class=\"codebox\">");
 			
+			// Add text without highlighting for copy-to-clipboard option.
+			// Encode so that newlines and spaces are not lost.
+			builder.Append("<div class=\"raw\">");
+			builder.Append(Uri.EscapeDataString(text));
+			builder.Append("</div>");
+			
+			builder.Append("<div class=\"codeheader\">");
+			builder.AppendFormat("<div class=\"codeinfo\">{0} Code</div>", highlighter.FullName);
+			builder.Append("<a href=\"#\" onclick=\"InsertCodeAddin.copy(this); return false\">Copy to Clipboard</a>");
+			builder.Append("&nbsp;&nbsp;&nbsp;&nbsp;");
+			builder.Append("<a href=\"#\" onclick=\"InsertCodeAddin.toggle(this); return false\">Expand</a>");
+			builder.Append("</div>");
+			
+			builder.AppendFormat("<div class=\"code\" style=\"max-height: 150px;\">");
 			text = highlighter.Parse(text);
 			text = text.Replace("  ", " &nbsp;");
 			text = text.Replace("\t", " &nbsp;&nbsp;&nbsp;");
 			text = text.Replace("\r\n", "<br/>");
 			text = text.Replace("\n", "<br/>");
 			builder.Append(text);
+			builder.AppendFormat("</div>"); 
 			
 			builder.AppendFormat("</div>");
+			
 			return builder.ToString();
 		}
 	}

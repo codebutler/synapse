@@ -46,6 +46,7 @@ EXTRAS =
 
 REFERENCES =  \
 	$(QYOTO_LIBS) \
+	System \
 	System.Core \
 	System.Xml
 

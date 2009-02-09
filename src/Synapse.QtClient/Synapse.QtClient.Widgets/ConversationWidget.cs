@@ -75,6 +75,8 @@ namespace Synapse.QtClient
 		
 		QMenu m_Menu;
 		
+		SynapseJSObject m_JSWindowObject;
+		
 		static string s_ThemesDirectory = null;
 
 		const string APPEND_MESSAGE_WITH_SCROLL      = "checkIfScrollToBottomIsNeeded(); appendMessage(\"{0}\"); scrollToBottomIfNeeded();";
@@ -103,6 +105,8 @@ namespace Synapse.QtClient
 		#region Constructor
 		public ConversationWidget(QWidget parent) : base(parent)
 		{
+			m_JSWindowObject = new SynapseJSObject(this);
+			
 			QObject.Connect(this.Page().MainFrame(), Qt.SIGNAL("javaScriptWindowObjectCleared()"), this, Qt.SLOT("OnJavaScriptWindowObjectCleared()"));
 
 			if (ConversationWidget.ThemesDirectory == null) {
@@ -527,6 +531,8 @@ namespace Synapse.QtClient
 		[Q_SLOT]
 		private void OnJavaScriptWindowObjectCleared ()
 		{
+			base.Page().MainFrame().AddToJavaScriptWindowObject("Synapse", m_JSWindowObject);
+			
 			if (m_ThemeName != null) {
 				// XXX: Do anything here?
 			}

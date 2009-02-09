@@ -98,7 +98,6 @@ FILES =  \
 	gtk-gui/Synapse.QtClient.ErrorDialog.cs \
 	Gui.cs \
 	IUpdateableAction.cs \
-	JSDebugObject.cs \
 	KeyPressEater.cs \
 	Main.cs \
 	qt-gui/AccountStatusWidget.cs \
@@ -148,6 +147,7 @@ FILES =  \
 	Synapse.QtClient.Windows/ProfileWindow.cs \
 	Synapse.QtClient.Windows/ServiceBrowserWindow.cs \
 	Synapse.QtClient.Windows/TabbedChatsWindow.cs \
+	SynapseJSObject.cs \
 	TrayIcon.cs \
 	WindowMover.cs 
 

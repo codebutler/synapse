@@ -1,9 +1,49 @@
 <style type="text/css">
-	.code {
+	.codebox {
 		border: 1px solid #D7D7D7;
 		background: #F8F8F8;
-		max-height: 150px;
+		overflow: auto;
+		max-width: 100%;
+	}
+	
+	.codebox .raw {
+		display: none;
+	}
+	
+	.codeheader {
+		border-bottom: 1px solid #D7D7D7;
+		font-size: small;
+		text-align: right;
+		padding: 3px;
+	}
+	
+	.codeinfo {
+		float: left;
+	}
+	
+	.code {
 		max-width: 100%;
 		overflow: auto;
 	}
 </style>
+
+<script type="text/javascript">
+	var InsertCodeAddin = {
+		toggle: function (link) {
+			var code = $(link).up().up().up().down('.code');
+			if (code.style.maxHeight != '') {
+				code.style.maxHeight = '';
+				$(link).update('Collapse');
+			} else {
+				code.style.maxHeight = '150px';
+				$(link).update('Expand');
+			}
+		},
+		copy: function (link) {
+			var rawCode = $(link).up().up().up().down('.raw');
+			var text = unescape(rawCode.innerHTML);
+			Synapse.setClipboard(text);
+			alert("Copied!");
+		}
+	}
+</script>

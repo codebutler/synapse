@@ -1,5 +1,5 @@
 //
-// JSDebugObject.cs
+// SynapseJSObject.cs: Common JS object available in all QWebViews.
 // 
 // Copyright (C) 2009 Eric Butler
 //
@@ -24,9 +24,9 @@ using Qyoto;
 
 namespace Synapse.QtClient
 {
-	public class JSDebugObject : QObject
+	public class SynapseJSObject : QObject
 	{
-		public JSDebugObject(QObject parent) : base (parent)
+		public SynapseJSObject(QObject parent) : base (parent)
 		{
 			
 		}
@@ -35,6 +35,13 @@ namespace Synapse.QtClient
 		public void debug (string text)
 		{
 			Console.WriteLine(text);
+		}
+		
+		[Q_SLOT]
+		public void setClipboard (string text)
+		{
+			var clipboard = QApplication.Clipboard();
+			clipboard.SetText(text);
 		}
 	}
 }
