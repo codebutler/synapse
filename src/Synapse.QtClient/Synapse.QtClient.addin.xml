@@ -16,11 +16,6 @@
 		<Descriptions>Handlers for UI actions</Descriptions>
 		<ExtensionNode name="ActionHandler" />
 	</ExtensionPoint>
-
-	<ExtensionPoint path="/Synapse/QtClient/Actions">
-		<Description>User interface actions</Description>
-		<ExtensionNode name="Action" type="Synapse.UI.Actions.ExtensionNodes.ActionCodon" />
-	</ExtensionPoint>
 	
 	<ExtensionPoint path="/Synapse/QtClient/ChatWindow/InsertActions">
 		<Description>Insert menu on toolbar in conversation windows.</Description>
@@ -29,5 +24,9 @@
 	
 	<ExtensionPoint path="/Synapse/QtClient/Roster/FriendActions">
 		<ExtensionNodeSet id="Synapse.QtClient.ActionSet" />
+	</ExtensionPoint>
+	
+	<ExtensionPoint path="/Synapse/QtClient/AddinPreferencesDialogs">
+		<ExtensionNode name="Dialog" type="Synapse.QtClient.ExtensionNodes.QWidgetTypeExtensionNode" />
 	</ExtensionPoint>
 </Addin>

@@ -119,6 +119,7 @@ FILES =  \
 	ResourceFileEngine.cs \
 	Synapse.QtClient.ExtensionNodes/ActionCodon.cs \
 	Synapse.QtClient.ExtensionNodes/IActionCodon.cs \
+	Synapse.QtClient.ExtensionNodes/QWidgetTypeExtensionNode.cs \
 	Synapse.QtClient.ExtensionNodes/SeparatorCodon.cs \
 	Synapse.QtClient.Widgets/AccountStatusWidget.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.cs \

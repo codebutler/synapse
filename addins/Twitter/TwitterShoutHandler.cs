@@ -24,7 +24,7 @@ using Synapse.ServiceStack;
 using Synapse.Xmpp.Services;
 using System.Threading;
 
-namespace Synapse.Addins.TwitterAddin
+namespace Synapse.Addins.Twitter
 {
 	public class TwitterShoutHandler : IShoutHandler
 	{

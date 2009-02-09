@@ -30,10 +30,8 @@ all: $(ASSEMBLY) $(PROGRAMFILES)
 
 FILES =  \
 	AssemblyInfo.cs \
-	gtk-gui/generated.cs \
-	gtk-gui/Synapse.Addins.TwitterAddin.TwitterAddinPreferencesDialog.cs \
+	qt-gui/TwitterAddinPreferencesDialog.cs \
 	TwitterAddinPreferencesDialog.cs \
-	TwitterAddinPreferencesFactory.cs \
 	TwitterService.cs \
 	TwitterShoutHandler.cs \
 	TwitterXmlApi.cs \
@@ -42,7 +40,6 @@ FILES =  \
 DATA_FILES = 
 
 RESOURCES =  \
-	gtk-gui/gui.stetic \
 	twitm-16.png \
 	twitm-48.png \
 	Twitter.addin.xml 
@@ -50,7 +47,6 @@ RESOURCES =  \
 EXTRAS = 
 
 REFERENCES =  \
-	$(GTK_SHARP_20_LIBS) \
 	$(QYOTO_LIBS) \
 	Mono.Posix \
 	System \

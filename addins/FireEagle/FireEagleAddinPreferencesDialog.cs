@@ -27,6 +27,7 @@ using Synapse.ServiceStack;
 using Synapse.Services;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
+using Synapse.QtClient;
 
 using Qyoto;
 
@@ -34,7 +35,7 @@ namespace Synapse.Addins.FireEagle
 {
 	public partial class FireEagleAddinPreferencesDialog : QDialog
 	{
-		public FireEagleAddinPreferencesDialog ()
+		public FireEagleAddinPreferencesDialog (QWidget parentWindow) : base (parentWindow)
 		{
 			SetupUi();
 			
@@ -55,6 +56,8 @@ namespace Synapse.Addins.FireEagle
 			service.AuthorizationNeeded += HandleAuthorizationNeeded;
 			service.ReceivedAccessToken += HandleReceivedAccessToken;
 			service.AccessTokenCleared  += HandleAccessTokenCleared;
+			
+			Gui.CenterWidgetOnScreen(this);
 		}
 		
 		[Q_SLOT]

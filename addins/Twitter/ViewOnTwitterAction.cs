@@ -30,7 +30,7 @@ using Synapse.QtClient.Widgets;
 
 using Qyoto;
 
-namespace Synapse.Addins.TwitterAddin
+namespace Synapse.Addins.Twitter
 {	
 	public class ViewOnTwitterAction : QAction, IUpdateableAction
 	{

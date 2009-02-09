@@ -7,10 +7,6 @@
 	isroot    = "true"
 	version   = "0.1">
 
-	<ExtensionPoint path="/Synapse/UI/AddinPreferences">
-		<ExtensionNode name="AddinPreferencesFactory" />
-	</ExtensionPoint>
-
 	<ExtensionNodeSet id="Synapse.UI.ResourceProviderSet">
 		<ExtensionNode name="ResourceProvider" type="Synapse.UI.ResourceProviderCodon" />
 	</ExtensionNodeSet>

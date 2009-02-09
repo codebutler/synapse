@@ -13,15 +13,15 @@
 	</Dependencies>
 
 	<Extension path="/Synapse/ServiceManager/Service">
-		<Service class="Synapse.Addins.TwitterAddin.TwitterService" />
+		<Service class="Synapse.Addins.Twitter.TwitterService" />
 	</Extension>
 
 	<Extension path="/Synapse/Xmpp/ActivityFeed/ShoutHandlers">
-		<ShoutHandler class="Synapse.Addins.TwitterAddin.TwitterShoutHandler" />
+		<ShoutHandler class="Synapse.Addins.Twitter.TwitterShoutHandler" />
 	</Extension>
 	
-	<Extension path="/Synapse/UI/AddinPreferences">
-		<AddinPreferencesFactory class="Synapse.Addins.TwitterAddin.TwitterAddinPreferencesFactory" />
+	<Extension path="/Synapse/QtClient/AddinPreferencesDialogs">
+		<Dialog class="Synapse.Addins.Twitter.TwitterAddinPreferencesDialog" />
 	</Extension>
 
 	<Extension path="/Synapse/UI/ResourceProviders">
@@ -29,6 +29,6 @@
 	</Extension>
 	
 	<Extension path="/Synapse/QtClient/Roster/FriendActions">
-		<Action id="Synapse.Addins.TwitterAddin.ViewOnTwitterAction" />
+		<Action id="Synapse.Addins.Twitter.ViewOnTwitterAction" />
 	</Extension>
 </Addin>

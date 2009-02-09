@@ -12,8 +12,8 @@
 		<Addin id="QtClient" version="0.1" />
 	</Dependencies>
 
-	<Extension path="/Synapse/UI/AddinPreferences">
-		<AddinPreferencesFactory class="Synapse.Addins.FireEagle.FireEagleAddinPreferencesFactory" />
+	<Extension path="/Synapse/QtClient/AddinPreferencesDialogs">
+		<Dialog class="Synapse.Addins.FireEagle.FireEagleAddinPreferencesDialog" />
 	</Extension>
 	
 	<Extension path="/Synapse/ServiceManager/Service">

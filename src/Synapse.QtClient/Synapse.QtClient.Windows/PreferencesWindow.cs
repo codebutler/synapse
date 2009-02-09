@@ -20,12 +20,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+
 using Qyoto;
-using Synapse.QtClient;
-using Synapse.UI;
+
 using Synapse.ServiceStack;
+using Synapse.UI;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
+using Synapse.QtClient;
+using Synapse.QtClient.ExtensionNodes;
+
 using Mono.Addins;
 
 namespace Synapse.QtClient.Windows
@@ -51,11 +55,12 @@ namespace Synapse.QtClient.Windows
 			QObject.Connect(extensionsList, Qt.SIGNAL("activated(const QModelIndex &)"), delegate (QModelIndex index) {
 				Addin addin = (Addin)index.InternalPointer();
 				
-				var nodes = AddinManager.GetExtensionNodes("/Synapse/UI/AddinPreferences");
-				foreach (TypeExtensionNode node in nodes) {
+				var nodes = AddinManager.GetExtensionNodes("/Synapse/QtClient/AddinPreferencesDialogs");
+				foreach (QWidgetTypeExtensionNode node in nodes) {
 					if (addin.Id.StartsWith(node.Addin.Id)) {
-						IAddinPreferencesFactory factory = (IAddinPreferencesFactory)node.CreateInstance();
-						factory.ShowDialog();
+						QDialog dialog = (QDialog)node.CreateInstance(this);
+						dialog.Show();
+						dialog.Exec();
 						break;
 					}
 				}

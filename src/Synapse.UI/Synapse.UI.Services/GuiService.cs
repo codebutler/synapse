@@ -38,7 +38,6 @@ namespace Synapse.UI.Services
 		{
 			foreach (TypeExtensionNode node in AddinManager.GetExtensionNodes("/Synapse/UI/Chat/MessageDisplayFormatters")) {
 				var formatter = (IMessageDisplayFormatter)node.CreateInstance();
-				Console.WriteLine("FORMATTER: " + formatter);
 				m_MessageDisplayFormatters.Add(formatter);
 			}
 		}

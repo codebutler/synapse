@@ -31,7 +31,7 @@ using Synapse.Xmpp.Services;
 using Synapse.Services;
 using Twitter;
 
-namespace Synapse.Addins.TwitterAddin
+namespace Synapse.Addins.Twitter
 {	
 	public class TwitterService  : IExtensionService, IInitializeService
 	{

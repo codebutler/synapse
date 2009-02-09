@@ -1,7 +1,7 @@
 //
-// TwitterAddinPreferencesFactory.cs
+// QWidgetTypeExtensionNode.cs: Extension node type for creating QWidgets with a parent.
 // 
-// Copyright (C) 2009 Eric Butler
+// Copyright (C) 2008 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -20,19 +20,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Synapse.UI;
+using System.Collections.Generic;
 
-namespace Synapse.Addins.TwitterAddin
-{
-	public class TwitterAddinPreferencesFactory : IAddinPreferencesFactory
+using Synapse.ServiceStack;
+using Synapse.UI.Services;
+
+using Mono.Addins;
+
+using Qyoto;
+
+namespace Synapse.QtClient.ExtensionNodes
+{	
+	public class QWidgetTypeExtensionNode : TypeExtensionNode
 	{
-		public void ShowDialog ()
+		public QWidget CreateInstance (QWidget parent)
 		{
-			var dialog = new TwitterAddinPreferencesDialog();
-			dialog.KeepAbove = true;
-			dialog.Show();
-			dialog.Present();
-			dialog.Run();
+			return (QWidget)Activator.CreateInstance(this.Type, parent);
 		}
 	}
 }

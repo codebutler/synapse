@@ -15,13 +15,11 @@
   </Configurations>
   <Contents>
     <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
-    <File name="IAvatarGridModel.cs" subtype="Code" buildaction="Compile" />
     <File name="RosterAvatarGridModel.cs" subtype="Code" buildaction="Compile" />
     <File name="MucAvatarGridModel.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
     <File name="ResourceProviderCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="template4dotnet.cs" subtype="Code" buildaction="Compile" />
-    <File name="IAddinPreferencesFactory.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Chat/AbstractChatContent.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Chat/ChatContentStatus.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Chat/ChatContentContext.cs" subtype="Code" buildaction="Compile" />
@@ -37,6 +35,7 @@
     <File name="ResourceCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Services/GuiService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.UI.Chat/IMessageDisplayFormatter.cs" subtype="Code" buildaction="Compile" />
+    <File name="IAvatarGridModel.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

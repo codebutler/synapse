@@ -59,7 +59,6 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG)
 
 FILES =  \
 	AssemblyInfo.cs \
-	IAddinPreferencesFactory.cs \
 	IAvatarGridModel.cs \
 	IAvatarProvider.cs \
 	MucAvatarGridModel.cs \
