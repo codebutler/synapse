@@ -38,6 +38,7 @@ using jabber.protocol.iq;
 
 using OAuth;
 using OAuth.RequestProxies;
+using OAuth.Xmpp;
 
 namespace Synapse.Addins.FireEagle
 {
@@ -159,7 +160,7 @@ namespace Synapse.Addins.FireEagle
 					iq.To = new jabber.JID("fireeagle.com");
 					iq.From = account.Jid;
 				
-					var oauth = new Synapse.Xmpp.OAuth(m_Consumer, m_AccessToken, account.Client.Document);
+					var oauth = new OAuthElement(m_Consumer, m_AccessToken, account.Client.Document);
 					iq["pubsub"].AppendChild(oauth);
 					
 					var proxy = RequestProxyFactory.CreateProxy(iq);
