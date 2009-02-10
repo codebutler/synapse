@@ -1,7 +1,7 @@
 //
-// AssemblyInfo.cs
+// IPasteFormatter.cs
 // 
-// Copyright (C) 2008-2009 Eric Butler
+// Copyright (C) 2008 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -19,12 +19,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Reflection;
-using System.Runtime.CompilerServices;
+using System;
 
-[assembly: AssemblyTitle("PasteBox")]
-[assembly: AssemblyDescription("PasteBox addin for Synapse.")]
-[assembly: AssemblyProduct("Synapse")]
-[assembly: AssemblyCopyright("(C) 2008-2009 Eric Butler")]
-
-[assembly: AssemblyVersion("0.1.*")]
+namespace Synapse.Addins.CodeSnippets
+{	
+	public interface IPasteFormatter
+	{
+		string Preview (string pastedText);
+	}
+}

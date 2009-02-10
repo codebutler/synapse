@@ -1,29 +1,30 @@
-<Project name="PasteBox" fileversion="2.0" language="C#" DefaultNamespace="Synapse.Addins.PasteBox" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
+<Project name="CodeSnippets" fileversion="2.0" language="C#" DefaultNamespace="Synapse.Addins.CodeSnippets" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
-      <Output directory="../../build/Debug/addins" assembly="PasteBox" />
+      <Output directory="../../build/Debug/addins" assembly="CodeSnippets" />
       <Build debugmode="True" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
       <EnvironmentVariables />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
-      <Output directory="../../build/Release/addins" assembly="PasteBox" />
+      <Output directory="../../build/Release/addins" assembly="CodeSnippets" />
       <Build debugmode="False" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="PasteBox.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="ShowPasteBoxAction.cs" subtype="Code" buildaction="Compile" />
-    <File name="PasteBoxDialog.cs" subtype="Code" buildaction="Compile" />
-    <File name="qt-gui/PasteBoxDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="CodeSnippets.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="qt-gui/InsertSnippetDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="IPasteFormatPreviewer.cs" subtype="Code" buildaction="Compile" />
     <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
-    <File name="CodeMessageDisplayFormatter.cs" subtype="Code" buildaction="Compile" />
-    <File name="PasteBoxService.cs" subtype="Code" buildaction="Compile" />
     <File name="ConversationHeader.html" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="Synapse.Addins.CodeSnippets/CodeSnippetsService.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Addins.CodeSnippets/CodeMessageDisplayFormatter.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Addins.CodeSnippets/InsertSnippetAction.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Addins.CodeSnippets/InsertSnippetDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/InsertSnippetDialog.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />
@@ -36,8 +37,8 @@
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/jabber-net.dll" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Wilco.SyntaxHighlighter.dll" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
@@ -51,7 +52,7 @@
   </MonoDevelop.Autotools.MakefileInfo>
   <QyotoDesignInfo>
     <Forms>
-      <QyotoForm UiFileName="PasteBoxDialog.ui" Namespace="Synapse.Addins.PasteBox" />
+      <QyotoForm UiFileName="InsertSnippetDialog.ui" Namespace="Synapse.Addins.CodeSnippets" />
     </Forms>
   </QyotoDesignInfo>
 </Project>

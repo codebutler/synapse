@@ -1,5 +1,5 @@
 //
-// PasteBoxService.cs
+// CodeSnippetsService.cs
 // 
 // Copyright (C) 2009 Eric Butler
 //
@@ -29,9 +29,9 @@ using Synapse.ServiceStack;
 using Synapse.UI.Chat;
 using Wilco.SyntaxHighlighting;
 
-namespace Synapse.Addins.PasteBox
+namespace Synapse.Addins.CodeSnippets
 {	
-	public class PasteBoxService : IExtensionService
+	public class CodeSnippetsService : IExtensionService
 	{
 		public static readonly string CODE_NS = "http://synapse.im/protocol/code";
 		
@@ -79,7 +79,7 @@ namespace Synapse.Addins.PasteBox
 
 		public string ServiceName {
 			get {
-				return "PasteBoxService";
+				return "CodeSnippetsService";
 			}
 		}
 

@@ -27,13 +27,13 @@ using Synapse.QtClient.Windows;
 
 using Qyoto;
 
-namespace Synapse.Addins.PasteBox
+namespace Synapse.Addins.CodeSnippets
 {
-	public class ShowPasteBoxAction : QAction
+	public class InsertSnippetAction : QAction
 	{
 		ChatWindow m_ChatWindow;
 		
-		public ShowPasteBoxAction (QWidget parent) : base (parent)
+		public InsertSnippetAction (QWidget parent) : base (parent)
 		{
 			m_ChatWindow = (ChatWindow)parent;
 			
@@ -46,7 +46,7 @@ namespace Synapse.Addins.PasteBox
 		[Q_SLOT]
 		void on_triggered (bool isChecked)
 		{
-			var dialog = new PasteBoxDialog(m_ChatWindow);
+			var dialog = new InsertSnippetDialog(m_ChatWindow);
 			dialog.Show();
 		}
 	}

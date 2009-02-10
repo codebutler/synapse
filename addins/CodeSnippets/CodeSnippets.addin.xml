@@ -1,6 +1,6 @@
-<Addin id        = "PasteBox"
+<Addin id        = "CodeSnippets"
 	   namespace = "Synapse"
-	   name      = "PasteBox"
+	   name      = "Code Snippets"
 	   author    = "Eric Butler"
 	   copyright = "GPLv3"
 	   version   = "0.1">
@@ -12,16 +12,16 @@
 	</Dependencies>
 
 	<Extension path="/Synapse/ServiceManager/Service">
-		<Service class="Synapse.Addins.PasteBox.PasteBoxService" />
+		<Service class="Synapse.Addins.CodeSnippets.CodeSnippetsService" />
 	</Extension>
 	
 	<Extension path="/Synapse/QtClient/ChatWindow/InsertActions">
 		<Separator />
-		<Action class="Synapse.Addins.PasteBox.ShowPasteBoxAction" />
+		<Action class="Synapse.Addins.CodeSnippets.InsertSnippetAction" />
 	</Extension>
 
 	<Extension path="/Synapse/UI/ResourceProviders">
-		<ResourceProvider id="pastebox"/>
+		<ResourceProvider id="codesnippets"/>
 	</Extension>
 
 	<Extension path="/Synapse/UI/ConversationHtmlHeaders">
@@ -29,6 +29,6 @@
 	</Extension>
 
 	<Extension path="/Synapse/UI/Chat/MessageDisplayFormatters">
-		<MessageDisplayFormatter class="Synapse.Addins.PasteBox.CodeMessageDisplayFormatter" />
+		<MessageDisplayFormatter class="Synapse.Addins.CodeSnippets.CodeMessageDisplayFormatter" />
 	</Extension>
 </Addin>

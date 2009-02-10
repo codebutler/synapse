@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>PasteBoxWindow</class>
- <widget class="QWidget" name="PasteBoxWindow" >
+ <class>InsertSnippetDialog</class>
+ <widget class="QDialog" name="InsertSnippetDialog" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -10,11 +10,11 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Paste &amp; Send Text</string>
+   <string>Insert Code Snippet</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
-   <property name="spacing" >
-    <number>9</number>
+   <property name="margin" >
+    <number>6</number>
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout" >
@@ -54,6 +54,19 @@
         <string/>
        </property>
       </widget>
+     </item>
+     <item row="0" column="2" >
+      <spacer name="horizontalSpacer_3" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
@@ -131,21 +144,13 @@
      <item>
       <widget class="QDialogButtonBox" name="buttonBox" >
        <property name="standardButtons" >
-        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+        <set>QDialogButtonBox::NoButton</set>
        </property>
       </widget>
      </item>
     </layout>
    </item>
   </layout>
-  <zorder>gridLayoutWidget</zorder>
-  <zorder>tabWidget</zorder>
-  <zorder>buttonBox_2</zorder>
-  <zorder>horizontalLayoutWidget</zorder>
-  <zorder>pushButton</zorder>
-  <zorder>commandLinkButton</zorder>
-  <zorder>horizontalLayoutWidget_2</zorder>
-  <zorder>buttonBox</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -155,5 +160,38 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>InsertSnippetDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>327</x>
+     <y>278</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>326</x>
+     <y>-9</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>InsertSnippetDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>370</x>
+     <y>281</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>344</x>
+     <y>7</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

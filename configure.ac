@@ -79,7 +79,7 @@ src/Synapse.QtClient/synapse
 src/Synapse.QtClient/Makefile
 addins/Makefile
 addins/Twitter/Makefile
-addins/PasteBox/Makefile
+addins/CodeSnippets/Makefile
 addins/Flickr/Makefile
 addins/Banshee/Makefile
 addins/YouTube/Makefile

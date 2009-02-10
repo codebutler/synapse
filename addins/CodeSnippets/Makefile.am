@@ -3,7 +3,7 @@ EXTRA_DIST =
 
 ASSEMBLY_COMPILER_COMMAND = gmcs
 ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
-ASSEMBLY = ../../build/Debug/addins/PasteBox.dll
+ASSEMBLY = ../../build/Debug/addins/CodeSnippets.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 COMPILE_TARGET = library
 PROJECT_REFERENCES =  \
@@ -13,8 +13,8 @@ PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.UI.dll 
 BUILD_DIR = ../../build/Debug/addins
 
-PASTEBOX_DLL_MDB_SOURCE=../../build/Debug/addins/PasteBox.dll.mdb
-PASTEBOX_DLL_MDB=$(BUILD_DIR)/PasteBox.dll.mdb
+PASTEBOX_DLL_MDB_SOURCE=../../build/Debug/addins/CodeSnippets.dll.mdb
+PASTEBOX_DLL_MDB=$(BUILD_DIR)/CodeSnippets.dll.mdb
 
 AL=al2
 SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
@@ -29,18 +29,19 @@ all: $(ASSEMBLY) $(PROGRAMFILES)
 
 FILES =  \
 	AssemblyInfo.cs \
-	CodeMessageDisplayFormatter.cs \
 	IPasteFormatPreviewer.cs \
-	PasteBoxDialog.cs \
-	PasteBoxService.cs \
-	qt-gui/PasteBoxDialog.cs \
-	ShowPasteBoxAction.cs 
+	qt-gui/InsertSnippetDialog.cs \
+	qt-gui/InsertSnippetDialog.cs \
+	Synapse.Addins.CodeSnippets/CodeMessageDisplayFormatter.cs \
+	Synapse.Addins.CodeSnippets/CodeSnippetsService.cs \
+	Synapse.Addins.CodeSnippets/InsertSnippetAction.cs \
+	Synapse.Addins.CodeSnippets/InsertSnippetDialog.cs 
 
 DATA_FILES = 
 
 RESOURCES =  \
-	ConversationHeader.html \
-	PasteBox.addin.xml 
+	CodeSnippets.addin.xml \
+	ConversationHeader.html 
 
 EXTRAS = 
 

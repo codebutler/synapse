@@ -1,5 +1,5 @@
 //
-// PasteBoxDialog.cs
+// InsertSnippetDialog.cs
 // 
 // Copyright (C) 2008 Eric Butler
 //
@@ -31,11 +31,11 @@ using Synapse.QtClient.Windows;
 using Qyoto;
 using Mono.Addins;
 
-namespace Synapse.Addins.PasteBox
+namespace Synapse.Addins.CodeSnippets
 {
-	public partial class PasteBoxDialog : QDialog
+	public partial class InsertSnippetDialog : QDialog
 	{		
-		public PasteBoxDialog (QWidget parent) : base (parent)
+		public InsertSnippetDialog (QWidget parent) : base (parent)
 		{
 			SetupUi();
 	
@@ -44,7 +44,7 @@ namespace Synapse.Addins.PasteBox
 			ChatWindow chatWindow = (ChatWindow)parent;
 			toLabel.Text = (chatWindow.Handler is ChatHandler) ? ((ChatHandler)chatWindow.Handler).Jid.ToString() : ((MucHandler)chatWindow.Handler).Room.JID.ToString();
 
-			var service = ServiceManager.Get<PasteBoxService>();
+			var service = ServiceManager.Get<CodeSnippetsService>();
 			foreach (var highlighter in service.Highlighters) {
 				typeComboBox.AddItem(highlighter.FullName, highlighter.Name);
 			}
@@ -75,14 +75,14 @@ namespace Synapse.Addins.PasteBox
 			
 			var mimeType = typeComboBox.ItemData(typeComboBox.CurrentIndex).ToString();
 			
-			var service = ServiceManager.Get<PasteBoxService>();
+			var service = ServiceManager.Get<CodeSnippetsService>();
 			service.SendMessage(handler, mimeType, textEdit.PlainText);
 		}
 
 		void UpdatePreview ()
 		{
 			string mimeType = typeComboBox.ItemData(typeComboBox.CurrentIndex);			
-			var service = ServiceManager.Get<PasteBoxService>();
+			var service = ServiceManager.Get<CodeSnippetsService>();
 			webView.SetHtml(service.GeneratePreview(mimeType, textEdit.PlainText));
 		}
 	}

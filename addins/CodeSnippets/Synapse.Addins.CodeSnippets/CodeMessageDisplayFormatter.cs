@@ -25,19 +25,19 @@ using Synapse.ServiceStack;
 using Synapse.UI.Chat;
 using jabber.protocol.client;
 
-namespace Synapse.Addins.PasteBox
+namespace Synapse.Addins.CodeSnippets
 {	
 	public class CodeMessageDisplayFormatter : IMessageDisplayFormatter
 	{
 		public bool SupportsMessage (string bodyHtml, Message message)
 		{
 			XmlElement bodyElement = message["body"];
-			return (bodyElement != null && !String.IsNullOrEmpty(bodyElement.GetAttribute("language", PasteBoxService.CODE_NS)));
+			return (bodyElement != null && !String.IsNullOrEmpty(bodyElement.GetAttribute("language", CodeSnippetsService.CODE_NS)));
 		}
 		
 		public string FormatMessage (string bodyHtml, Message message)
 		{		
-			var service = ServiceManager.Get<PasteBoxService>();
+			var service = ServiceManager.Get<CodeSnippetsService>();
 			return service.FormatMessageBody(message["body"]);
 		}
 

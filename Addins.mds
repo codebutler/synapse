@@ -1,7 +1,7 @@
 <Combine name="Addins" fileversion="2.0">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="CombineConfiguration">
-      <Entry build="True" name="PasteBox" configuration="Debug" />
+      <Entry build="True" name="CodeSnippets" configuration="Debug" />
       <Entry build="True" name="Banshee" configuration="Debug" />
       <Entry build="True" name="Twitter" configuration="Debug" />
       <Entry build="True" name="Flickr" configuration="Debug" />
@@ -9,7 +9,7 @@
       <Entry build="True" name="FireEagle" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
-      <Entry build="True" name="PasteBox" configuration="Release" />
+      <Entry build="True" name="CodeSnippets" configuration="Release" />
       <Entry build="True" name="Banshee" configuration="Release" />
       <Entry build="True" name="Twitter" configuration="Release" />
       <Entry build="True" name="Flickr" configuration="Release" />
@@ -17,8 +17,8 @@
       <Entry build="True" name="FireEagle" configuration="Release" />
     </Configuration>
   </Configurations>
-  <StartMode startupentry="PasteBox" single="True">
-    <Execute type="None" entry="PasteBox" />
+  <StartMode startupentry="CodeSnippets" single="True">
+    <Execute type="None" entry="CodeSnippets" />
     <Execute type="None" entry="Banshee" />
     <Execute type="None" entry="Twitter" />
     <Execute type="None" entry="Flickr" />
@@ -26,7 +26,7 @@
     <Execute type="None" entry="FireEagle" />
   </StartMode>
   <Entries>
-    <Entry filename="addins/PasteBox/PasteBox.mdp" />
+    <Entry filename="addins/CodeSnippets/CodeSnippets.mdp" />
     <Entry filename="addins/Banshee/Banshee.mdp" />
     <Entry filename="addins/Twitter/Twitter.mdp" />
     <Entry filename="addins/Flickr/Flickr.mdp" />

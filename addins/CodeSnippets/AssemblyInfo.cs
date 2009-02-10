@@ -1,7 +1,7 @@
 //
-// PasteBoxWindow.cs
+// AssemblyInfo.cs
 // 
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2008-2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -19,13 +19,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using Qyoto;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
-public partial class PasteBoxWindow : QWidget
-{
-	public PasteBoxWindow (QWidget parent) : base (parent)
-	{
-		SetupUi();
-	}
-}
+[assembly: AssemblyTitle("CodeSnippets")]
+[assembly: AssemblyDescription("Code Snippets addin for Synapse.")]
+[assembly: AssemblyProduct("Synapse")]
+[assembly: AssemblyCopyright("(C) 2008-2009 Eric Butler")]
+
+[assembly: AssemblyVersion("0.1.*")]
