@@ -34,6 +34,7 @@ FILES =  \
 	TwitterAddinPreferencesDialog.cs \
 	TwitterService.cs \
 	TwitterShoutHandler.cs \
+	TwitterWebIdentityConfigurator.cs \
 	TwitterXmlApi.cs \
 	ViewOnTwitterAction.cs 
 

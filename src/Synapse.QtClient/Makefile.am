@@ -98,22 +98,24 @@ FILES =  \
 	gtk-gui/Synapse.QtClient.ErrorDialog.cs \
 	Gui.cs \
 	IUpdateableAction.cs \
+	IWebIdentityConfigurator.cs \
 	KeyPressEater.cs \
 	Main.cs \
 	qt-gui/AccountStatusWidget.cs \
 	qt-gui/AddFriendWindow.cs \
-	qt-gui/AvatarSelectDialog.cs \
 	qt-gui/ChatWindow.cs \
 	qt-gui/DebugWindow.cs \
 	qt-gui/EditAccountDialog.cs \
 	qt-gui/EditGroupsWidget.cs \
 	qt-gui/EditGroupsWindow.cs \
+	qt-gui/EditProfileDialog.cs \
 	qt-gui/MainWindow.cs \
 	qt-gui/NoAccountsWidget.cs \
 	qt-gui/PreferencesWindow.cs \
 	qt-gui/ProfileWindow.cs \
 	qt-gui/RosterWidget.cs \
 	qt-gui/ServiceBrowserWindow.cs \
+	qt-gui/WebIdentityConfiguratorWidget.cs \
 	QtTraceListener.cs \
 	ResizableGraphicsPixmapItem.cs \
 	ResourceFileEngine.cs \
@@ -121,6 +123,7 @@ FILES =  \
 	Synapse.QtClient.ExtensionNodes/IActionCodon.cs \
 	Synapse.QtClient.ExtensionNodes/QWidgetTypeExtensionNode.cs \
 	Synapse.QtClient.ExtensionNodes/SeparatorCodon.cs \
+	Synapse.QtClient.ExtensionNodes/WebIdentityConfiguratorCodon.cs \
 	Synapse.QtClient.Widgets/AccountStatusWidget.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.cs \
 	Synapse.QtClient.Widgets/AvatarGrid.FadeInOutAnimation.cs \
@@ -137,12 +140,15 @@ FILES =  \
 	Synapse.QtClient.Widgets/NoAccountsWidget.cs \
 	Synapse.QtClient.Widgets/NotificationsWidget.cs \
 	Synapse.QtClient.Widgets/RosterWidget.cs \
+	Synapse.QtClient.Widgets/WebIdentityConfiguratorWidget.cs \
 	Synapse.QtClient.Windows/AddFriendWindow.cs \
-	Synapse.QtClient.Windows/AvatarSelectDialog.cs \
 	Synapse.QtClient.Windows/ChatWindow.cs \
 	Synapse.QtClient.Windows/DebugWindow.cs \
 	Synapse.QtClient.Windows/EditAccountDialog.cs \
 	Synapse.QtClient.Windows/EditGroupsWindow.cs \
+	Synapse.QtClient.Windows/EditProfileDialog.AvatarTab.cs \
+	Synapse.QtClient.Windows/EditProfileDialog.cs \
+	Synapse.QtClient.Windows/EditProfileDialog.WebIdentitiesTab.cs \
 	Synapse.QtClient.Windows/MainWindow.cs \
 	Synapse.QtClient.Windows/PreferencesWindow.cs \
 	Synapse.QtClient.Windows/ProfileWindow.cs \

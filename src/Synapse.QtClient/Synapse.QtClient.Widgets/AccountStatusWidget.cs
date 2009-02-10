@@ -47,7 +47,7 @@ namespace Synapse.QtClient.Widgets
 		QAction m_DoNotDisturbAction;
 		QAction m_OfflineAction;
 	
-		AvatarSelectDialog m_AvatarDialog;
+		EditProfileDialog m_EditProfileDialog;
 		
 		public AccountStatusWidget(Account account, RosterWidget parent, MainWindow parentWindow) : base (parent)
 		{
@@ -55,14 +55,14 @@ namespace Synapse.QtClient.Widgets
 			
 			m_ParentWindow = parentWindow;
 	
-			m_AvatarDialog = new AvatarSelectDialog(account, this.TopLevelWidget());
+			m_EditProfileDialog = new EditProfileDialog(account, this.TopLevelWidget());
 			
 			m_AvatarLabel.Cursor = new QCursor(CursorShape.PointingHandCursor);
 			m_AvatarLabel.Clicked += delegate {
 				if (m_Account.ConnectionState == AccountConnectionState.Connected) {
-					Gui.CenterWidgetOnScreen(m_AvatarDialog);
-					m_AvatarDialog.Show();
-					m_AvatarDialog.ActivateWindow();
+					Gui.CenterWidgetOnScreen(m_EditProfileDialog);
+					m_EditProfileDialog.Show(2);
+					m_EditProfileDialog.ActivateWindow();
 				} else {
 					// FIXME: It really wouldn't be so hard to make this work. 
 					// On connect, check to see if it was changed and update server.

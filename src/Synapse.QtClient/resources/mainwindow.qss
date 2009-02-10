@@ -118,7 +118,7 @@ QPushButton {
 }
 
 QCheckBox {
-color: #BBBBBB;
+	color: #BBBBBB;
 }
 
 QPushButton[flat="false"] {

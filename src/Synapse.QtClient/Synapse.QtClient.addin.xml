@@ -29,4 +29,8 @@
 	<ExtensionPoint path="/Synapse/QtClient/AddinPreferencesDialogs">
 		<ExtensionNode name="Dialog" type="Synapse.QtClient.ExtensionNodes.QWidgetTypeExtensionNode" />
 	</ExtensionPoint>
+	
+	<ExtensionPoint path="/Synapse/QtClient/WebIdentityConfigurators">
+		<ExtensionNode name="WebIdentityConfigurator" type="Synapse.QtClient.ExtensionNodes.WebIdentityConfiguratorCodon" />
+	</ExtensionPoint>
 </Addin>

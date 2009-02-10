@@ -42,44 +42,29 @@ using jabber.protocol.iq;
 
 namespace Synapse.QtClient.Windows
 {
-	public partial class AvatarSelectDialog : QDialog
+	public partial class EditProfileDialog : QDialog
 	{
-		Account m_Account;
-		
-		public AvatarSelectDialog (Account account, QWidget parent) : base (parent)
+		void SetupAvatarTab ()
 		{
-			if (account == null)
-				throw new ArgumentNullException("account");
-			
-			SetupUi();
-	
-			m_Account = account;
 			m_Account.AvatarManager.AvatarUpdated += HandleAvatarUpdated;
 	
-			avatarLabel.Pixmap = (QPixmap)AvatarManager.GetAvatar(account.Jid);
+			avatarLabel.Pixmap = (QPixmap)AvatarManager.GetAvatar(m_Account.Jid);
 			
-			if (account.VCard != null && (!String.IsNullOrEmpty(account.VCard.Nickname) || !String.IsNullOrEmpty(account.VCard.FullName)))
-				lineEdit.Text = !String.IsNullOrEmpty(account.VCard.Nickname) ? account.VCard.Nickname : account.VCard.FullName;
+			if (m_Account.VCard != null && (!String.IsNullOrEmpty(m_Account.VCard.Nickname) || !String.IsNullOrEmpty(m_Account.VCard.FullName)))
+				avatarSearchLineEdit.Text = !String.IsNullOrEmpty(m_Account.VCard.Nickname) ? m_Account.VCard.Nickname : m_Account.VCard.FullName;
 			else
-				lineEdit.Text = account.Jid.User;
+				avatarSearchLineEdit.Text = m_Account.Jid.User;
 			
 			foreach (var node in AddinManager.GetExtensionNodes("/Synapse/UI/AvatarProviders")) {
 				IAvatarProvider provider = (IAvatarProvider)((TypeExtensionNode)node).CreateInstance();
 				var tab = new AvatarProviderTab(provider, this);
-				tabWidget.AddTab(tab, provider.Name);
+				avatarTabWidget.AddTab(tab, provider.Name);
 				tab.Show();
 			}
 	
-			if (tabWidget.Count == 0) {
+			if (avatarTabWidget.Count == 0) {
 				// FIXME: Show a "no providers" message.
 			}
-		}
-	
-		public new void Show ()
-		{
-			base.Show();
-			if (tabWidget.Count > 0)
-				((AvatarProviderTab)tabWidget.CurrentWidget()).Update(lineEdit.Text);
 		}
 	
 		void HandleAvatarUpdated(string jid, string avatarHash)
@@ -92,7 +77,7 @@ namespace Synapse.QtClient.Windows
 		}
 	
 		[Q_SLOT]
-		public void setAvatarUrl(string url)
+		void setAvatarUrl(string url)
 		{
 			avatarLabel.Pixmap = new QPixmap("resource:/loading.gif");
 	
@@ -114,13 +99,13 @@ namespace Synapse.QtClient.Windows
 		}
 		
 		[Q_SLOT]
-		void on_searchButton_clicked ()
+		void on_avatarSearchButton_clicked ()
 		{
-			((AvatarProviderTab)tabWidget.CurrentWidget()).Update(lineEdit.Text);
+			((AvatarProviderTab)avatarTabWidget.CurrentWidget()).Update(avatarSearchLineEdit.Text);
 		}
 	
 		[Q_SLOT]
-		void on_browseButton_clicked ()
+		void on_avatarBrowseButton_clicked ()
 		{
 			var dialog = new QFileDialog(this.TopLevelWidget(), "Select Avatar");
 			dialog.fileMode = QFileDialog.FileMode.ExistingFile;
@@ -142,7 +127,7 @@ namespace Synapse.QtClient.Windows
 		}
 		
 		[Q_SLOT]
-		void on_clearButton_clicked ()
+		void on_clearAvatarButton_clicked ()
 		{
 			SetAvatar(null, null);
 		}
@@ -175,6 +160,12 @@ namespace Synapse.QtClient.Windows
 				if (m_Account.VCard.Photo == null) {
 					m_Account.VCard.Photo = new VCard.VPhoto(m_Account.Client.Document);
 				}
+				
+				Console.WriteLine(m_Account.VCard.OuterXml);
+				Console.WriteLine("VPhoto: " + (m_Account.VCard.Photo == null));
+				Console.WriteLine(m_Account.VCard["PHOTO"]);
+				Console.WriteLine(m_Account.VCard["PHOTO"].Name);
+				Console.WriteLine(m_Account.VCard["PHOTO"].GetType());
 				
 				m_Account.VCard.Photo.ImageType = format;
 				m_Account.VCard.Photo.BinVal = buffer;

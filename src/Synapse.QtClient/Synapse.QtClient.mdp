@@ -77,7 +77,6 @@
     <File name="qt-gui/EditAccountDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="SynapseJSObject.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Windows/PreferencesWindow.cs" subtype="Code" buildaction="Compile" />
-    <File name="qt-gui/AvatarSelectDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AvatarLabel.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/loading.gif" subtype="Code" buildaction="EmbedAsResource" />
     <File name="qt-gui/AddFriendWindow.cs" subtype="Code" buildaction="Compile" />
@@ -99,7 +98,7 @@
     <File name="Synapse.QtClient.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
     <File name="Synapse.QtClient.Widgets/EditGroupsWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Windows/AddFriendWindow.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.QtClient.Windows/AvatarSelectDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/EditProfileDialog.AvatarTab.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Windows/EditAccountDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.ExtensionNodes/ActionCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.ExtensionNodes/IActionCodon.cs" subtype="Code" buildaction="Compile" />
@@ -107,6 +106,13 @@
     <File name="IUpdateableAction.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/ConversationTextEdit.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.ExtensionNodes/QWidgetTypeExtensionNode.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/EditProfileDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/EditProfileDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Widgets/WebIdentityConfiguratorWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="IWebIdentityConfigurator.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/WebIdentityConfiguratorWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/EditProfileDialog.WebIdentitiesTab.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.ExtensionNodes/WebIdentityConfiguratorCodon.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/jabber-net.dll" />
@@ -154,9 +160,10 @@
       <QyotoForm UiFileName="ServiceBrowserWindow.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="EditGroupsWindow.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="EditAccountDialog.ui" Namespace="Synapse.QtClient.Windows" />
-      <QyotoForm UiFileName="AvatarSelectDialog.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="AddFriend.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="EditGroupsWidget.ui" Namespace="Synapse.QtClient.Widgets" />
+      <QyotoForm UiFileName="EditProfileDialog.ui" Namespace="Synapse.QtClient.Windows" />
+      <QyotoForm UiFileName="WebIdentityConfiguratorWidget.ui" Namespace="Synapse.QtClient.Widgets" />
     </Forms>
   </QyotoDesignInfo>
 </Project>

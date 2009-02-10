@@ -1,4 +1,4 @@
-<Project name="Twitter" fileversion="2.0" language="C#" DefaultNamespace="Synapse.Addins.TwitterAddin" UseParentDirectoryAsNamespace="True" targetFramework="3.5" ctype="DotNetProject">
+<Project name="Twitter" fileversion="2.0" language="C#" DefaultNamespace="Synapse.Addins.Twitter" UseParentDirectoryAsNamespace="True" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug/addins" assembly="Twitter" />
@@ -25,6 +25,7 @@
     <File name="ViewOnTwitterAction.cs" subtype="Code" buildaction="Compile" />
     <File name="TwitterAddinPreferencesDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/TwitterAddinPreferencesDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="TwitterWebIdentityConfigurator.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

@@ -20,8 +20,11 @@
 		<ShoutHandler class="Synapse.Addins.Twitter.TwitterShoutHandler" />
 	</Extension>
 	
-	<Extension path="/Synapse/QtClient/AddinPreferencesDialogs">
-		<Dialog class="Synapse.Addins.Twitter.TwitterAddinPreferencesDialog" />
+	<Extension path="/Synapse/QtClient/WebIdentityConfigurators">
+		<WebIdentityConfigurator class="Synapse.Addins.Twitter.TwitterWebIdentityConfigurator"
+		                         name="Twitter" 
+		                         description="Send your Synapse shouts to Twitter as tweets, and follow your friends' tweets right from the Synapse activity feed!" 
+		                         icon="resource:/twitter/twitm-48.png" />
 	</Extension>
 
 	<Extension path="/Synapse/UI/ResourceProviders">
