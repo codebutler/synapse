@@ -31,8 +31,7 @@ REFERENCES =  \
 	System.Core \
 	System.Xml
 
-PROJECT_REFERENCES = \
-	../../build/Debug/Synapse.Core.dll
+PROJECT_REFERENCES = ../../build/Debug/Synapse.Core.dll
 
 DLL_REFERENCES =  \
 	../../contrib/Hyena.dll \

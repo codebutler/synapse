@@ -33,7 +33,7 @@ REFERENCES =  \
 	System.Web \
 	System.Xml
 
-PROJECT_REFERENCES = \
+PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.Core.dll \
 	../../build/Debug/Synapse.Services.dll
 

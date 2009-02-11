@@ -84,18 +84,6 @@ namespace Synapse.QtClient.Windows
 			base.Show();
 		}
 		
-		public string Login {
-			get {
-				return m_NoAccountsWidget.Login;
-			}
-		}
-
-		public string Password {
-			get {
-				return m_NoAccountsWidget.Password;
-			}
-		}
-		
 		public void AddAccount(Account account)
 		{
 			Application.Invoke(delegate {
