@@ -1,92 +1,4 @@
-
-EXTRA_DIST =  
-
-THEMES_DIR = resources/themes
-INSTALLED_THEMES_DIR = $(expanded_datadir)/$(PACKAGE)/themes/
-
-install-data-hook:
-	mkdir -p $(DESTDIR)$(INSTALLED_THEMES_DIR)
-	cd $(THEMES_DIR) && find . -type f -exec $(INSTALL_DATA) -D -v '{}' '$(DESTDIR)$(INSTALLED_THEMES_DIR){}' \; ;
-
-uninstall-hook:
-	rm -rf $(DESTDIR)$(INSTALLED_THEMES_DIR)
-
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -unsafe -warn:4 -optimize- -debug "-define:DEBUG"
-ASSEMBLY = ../../build/Debug/Synapse.exe
-ASSEMBLY_MDB = $(ASSEMBLY).mdb
-COMPILE_TARGET = exe
-PROJECT_REFERENCES =  \
-	../../build/Debug/Synapse.Core.dll \
-	../../build/Debug/Synapse.Services.dll \
-	../../build/Debug/Synapse.UI.dll \
-	../../build/Debug/Synapse.Xmpp.dll
-BUILD_DIR = ../../build/Debug
-
-SYNAPSE_SERVICES_DLL_SOURCE=../../build/Debug/Synapse.Services.dll
-SYNAPSE_SERVICES_DLL=$(BUILD_DIR)/Synapse.Services.dll
-SYNAPSE_DLL=
-QTWEBKIT_DLL_CONFIG_SOURCE=../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll.config
-SYNAPSE_CORE_DLL_SOURCE=../../build/Debug/Synapse.Core.dll
-SYNAPSE_CORE_DLL=$(BUILD_DIR)/Synapse.Core.dll
-NDESK_DBUS_DLL_MDB_SOURCE=../../contrib/NDesk.DBus.dll.mdb
-SYNAPSE_UI_DLL_SOURCE=../../build/Debug/Synapse.UI.dll
-SYNAPSE_UI_DLL=$(BUILD_DIR)/Synapse.UI.dll
-MONO_ROCKS_DLL_MDB_SOURCE=../../contrib/Mono.Rocks.dll.mdb
-SYNAPSE_CORE_DLL_MDB_SOURCE=../../build/Debug/Synapse.Core.dll.mdb
-SYNAPSE_CORE_DLL_MDB=$(BUILD_DIR)/Synapse.Core.dll.mdb
-JABBER_NET_DLL_MDB_SOURCE=../../contrib/jabber-net.dll.mdb
-SYNAPSE_UI_DLL_MDB_SOURCE=../../build/Debug/Synapse.UI.dll.mdb
-SYNAPSE_UI_DLL_MDB=$(BUILD_DIR)/Synapse.UI.dll.mdb
-HYENA_GUI_DLL_SOURCE=../../contrib/Hyena.Gui.dll
-SYNAPSE_XMPP_DLL_MDB_SOURCE=../../build/Debug/Synapse.Xmpp.dll.mdb
-SYNAPSE_XMPP_DLL_MDB=$(BUILD_DIR)/Synapse.Xmpp.dll.mdb
-HYENA_GUI_DLL_CONFIG_SOURCE=../../contrib/Hyena.Gui.dll.config
-SYNAPSE_SERVICES_DLL_MDB_SOURCE=../../build/Debug/Synapse.Services.dll.mdb
-SYNAPSE_SERVICES_DLL_MDB=$(BUILD_DIR)/Synapse.Services.dll.mdb
-HYENA_DLL_SOURCE=../../contrib/Hyena.dll
-MONO_ROCKS_DLL_SOURCE=../../contrib/Mono.Rocks.dll
-QTWEBKIT_DLL_SOURCE=../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll
-SYNAPSE_XMPP_DLL_SOURCE=../../build/Debug/Synapse.Xmpp.dll
-SYNAPSE_XMPP_DLL=$(BUILD_DIR)/Synapse.Xmpp.dll
-NDESK_DBUS_DLL_SOURCE=../../contrib/NDesk.DBus.dll
-JABBER_NET_DLL_SOURCE=../../contrib/jabber-net.dll
-SYNAPSE_EXE_MDB_SOURCE=../../build/Debug/Synapse.exe.mdb
-SYNAPSE_EXE_MDB=$(BUILD_DIR)/Synapse.exe.mdb
-
-AL=al2
-SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
-
-PROGRAMFILES = \
-	$(SYNAPSE_SERVICES_DLL) \
-	$(SYNAPSE_DLL) \
-	$(QTWEBKIT_DLL_CONFIG) \
-	$(SYNAPSE_CORE_DLL) \
-	$(NDESK_DBUS_DLL_MDB) \
-	$(SYNAPSE_UI_DLL) \
-	$(MONO_ROCKS_DLL_MDB) \
-	$(SYNAPSE_CORE_DLL_MDB) \
-	$(JABBER_NET_DLL_MDB) \
-	$(SYNAPSE_UI_DLL_MDB) \
-	$(HYENA_GUI_DLL) \
-	$(SYNAPSE_XMPP_DLL_MDB) \
-	$(HYENA_GUI_DLL_CONFIG) \
-	$(SYNAPSE_SERVICES_DLL_MDB) \
-	$(HYENA_DLL) \
-	$(MONO_ROCKS_DLL) \
-	$(QTWEBKIT_DLL) \
-	$(SYNAPSE_XMPP_DLL) \
-	$(NDESK_DBUS_DLL) \
-	$(JABBER_NET_DLL) \
-	$(SYNAPSE_EXE_MDB)  
-
-BINARIES = \
-	$(SYNAPSE)  
-
-
-RESGEN=resgen2
-	
-all: $(ASSEMBLY) $(PROGRAMFILES) $(BINARIES) 
+# Begin MonoDevelop-maintained variables
 
 FILES =  \
 	AbstractSimpleFileEngine.cs \
@@ -158,8 +70,6 @@ FILES =  \
 	TrayIcon.cs \
 	WindowMover.cs 
 
-DATA_FILES = 
-
 RESOURCES =  \
 	gtk-gui/gui.stetic \
 	resources/collapse.png \
@@ -188,9 +98,6 @@ RESOURCES =  \
 	resources/view-list.png \
 	Synapse.QtClient.addin.xml 
 
-EXTRAS = \
-	synapse.in 
-
 REFERENCES =  \
 	$(GLIB_SHARP_20_LIBS) \
 	$(GTK_SHARP_20_LIBS) \
@@ -202,6 +109,12 @@ REFERENCES =  \
 	System.Drawing \
 	System.Xml
 
+PROJECT_REFERENCES =  \
+	../../build/Debug/Synapse.Core.dll \
+	../../build/Debug/Synapse.Services.dll \
+	../../build/Debug/Synapse.UI.dll \
+	../../build/Debug/Synapse.Xmpp.dll
+
 DLL_REFERENCES =  \
 	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll \
 	../../contrib/Hyena.dll \
@@ -209,48 +122,53 @@ DLL_REFERENCES =  \
 	../../contrib/Mono.Addins.dll \
 	../../contrib/Mono.Rocks.dll
 
-CLEANFILES = $(PROGRAMFILES) $(BINARIES) 
+# End MonoDevelop-maintained variables
+
+ASSEMBLY = $(BUILD_DIR)/Synapse.exe
+ASSEMBLY_MDB = $(ASSEMBLY).mdb
+
+SYNAPSE_QTCLIENT_PC = $(BUILD_DIR)/synapse.qtclient.pc
+
+SYNAPSE = $(BUILD_DIR)/synapse
+
+SYNAPSE_ADDINS = $(BUILD_DIR)/Synapse.addins
+
+LINUX_PKGCONFIG = \
+	$(SYNAPSE_UI_PC)  
+
+BINARIES = $(SYNAPSE)
+
+EXTRA_DIST = $(SYNAPSE) $(SYNAPSE_UI_PC) $(SYNAPSE_ADDINS)
+
+all: $(ASSEMBLY) $(ASSEMBLY_MDB) $(LINUX_PKGCONFIG) $(SYNAPSE) $(SYNAPSE_ADDINS)
 
 include $(top_srcdir)/Makefile.include
 
-QTWEBKIT_DLL_CONFIG = $(BUILD_DIR)/qtwebkit.dll.config
-NDESK_DBUS_DLL_MDB = $(BUILD_DIR)/NDesk.DBus.dll.mdb
-MONO_ROCKS_DLL_MDB = $(BUILD_DIR)/Mono.Rocks.dll.mdb
-JABBER_NET_DLL_MDB = $(BUILD_DIR)/jabber-net.dll.mdb
-HYENA_GUI_DLL = $(BUILD_DIR)/Hyena.Gui.dll
-SYNAPSE = $(BUILD_DIR)/synapse
-HYENA_GUI_DLL_CONFIG = $(BUILD_DIR)/Hyena.Gui.dll.config
-HYENA_DLL = $(BUILD_DIR)/Hyena.dll
-MONO_ROCKS_DLL = $(BUILD_DIR)/Mono.Rocks.dll
-QTWEBKIT_DLL = $(BUILD_DIR)/qtwebkit.dll
-NDESK_DBUS_DLL = $(BUILD_DIR)/NDesk.DBus.dll
-JABBER_NET_DLL = $(BUILD_DIR)/jabber-net.dll
-MONO_ADDINS_DLL = $(BUILD_DIR)/Mono.Addins.dll
+pkglib_SCRIPTS += $(SYNAPSE_ADDINS)
 
-$(eval $(call emit-deploy-target,SYNAPSE_DLL))
-$(eval $(call emit-deploy-target,QTWEBKIT_DLL_CONFIG))
-$(eval $(call emit-deploy-target,NDESK_DBUS_DLL_MDB))
-$(eval $(call emit-deploy-target,MONO_ROCKS_DLL_MDB))
-$(eval $(call emit-deploy-target,JABBER_NET_DLL_MDB))
-$(eval $(call emit-deploy-target,HYENA_GUI_DLL))
+CLEANFILES += $(SYNAPSE) $(SYNAPSE_ADDINS)
+
 $(eval $(call emit-deploy-wrapper,SYNAPSE,synapse,x))
-$(eval $(call emit-deploy-target,HYENA_GUI_DLL_CONFIG))
-$(eval $(call emit-deploy-target,HYENA_DLL))
-$(eval $(call emit-deploy-target,MONO_ROCKS_DLL))
-$(eval $(call emit-deploy-target,QTWEBKIT_DLL))
-$(eval $(call emit-deploy-target,NDESK_DBUS_DLL))
-$(eval $(call emit-deploy-target,JABBER_NET_DLL))
-$(eval $(call emit-deploy-target,MONO_ROCKS_DLL))
+$(eval $(call emit-deploy-wrapper,SYNAPSE_QTCLIENT_PC,synapse.ui.pc))
 
+$(SYNAPSE_ADDINS): Synapse.addins
+	cp Synapse.addins $(SYNAPSE_ADDINS)
 
-$(eval $(call emit_resgen_targets))
-$(build_xamlg_list): %.xaml.g.cs: %.xaml
-	xamlg '$<'
-
-$(ASSEMBLY) $(ASSEMBLY_MDB): $(build_sources) $(build_resources) $(build_datafiles) $(DLL_REFERENCES) $(PROJECT_REFERENCES) $(build_xamlg_list) $(build_satellite_assembly_list)
+$(ASSEMBLY) $(ASSEMBLY_MDB): $(build_sources) $(build_resources) $(DLL_REFERENCES) $(PROJECT_REFERENCES)
 	mkdir -p $(shell dirname $(ASSEMBLY))
-	$(ASSEMBLY_COMPILER_COMMAND) $(ASSEMBLY_COMPILER_FLAGS) -out:$(ASSEMBLY) -target:$(COMPILE_TARGET) $(build_sources_embed) $(build_resources_embed) $(build_references_ref)
+	$(MCS) $(MCS_FLAGS) -out:$(ASSEMBLY) $(build_sources) $(build_resources_embed) $(build_references_ref)
 	cp -r $(THEMES_DIR) $(BUILD_DIR)/themes
 
-clean:
+clean-local:
 	rm -rf $(BUILD_DIR)/themes
+
+THEMES_DIR = resources/themes
+INSTALLED_THEMES_DIR = $(prefix)/share/synapse/themes/
+
+install-data-hook:
+	mkdir -p $(INSTALLED_THEMES_DIR)
+	echo "Installing Themes..."
+	cd $(THEMES_DIR) && find . -type f -exec $(INSTALL_DATA) -D -v '{}' '$(INSTALLED_THEMES_DIR){}' \; ;
+
+uninstall-hook:
+	rm -rf $(INSTALLED_THEMES_DIR)

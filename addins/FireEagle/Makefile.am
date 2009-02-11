@@ -1,23 +1,30 @@
 # Begin MonoDevelop-maintained variables
 
-FILES = YouTubeMessageDisplayFormatter.cs 
+FILES = AssemblyInfo.cs  \
+	FireEagleAddinPreferencesDialog.cs  \
+	FireEagleService.cs  \
+	FireEagleWebIdentityConfigurator.cs \
+	qt-gui/FireEagleAddinPreferencesDialog.cs
 
 RESOURCES =  \
-	ConversationHeader.html \
-	YouTube.addin.xml 
+	fireeagle-48.png \
+	logo.png
 
 REFERENCES =  \
-	../../contrib/jabber-net.dll \
+	$(QYOTO_LIBS) \
 	System \
 	System.Web \
 	System.Xml
 
 PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.Core.dll \
-	../../build/Debug/Synapse.UI.dll \
-	../../build/Debug/Synapse.Services.dll
+	../../build/Debug/Synapse.Xmpp.dll \
+	../../build/Debug/Synapse.Services.dll \
+	../../build/Debug/Synapse.exe
 
 DLL_REFERENCES =  \
+	../../contrib/OAuth.dll \
+	../../contrib/OAuthXmpp.dll \
 	../../contrib/jabber-net.dll
 
 # End MonoDevelop-maintained variables
@@ -25,7 +32,7 @@ DLL_REFERENCES =  \
 pkglibdir = $(prefix)/lib/synapse/addins
 BUILD_DIR = $(top_builddir)/build/Debug/addins
 
-ASSEMBLY = $(BUILD_DIR)/YouTube.dll
+ASSEMBLY = $(BUILD_DIR)/FireEagle.dll
 ASSEMBLY_MDB = $(ASSEMBLY).mdb
 
 all: $(ASSEMBLY) $(ASSEMBLY_MDB)
