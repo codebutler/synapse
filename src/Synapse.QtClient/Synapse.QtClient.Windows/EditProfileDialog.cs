@@ -62,6 +62,7 @@ namespace Synapse.QtClient.Windows
 		
 		public new void Show ()
 		{
+			Gui.CenterWidgetOnScreen(this);
 			base.Show();
 			if (avatarTabWidget.Count > 0)
 				((AvatarProviderTab)avatarTabWidget.CurrentWidget()).Update(avatarSearchLineEdit.Text);

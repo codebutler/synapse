@@ -88,6 +88,8 @@ namespace Synapse.QtClient.Windows
 			webView.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
 
 			RequestUrl(m_HomeUri);
+			
+			Gui.CenterWidgetOnScreen(this);
 		}
 		
 		public Account Account {
@@ -192,7 +194,7 @@ namespace Synapse.QtClient.Windows
 			}
 			template.DeselectSection();
 			
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				Uri uri = new Uri(String.Format("xmpp:{0}?disco;node={1}", node.JID.ToString(), node.Node));
 				LoadContent(uri, template.getContent());
 			});

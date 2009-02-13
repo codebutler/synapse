@@ -121,7 +121,7 @@ namespace Synapse.Services
 
 		void DesktopNotify (ActivityFeedItemTemplate template, IActivityFeedItem item, string text)
 		{
-			Application.Invoke(delegate {
+			Gtk.Application.Invoke(delegate {
 				Notification notif = new Notification(text, item.Content);
 				foreach (var action in template.Actions) {
 					notif.AddAction(action.Name, action.Label, delegate {

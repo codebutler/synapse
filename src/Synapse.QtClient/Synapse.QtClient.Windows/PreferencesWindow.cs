@@ -135,7 +135,7 @@ namespace Synapse.QtClient.Windows
 	
 			void HandleAccountsChanged (Account account)
 			{
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					Emit.LayoutChanged();
 				});
 			}

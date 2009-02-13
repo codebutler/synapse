@@ -5,11 +5,9 @@ FILES =  \
 	Synapse.Core.ExtensionMethods/IEnumerable.cs \
 	Synapse.Core.ExtensionMethods/StringExtensions.cs \
 	Synapse.Core/Magic.cs \
-	Synapse.Core/Pair.cs \
 	Synapse.Core/Paths.cs \
 	Synapse.Core/PlatformHacks.cs \
 	Synapse.Core/PList.cs \
-	Synapse.Core/PropertyCollection.cs \
 	Synapse.Core/ReadOnlyDictionary.cs \
 	Synapse.Core/SerializableDictionary.cs \
 	Synapse.Core/Serialization.cs \

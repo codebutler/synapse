@@ -362,7 +362,7 @@ namespace Synapse.QtClient.Windows
 
 			void HandleOnJoin(Room room)
 			{
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					if (!m_MucWindows.ContainsKey(room)) {
 						var window = new ChatWindow(new MucHandler(m_Account, room));
 						window.Closed += HandleMucWindowClosed;
@@ -374,7 +374,7 @@ namespace Synapse.QtClient.Windows
 	
 			void HandleOnMessage (object sender, Message message)
 			{
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					if (message.Type == MessageType.chat) {
 						// Make sure we don't open a new window if all we've got is a chatstate.
 						// Some people like a "psycic" mode though, so this should be configurable.
@@ -388,7 +388,7 @@ namespace Synapse.QtClient.Windows
 			
 			void HandleOnPresence (object o, Presence presence)
 			{
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					if (m_ChatWindows.ContainsKey(presence.From.Bare)) {
 						var window = m_ChatWindows[presence.From.Bare];
 						((ChatHandler)window.Handler).SetPresence(presence);
@@ -398,18 +398,20 @@ namespace Synapse.QtClient.Windows
 
 			void HandleChatWindowClosed(object sender, EventArgs e)
 			{
-				Application.Invoke(delegate {
-					var window = (ChatWindow)sender;
-					m_ChatWindows.Remove(((ChatHandler)window.Handler).Jid.Bare);	
+				var window  = (ChatWindow)sender;
+				var handler = (ChatHandler)window.Handler;
+				QApplication.Invoke(delegate {
+					m_ChatWindows.Remove(handler.Jid.Bare);
 					Gui.TabbedChatsWindow.RemoveChatWindow(window);
 				});
 			}
 			
 			void HandleMucWindowClosed(object sender, EventArgs e)
 			{
-				Application.Invoke(delegate {
-					ChatWindow window = ((ChatWindow)sender);
-					m_MucWindows.Remove(((MucHandler)window.Handler).Room);				
+				var window  = (ChatWindow)sender;
+				var handler = (MucHandler)window.Handler;
+				QApplication.Invoke(delegate {
+					m_MucWindows.Remove(handler.Room);				
 					Gui.TabbedChatsWindow.RemoveChatWindow(window);
 				});
 			}

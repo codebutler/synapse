@@ -115,7 +115,7 @@ namespace Synapse.QtClient.Windows
 				else
 					template = template.Replace("@@WORK_PHONE@@", String.Empty);
 			}
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				webView.SetHtml(template);
 			});
 		}

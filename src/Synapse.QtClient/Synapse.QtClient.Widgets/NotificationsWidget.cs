@@ -49,7 +49,7 @@ namespace Synapse.QtClient.Widgets
 		{
 			var service = ServiceManager.Get<ActivityFeedService>();
 			if (service.Templates[item.Type].ShowInMainWindow) {
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					this.Layout().AddWidget(new NotificationItemWidget(item, this));
 					this.Show();
 				});

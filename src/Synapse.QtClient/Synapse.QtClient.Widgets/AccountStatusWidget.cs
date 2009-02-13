@@ -57,7 +57,6 @@ namespace Synapse.QtClient.Widgets
 			m_AvatarLabel.Cursor = new QCursor(CursorShape.PointingHandCursor);
 			m_AvatarLabel.Clicked += delegate {
 				if (m_Account.ConnectionState == AccountConnectionState.Connected) {
-					Gui.CenterWidgetOnScreen(m_EditProfileDialog);
 					m_EditProfileDialog.Show(2);
 					m_EditProfileDialog.ActivateWindow();
 				} else {

@@ -24,7 +24,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
 using System.Linq;
+
 using Qyoto;
+
 using Synapse.Core;
 using Synapse.Core.ExtensionMethods;
 using Synapse.ServiceStack;
@@ -36,10 +38,12 @@ using Synapse.UI.Services;
 using Synapse.QtClient;
 using Synapse.QtClient.Windows;
 using Synapse.QtClient.ExtensionNodes;
+
 using jabber;
 using jabber.connection;
 using jabber.protocol.client;
 using jabber.protocol.iq;
+
 using Mono.Rocks;
 using Mono.Addins;
 
@@ -306,7 +310,7 @@ namespace Synapse.QtClient.Widgets
 		
 		public void AddActivityFeedItem (IActivityFeedItem item)
 		{
-			Application.Invoke(delegate {					
+			QApplication.Invoke(delegate {					
 				string accountJid = (item is XmppActivityFeedItem && ((XmppActivityFeedItem)item).Account != null) ? ((XmppActivityFeedItem)item).Account.Jid.Bare : null;
 				string fromJid = (item is XmppActivityFeedItem) ? ((XmppActivityFeedItem)item).FromJid : null;
 				string content = Util.Linkify(item.Content);
@@ -358,7 +362,7 @@ namespace Synapse.QtClient.Widgets
 			account.Client.OnPresence += HandleOnPresence;
 			account.ConnectionStateChanged += HandleConnectionStateChanged;
 	
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				UpdateOnlineCount();
 			});
 		}
@@ -368,21 +372,21 @@ namespace Synapse.QtClient.Widgets
 			account.Client.OnPresence -= HandleOnPresence;
 			account.ConnectionStateChanged -= HandleConnectionStateChanged;
 			
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				UpdateOnlineCount();
 			});
 		}
 	
 		void HandleOnPresence (object o, Presence pres)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				UpdateOnlineCount();
 			});
 		}
 	
 		void HandleConnectionStateChanged (Account account)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				UpdateOnlineCount();
 			});
 		}

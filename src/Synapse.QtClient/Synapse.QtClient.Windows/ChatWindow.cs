@@ -153,8 +153,11 @@ namespace Synapse.QtClient.Windows
 			activitiesMenuButton.SetMenu(activitiesMenu);
 			toolbar.AddWidget(activitiesMenuButton);
 			
-			activitiesMenu.AddAction(Gui.LoadIcon("internet-group-chat", 16), "Invite to Conference...");
-			activitiesMenu.AddSeparator();
+			if (m_Handler is ChatHandler) {
+				activitiesMenu.AddAction(Gui.LoadIcon("internet-group-chat", 16), "Invite to Conference...");
+				activitiesMenu.AddSeparator();
+			}
+			
 			activitiesMenu.AddAction(Gui.LoadIcon("applications-graphics", 16), "Launch Whiteboard...");
 			activitiesMenu.AddAction(Gui.LoadIcon("desktop", 16), "Share Desktop...");
 			
@@ -184,7 +187,7 @@ namespace Synapse.QtClient.Windows
 					if (pres.From.Bare != chatHandler.Jid.Bare || pres.Priority == "-1") {
 						return;
 					}
-					Application.Invoke(delegate {
+					QApplication.Invoke(delegate {
 						if (!String.IsNullOrEmpty(pres.From.Resource)) {
 							if (pres.Type == PresenceType.available) {
 								string text = String.Format("{0} ({1})", Helper.GetResourceDisplay(pres), Helper.GetPresenceDisplay(pres));
@@ -218,13 +221,13 @@ namespace Synapse.QtClient.Windows
 						string text = String.Format("{0} ({1})", Helper.GetResourceDisplay(presence), Helper.GetPresenceDisplay(presence));
 						m_ToComboBox.AddItem(text, presence.From.Resource);
 					}
-				}				
+				}			
+				
+				// FIXME: Make this a menu with "View Profile" and "View History".
+				toolbar.AddAction(Gui.LoadIcon("info", 16), "View Profile");			
 			} else {
 				toWidgetAction.Visible = false;
 			}
-			
-			// FIXME: Make this a menu with "View Profile" and "View History".
-			toolbar.AddAction(Gui.LoadIcon("info", 16), "View Profile");
 			
 			m_ConversationWidget.LoadTheme("Mockie", "Orange - Icon Left");
 
@@ -297,22 +300,22 @@ namespace Synapse.QtClient.Windows
 				bool replaceLast = m_PreviousContent is ChatContentTyping;
 				
 				m_PreviousContent = content;
-				
-				if (m_Handler is ChatHandler) {
-					Application.Invoke(delegate {
-						m_ConversationWidget.AppendContent(content, isSimilar, false, replaceLast);
+			
+				QApplication.Invoke(delegate {
+					m_ConversationWidget.AppendContent(content, isSimilar, false, replaceLast);
+					
+					if (content is ChatContentMessage && !IsActive) {
+						UrgencyHint = true;
+					}
 						
-						if (content is ChatContentMessage && !IsActive) {
-							UrgencyHint = true;
-						}
-						
+					if (m_Handler is ChatHandler) {
 						if (content is ChatContentMessage && (content.Source.Bare == ((ChatHandler)m_Handler).Jid.Bare)) {
 							// Select this resource so our replies go to it.
 							int i = m_ToComboBox.FindData(((ChatContentMessage)content).Source.Resource);
 							m_ToComboBox.CurrentIndex = (i > -1) ? i : 0;
 						}
-					});
-				}
+					}
+				});
 			}
 		}
 		

@@ -170,7 +170,7 @@ namespace Synapse.QtClient.Widgets
 		private void model_ItemAdded (IAvatarGridModel<T> model, T item)
 		{
 			if (!model.ModelUpdating) {
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					AddItem(item);
 					ResizeAndRepositionGroups();
 				});
@@ -180,7 +180,7 @@ namespace Synapse.QtClient.Widgets
 		private void model_ItemRemoved (IAvatarGridModel<T> model, T item)
 		{
 			if (!model.ModelUpdating) {
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					RemoveItem(item);
 				});
 			}
@@ -193,7 +193,7 @@ namespace Synapse.QtClient.Widgets
 			}
 
 			var s = Environment.StackTrace;
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				bool visibilityChanged = false;
 				bool groupsChanged = false;
 
@@ -238,7 +238,7 @@ namespace Synapse.QtClient.Widgets
 
 		private void model_Refreshed (object o, EventArgs args)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				Console.WriteLine("Model Refreshed");
 				
 				lock (m_Groups) {
@@ -262,7 +262,7 @@ namespace Synapse.QtClient.Widgets
 
 		void model_ItemsChanged (object o, EventArgs args)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				ResizeAndRepositionGroups();
 			});
 		}

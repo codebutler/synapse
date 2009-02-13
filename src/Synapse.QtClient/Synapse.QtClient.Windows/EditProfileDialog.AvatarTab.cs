@@ -70,7 +70,7 @@ namespace Synapse.QtClient.Windows
 		void HandleAvatarUpdated(string jid, string avatarHash)
 		{
 			if (jid == m_Account.Jid.Bare) {
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					avatarLabel.Pixmap = (QPixmap)AvatarManager.GetAvatar(avatarHash);
 				});
 			}
@@ -92,7 +92,7 @@ namespace Synapse.QtClient.Windows
 					buffer = stream.GetBuffer();
 				}
 				
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					SetAvatar(buffer, image.RawFormat);
 				});
 			}, null);
@@ -209,7 +209,7 @@ namespace Synapse.QtClient.Windows
 					builder.AppendFormat("<div style=\"float: left; padding: 6px;\"> <a href=\"javascript:AvatarSelectDialog.setAvatarUrl('{0}')\" title=\"{1}\"><img style=\"width: 75px; height: 75px;\" alt=\"{1}\" src=\"{2}\"/></a></div>", info.Url, info.Title, info.ThumbnailUrl);
 				}
 	
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					base.SetHtml(builder.ToString());
 				});
 			}

@@ -50,7 +50,7 @@ namespace Synapse.QtClient.Windows
 	
 		public void HandleAccountAdded(Account account)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				QTextEdit textEdit = new QTextEdit(this);
 				textEdit.FrameShape = QFrame.Shape.NoFrame;
 				textEdit.ReadOnly = true;
@@ -66,14 +66,14 @@ namespace Synapse.QtClient.Windows
 				m_AccountXmlWidgets.Add(account, widget);
 		
 				account.Client.OnWriteText += delegate(object sender, string txt) {
-					Application.Invoke(delegate {
+					QApplication.Invoke(delegate {
 						if (enableConsoleCheckBox.Checked)
 							textEdit.Append("<b>" + Qt.Escape(txt) + "</b><br/>");
 					});
 				};
 		
 				account.Client.OnReadText += delegate(object sender, string txt) {
-					Application.Invoke(delegate {
+					QApplication.Invoke(delegate {
 						if (enableConsoleCheckBox.Checked)
 							textEdit.Append(Qt.Escape(txt) + "<br/>");
 					});
@@ -83,7 +83,7 @@ namespace Synapse.QtClient.Windows
 	
 		public void HandleAccountRemoved(Account account)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				QWidget widget = m_AccountXmlWidgets[account];
 				m_AccountXmlWidgets.Remove(account);
 				widget.Dispose();

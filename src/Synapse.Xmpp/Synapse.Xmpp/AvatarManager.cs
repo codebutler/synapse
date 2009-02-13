@@ -1,7 +1,7 @@
 //
 // AvatarManager.cs
 // 
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2008-2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
