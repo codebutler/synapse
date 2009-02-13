@@ -400,8 +400,8 @@ namespace Synapse.QtClient
 				
 				inString = inString.Replace("%userIconPath%", userStatusIcon);
 				inString = inString.Replace("%senderScreenName%", content.Source.ToString());
-				inString = inString.Replace("%sender%", content.Account.GetDisplayName(content.Source));
-				inString = inString.Replace("%senderDisplayName%", content.Account.GetDisplayName(content.Source));
+				inString = inString.Replace("%sender%", content.SourceDisplayName);
+				inString = inString.Replace("%senderDisplayName%", content.SourceDisplayName);
 				inString = inString.Replace("%service%", String.Empty);
 
 				// FIXME: %textbackgroundcolor{

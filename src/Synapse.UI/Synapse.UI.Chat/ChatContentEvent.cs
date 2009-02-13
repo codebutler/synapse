@@ -30,8 +30,8 @@ namespace Synapse.UI.Chat
 {
 	public class ChatContentEvent : ChatContentStatus
 	{
-		public ChatContentEvent(Account account, JID source, JID destination, DateTime date, string eventType)
-			: base (account, source, destination, date, eventType)
+		public ChatContentEvent(Account account, JID source, string sourceDisplayName, JID destination, DateTime date, string eventType)
+			: base (account, source, sourceDisplayName, destination, date, eventType)
 		{
 		}
 		

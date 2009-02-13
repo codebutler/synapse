@@ -1,7 +1,7 @@
 //
 // Main.cs
 //
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2008-2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -98,7 +98,7 @@ namespace Synapse.QtClient
 			
 			Application.Run();
 				
-			Application.Client.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				/* Create the UI */
 				Gui.MainWindow = new MainWindow();
 				Gui.DebugWindow = new DebugWindow();
@@ -125,9 +125,9 @@ namespace Synapse.QtClient
 			string crashLog = args.ExceptionObject.ToString();
 			Util.WriteToFile(crashFileName, crashLog);
 
-			ShowErrorWindow("Oh no! An unhandled error has occured and Synapse must close.", ex);
+			// FIXME: Figure out how to show a damn error dialog.
 			
-			Environment.Exit(-1);
+			QCoreApplication.Quit();
 		}
 
 		public QApplication QApp {
@@ -138,28 +138,6 @@ namespace Synapse.QtClient
 		
 		public override string ClientId {
 			get { return "qtclient"; }
-		}
-
-		public override uint RunIdle (IdleHandler handler)
-		{
-			if (Thread.CurrentThread.ManagedThreadId != 1) {
-				QCoreApplication.Invoke(delegate {
-					handler();
-				});
-			} else {
-				handler();
-			}
-			return 0;
-		}
-
-		public override uint RunTimeout (uint milliseconds, Synapse.ServiceStack.TimeoutHandler handler)
-		{
-			throw new System.NotImplementedException ();
-		}
-
-		public override bool IdleTimeoutRemove (uint id)
-		{
-			throw new System.NotImplementedException ();
 		}
 
 		public override object CreateImage (string fileName)
@@ -174,7 +152,7 @@ namespace Synapse.QtClient
 
 		public override void ShowErrorWindow (string errorTitle, Exception error)
 		{
-			this.InvokeAndBlock(delegate {
+			InvokeAndBlock(delegate {
 				ErrorDialog dialog = new ErrorDialog(errorTitle, error);
 				dialog.Show();
 				dialog.Run();
@@ -185,6 +163,28 @@ namespace Synapse.QtClient
 		{
 			Gui.TrayIcon.Dispose();
 			QCoreApplication.Quit();
+		}
+		
+		void InvokeAndBlock (NoArgDelegate dele)
+		{
+			ManualResetEvent mutex = new ManualResetEvent(false);
+			Invoke(delegate {
+				dele();
+				Console.WriteLine("DONE!");
+				mutex.Set();
+			});
+			mutex.WaitOne();
+		}
+		
+		void Invoke (NoArgDelegate dele) 
+		{
+			if (Thread.CurrentThread.ManagedThreadId != 1) {
+				QCoreApplication.Invoke(delegate {
+					dele();
+				});
+			} else {
+				dele();
+			}
 		}
 	}
 }

@@ -90,7 +90,14 @@ namespace Synapse.UI
 		
 		public int GetGroupOrder (string groupName)
 		{
-			return 0;
+			if (groupName == "Moderators")
+				return 1;
+			else if (groupName == "Participants")
+				return 2;
+			else if (groupName == "Visitor")
+				return 3;
+			else
+				return 4;
 		}
 			
 		public string GetName (RoomParticipant participant)

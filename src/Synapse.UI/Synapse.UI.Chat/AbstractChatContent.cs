@@ -34,15 +34,16 @@ namespace Synapse.UI.Chat
 		string       m_MessageHtml;
 		List<string> m_CustomDisplayClasses = new List<string>();
 		JID          m_Source;
+		string       m_SourceDisplayName;
 		JID          m_Destination;
 		DateTime     m_Date;
 
-		public AbstractChatContent (Account account, JID source, JID destination)
-			: this (account, source, destination, DateTime.Now)
+		public AbstractChatContent (Account account, JID source, string sourceDisplayName, JID destination)
+			: this (account, source, sourceDisplayName, destination, DateTime.Now)
 		{			
 		}
 		
-		public AbstractChatContent (Account account, JID source, JID destination, DateTime date)
+		public AbstractChatContent (Account account, JID source, string sourceDisplayName, JID destination, DateTime date)
 		{
 			if (account == null)
 				throw new ArgumentNullException("account");
@@ -50,10 +51,11 @@ namespace Synapse.UI.Chat
 			if (date == null)
 				throw new ArgumentNullException("date");
 			
-			m_Account     = account;
-			m_Source      = source;
+			m_Account = account;
+			m_Source = source;
+			m_SourceDisplayName = sourceDisplayName;
 			m_Destination = destination;
-			m_Date        = date;
+			m_Date = date;
 		}
 		
 		public virtual string MessageHtml {
@@ -107,6 +109,12 @@ namespace Synapse.UI.Chat
 		public JID Source {
 			get {
 				return m_Source;
+			}
+		}
+		
+		public string SourceDisplayName {
+			get {
+				return m_SourceDisplayName;
 			}
 		}
 

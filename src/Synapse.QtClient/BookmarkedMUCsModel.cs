@@ -53,7 +53,7 @@ namespace Synapse.QtClient
 
 		void HandleConnectionStateChanged(Account account)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				Emit.LayoutChanged();
 			});			
 		}
@@ -66,7 +66,7 @@ namespace Synapse.QtClient
 
 		void HandleOnConference(BookmarkManager manager, BookmarkConference conference)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				Emit.LayoutChanged();
 			});
 		}

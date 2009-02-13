@@ -1,4 +1,4 @@
-<Combine name="Synapse" fileversion="2.0">
+<Combine fileversion="2.0" name="Synapse">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="CombineConfiguration">
       <Entry build="True" name="Synapse.Core" configuration="Debug" />

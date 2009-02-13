@@ -115,7 +115,7 @@ namespace Synapse.UI.Chat
 						Console.WriteLine(String.Format("Unknown chatstate from {0}: {1}", from, child.LocalName));
 					}
 	
-					var typingContent = new ChatContentTyping(m_Account, null, null, state);
+					var typingContent = new ChatContentTyping(m_Account, fromJid, from, null, state);
 					NewContent(this, typingContent);
 				}
 			}
@@ -148,7 +148,7 @@ namespace Synapse.UI.Chat
 				// FIXME: Add support for delayed message timestamps.
 				DateTime date = DateTime.Now;
 				
-				var content = new ChatContentMessage(m_Account, fromJid, msg.To, date);
+				var content = new ChatContentMessage(m_Account, fromJid, from, msg.To, date);
 				content.IsOutgoing = !incoming;
 				content.MessageHtml = body;
 				
@@ -158,7 +158,7 @@ namespace Synapse.UI.Chat
 	
 		protected void AppendStatus (string message)
 		{
-			var content = new ChatContentStatus(m_Account, null, null, DateTime.Now, String.Empty);
+			var content = new ChatContentStatus(m_Account, null, null, null, DateTime.Now, String.Empty);
 			content.MessageHtml = message;
 
 			NewContent(this, content);

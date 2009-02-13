@@ -50,9 +50,16 @@ namespace Synapse.QtClient.Widgets
 		{
 			nameLabel.Text = String.Format("<b>{0}</b><br/>{1}", m_Node.Name, m_Node.Description);
 			if (m_Configurator.IsConfigured)
-				nameLabel.Text += String.Format("<br/><br/><span style=\"color: red;\">{0} is configured!</span>", m_Node.Name);
+				nameLabel.Text += String.Format("<br/><br/><span style=\"color: green;\">{0} is configured!</span>", m_Node.Name);
 			else
 				nameLabel.Text += String.Format("<br/><br/><span style=\"color: red;\">{0} is not configured.</span>", m_Node.Name);
+		}
+		
+		[Q_SLOT]
+		void on_configureButton_clicked ()
+		{
+			m_Configurator.ShowConfigurationDialog(base.TopLevelWidget());
+			UpdateStatus();
 		}
 	}
 }

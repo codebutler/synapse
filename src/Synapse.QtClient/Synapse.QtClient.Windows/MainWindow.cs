@@ -76,10 +76,12 @@ namespace Synapse.QtClient.Windows
 			m_MainMenu.AddAction(Gui.BuiltinActions.NewMessageAction);
 			m_MainMenu.AddAction(Gui.BuiltinActions.JoinConferenceAction);
 			m_MainMenu.AddAction(Gui.BuiltinActions.ShowBrowserAction);
+			m_MainMenu.AddAction(Gui.BuiltinActions.EditProfileAction);
 			m_MainMenu.AddAction(Gui.BuiltinActions.ChangeStatusAction);
 			m_MainMenu.AddSeparator();
 			m_MainMenu.AddAction(Gui.BuiltinActions.ShowPreferencesAction);
 			m_MainMenu.AddSeparator();
+			m_MainMenu.AddAction(Gui.BuiltinActions.AboutAction);
 			m_MainMenu.AddAction(Gui.BuiltinActions.SendFeedbackAction);
 			m_MainMenu.AddSeparator();
 			m_MainMenu.AddAction(Gui.BuiltinActions.QuitAction);

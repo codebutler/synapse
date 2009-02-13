@@ -1,6 +1,7 @@
 # Begin MonoDevelop-maintained variables
 
 FILES =  \
+	AboutDialog.cs \
 	AbstractSimpleFileEngine.cs \
 	AssemblyInfo.cs \
 	AvatarFileEngine.cs \
@@ -14,6 +15,7 @@ FILES =  \
 	IWebIdentityConfigurator.cs \
 	KeyPressEater.cs \
 	Main.cs \
+	qt-gui/AboutDialog.cs \
 	qt-gui/AccountStatusWidget.cs \
 	qt-gui/AddFriendWindow.cs \
 	qt-gui/ChatWindow.cs \

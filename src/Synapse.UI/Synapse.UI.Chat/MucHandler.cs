@@ -54,20 +54,34 @@ namespace Synapse.UI.Chat
 		public override void Send (string text)
 		{
 			if (!String.IsNullOrEmpty(text)) {
-				// FIXME: Send this as HTML
-				m_Room.PublicMessage(text);
+				Message message = new Message(base.Account.Client.Document);
+				message.Type = MessageType.groupchat;
+				message.To = m_Room.JID;
+				message.Body = text; // FIXME: Send this as HTML
+
+				var activeElem = base.Account.Client.Document.CreateElement("active");
+				activeElem.SetAttribute("xmlns", "http://jabber.org/protocol/chatstates");
+				message.AppendChild(activeElem);
+
+				base.Account.Client.Write(message);
+				//base.AppendMessage(false, message);
 			}
 		}
 
 		public override void Send (XmlElement contentElement)
 		{
-			Message m = new Message(base.Account.Client.Document);
-			m.To = m_Room.JID;
-			m.Type = MessageType.groupchat;
-            
-			m.AppendChild(contentElement);
-			
-			base.Account.Client.Write(m);
+			Message message = new Message(base.Account.Client.Document);
+			message.Type = MessageType.groupchat;
+			message.To = m_Room.JID;
+
+			message.AppendChild(contentElement);
+
+			var activeElem = base.Account.Client.Document.CreateElement("active");
+			activeElem.SetAttribute("xmlns", "http://jabber.org/protocol/chatstates");
+			message.AppendChild(activeElem);
+
+			base.Account.Client.Write(message);
+			//base.AppendMessage(false, message);
 		}
 		
 		public Room Room {

@@ -156,7 +156,7 @@ namespace Synapse.QtClient.Windows {
             verticalLayout.Margin = 6;
             this.mainTabWidget = new QTabWidget(this);
             this.mainTabWidget.ObjectName = "mainTabWidget";
-            this.mainTabWidget.CurrentIndex = 2;
+            this.mainTabWidget.CurrentIndex = 0;
             verticalLayout.AddWidget(this.mainTabWidget);
             this.tab = new QWidget(this.mainTabWidget);
             this.tab.ObjectName = "tab";
@@ -186,7 +186,7 @@ namespace Synapse.QtClient.Windows {
             QFormLayout formLayout_2;
             formLayout_2 = new QFormLayout(this.groupBox_2);
             formLayout_2.fieldGrowthPolicy = QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow;
-            formLayout_2.SetContentsMargins(6, 6, 6, 0);
+            formLayout_2.SetContentsMargins(6, 12, 6, 0);
             this.label_9 = new QLabel(this.groupBox_2);
             this.label_9.ObjectName = "label_9";
             this.label_9.Text = "Full Name:";
@@ -221,7 +221,7 @@ namespace Synapse.QtClient.Windows {
             this.groupBox_5.Checkable = false;
             QHBoxLayout horizontalLayout_3;
             horizontalLayout_3 = new QHBoxLayout(this.groupBox_5);
-            horizontalLayout_3.Margin = 6;
+            horizontalLayout_3.SetContentsMargins(6, 12, 6, 6);
             this.bioTextEdit = new QTextEdit(this.groupBox_5);
             this.bioTextEdit.ObjectName = "bioTextEdit";
             horizontalLayout_3.AddWidget(this.bioTextEdit);
@@ -238,7 +238,7 @@ namespace Synapse.QtClient.Windows {
             this.groupBox_4.Title = "Contact Information";
             QFormLayout formLayout_3;
             formLayout_3 = new QFormLayout(this.groupBox_4);
-            formLayout_3.Margin = 6;
+            formLayout_3.SetContentsMargins(6, 12, 6, 6);
             this.label_12 = new QLabel(this.groupBox_4);
             this.label_12.ObjectName = "label_12";
             this.label_12.Text = "Email:";
@@ -299,7 +299,7 @@ namespace Synapse.QtClient.Windows {
             this.groupBox_6.Title = "Company Information";
             QFormLayout formLayout_4;
             formLayout_4 = new QFormLayout(this.groupBox_6);
-            formLayout_4.SetContentsMargins(6, 6, 6, 0);
+            formLayout_4.SetContentsMargins(6, 12, 6, 0);
             this.label = new QLabel(this.groupBox_6);
             this.label.ObjectName = "label";
             this.label.Text = "Company:";
@@ -331,7 +331,7 @@ namespace Synapse.QtClient.Windows {
             QFormLayout formLayout;
             formLayout = new QFormLayout(this.groupBox);
             formLayout.fieldGrowthPolicy = QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow;
-            formLayout.SetContentsMargins(6, 6, 6, 0);
+            formLayout.SetContentsMargins(6, 12, 6, 0);
             this.label_8 = new QLabel(this.groupBox);
             this.label_8.ObjectName = "label_8";
             this.label_8.Text = "Email:";

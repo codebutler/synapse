@@ -105,7 +105,7 @@ namespace Synapse.QtClient.Widgets {
         
         protected QLabel shoutCharsLabel;
         
-        protected QWidget widget_2;
+        protected QWidget shoutHandlersBox;
         
         protected QLabel label_8;
         
@@ -427,16 +427,16 @@ namespace Synapse.QtClient.Widgets {
             this.shoutCharsLabel.ObjectName = "shoutCharsLabel";
             this.shoutCharsLabel.Text = "140";
             horizontalLayout_2.AddWidget(this.shoutCharsLabel);
-            this.widget_2 = new QWidget(this.shoutContainer);
-            this.widget_2.ObjectName = "widget_2";
+            this.shoutHandlersBox = new QWidget(this.shoutContainer);
+            this.shoutHandlersBox.ObjectName = "shoutHandlersBox";
             QHBoxLayout horizontalLayout_10;
-            horizontalLayout_10 = new QHBoxLayout(this.widget_2);
+            horizontalLayout_10 = new QHBoxLayout(this.shoutHandlersBox);
             horizontalLayout_10.Margin = 0;
-            this.label_8 = new QLabel(this.widget_2);
+            this.label_8 = new QLabel(this.shoutHandlersBox);
             this.label_8.ObjectName = "label_8";
             this.label_8.Text = "Also Send To:";
             horizontalLayout_10.AddWidget(this.label_8);
-            this.shoutHandlersContainer = new QWidget(this.widget_2);
+            this.shoutHandlersContainer = new QWidget(this.shoutHandlersBox);
             this.shoutHandlersContainer.ObjectName = "shoutHandlersContainer";
             QHBoxLayout horizontalLayout_11;
             horizontalLayout_11 = new QHBoxLayout(this.shoutHandlersContainer);
@@ -446,7 +446,7 @@ namespace Synapse.QtClient.Widgets {
             QSpacerItem horizontalSpacer_4;
             horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
             horizontalLayout_10.AddItem(horizontalSpacer_4);
-            verticalLayout_8.AddWidget(this.widget_2);
+            verticalLayout_8.AddWidget(this.shoutHandlersBox);
             QHBoxLayout horizontalLayout_3;
             horizontalLayout_3 = new QHBoxLayout();
             verticalLayout_8.AddLayout(horizontalLayout_3);

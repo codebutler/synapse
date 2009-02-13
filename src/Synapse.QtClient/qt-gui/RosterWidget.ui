@@ -622,7 +622,7 @@ p, li { white-space: pre-wrap; }
                </layout>
               </item>
               <item>
-               <widget class="QWidget" native="1" name="widget_2" >
+               <widget class="QWidget" native="1" name="shoutHandlersBox" >
                 <layout class="QHBoxLayout" name="horizontalLayout_10" >
                  <property name="margin" >
                   <number>0</number>

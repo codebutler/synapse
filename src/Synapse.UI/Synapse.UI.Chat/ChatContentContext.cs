@@ -30,8 +30,8 @@ namespace Synapse.UI.Chat
 {
 	public class ChatContentContext : AbstractChatContent
 	{
-		public ChatContentContext(Account account, JID source, JID destination, DateTime date)
-			: base (account, source, destination, date)
+		public ChatContentContext(Account account, JID source, string sourceDisplayName, JID destination, DateTime date)
+			: base (account, source, sourceDisplayName, destination, date)
 		{
 		}
 		

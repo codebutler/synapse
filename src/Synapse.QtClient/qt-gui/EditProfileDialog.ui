@@ -19,7 +19,7 @@
    <item>
     <widget class="QTabWidget" name="mainTabWidget" >
      <property name="currentIndex" >
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
       <attribute name="title" >
@@ -60,7 +60,7 @@
               <number>6</number>
              </property>
              <property name="topMargin" >
-              <number>6</number>
+              <number>12</number>
              </property>
              <property name="rightMargin" >
               <number>6</number>
@@ -130,7 +130,16 @@
              <bool>false</bool>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_3" >
-             <property name="margin" >
+             <property name="leftMargin" >
+              <number>6</number>
+             </property>
+             <property name="topMargin" >
+              <number>12</number>
+             </property>
+             <property name="rightMargin" >
+              <number>6</number>
+             </property>
+             <property name="bottomMargin" >
               <number>6</number>
              </property>
              <item>
@@ -154,7 +163,16 @@
           <string>Contact Information</string>
          </property>
          <layout class="QFormLayout" name="formLayout_3" >
-          <property name="margin" >
+          <property name="leftMargin" >
+           <number>6</number>
+          </property>
+          <property name="topMargin" >
+           <number>12</number>
+          </property>
+          <property name="rightMargin" >
+           <number>6</number>
+          </property>
+          <property name="bottomMargin" >
            <number>6</number>
           </property>
           <item row="0" column="0" >
@@ -256,7 +274,7 @@
            <number>6</number>
           </property>
           <property name="topMargin" >
-           <number>6</number>
+           <number>12</number>
           </property>
           <property name="rightMargin" >
            <number>6</number>
@@ -319,7 +337,7 @@
            <number>6</number>
           </property>
           <property name="topMargin" >
-           <number>6</number>
+           <number>12</number>
           </property>
           <property name="rightMargin" >
            <number>6</number>

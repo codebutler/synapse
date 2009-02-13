@@ -50,6 +50,7 @@
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/OAuth.dll" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/OAuthXmpp.dll" />
+    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">

@@ -49,7 +49,7 @@
          <item>
           <widget class="QLabel" name="headerLabel" >
            <property name="sizePolicy" >
-            <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
+            <sizepolicy vsizetype="Minimum" hsizetype="Expanding" >
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -71,6 +71,18 @@ p, li { white-space: pre-wrap; }
          </item>
          <item>
           <widget class="QPushButton" name="menuButton" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>12</width>
+             <height>12</height>
+            </size>
+           </property>
            <property name="maximumSize" >
             <size>
              <width>12</width>
@@ -82,6 +94,12 @@ p, li { white-space: pre-wrap; }
            </property>
            <property name="text" >
             <string/>
+           </property>
+           <property name="iconSize" >
+            <size>
+             <width>7</width>
+             <height>7</height>
+            </size>
            </property>
            <property name="flat" >
             <bool>true</bool>
@@ -90,6 +108,18 @@ p, li { white-space: pre-wrap; }
          </item>
          <item>
           <widget class="QPushButton" name="closeButton" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize" >
+            <size>
+             <width>12</width>
+             <height>12</height>
+            </size>
+           </property>
            <property name="maximumSize" >
             <size>
              <width>12</width>
@@ -101,6 +131,12 @@ p, li { white-space: pre-wrap; }
            </property>
            <property name="text" >
             <string/>
+           </property>
+           <property name="iconSize" >
+            <size>
+             <width>7</width>
+             <height>7</height>
+            </size>
            </property>
            <property name="flat" >
             <bool>true</bool>

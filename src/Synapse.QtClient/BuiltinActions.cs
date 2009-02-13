@@ -20,8 +20,9 @@ namespace Synapse.QtClient
 		QAction m_NewMessageAction;
 		QAction m_JoinMucAction;
 		QAction m_ChangeStatusAction;
-		QMenu m_AccountsMenu;
-		
+		QAction m_EditProfileAction;
+		QAction m_AboutAction;
+		QMenu m_AccountsMenu;		
 		
 		QMenu   m_PresenceMenu;
 		QAction m_AvailableAction;
@@ -35,22 +36,28 @@ namespace Synapse.QtClient
 		{
 			m_AccountsMenu = new QMenu();
 			
-			m_QuitAction = new QAction("Quit", this);
+			m_QuitAction = new QAction(Gui.LoadIcon("gtk-quit"), "Quit", this);
 			QObject.Connect(m_QuitAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleQuitActionTriggered()"));
 			
-			m_ShowPreferencesAction = new QAction("Preferences", this);
+			m_ShowPreferencesAction = new QAction(Gui.LoadIcon("gtk-preferences"), "Preferences", this);
 			QObject.Connect(m_ShowPreferencesAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowPreferencesActionTriggered()"));
 			
 			m_SendFeedbackAction = new QAction("Send Feedback...", this);
 			QObject.Connect(m_SendFeedbackAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleSendFeedbackActionTriggered()"));			
 			
-			m_ShowBrowserAction = new QAction("Discover Services...", this);
+			m_ShowBrowserAction = new QAction(Gui.LoadIcon("search"), "Discover Services...", this);
 			QObject.Connect(m_ShowBrowserAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowBrowserActionTriggered()"));
 						
-			m_NewMessageAction = new QAction("New Message...", this);
+			m_NewMessageAction = new QAction(Gui.LoadIcon("gtk-new"), "New Message...", this);
 			
-			m_JoinMucAction = new QAction("Create/Join Conference...", this);
-				
+			m_JoinMucAction = new QAction(Gui.LoadIcon("internet-group-chat"), "Create/Join Conference...", this);
+			
+			m_EditProfileAction = new QAction(Gui.LoadIcon("stock_person"), "Edit Profile...", this);
+			QObject.Connect(m_EditProfileAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleEditProfileActionTriggered()"));
+			
+			m_AboutAction = new QAction(Gui.LoadIcon("help-about"), "About", this);
+			QObject.Connect(m_AboutAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleAboutActionTriggered()"));
+
 			m_PresenceMenu = new QMenu();
 
 			QActionGroup group = new QActionGroup(this);
@@ -122,9 +129,21 @@ namespace Synapse.QtClient
 			}
 		}
 		
+		public QAction EditProfileAction {
+			get {
+				return m_EditProfileAction;
+			}
+		}
+			
 		public QAction ChangeStatusAction {
 			get {
 				return m_ChangeStatusAction;
+			}
+		}
+		
+		public QAction AboutAction {
+			get {
+				return m_AboutAction;
 			}
 		}
 		
@@ -156,6 +175,25 @@ namespace Synapse.QtClient
 				var window = new ServiceBrowserWindow(account);
 				window.Show();
 			}
+		}
+		
+		[Q_SLOT]
+		void HandleEditProfileActionTriggered ()
+		{
+			// FIXME: Using ShowAccountMenu here looks really bad.
+			// Need to add the accounts into the menu under the action instead.
+			var account = Gui.ShowAccountSelectMenu(null);				
+			if (account != null) {
+				var dialog = new EditProfileDialog(account, Gui.MainWindow);
+				dialog.Show();
+			}
+		}
+		
+		[Q_SLOT]
+		void HandleAboutActionTriggered ()
+		{
+			var aboutDialog = new AboutDialog(Gui.MainWindow);
+			aboutDialog.Show();
 		}
 	}
 }
