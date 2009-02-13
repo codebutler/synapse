@@ -113,6 +113,9 @@
     <File name="qt-gui/WebIdentityConfiguratorWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Windows/EditProfileDialog.WebIdentitiesTab.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.ExtensionNodes/WebIdentityConfiguratorCodon.cs" subtype="Code" buildaction="Compile" />
+    <File name="resources/stock-close_12.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="resources/menu-icon.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="BuiltinActions.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/jabber-net.dll" />

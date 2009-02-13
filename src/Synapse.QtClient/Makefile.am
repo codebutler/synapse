@@ -5,6 +5,7 @@ FILES =  \
 	AssemblyInfo.cs \
 	AvatarFileEngine.cs \
 	BookmarkedMUCsModel.cs \
+	BuiltinActions.cs \
 	ErrorDialog.cs \
 	gtk-gui/generated.cs \
 	gtk-gui/Synapse.QtClient.ErrorDialog.cs \
@@ -82,6 +83,7 @@ RESOURCES =  \
 	resources/loading.gif \
 	resources/mainwindow.qss \
 	resources/mainwindow-noaccounts.qss \
+	resources/menu-icon.png \
 	resources/music-16.png \
 	resources/newtab.html \
 	resources/oceanbg.png \
@@ -93,6 +95,7 @@ RESOURCES =  \
 	resources/ServiceDiscovery.html \
 	resources/simple-add.png \
 	resources/simple-search.png \
+	resources/stock-close_12.png \
 	resources/Template.html \
 	resources/view-grid.png \
 	resources/view-list.png \

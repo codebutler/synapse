@@ -31,13 +31,8 @@ namespace Synapse.QtClient
 		QSystemTrayIcon m_Icon;
 		
 		QMenu m_Menu;
-		QMenu m_StatusMenu;
 		
 		QAction m_ShowMainWindowAction;
-		QAction m_ShowPreferencesAction;
-		QAction m_NewMessageAction;
-		QAction m_JoinMucAction;
-		QAction m_QuitAction;
 		QAction m_ShowDebugWindowAction;
 		
 		public TrayIcon ()
@@ -46,32 +41,24 @@ namespace Synapse.QtClient
 			m_ShowMainWindowAction.Checkable = true;
 			QObject.Connect(m_ShowMainWindowAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowMainWindowActionTriggered()"));
 
-			m_StatusMenu = new QMenu("Change Status");
-			
-			m_ShowPreferencesAction = new QAction("Preferences", this);
-			QObject.Connect(m_ShowPreferencesAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowPreferencesActionTriggered()"));
-			
-			m_NewMessageAction = new QAction("New Message...", this);
-			m_JoinMucAction    = new QAction("Create/Join Conference...", this);
-			
 			m_ShowDebugWindowAction = new QAction("Debug Window", this);
 			m_ShowDebugWindowAction.Checkable = true;
 			QObject.Connect(m_ShowDebugWindowAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowDebugWindowActionTriggered()"));
-			
-			m_QuitAction = new QAction("Quit", this);
-			QObject.Connect(m_QuitAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleQuitActionTriggered()"));
 			
 			m_Menu = new QMenu();
 			m_Menu.AddAction(m_ShowMainWindowAction);
 			m_Menu.AddAction(m_ShowDebugWindowAction);
 			m_Menu.AddSeparator();
-			m_Menu.AddAction(m_NewMessageAction);
-			m_Menu.AddAction(m_JoinMucAction);
-			m_Menu.AddMenu(m_StatusMenu);
+			m_Menu.AddAction(Gui.BuiltinActions.NewMessageAction);
+			m_Menu.AddAction(Gui.BuiltinActions.JoinConferenceAction);
+			m_Menu.AddAction(Gui.BuiltinActions.ShowBrowserAction);
+			m_Menu.AddAction(Gui.BuiltinActions.ChangeStatusAction);
 			m_Menu.AddSeparator();
-			m_Menu.AddAction(m_ShowPreferencesAction);
+			m_Menu.AddAction(Gui.BuiltinActions.ShowPreferencesAction);
 			m_Menu.AddSeparator();
-			m_Menu.AddAction(m_QuitAction);
+			m_Menu.AddAction(Gui.BuiltinActions.SendFeedbackAction);
+			m_Menu.AddSeparator();
+			m_Menu.AddAction(Gui.BuiltinActions.QuitAction);
 			QObject.Connect(m_Menu, Qt.SIGNAL("aboutToShow()"), new NoArgDelegate(HandleMenuAboutToShow));
 
 			QPixmap pixmap = new QPixmap("resource:/octy-22.png");
@@ -110,13 +97,7 @@ namespace Synapse.QtClient
 			m_ShowMainWindowAction.Checked = Gui.MainWindow.IsVisible();
 			m_ShowDebugWindowAction.Checked = Gui.DebugWindow.IsVisible();
 		}
-
-		[Q_SLOT]
-		void HandleQuitActionTriggered ()
-		{
-			Application.Shutdown();
-		}
-
+		
 		[Q_SLOT]
 		void HandleShowMainWindowActionTriggered ()
 		{
@@ -133,12 +114,6 @@ namespace Synapse.QtClient
 				Gui.DebugWindow.Show();
 			else
 				Gui.DebugWindow.Hide();	
-		}
-		
-		[Q_SLOT]
-		void HandleShowPreferencesActionTriggered ()
-		{
-			Gui.PreferencesWindow.Show();
 		}
 		
 		[Q_SLOT]

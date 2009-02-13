@@ -36,9 +36,6 @@ namespace Synapse.QtClient.Widgets
 		Account    m_Account;
 		MainWindow m_ParentWindow;
 	
-		QMenu   m_AccountMenu;
-		QAction m_ShowBrowserAction;
-	
 		QMenu   m_PresenceMenu;
 		QAction m_AvailableAction;
 		QAction m_FreeToChatAction;
@@ -77,17 +74,10 @@ namespace Synapse.QtClient.Widgets
 			m_Account.AvatarManager.AvatarUpdated += HandleAvatarUpdated;
 			OnAccountStateChanged(account);
 	
-			m_AccountMenu = new QMenu(this);
-			QObject.Connect(m_AccountMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("HandleAccountMenuAboutToShow()"));
-			QObject.Connect(m_AccountMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("HandleAccountMenuTriggered(QAction*)"));
-			m_ShowBrowserAction = new QAction("Show Browser", this);
-			m_AccountMenu.AddAction(m_ShowBrowserAction);
-	
 			HandleAvatarUpdated(m_Account.Jid.Bare, null);
 			
 			HandleMyVCardUpdated(null, EventArgs.Empty);
 			m_NameLabel.TextFormat = TextFormat.RichText;
-			m_NameLabel.Clicked += HandleNameClicked;
 	
 			m_PresenceMenu = new QMenu(this);
 			QObject.Connect(m_PresenceMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("HandlePresenceMenuAboutToShow()"));
@@ -125,7 +115,7 @@ namespace Synapse.QtClient.Widgets
 		
 		void OnAccountStateChanged (Account account)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				string text = null;
 				string statusText = null;
 				if (account.Status != null) {
@@ -156,7 +146,7 @@ namespace Synapse.QtClient.Widgets
 		void HandleAvatarUpdated (string jid, string hash)
 		{
 			if (jid == m_Account.Jid.Bare) {				
-				Application.Invoke(delegate {		
+				QApplication.Invoke(delegate {		
 					QPixmap pixmap = new QPixmap(32, 32);
 					pixmap.Fill(GlobalColor.transparent);
 	
@@ -182,7 +172,7 @@ namespace Synapse.QtClient.Widgets
 		
 		void HandleMyVCardUpdated (object sender, EventArgs args)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				if (m_Account.VCard != null && !String.IsNullOrEmpty(m_Account.VCard.Nickname))
 					m_NameLabel.Text = m_Account.VCard.Nickname;
 				else
@@ -234,26 +224,6 @@ namespace Synapse.QtClient.Widgets
 			} else {
 				m_OfflineAction.Checked = true;
 			}
-		}
-	
-		[Q_SLOT]
-		void HandleAccountMenuAboutToShow ()
-		{
-			
-		}
-	
-		[Q_SLOT]
-		void HandleAccountMenuTriggered (QAction action)
-		{
-			if (action == m_ShowBrowserAction) {
-				var window = new ServiceBrowserWindow(m_Account);
-				window.Show();
-			}
-		}
-	
-		void HandleNameClicked(object o, EventArgs args)
-		{
-			m_AccountMenu.Popup(m_NameLabel.MapToGlobal(m_NameLabel.Rect.BottomLeft()));
 		}
 	}
 }

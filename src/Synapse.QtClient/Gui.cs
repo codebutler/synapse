@@ -32,6 +32,8 @@ namespace Synapse.QtClient
 {
 	public static class Gui
 	{
+		static BuiltinActions s_BuiltinActions;
+		
 		public static MainWindow MainWindow {
 			get;
 			set;
@@ -57,12 +59,21 @@ namespace Synapse.QtClient
 			set;
 		}
 		
+		public static BuiltinActions BuiltinActions {
+			get {
+				if (s_BuiltinActions == null)
+					s_BuiltinActions = new BuiltinActions();
+				return s_BuiltinActions;
+			}
+		}
+		
 		public static Account ShowAccountSelectMenu (QWidget attachWidget)
 		{
 			AccountService accountService = ServiceManager.Get<AccountService>();
 	
 			if (accountService.ConnectedAccounts.Count == 0) {
-				QMessageBox.Critical(attachWidget.TopLevelWidget(), "Synapse", "You are not connected.");
+				var widget = (attachWidget != null) ? attachWidget.TopLevelWidget() : Gui.MainWindow;
+				QMessageBox.Critical(widget, "Synapse", "You are not connected.");
 				return null;
 			}			
 
@@ -77,8 +88,11 @@ namespace Synapse.QtClient
 						menu.SetActiveAction(action);
 				}
 				
-				QAction selectedAction = menu.Exec(attachWidget.MapToGlobal(new QPoint(0, attachWidget.Height())));
-				selectedAccount = accountService.GetAccount(new jabber.JID(selectedAction.Text));
+				var pos = (attachWidget != null) ? attachWidget.MapToGlobal(new QPoint(0, attachWidget.Height())) : QCursor.Pos();
+				QAction selectedAction = menu.Exec(pos);
+				if (selectedAction != null) {
+					selectedAccount = accountService.GetAccount(new jabber.JID(selectedAction.Text));
+				}
 			} else {
 				selectedAccount = accountService.ConnectedAccounts[0];
 			}

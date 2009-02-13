@@ -6,6 +6,10 @@ QWidget#containerWidget {
 	background: #010409 url(resource:/oceanbg.png) no-repeat top center;
 }
 
+QWidget#headerWidget {
+	background: transparent;
+}
+
 QLabel#headerLabel {
 	font-weight: bold;
 	background: transparent;

@@ -2,12 +2,15 @@ QWidget#containerWidget {
 	background-color: #222222;
 }
 
-QLabel#headerLabel {
-	color: #C7C7C7;
-	font-weight: bold;
+QWidget#headerWidget {
 	/* background-color: #606060; */
 	background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #666666, stop: 1 #5D5D5D);
 	border-top: 1px solid #808080;
+}
+
+QLabel#headerLabel {
+	color: #C7C7C7;
+	font-weight: bold;
 }
 
 #m_AccountsContainer {
