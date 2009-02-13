@@ -15,10 +15,6 @@
 	<Extension path="/Synapse/ServiceManager/Service">
 		<Service class="Synapse.Addins.Twitter.TwitterService" />
 	</Extension>
-
-	<Extension path="/Synapse/Xmpp/ActivityFeed/ShoutHandlers">
-		<ShoutHandler class="Synapse.Addins.Twitter.TwitterShoutHandler" />
-	</Extension>
 	
 	<Extension path="/Synapse/QtClient/WebIdentityConfigurators">
 		<WebIdentityConfigurator class="Synapse.Addins.Twitter.TwitterWebIdentityConfigurator"

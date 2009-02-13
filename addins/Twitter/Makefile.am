@@ -2,12 +2,12 @@
 
 FILES =  \
 	AssemblyInfo.cs \
-	qt-gui/TwitterAddinPreferencesDialog.cs \
-	TwitterAddinPreferencesDialog.cs \
+	qt-gui/TwitterConfigurationDialog.cs \
+	TwitterAccountHandler.cs \
+	TwitterClient.cs \
+	TwitterConfigurationDialog.cs \
 	TwitterService.cs \
-	TwitterShoutHandler.cs \
 	TwitterWebIdentityConfigurator.cs \
-	TwitterXmlApi.cs \
 	ViewOnTwitterAction.cs 
 
 RESOURCES =  \

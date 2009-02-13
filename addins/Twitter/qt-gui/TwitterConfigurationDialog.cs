@@ -13,7 +13,7 @@ namespace Synapse.Addins.Twitter {
     using Qyoto;
     
     
-    public partial class TwitterAddinPreferencesDialog : QDialog {
+    public partial class TwitterConfigurationDialog : QDialog {
         
         protected QLabel logoLabel;
         
@@ -30,10 +30,10 @@ namespace Synapse.Addins.Twitter {
         protected QDialogButtonBox buttonBox;
         
         protected void SetupUi() {
-            base.ObjectName = "TwitterAddinPreferencesDialog";
+            base.ObjectName = "TwitterConfigurationDialog";
             this.WindowModality = Qt.WindowModality.NonModal;
             this.Geometry = new QRect(0, 0, 313, 137);
-            this.WindowTitle = "Twitter Preferences";
+            this.WindowTitle = "Twitter Configuration";
             this.Modal = true;
             QVBoxLayout verticalLayout;
             verticalLayout = new QVBoxLayout(this);

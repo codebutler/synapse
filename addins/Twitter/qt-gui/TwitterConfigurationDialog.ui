@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>TwitterAddinPreferencesDialog</class>
- <widget class="QDialog" name="TwitterAddinPreferencesDialog" >
+ <class>TwitterConfigurationDialog</class>
+ <widget class="QDialog" name="TwitterConfigurationDialog" >
   <property name="windowModality" >
    <enum>Qt::NonModal</enum>
   </property>
@@ -13,7 +13,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Twitter Preferences</string>
+   <string>Twitter Configuration</string>
   </property>
   <property name="modal" >
    <bool>true</bool>
@@ -104,7 +104,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>TwitterAddinPreferencesDialog</receiver>
+   <receiver>TwitterConfigurationDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -120,7 +120,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>TwitterAddinPreferencesDialog</receiver>
+   <receiver>TwitterConfigurationDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >

@@ -16,16 +16,16 @@
   </Configurations>
   <Contents>
     <File name="Twitter.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="TwitterXmlApi.cs" subtype="Code" buildaction="Compile" />
+    <File name="TwitterClient.cs" subtype="Code" buildaction="Compile" />
     <File name="TwitterService.cs" subtype="Code" buildaction="Compile" />
-    <File name="TwitterShoutHandler.cs" subtype="Code" buildaction="Compile" />
+    <File name="TwitterAccountHandler.cs" subtype="Code" buildaction="Compile" />
     <File name="twitm-48.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="twitm-16.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
     <File name="ViewOnTwitterAction.cs" subtype="Code" buildaction="Compile" />
-    <File name="TwitterAddinPreferencesDialog.cs" subtype="Code" buildaction="Compile" />
-    <File name="qt-gui/TwitterAddinPreferencesDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="TwitterConfigurationDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="TwitterWebIdentityConfigurator.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/TwitterConfigurationDialog.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -53,7 +53,7 @@
   </MonoDevelop.Autotools.MakefileInfo>
   <QyotoDesignInfo>
     <Forms>
-      <QyotoForm UiFileName="TwitterAddinPreferencesDialog.ui" Namespace="Synapse.Addins.Twitter" />
+      <QyotoForm UiFileName="TwitterConfigurationDialog.ui" Namespace="Synapse.Addins.Twitter" />
     </Forms>
   </QyotoDesignInfo>
 </Project>

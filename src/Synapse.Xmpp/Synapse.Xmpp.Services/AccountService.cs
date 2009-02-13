@@ -208,5 +208,9 @@ namespace Synapse.Xmpp.Services
 		public bool AutoConnect {
 			get; set;
 		}
+		
+		public SerializableDictionary<string, string> Properties {
+			get; set;
+		}
 	}
 }

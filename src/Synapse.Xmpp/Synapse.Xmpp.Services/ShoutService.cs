@@ -29,9 +29,14 @@ using Mono.Addins;
 
 namespace Synapse.Xmpp.Services
 {
+	public delegate void ShoutHandlerEventHandler (IShoutHandler handler);
+	
 	public class ShoutService : IRequiredService, IInitializeService
 	{
 		List<IShoutHandler> m_ShoutHandlers = new List<IShoutHandler>();
+		
+		public event ShoutHandlerEventHandler HandlerAdded;
+		public event ShoutHandlerEventHandler HandlerRemoved;
 		
 		public void Initialize ()
 		{
@@ -41,7 +46,7 @@ namespace Synapse.Xmpp.Services
 			var nodes = AddinManager.GetExtensionNodes("/Synapse/Xmpp/ActivityFeed/ShoutHandlers");
 			foreach (var node in nodes) {
 				IShoutHandler handler = (IShoutHandler) ((TypeExtensionNode)node).CreateInstance();
-				m_ShoutHandlers.Add(handler);
+				AddHandler(handler);
 			}
 		}
 
@@ -51,10 +56,31 @@ namespace Synapse.Xmpp.Services
 			}
 		}
 		
+		public void AddHandler (IShoutHandler handler)
+		{
+			m_ShoutHandlers.Add(handler);
+			
+			if (HandlerAdded != null)
+				HandlerAdded(handler);
+		}
+		
+		public void RemoveHandler (IShoutHandler handler)
+		{
+			m_ShoutHandlers.Remove(handler);
+			
+			if (HandlerRemoved != null)
+				HandlerRemoved(handler);
+		}
+		
 		public void Shout (string message, IShoutHandler[] handlers)
 		{
 			var accountService = ServiceManager.Get<AccountService>();
-			foreach (var account in accountService.Accounts) {
+			
+			if (accountService.ConnectedAccounts.Count == 0 && handlers.Length == 0) {
+				throw new UserException("You are not connected.");
+			}
+			
+			foreach (var account in accountService.ConnectedAccounts) {
 				account.GetFeature<Microblogging>().Post(message);
 			}
 

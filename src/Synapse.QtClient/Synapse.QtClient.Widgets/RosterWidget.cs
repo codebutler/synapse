@@ -249,14 +249,14 @@ namespace Synapse.QtClient.Widgets
 			UpdateOnlineCount();
 	
 			var shoutService = ServiceManager.Get<ShoutService>();
+			shoutService.HandlerAdded += HandleShoutHandlerAdded;
+			shoutService.HandlerRemoved += HandleShoutHandlerRemoved;
 			if (shoutService.Handlers.Count() > 0) {
 				foreach (IShoutHandler handler in shoutService.Handlers) {
-					QCheckBox check = new ShoutHandlerCheckBox(handler, shoutHandlersContainer);
-					check.Checked = true;
-					shoutHandlersContainer.Layout().AddWidget(check);
+					HandleShoutHandlerAdded(handler);
 				}
 			} else {
-				shoutHandlersContainer.Hide();
+				shoutHandlersBox.Hide();
 			}
 	
 			m_FeedFilterMenu = new QMenu(this);
@@ -346,9 +346,13 @@ namespace Synapse.QtClient.Widgets
 					}
 				}
 				
-				var service = ServiceManager.Get<ShoutService>();
-				service.Shout(shoutLineEdit.Text, selectedHandlers.ToArray());
-				shoutLineEdit.Clear();
+				try {
+					var service = ServiceManager.Get<ShoutService>();
+					service.Shout(shoutLineEdit.Text, selectedHandlers.ToArray());
+					shoutLineEdit.Clear();
+				} catch (UserException ex) {
+					QMessageBox.Critical(base.TopLevelWidget(), "Synapse", ex.Message);
+				}
 			}
 		}
 		
@@ -396,6 +400,36 @@ namespace Synapse.QtClient.Widgets
 			var accountService = ServiceManager.Get<AccountService>();
 			int num = accountService.Accounts.Sum(account => account.NumOnlineFriends);
 			statsLabel.Text = String.Format("{0} friends online", num);
+		}
+		
+		void HandleShoutHandlerAdded (IShoutHandler handler)
+		{
+			QCheckBox check = new ShoutHandlerCheckBox(handler, shoutHandlersContainer);
+			check.Checked = true;
+			shoutHandlersContainer.Layout().AddWidget(check);
+			
+			shoutHandlersBox.Show();
+		}
+		
+		void HandleShoutHandlerRemoved (IShoutHandler handler)
+		{
+			for (int x = 0; x < shoutHandlersContainer.Layout().Count(); x++) {
+				var item = shoutHandlersContainer.Layout().ItemAt(x);
+				if (item is QWidgetItem) {
+					var check = ((ShoutHandlerCheckBox)((QWidgetItem)item).Widget());
+					if (check.Handler == handler) {
+						shoutHandlersContainer.Layout().RemoveWidget(check);
+						check.SetParent(null);
+						check.Dispose();
+						break;
+					}
+				}
+			}
+			
+			var shoutService = ServiceManager.Get<ShoutService>();
+			if (shoutService.Handlers.Count() == 0) {
+				shoutHandlersBox.Hide();
+			}
 		}
 		
 		#region Private Slots

@@ -1,5 +1,5 @@
 //
-// TwitterXmlApi.cs
+// TwitterClient.cs
 // 
 // Copyright (C) 2009 Eric Butler
 //
@@ -37,11 +37,17 @@ namespace Twitter
 		static readonly string UpdateUrl = "http://twitter.com/statuses/update.xml";
 		static readonly string DirectMessagesUrl = "http://twitter.com/direct_messages.xml";
 		
-		public TwitterClient ()
+		string m_Username;
+		string m_Password;
+		
+		public TwitterClient (string username, string password)
 		{
+			m_Username = username;
+			m_Password = password;
+			
 			FriendsTimelineLastCheckedAt = DateTime.MinValue;
-			RepliesLastCheckedAt = DateTime.MinValue;
-			DirectMessagesLastChecked = DateTime.MinValue;
+			RepliesLastCheckedAt         = DateTime.MinValue;
+			DirectMessagesLastChecked    = DateTime.MinValue;
 		}
 		
 		public DateTime FriendsTimelineLastCheckedAt {
@@ -60,13 +66,18 @@ namespace Twitter
 		}
 
 		public string Username {
-			get;
-			set;
+			get {
+				return m_Username;
+			}
 		}
 
 		public string Password {
-			get;
-			set;
+			get {
+				return m_Password;
+			}
+			set {
+				m_Password = value;
+			}
 		}
 
 		public IEnumerable<AbstractTwitterItem> FriendsAndRepliesAndMessages(bool since)

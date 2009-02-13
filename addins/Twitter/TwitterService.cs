@@ -35,19 +35,12 @@ namespace Synapse.Addins.Twitter
 {	
 	public class TwitterService  : IExtensionService, IInitializeService
 	{
-		TwitterClient m_Twitter;
-		Timer         m_Timer;
-		List<int>     m_SeenIds = new List<int>();
+		Dictionary<string, TwitterAccountHandler> m_TwitterAccounts = new Dictionary<string, TwitterAccountHandler>();
+		List<int> m_SeenIds = new List<int>();
 		
 		public void Initialize ()
 		{
-			m_Twitter = new TwitterClient();
-
-			// Only show messages within the last 15 minutes.
-			m_Twitter.FriendsTimelineLastCheckedAt = DateTime.Now.ToUniversalTime() - new TimeSpan(0, 15, 0);
-			m_Twitter.RepliesLastCheckedAt = DateTime.Now.ToUniversalTime() - new TimeSpan(0, 15, 0);
-			m_Twitter.DirectMessagesLastChecked = DateTime.Now.ToUniversalTime() - new TimeSpan(0, 15, 0);
-
+			#region Feed Templates
 			var replyAction = new NotificationAction() {
 				Name = "reply",
 				Label = "Reply",
@@ -77,89 +70,19 @@ namespace Synapse.Addins.Twitter
 				{ "IconUrl", "resource:/twitter/twitm-16.png" }
 			}, replyAction);
 
-			m_Timer = new Timer(240000);
-			m_Timer.Elapsed += HandleElapsed;
-				
-			var settingsService = ServiceManager.Get<SettingsService>();
-			m_Twitter.Username = settingsService.Get<string>("Twitter.Username");
-			m_Twitter.Password = settingsService.Get<string>("Twitter.Password");
-
-			var accountService = ServiceManager.Get<AccountService>();
-			foreach (Account account in accountService.Accounts) {
-				account.GetFeature<UserWebIdentities>().SetIdentity("twitter", m_Twitter.Username);
-			}
+			#endregion
 			
 			Application.Client.Started += delegate {
-				StartStop();
+				var accountService = ServiceManager.Get<AccountService>();
+				accountService.AccountAdded   += HandleAccountAdded;
+				accountService.AccountRemoved += HandleAccountRemoved;
+				foreach (Account account in accountService.Accounts) {
+					HandleAccountAdded(account);
+				}
 			};
 		}
-		
-		public string Username {
-			get {
-				return m_Twitter.Username;
-			}
-			set {
-				var settingsService = ServiceManager.Get<SettingsService>();
-				settingsService.Set("Twitter.Username", value);
-				
-				m_Twitter.Username = value;
-				StartStop();
-			
-				var accountService = ServiceManager.Get<AccountService>();
-				foreach (Account account in accountService.Accounts) {
-					account.GetFeature<UserWebIdentities>().SetIdentity("twitter", value);
-				}
-			}
-		}
 
-		public string Password {
-			get {
-				return m_Twitter.Password;
-			}
-			set {
-				var settingsService = ServiceManager.Get<SettingsService>();
-				settingsService.Set("Twitter.Password", value);
-				
-				m_Twitter.Password = value;
-				StartStop();
-			}
-		}
-
-		public void Update (string status)
-		{
-			if (!String.IsNullOrEmpty(m_Twitter.Username) && !String.IsNullOrEmpty(m_Twitter.Password)) {
-				AddStatus(m_Twitter.Update(status));
-			} else {
-				throw new Exception("No username/password");
-			}
-		}
-
-		void HandleElapsed(object sender, ElapsedEventArgs e)
-		{
-			try {
-				var statuses = m_Twitter.FriendsAndRepliesAndMessages(true).OrderBy(s => s.CreatedAtDT);
-				foreach (var status in statuses) {
-					AddStatus(status);
-				}
-				
-			} catch (Exception ex) {
-				Console.Error.WriteLine("Twitter API Error: " + ex);
-			}
-		}
-
-		void StartStop ()
-		{
-			if (!String.IsNullOrEmpty(Username) && !String.IsNullOrEmpty(Password)) {
-				System.Threading.ThreadPool.QueueUserWorkItem(delegate {
-					HandleElapsed(null, null);
-					m_Timer.Start();
-				});
-			} else {
-				m_Timer.Stop();
-			}
-		}
-
-		void AddStatus (AbstractTwitterItem status)
+		public void AddStatus (AbstractTwitterItem status)
 		{
 			if (!m_SeenIds.Contains(status.ID)) {
 				m_SeenIds.Add(status.ID);
@@ -171,6 +94,18 @@ namespace Synapse.Addins.Twitter
 			}
 		}
 		
+		public void AccountConfigUpdated (Account account, string oldUsername, string newUsername, string newPassword)
+		{
+			lock (m_TwitterAccounts) {
+				if (oldUsername != newUsername) {
+					RemoveTwitterAccount(account, oldUsername);
+				}
+				if (!String.IsNullOrEmpty(newUsername) && !String.IsNullOrEmpty(newPassword)) {
+					AddTwitterAccount(account, newUsername, newPassword);
+				}
+			}
+		}
+				                                  
 		public string ServiceName {
 			get {
 				return "TwitterService";
@@ -179,7 +114,74 @@ namespace Synapse.Addins.Twitter
 
 		public void Dispose ()
 		{
-			m_Timer.Stop();
+			lock (m_TwitterAccounts) {
+				foreach (var pair in m_TwitterAccounts) {
+					var handler = pair.Value;
+					handler.Dispose();
+				}
+				m_TwitterAccounts.Clear();
+			}
+		}
+		
+		void HandleAccountAdded (Account account)
+		{
+			if (!String.IsNullOrEmpty(account.GetProperty("Twitter.Username")) &&
+			    !String.IsNullOrEmpty(account.GetProperty("Twitter.Password")))
+			{
+				string username = account.GetProperty("Twitter.Username");
+				string password = account.GetProperty("Twitter.Password");
+				account.GetFeature<UserWebIdentities>().SetIdentity("twitter", username);
+				
+				AddTwitterAccount(account, username, password);	
+			}
+		}
+		
+		void HandleAccountRemoved (Account account)
+		{
+			string username = account.GetProperty("Twitter.Username");
+			if (!String.IsNullOrEmpty(username)) {
+				RemoveTwitterAccount(account, username);
+			}
+		}
+		
+		void AddTwitterAccount (Account account, string username, string password)
+		{
+			lock (m_TwitterAccounts) {
+				if (!m_TwitterAccounts.ContainsKey(username)) {
+					var handler = new TwitterAccountHandler(username, password);
+					m_TwitterAccounts.Add(username, handler);
+					
+					var shoutService = ServiceManager.Get<ShoutService>();
+					shoutService.AddHandler(handler);
+					
+					handler.Accounts.Add(account);
+					
+					Console.WriteLine("Added twitter account: " + username);
+				} else if (m_TwitterAccounts[username].Accounts.Contains(account)) {
+					m_TwitterAccounts[username].Password = password;
+					m_TwitterAccounts[username].Accounts.Add(account);
+				}
+			}
+		}
+		
+		void RemoveTwitterAccount (Account account, string username)
+		{
+			lock (m_TwitterAccounts) {
+				if (m_TwitterAccounts.ContainsKey(username)) {
+					var handler = m_TwitterAccounts[username];
+					if (handler.Accounts.Contains(account)) {
+						handler.Accounts.Remove(account);
+					}
+					
+					if (handler.Accounts.Count == 0) {
+						handler.Dispose();
+						m_TwitterAccounts.Remove(username);
+						
+						var shoutService = ServiceManager.Get<ShoutService>();
+						shoutService.RemoveHandler(handler);
+					}
+				}
+			}
 		}
 	}
 

@@ -42,6 +42,7 @@ namespace Synapse.Xmpp
 {
 	public delegate void AccountEventHandler (Account account);
 	public delegate void MessageEventHandler (Account account, Packet packet);
+	public delegate void PropertyEventHandler (Account account, string name, string oldValue, string newValue);
 	
 	public class Account
 	{
@@ -73,8 +74,8 @@ namespace Synapse.Xmpp
 		IQTracker         m_IQTracker;
 		AvatarManager     m_AvatarManager;
 		
-		Dictionary<Type, IDiscoverable> m_Features   = new Dictionary<Type, IDiscoverable>();
-		PropertyCollection              m_Properties = new PropertyCollection();
+		Dictionary<Type, IDiscoverable>        m_Features   = new Dictionary<Type, IDiscoverable>();
+		SerializableDictionary<string, string> m_Properties = new SerializableDictionary<string, string>();
 
 		Dictionary<JID, Presence> m_UserPresenceCache;
 
@@ -83,7 +84,8 @@ namespace Synapse.Xmpp
 		public event AccountEventHandler Changed; // XXX: is this used?
 		public event AccountEventHandler ConnectionStateChanged;
 		public event AccountEventHandler StatusChanged;
-		public event EventHandler MyVCardUpdated;
+		public event EventHandler        MyVCardUpdated;
+		public event PropertyEventHandler PropertyChanged;
 		
 		public Account (string user, string domain, string resource) : this (user, domain, resource, null)
 		{
@@ -108,6 +110,7 @@ namespace Synapse.Xmpp
 			Account account = new Account(info.User, info.Domain, info.Resource, info.ConnectServer);
 			account.Password = info.Password;
 			account.AutoConnect = info.AutoConnect;
+			account.Properties = info.Properties;
 			return account;
 		}
 		
@@ -607,10 +610,35 @@ namespace Synapse.Xmpp
 			m_Client.Close();
 		}
 		
-		public PropertyCollection Properties {
+		internal SerializableDictionary<string, string> Properties {
 			get {
 				return m_Properties;
 			}
+			set {
+				if (value != null)
+					m_Properties = value;
+			}
+		}
+		
+		public string GetProperty (string name)
+		{
+			if (m_Properties.ContainsKey(name))
+				return m_Properties[name];
+			else
+				return null;
+		}
+		
+		public void SetProperty (string name, string value)
+		{
+			string oldValue = GetProperty(name);
+			
+			m_Properties[name] = value;
+			
+			var accountService = ServiceManager.Get<AccountService>();
+			accountService.SaveAccounts();
+			
+			if (PropertyChanged != null)
+				PropertyChanged(this, name, oldValue, value);
 		}
 
 		public AccountInfo ToAccountInfo ()
@@ -622,6 +650,7 @@ namespace Synapse.Xmpp
 			info.Password = m_Password;
 			info.ConnectServer = m_ConnectServer;
 			info.AutoConnect = m_AutoConnect;
+			info.Properties = m_Properties;
 			return info;
 		}
 

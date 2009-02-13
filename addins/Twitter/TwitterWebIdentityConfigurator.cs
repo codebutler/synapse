@@ -39,14 +39,16 @@ namespace Synapse.Addins.Twitter
 		
 		public void ShowConfigurationDialog (QWidget parentWindow)
 		{
-			
+			var dialog = new TwitterConfigurationDialog(m_Account, parentWindow);
+			dialog.Show();
+			dialog.Exec();
 		}
 		
 		public bool IsConfigured {
 			get {
-				return false;
-				//return !String.IsNullOrEmpty(m_Account.Properties.Get("Twitter.Username")) &&
-				//       !String.IsNullOrEmpty(m_Account.Properties.Get("Twitter.Password"));
+				// FIXME: Should check that the login is actually valid.
+				return !String.IsNullOrEmpty(m_Account.GetProperty("Twitter.Username")) &&
+				       !String.IsNullOrEmpty(m_Account.GetProperty("Twitter.Password"));
 			}
 		}
 	}
