@@ -7,8 +7,8 @@ FILES =  \
 	AvatarFileEngine.cs \
 	AvatarGridZoomAction.cs \
 	BookmarkedMUCsModel.cs \
-	BuiltinActions.cs \
 	ErrorDialog.cs \
+	GlobalActions.cs \
 	gtk-gui/generated.cs \
 	gtk-gui/Synapse.QtClient.ErrorDialog.cs \
 	Gui.cs \

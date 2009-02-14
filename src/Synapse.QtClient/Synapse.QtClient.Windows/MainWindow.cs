@@ -73,18 +73,18 @@ namespace Synapse.QtClient.Windows
 			contentWidget.Layout().AddWidget(m_NoAccountsWidget);
 			
 			m_MainMenu = new QMenu(this);
-			m_MainMenu.AddAction(Gui.BuiltinActions.NewMessageAction);
-			m_MainMenu.AddAction(Gui.BuiltinActions.JoinConferenceAction);
-			m_MainMenu.AddAction(Gui.BuiltinActions.ShowBrowserAction);
-			m_MainMenu.AddAction(Gui.BuiltinActions.EditProfileAction);
-			m_MainMenu.AddAction(Gui.BuiltinActions.ChangeStatusAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.NewMessageAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.JoinConferenceAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.ShowBrowserAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.EditProfileAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.ChangeStatusAction);
 			m_MainMenu.AddSeparator();
-			m_MainMenu.AddAction(Gui.BuiltinActions.ShowPreferencesAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.ShowPreferencesAction);
 			m_MainMenu.AddSeparator();
-			m_MainMenu.AddAction(Gui.BuiltinActions.AboutAction);
-			m_MainMenu.AddAction(Gui.BuiltinActions.SendFeedbackAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.AboutAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.SendFeedbackAction);
 			m_MainMenu.AddSeparator();
-			m_MainMenu.AddAction(Gui.BuiltinActions.QuitAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.QuitAction);
 
 			Gui.CenterWidgetOnScreen(this);
 

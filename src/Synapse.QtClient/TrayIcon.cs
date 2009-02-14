@@ -49,18 +49,18 @@ namespace Synapse.QtClient
 			m_Menu.AddAction(m_ShowMainWindowAction);
 			m_Menu.AddAction(m_ShowDebugWindowAction);
 			m_Menu.AddSeparator();
-			m_Menu.AddAction(Gui.BuiltinActions.NewMessageAction);
-			m_Menu.AddAction(Gui.BuiltinActions.JoinConferenceAction);
-			m_Menu.AddAction(Gui.BuiltinActions.ShowBrowserAction);
-			m_Menu.AddAction(Gui.BuiltinActions.EditProfileAction);
-			m_Menu.AddAction(Gui.BuiltinActions.ChangeStatusAction);
+			m_Menu.AddAction(Gui.GlobalActions.NewMessageAction);
+			m_Menu.AddAction(Gui.GlobalActions.JoinConferenceAction);
+			m_Menu.AddAction(Gui.GlobalActions.ShowBrowserAction);
+			m_Menu.AddAction(Gui.GlobalActions.EditProfileAction);
+			m_Menu.AddAction(Gui.GlobalActions.ChangeStatusAction);
 			m_Menu.AddSeparator();
-			m_Menu.AddAction(Gui.BuiltinActions.ShowPreferencesAction);
+			m_Menu.AddAction(Gui.GlobalActions.ShowPreferencesAction);
 			m_Menu.AddSeparator();
-			m_Menu.AddAction(Gui.BuiltinActions.AboutAction);
-			m_Menu.AddAction(Gui.BuiltinActions.SendFeedbackAction);
+			m_Menu.AddAction(Gui.GlobalActions.AboutAction);
+			m_Menu.AddAction(Gui.GlobalActions.SendFeedbackAction);
 			m_Menu.AddSeparator();
-			m_Menu.AddAction(Gui.BuiltinActions.QuitAction);
+			m_Menu.AddAction(Gui.GlobalActions.QuitAction);
 			QObject.Connect(m_Menu, Qt.SIGNAL("aboutToShow()"), new NoArgDelegate(HandleMenuAboutToShow));
 
 			QPixmap pixmap = new QPixmap("resource:/octy-22.png");

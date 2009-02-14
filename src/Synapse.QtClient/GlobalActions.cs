@@ -11,7 +11,7 @@ using Qyoto;
 
 namespace Synapse.QtClient
 {
-	public class BuiltinActions : QObject
+	public class GlobalActions : QObject
 	{
 		QAction m_QuitAction;
 		QAction m_ShowPreferencesAction;
@@ -32,7 +32,7 @@ namespace Synapse.QtClient
 		QAction m_DoNotDisturbAction;
 		QAction m_OfflineAction;
 		
-		public BuiltinActions()
+		public GlobalActions()
 		{
 			m_AccountsMenu = new QMenu();
 			

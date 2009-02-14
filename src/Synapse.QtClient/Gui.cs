@@ -32,7 +32,7 @@ namespace Synapse.QtClient
 {
 	public static class Gui
 	{
-		static BuiltinActions s_BuiltinActions;
+		static GlobalActions s_GlobalActions;
 		
 		public static MainWindow MainWindow {
 			get;
@@ -59,11 +59,11 @@ namespace Synapse.QtClient
 			set;
 		}
 		
-		public static BuiltinActions BuiltinActions {
+		public static GlobalActions GlobalActions {
 			get {
-				if (s_BuiltinActions == null)
-					s_BuiltinActions = new BuiltinActions();
-				return s_BuiltinActions;
+				if (s_GlobalActions == null)
+					s_GlobalActions = new GlobalActions();
+				return s_GlobalActions;
 			}
 		}
 		

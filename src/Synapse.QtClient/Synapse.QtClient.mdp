@@ -115,7 +115,7 @@
     <File name="Synapse.QtClient.ExtensionNodes/WebIdentityConfiguratorCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/stock-close_12.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/menu-icon.png" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="BuiltinActions.cs" subtype="Code" buildaction="Compile" />
+    <File name="GlobalActions.cs" subtype="Code" buildaction="Compile" />
     <File name="AboutDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/AboutDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="AvatarGridZoomAction.cs" subtype="Code" buildaction="Compile" />
@@ -141,8 +141,8 @@
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Xmpp" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <Deployment.LinuxDeployData scriptName="synapse" />
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
