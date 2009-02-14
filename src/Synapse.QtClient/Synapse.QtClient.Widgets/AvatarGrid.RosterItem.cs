@@ -33,12 +33,30 @@ namespace Synapse.QtClient.Widgets
 			AvatarGrid<T> m_Grid;
 			T             m_Item;
 			QRectF        m_Rect;
+					
+			QTimeLine m_MoveAnimationTimeLine;
+			QGraphicsItemAnimation m_MoveAnimation;
+			
+			QTimeLine m_FadeAnimationTimeLine;
+			FadeInOutAnimation m_FadeAnimation;
 			
 			public RosterItem (AvatarGrid<T> grid, T item, double width, double height, QGraphicsItem parent) : base (parent)
 			{
 				m_Grid = grid;
 				m_Item = item;
 				m_Rect = new QRectF(0, 0, 0, 0);
+				
+				m_MoveAnimationTimeLine = new QTimeLine(500);
+				
+				m_MoveAnimation = new QGraphicsItemAnimation();
+				m_MoveAnimation.SetItem(this);
+				m_MoveAnimation.SetTimeLine(m_MoveAnimationTimeLine);				
+								
+				m_FadeAnimationTimeLine = new QTimeLine(500);
+				
+				m_FadeAnimation = new FadeInOutAnimation();
+				m_FadeAnimation.SetItem(this);
+				m_FadeAnimation.SetTimeLine(m_FadeAnimationTimeLine);
 
 				// FIXME: This causes all sorts of problems.
 				// this.SetCacheMode(QGraphicsItem.CacheMode.DeviceCoordinateCache);
@@ -161,15 +179,17 @@ namespace Synapse.QtClient.Widgets
 
 			public void BeginFade(bool fadeIn)
 			{
-				// FIXME: Start an animation.
-				this.Opacity = fadeIn ? 1 : 0;
-				this.SetVisible(fadeIn);
+				m_FadeAnimationTimeLine.Stop();
+				m_FadeAnimation.FadeIn = fadeIn;
+				m_FadeAnimationTimeLine.Start();
 			}
 
 			public void BeginMove(QPointF pos)
 			{
-				// FIXME: Start an animation.
-				this.SetPos(pos);
+				m_MoveAnimationTimeLine.Stop();
+				m_MoveAnimation.SetPosAt(0, base.Pos());
+				m_MoveAnimation.SetPosAt(1, pos);
+				m_MoveAnimationTimeLine.Start();
 			}
 		}
 

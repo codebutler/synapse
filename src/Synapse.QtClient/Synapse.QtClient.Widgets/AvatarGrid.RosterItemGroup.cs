@@ -41,10 +41,28 @@ namespace Synapse.QtClient.Widgets
 			bool          m_LeftButtonDown = false;
 			bool          m_ItemOver = false;
 			
+			QTimeLine m_MoveAnimationTimeLine;
+			QGraphicsItemAnimation m_MoveAnimation;
+			
+			QTimeLine m_FadeAnimationTimeLine;
+			FadeInOutAnimation m_FadeAnimation;
+			
 			public RosterItemGroup (AvatarGrid<T> grid, string groupName)
 			{
 				m_Grid      = grid;
 				m_GroupName = groupName;
+				
+				m_MoveAnimationTimeLine = new QTimeLine(500);
+				
+				m_MoveAnimation = new QGraphicsItemAnimation();
+				m_MoveAnimation.SetItem(this);
+				m_MoveAnimation.SetTimeLine(m_MoveAnimationTimeLine);				
+								
+				m_FadeAnimationTimeLine = new QTimeLine(500);
+				
+				m_FadeAnimation = new FadeInOutAnimation();
+				m_FadeAnimation.SetItem(this);
+				m_FadeAnimation.SetTimeLine(m_FadeAnimationTimeLine);
 				
 				m_Font = new QFont(m_Grid.Font);
 				m_Font.SetPointSize(8); // FIXME: Set to m_Grid.HeaderHeight.
@@ -96,15 +114,17 @@ namespace Synapse.QtClient.Widgets
 			
 			public void BeginFade(bool fadeIn)
 			{
-				// FIXME: Start an animation.
-				this.Opacity = fadeIn ? 1 : 0;
-				this.SetVisible(fadeIn);
+				m_FadeAnimationTimeLine.Stop();
+				m_FadeAnimation.FadeIn = fadeIn;
+				m_FadeAnimationTimeLine.Start();
 			}
 
 			public void BeginMove(QPointF pos)
 			{
-				// FIXME: Start an animation.
-				this.SetPos(pos);
+				m_MoveAnimationTimeLine.Stop();
+				m_MoveAnimation.SetPosAt(0, base.Pos());
+				m_MoveAnimation.SetPosAt(1, pos);
+				m_MoveAnimationTimeLine.Start();
 			}			
 			
 			public override QRectF BoundingRect ()

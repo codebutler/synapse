@@ -137,8 +137,10 @@ namespace Synapse.QtClient.Widgets
 
 						// FIXME: I cannot figure out how to make this work without doing this.
 						// Is there some method that does a complete re-layout?
-						base.Hide();
-						base.Show();
+						if (base.IsVisible()) {
+							base.Hide();
+							base.Show();
+						}
 						
 						var avatarPoint = m_GraphicsView.MapToParent(m_GraphicsView.MapFromScene(m_PixmapItem.X(), m_PixmapItem.Y()));
 						
