@@ -31,14 +31,14 @@
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Services" />
     <ProjectReference type="Gac" localcopy="False" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
     <ProjectReference type="Assembly" localcopy="False" refto="../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll" />
-    <ProjectReference type="Project" localcopy="True" refto="Synapse.QtClient" />
-    <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/jabber-net.dll" />
-    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Wilco.SyntaxHighlighter.dll" />
-    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
-    <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Project" localcopy="False" refto="Synapse.QtClient" />
+    <ProjectReference type="Project" localcopy="False" refto="Synapse.Core" />
+    <ProjectReference type="Gac" localcopy="False" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Assembly" localcopy="False" specificVersion="False" refto="../../contrib/jabber-net.dll" />
+    <ProjectReference type="Assembly" localcopy="False" specificVersion="False" refto="../../contrib/Wilco.SyntaxHighlighter.dll" />
+    <ProjectReference type="Assembly" localcopy="False" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
+    <ProjectReference type="Gac" localcopy="False" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="False" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
