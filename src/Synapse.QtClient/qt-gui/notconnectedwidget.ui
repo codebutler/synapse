@@ -130,7 +130,10 @@ p, li { white-space: pre-wrap; }
          <item row="0" column="0" >
           <widget class="QLabel" name="label" >
            <property name="text" >
-            <string>Login:</string>
+            <string>Jabber ID:</string>
+           </property>
+           <property name="buddy" >
+            <cstring>m_LoginLineEdit</cstring>
            </property>
           </widget>
          </item>
@@ -141,6 +144,9 @@ p, li { white-space: pre-wrap; }
           <widget class="QLabel" name="label_2" >
            <property name="text" >
             <string>Password:</string>
+           </property>
+           <property name="buddy" >
+            <cstring>m_PasswordLineEdit</cstring>
            </property>
           </widget>
          </item>
@@ -183,6 +189,12 @@ p, li { white-space: pre-wrap; }
            <property name="text" >
             <string>OK</string>
            </property>
+           <property name="autoDefault" >
+            <bool>true</bool>
+           </property>
+           <property name="default" >
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
         </layout>
@@ -194,5 +206,38 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>m_PasswordLineEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>saveAccountButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>265</x>
+     <y>414</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>291</x>
+     <y>458</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_LoginLineEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>saveAccountButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>208</x>
+     <y>382</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>266</x>
+     <y>453</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

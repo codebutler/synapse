@@ -95,9 +95,11 @@ namespace Synapse.QtClient.Widgets
 			JID jid = null;
 			
 			if (String.IsNullOrEmpty(m_LoginLineEdit.Text))
-				QMessageBox.Critical(this.TopLevelWidget(), "Synapse", "Login may not be empty");
+				QMessageBox.Critical(this.TopLevelWidget(), "Synapse", "Login may not be empty.");
 			else if (!JID.TryParse(m_LoginLineEdit.Text, out jid))
-				QMessageBox.Critical(this.TopLevelWidget(), "Synapse", "Login is not valid Jabber ID");
+				QMessageBox.Critical(this.TopLevelWidget(), "Synapse", "Login should look like 'user@server'.");
+			else if (String.IsNullOrEmpty(new JID(m_LoginLineEdit.Text).User))
+				QMessageBox.Critical(this.TopLevelWidget(), "Synapse", "Login should look like 'user@server'.");
 			else if (String.IsNullOrEmpty(m_PasswordLineEdit.Text))
 				QMessageBox.Critical(this.TopLevelWidget(), "Synapse", "Password may not be empty");
 			else {
