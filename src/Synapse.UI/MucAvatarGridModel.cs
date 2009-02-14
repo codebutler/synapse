@@ -116,9 +116,9 @@ namespace Synapse.UI
 			// FIXME: AvatarManager only deals with bare jids, so unless we know the participant's real jid, 
 			// this wont work since nickJids look like room@server/nickname.
 			if (!String.IsNullOrEmpty(participant.RealJID)) {
-				return AvatarManager.GetAvatar(jid);
+				return AvatarManager.GetAvatar(participant.RealJID);
 			} else {
-				return AvatarManager.GetAvatar(null);
+				return AvatarManager.GetAvatar("default");
 			}
 		}
 

@@ -124,20 +124,26 @@ namespace Synapse.Xmpp
 		}
 		
 		void HandleOnPresence(object sender, Presence pres)
-		{
-			if (m_Account.Roster[pres.From.Bare] != null) {
-				foreach (XmlElement x in pres.GetElementsByTagName("x")) {
-					if (x.Attributes["xmlns"] != null && x.Attributes["xmlns"].Value == "vcard-temp:x:update") {
-						var photos = x.GetElementsByTagName("photo");
-						if (photos.Count > 0) {
-							string bareJid = pres.From.Bare;
-							string hash = photos[0].InnerText;						
-							s_HashCache[bareJid] = hash;						
-							if (!AvatarExists(hash))
-								UpdateAvatar(bareJid, hash);					
-							break;
-						}
-					}
+		{			
+			// Make sure this isn't related to a MUC at all. 
+			// Is there really no better way?
+			foreach (XmlNode element in pres.ChildNodes) {
+				if (element.NamespaceURI.StartsWith("http://jabber.org/protocol/muc")) {
+					return;
+				}
+			}
+			
+			var nsmgr = new XmlNamespaceManager(m_Account.Client.Document.NameTable);
+			nsmgr.AddNamespace("v", "vcard-temp:x:update");
+			var x = pres.SelectSingleNode("v:x", nsmgr);
+			if (x != null) {
+				var photo = x["photo"];
+				if (photo != null) {
+					string bareJid = pres.From.Bare;
+					string hash = photo.InnerText;						
+					s_HashCache[bareJid] = hash;						
+					if (!AvatarExists(hash))
+						UpdateAvatar(bareJid, hash);
 				}
 			}
 		}
