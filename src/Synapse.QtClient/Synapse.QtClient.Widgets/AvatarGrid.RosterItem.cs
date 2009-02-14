@@ -99,7 +99,7 @@ namespace Synapse.QtClient.Widgets
 				if (m_Grid.ListMode) {
 					var rect = BoundingRect();
 					var pen = new QPen();
-					pen.SetBrush(new QBrush(new QColor(Qt.GlobalColor.white)));
+					pen.SetBrush(m_Grid.Palette.Text());
 					painter.SetPen(pen);
 
 					int x = iconSize + m_Grid.IconPadding;

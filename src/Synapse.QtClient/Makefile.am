@@ -5,6 +5,7 @@ FILES =  \
 	AbstractSimpleFileEngine.cs \
 	AssemblyInfo.cs \
 	AvatarFileEngine.cs \
+	AvatarGridZoomAction.cs \
 	BookmarkedMUCsModel.cs \
 	BuiltinActions.cs \
 	ErrorDialog.cs \

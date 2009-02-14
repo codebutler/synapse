@@ -134,23 +134,12 @@ namespace Synapse.QtClient.Widgets
 	
 			m_RosterMenu.AddSeparator();
 	
-			var sliderAction = new QWidgetAction(this);
-			
-			var sliderContainer = new QWidget(this);
-			sliderContainer.SetLayout(new QHBoxLayout());
-			sliderContainer.Layout().AddWidget(new QLabel("Zoom:", sliderContainer));
-			var zoomSlider = new QSlider(Orientation.Horizontal, sliderContainer);
-			zoomSlider.Minimum = 16;
-			zoomSlider.Maximum = 60;
-			zoomSlider.Value = rosterGrid.IconSize;
-			QObject.Connect(zoomSlider, Qt.SIGNAL("valueChanged(int)"), this, Qt.SLOT("zoomSlider_valueChanged(int)"));
-			sliderContainer.Layout().AddWidget(zoomSlider);
-			sliderAction.SetDefaultWidget(sliderContainer);
+			var sliderAction = new AvatarGridZoomAction<Synapse.UI.RosterItem>(rosterGrid);
 			m_RosterMenu.AddAction(sliderAction);
-	
+			
 			m_InviteActions = new List<QAction>();
 			
-			m_InviteMenu = new QMenu(this);		
+			m_InviteMenu = new QMenu(this);
 			m_InviteMenu.MenuAction().Text = "Invite To";
 			m_InviteMenu.AddAction("New Conference...");
 	
@@ -568,12 +557,6 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 		
-		[Q_SLOT]
-		void zoomSlider_valueChanged (int value)
-		{
-			rosterGrid.IconSize = value;
-		}
-	
 		[Q_SLOT]
 		void on_friendSearchLineEdit_textChanged ()
 		{

@@ -70,6 +70,30 @@ namespace Synapse.QtClient.Windows
 			if (handler is MucHandler) {
 				var mucHandler = (MucHandler)handler;
 				participantsGrid.Model = mucHandler.GridModel;
+				participantsGrid.ContextMenuPolicy = Qt.ContextMenuPolicy.ActionsContextMenu;
+				
+				var group = new QActionGroup(this);
+				
+				var gridModeAction = new QAction("View as Grid", this);
+				QObject.Connect(gridModeAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleGridModeActionTriggered()")); 
+				gridModeAction.SetActionGroup(group);
+				gridModeAction.Checkable = true;
+				gridModeAction.Checked = true;
+				participantsGrid.AddAction(gridModeAction);
+		
+				var listModeAction = new QAction("View as List", this);
+				QObject.Connect(listModeAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleListModeActionTriggered()"));
+				listModeAction.SetActionGroup(group);
+				listModeAction.Checkable = true;
+				participantsGrid.AddAction(listModeAction);
+				
+				var separatorAction = new QAction(participantsGrid);
+				separatorAction.SetSeparator(true);
+				participantsGrid.AddAction(separatorAction);
+				
+				var sliderAction = new AvatarGridZoomAction<jabber.connection.RoomParticipant>(participantsGrid);
+				participantsGrid.AddAction(sliderAction);
+			
 				m_ConversationWidget.ChatName = mucHandler.Room.JID;
 				this.WindowTitle = mucHandler.Room.JID;
 				this.WindowIcon = Gui.LoadIcon("internet-group-chat");
@@ -344,6 +368,18 @@ namespace Synapse.QtClient.Windows
 			get {
 				return (Gui.TabbedChatsWindow.IsActiveWindow && Gui.TabbedChatsWindow.CurrentChat == this);
 			}
+		}
+		
+		[Q_SLOT]
+		void HandleGridModeActionTriggered ()
+		{
+			participantsGrid.ListMode = false;
+		}
+		
+		[Q_SLOT]
+		void HandleListModeActionTriggered ()
+		{
+			participantsGrid.ListMode = true;
 		}
 	}
 }

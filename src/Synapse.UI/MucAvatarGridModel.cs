@@ -25,6 +25,7 @@ using Synapse.Core;
 using Synapse.Xmpp;
 using jabber;
 using jabber.connection;
+using jabber.protocol.client;
 
 namespace Synapse.UI
 {	
@@ -112,8 +113,13 @@ namespace Synapse.UI
 
 		public object GetImage (RoomParticipant participant)
 		{
-			var jid = (!String.IsNullOrEmpty(participant.RealJID)) ? participant.RealJID : participant.NickJID;
-			return AvatarManager.GetAvatar(jid);
+			// FIXME: AvatarManager only deals with bare jids, so unless we know the participant's real jid, 
+			// this wont work since nickJids look like room@server/nickname.
+			if (!String.IsNullOrEmpty(participant.RealJID)) {
+				return AvatarManager.GetAvatar(jid);
+			} else {
+				return AvatarManager.GetAvatar(null);
+			}
 		}
 
 		public string GetPresenceInfo (RoomParticipant participant)

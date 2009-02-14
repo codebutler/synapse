@@ -125,16 +125,18 @@ namespace Synapse.Xmpp
 		
 		void HandleOnPresence(object sender, Presence pres)
 		{
-			foreach (XmlElement x in pres.GetElementsByTagName("x")) {
-				if (x.Attributes["xmlns"] != null && x.Attributes["xmlns"].Value == "vcard-temp:x:update") {
-					var photos = x.GetElementsByTagName("photo");
-					if (photos.Count > 0) {
-						string bareJid = pres.From.Bare;
-						string hash = photos[0].InnerText;						
-						s_HashCache[bareJid] = hash;						
-						if (!AvatarExists(hash))
-							UpdateAvatar(bareJid, hash);					
-						break;
+			if (m_Account.Roster[pres.From.Bare] != null) {
+				foreach (XmlElement x in pres.GetElementsByTagName("x")) {
+					if (x.Attributes["xmlns"] != null && x.Attributes["xmlns"].Value == "vcard-temp:x:update") {
+						var photos = x.GetElementsByTagName("photo");
+						if (photos.Count > 0) {
+							string bareJid = pres.From.Bare;
+							string hash = photos[0].InnerText;						
+							s_HashCache[bareJid] = hash;						
+							if (!AvatarExists(hash))
+								UpdateAvatar(bareJid, hash);					
+							break;
+						}
 					}
 				}
 			}

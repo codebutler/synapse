@@ -278,24 +278,26 @@ namespace Synapse.Xmpp
 					StatusChanged(this);
 			}
 
-			var feed = ServiceManager.Get<ActivityFeedService>();
-			
-			if (pres.Type == PresenceType.error) {
-				// FIXME: Show error
-			} else if (pres.Type == PresenceType.probe) {
-				// FIXME: Do anything here?
-			} else if (pres.Type == PresenceType.subscribe) {
-				feed.PostItem(this, pres.From, "subscribe", null, pres.Status);
-			} else if (pres.Type == PresenceType.subscribed) {
-				feed.PostItem(this, pres.From, "subscribed", null, pres.Status);
-			} else if (pres.Type == PresenceType.unsubscribe) {
-				feed.PostItem(this, pres.From, "unsubscribe", null, pres.Status);
-			} else if (pres.Type == PresenceType.unsubscribed) {
-				feed.PostItem(this, pres.From, "unsubscribed", null, pres.Status);
-			} else if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable || pres.Type == PresenceType.invisible) {
-				if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
-					if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
-						PostActivityFeedItem(pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status);
+			if (m_Roster[pres.From.Bare] != null) {
+				var feed = ServiceManager.Get<ActivityFeedService>();
+				
+				if (pres.Type == PresenceType.error) {
+					// FIXME: Show error
+				} else if (pres.Type == PresenceType.probe) {
+					// FIXME: Do anything here?
+				} else if (pres.Type == PresenceType.subscribe) {
+					feed.PostItem(this, pres.From, "subscribe", null, pres.Status);
+				} else if (pres.Type == PresenceType.subscribed) {
+					feed.PostItem(this, pres.From, "subscribed", null, pres.Status);
+				} else if (pres.Type == PresenceType.unsubscribe) {
+					feed.PostItem(this, pres.From, "unsubscribe", null, pres.Status);
+				} else if (pres.Type == PresenceType.unsubscribed) {
+					feed.PostItem(this, pres.From, "unsubscribed", null, pres.Status);
+				} else if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable || pres.Type == PresenceType.invisible) {
+					if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
+						if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
+							PostActivityFeedItem(pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status);
+						}
 					}
 				}
 			}
@@ -442,7 +444,7 @@ namespace Synapse.Xmpp
 
 		public RosterManager Roster {
 			get {
-				return this.m_Roster;
+				return m_Roster;
 			}
 		}
 
