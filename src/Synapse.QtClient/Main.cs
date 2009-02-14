@@ -26,14 +26,17 @@ using System.IO;
 
 using Hyena;
 
-using Synapse.ServiceStack;
 using Synapse.Core;
+using Synapse.ServiceStack;
+using Synapse.Services;
 using Synapse.UI.Services;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
 
 using Qyoto;
 using QtWebKit;
+
+using Notifications;
 
 using Synapse.QtClient.Windows;
 
@@ -148,6 +151,20 @@ namespace Synapse.QtClient
 		public override object CreateImage (byte[] data)
 		{
 			throw new NotImplementedException();
+		}
+		
+		public override void DesktopNotify (ActivityFeedItemTemplate template, IActivityFeedItem item, string text)
+		{
+			// FIXME: This will need to be different on windows/osx...
+			QApplication.Invoke(delegate {
+				Notification notif = new Notification(text, item.Content);
+				foreach (var action in template.Actions) {
+					notif.AddAction(action.Name, action.Label, delegate {
+						item.TriggerAction(action.Name);
+					});
+				}			
+				notif.Show ();
+			});
 		}
 
 		public override void ShowErrorWindow (string errorTitle, Exception error)

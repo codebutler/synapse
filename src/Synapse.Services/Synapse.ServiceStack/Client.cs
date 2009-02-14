@@ -32,6 +32,7 @@
 using System;
 using System.Threading;
 using Synapse.Core;
+using Synapse.Services;
 
 namespace Synapse.ServiceStack
 {
@@ -61,6 +62,8 @@ namespace Synapse.ServiceStack
 		public abstract object CreateImage (string fileName);
 
 		public abstract void ShowErrorWindow (string title, Exception error);
+		
+		public abstract void DesktopNotify (ActivityFeedItemTemplate template, IActivityFeedItem item, string text);
 		
         protected void OnStarted ()
         {

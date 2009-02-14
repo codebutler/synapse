@@ -108,6 +108,7 @@ REFERENCES =  \
 	$(GLIB_SHARP_20_LIBS) \
 	$(GTK_SHARP_20_LIBS) \
 	$(NDESK_DBUS_GLIB_10_LIBS) \
+	$(NOTIFY_SHARP_LIBS) \
 	$(QYOTO_LIBS) \
 	Mono.Posix \
 	System \
