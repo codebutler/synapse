@@ -160,8 +160,16 @@ namespace Synapse.UI.Chat
 					}
 				}
 					
-				// FIXME: Add support for delayed message timestamps.
 				DateTime date = DateTime.Now;
+				
+				var nsmgr = new XmlNamespaceManager(msg.OwnerDocument.NameTable);
+				nsmgr.AddNamespace("delay", "jabber:x:delay");
+				var delay = (XmlElement)msg.SelectSingleNode("delay:x", nsmgr);
+				if (delay != null) {
+					string stamp = delay.GetAttribute("stamp");
+					// CCYYMMDDThh:mm:ss
+					date = DateTime.ParseExact(stamp, @"yyyyMMdd\THH:mm:ss", null).ToLocalTime();
+				}
 				
 				var content = new ChatContentMessage(m_Account, fromJid, from, msg.To, date);
 				content.IsOutgoing = !incoming;
@@ -181,11 +189,11 @@ namespace Synapse.UI.Chat
 		
 		protected virtual void OnNewContent (AbstractChatContent content)
 		{
-			lock (m_ContentQueue) {
-				var handler = NewContent;
-				if (NewContent != null) {
-					NewContent(this, content);
-				} else {
+			var handler = NewContent;
+			if (NewContent != null) {
+				NewContent(this, content);
+			} else {
+				lock (m_ContentQueue) {
 					m_ContentQueue.Enqueue(content);
 				}
 			}
