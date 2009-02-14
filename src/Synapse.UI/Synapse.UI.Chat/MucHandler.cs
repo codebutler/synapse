@@ -39,10 +39,7 @@ namespace Synapse.UI.Chat
 		{
 			m_Room = room;
 			m_GridModel = new MucAvatarGridModel(account, room);
-		}
-
-		public override void Start()
-		{
+			
 			m_Room.OnRoomMessage += HandleOnRoomMessage;
 			m_Room.OnSelfMessage += HandleOnSelfMessage;
 			m_Room.OnParticipantJoin += HandleOnParticipantJoin;

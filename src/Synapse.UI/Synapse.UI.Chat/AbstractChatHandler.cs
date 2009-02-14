@@ -21,6 +21,7 @@
 
 using System;
 using System.Xml;
+using System.Collections.Generic;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.UI;
@@ -38,6 +39,8 @@ namespace Synapse.UI.Chat
 		
 		Account m_Account;
 		bool m_Ready = true;
+		
+		Queue<AbstractChatContent> m_ContentQueue = new Queue<AbstractChatContent>();
 
 		protected AbstractChatHandler (Account account)
 		{
@@ -61,7 +64,19 @@ namespace Synapse.UI.Chat
 			}
 		}
 
-		public abstract void Start ();
+		public void FireQueued ()
+		{
+			lock (m_ContentQueue) {
+				if (NewContent == null) {
+					throw new InvalidOperationException("You must add a NewContent event handler first!");
+				}
+				while (m_ContentQueue.Count > 0) {
+					OnNewContent(m_ContentQueue.Dequeue());
+				}
+				m_ContentQueue = null;
+			}
+		}
+		
 		public abstract void Send (string html);
 		public abstract void Send (XmlElement element);
 		public abstract void Dispose ();
@@ -116,7 +131,7 @@ namespace Synapse.UI.Chat
 					}
 	
 					var typingContent = new ChatContentTyping(m_Account, fromJid, from, null, state);
-					NewContent(this, typingContent);
+					OnNewContent(typingContent);
 				}
 			}
 			
@@ -152,7 +167,7 @@ namespace Synapse.UI.Chat
 				content.IsOutgoing = !incoming;
 				content.MessageHtml = body;
 				
-				NewContent(this, content);
+				OnNewContent(content);
 			}
 		}
 	
@@ -161,7 +176,19 @@ namespace Synapse.UI.Chat
 			var content = new ChatContentStatus(m_Account, null, null, null, DateTime.Now, String.Empty);
 			content.MessageHtml = message;
 
-			NewContent(this, content);
+			OnNewContent(content);
+		}
+		
+		protected virtual void OnNewContent (AbstractChatContent content)
+		{
+			lock (m_ContentQueue) {
+				var handler = NewContent;
+				if (NewContent != null) {
+					NewContent(this, content);
+				} else {
+					m_ContentQueue.Enqueue(content);
+				}
+			}
 		}
 	}
 }

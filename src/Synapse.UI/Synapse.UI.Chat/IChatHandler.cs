@@ -40,7 +40,7 @@ namespace Synapse.UI.Chat
 			get;
 		}
 
-		void Start ();
+		void FireQueued ();
 		
 		void Send (string html);
 		void Send (XmlElement contentElement);

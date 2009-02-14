@@ -254,8 +254,8 @@ namespace Synapse.QtClient.Windows
 			}
 			
 			m_ConversationWidget.LoadTheme("Mockie", "Orange - Icon Left");
-
-			handler.Start();
+			
+			m_Handler.FireQueued();
 		}
 
 		public IChatHandler Handler {
@@ -314,7 +314,9 @@ namespace Synapse.QtClient.Windows
 					} else {
 						title = chatHandler.Account.GetDisplayName(chatHandler.Jid);
 					}
-					Gui.TabbedChatsWindow.SetTabTitle(this, title);
+					QApplication.Invoke(delegate {
+						Gui.TabbedChatsWindow.SetTabTitle(this, title);
+					});
 				}
 			} else {
 				bool isSimilar   = m_PreviousContent != null && content.IsSimilarToContent(m_PreviousContent);

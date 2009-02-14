@@ -342,29 +342,38 @@ namespace Synapse.QtClient.Windows
 				m_Account.Client.OnPresence -= HandleOnPresence;
 			}
 				
-			public ChatWindow OpenChatWindow (JID jid, bool focus)
+			public ChatHandler OpenChatWindow (JID jid, bool focus)
 			{
-				ChatWindow window = null;
-				if (!m_ChatWindows.ContainsKey(jid.Bare)) {
-					window = new ChatWindow(new ChatHandler(m_Account, jid));
-					window.Closed += HandleChatWindowClosed;
-					m_ChatWindows.Add(jid.Bare, window);
-	
-					Gui.TabbedChatsWindow.AddChatWindow(window, focus);
-				} else {
-					window = m_ChatWindows[jid.Bare];
-					if (focus) {
-						Gui.TabbedChatsWindow.FocusChatWindow(window);
+				lock (m_ChatWindows) {
+					if (!m_ChatWindows.ContainsKey(jid.Bare)) {
+						var handler = new ChatHandler(m_Account, jid);
+						QApplication.Invoke(delegate {
+							var window = new ChatWindow(handler);
+							window.Closed += HandleChatWindowClosed;
+							lock (m_ChatWindows) {
+								m_ChatWindows.Add(jid.Bare, window);
+							}
+							Gui.TabbedChatsWindow.AddChatWindow(window, focus);
+						});
+						return handler;
+					} else {
+						var window = m_ChatWindows[jid.Bare];
+						if (focus) {
+							QApplication.Invoke(delegate {
+								Gui.TabbedChatsWindow.FocusChatWindow(window);
+							});
+						}
+						return (ChatHandler)window.Handler;
 					}
 				}
-				return window;
 			}
 
 			void HandleOnJoin(Room room)
 			{
+				var handler = new MucHandler(m_Account, room);
 				QApplication.Invoke(delegate {
 					if (!m_MucWindows.ContainsKey(room)) {
-						var window = new ChatWindow(new MucHandler(m_Account, room));
+						var window = new ChatWindow(handler);
 						window.Closed += HandleMucWindowClosed;
 						m_MucWindows[room] = window;
 						Gui.TabbedChatsWindow.AddChatWindow(window, true);
@@ -374,33 +383,35 @@ namespace Synapse.QtClient.Windows
 	
 			void HandleOnMessage (object sender, Message message)
 			{
-				QApplication.Invoke(delegate {
-					if (message.Type == MessageType.chat) {
-						// Make sure we don't open a new window if all we've got is a chatstate.
-						// Some people like a "psycic" mode though, so this should be configurable.
+				if (message.Type == MessageType.chat) {
+					// Make sure we don't open a new window if all we've got is a chatstate.
+					// Some people like a "psycic" mode though, so this should be configurable.
+					lock (m_ChatWindows) {
 						if (m_ChatWindows.ContainsKey(message.From.Bare) || (message.Body != null || message.Html != null )) {
-							ChatWindow window = OpenChatWindow(message.From, false);
-							((ChatHandler)window.Handler).AppendMessage(message);
+							ChatHandler handler = OpenChatWindow(message.From, false);
+							handler.AppendMessage(message);
 						}
 					}
-				});
+				}
 			}
 			
 			void HandleOnPresence (object o, Presence presence)
 			{
-				QApplication.Invoke(delegate {
+				lock (m_ChatWindows) {
 					if (m_ChatWindows.ContainsKey(presence.From.Bare)) {
 						var window = m_ChatWindows[presence.From.Bare];
 						((ChatHandler)window.Handler).SetPresence(presence);
 					}
-				});
+				}
 			}
 
 			void HandleChatWindowClosed(object sender, EventArgs e)
 			{
 				var window  = (ChatWindow)sender;
 				var handler = (ChatHandler)window.Handler;
-				m_ChatWindows.Remove(handler.Jid.Bare);
+				lock (m_ChatWindows) {
+					m_ChatWindows.Remove(handler.Jid.Bare);
+				}
 				Gui.TabbedChatsWindow.RemoveChatWindow(window);
 			}
 			
