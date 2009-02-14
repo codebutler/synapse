@@ -400,20 +400,16 @@ namespace Synapse.QtClient.Windows
 			{
 				var window  = (ChatWindow)sender;
 				var handler = (ChatHandler)window.Handler;
-				QApplication.Invoke(delegate {
-					m_ChatWindows.Remove(handler.Jid.Bare);
-					Gui.TabbedChatsWindow.RemoveChatWindow(window);
-				});
+				m_ChatWindows.Remove(handler.Jid.Bare);
+				Gui.TabbedChatsWindow.RemoveChatWindow(window);
 			}
 			
 			void HandleMucWindowClosed(object sender, EventArgs e)
 			{
 				var window  = (ChatWindow)sender;
 				var handler = (MucHandler)window.Handler;
-				QApplication.Invoke(delegate {
-					m_MucWindows.Remove(handler.Room);				
-					Gui.TabbedChatsWindow.RemoveChatWindow(window);
-				});
+				m_MucWindows.Remove(handler.Room);				
+				Gui.TabbedChatsWindow.RemoveChatWindow(window);
 			}
 		}
 	}

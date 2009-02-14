@@ -26,7 +26,6 @@ using System.Text;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Services;
-using Notifications;
 using Mono.Addins;
 
 namespace Synapse.Services
