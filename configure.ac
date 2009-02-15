@@ -64,7 +64,6 @@ addins/CodeSnippets/Makefile
 addins/Flickr/Makefile
 addins/Banshee/Makefile
 addins/YouTube/Makefile
-addins/FireEagle/Makefile
 ])
 
 AC_OUTPUT

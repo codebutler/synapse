@@ -6,7 +6,6 @@
       <Entry build="True" name="Twitter" configuration="Debug" />
       <Entry build="True" name="Flickr" configuration="Debug" />
       <Entry build="True" name="YouTube" configuration="Debug" />
-      <Entry build="True" name="FireEagle" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="CodeSnippets" configuration="Release" />
@@ -14,7 +13,6 @@
       <Entry build="True" name="Twitter" configuration="Release" />
       <Entry build="True" name="Flickr" configuration="Release" />
       <Entry build="True" name="YouTube" configuration="Release" />
-      <Entry build="True" name="FireEagle" configuration="Release" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="CodeSnippets" single="True">
@@ -23,7 +21,6 @@
     <Execute type="None" entry="Twitter" />
     <Execute type="None" entry="Flickr" />
     <Execute type="None" entry="YouTube" />
-    <Execute type="None" entry="FireEagle" />
   </StartMode>
   <Entries>
     <Entry filename="addins/CodeSnippets/CodeSnippets.mdp" />
@@ -31,6 +28,5 @@
     <Entry filename="addins/Twitter/Twitter.mdp" />
     <Entry filename="addins/Flickr/Flickr.mdp" />
     <Entry filename="addins/YouTube/YouTube.mdp" />
-    <Entry filename="addins/FireEagle/FireEagle.mdp" />
   </Entries>
 </Combine>

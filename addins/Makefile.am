@@ -1,1 +1,1 @@
-SUBDIRS = CodeSnippets Banshee Twitter Flickr YouTube FireEagle
+SUBDIRS = CodeSnippets Banshee Twitter Flickr YouTube
