@@ -2,7 +2,6 @@
 
 FILES =  \
 	AssemblyInfo.cs \
-	gtk-gui/generated.cs \
 	Synapse.Services/ActivityFeedService.cs \
 	Synapse.Services/NetworkService.cs \
 	Synapse.Services/NowPlayingService.cs \
@@ -23,12 +22,9 @@ FILES =  \
 	Synapse.ServiceStack/ServiceManager.cs \
 	Synapse.ServiceStack/ServiceStartedHandler.cs 
 
-RESOURCES =  \
-	gtk-gui/gui.stetic \
-	Synapse.Services.addin.xml 
+RESOURCES = Synapse.Services.addin.xml 
 
 REFERENCES =  \
-	$(GTK_SHARP_20_LIBS) \
 	Mono.Posix \
 	System \
 	System.Core \
