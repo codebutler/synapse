@@ -129,25 +129,5 @@ namespace Synapse.ServiceStack
             Log.DebugFormat ("Bus.Session.RequestName ('{0}') replied with {1}", bus_name, name_reply);
             return name_reply;
         }
-        
-        private static GLib.MainLoop mainloop;
-        
-        public static void RunMainLoop ()
-        {
-            if (mainloop == null) {
-                mainloop = new GLib.MainLoop ();
-            }
-            
-            if (!mainloop.IsRunning) {
-                mainloop.Run ();
-            }
-        }
-        
-        public static void QuitMainLoop ()
-        {
-            if (mainloop != null && mainloop.IsRunning) {
-                mainloop.Quit ();
-            }
-        }
     }
 }
