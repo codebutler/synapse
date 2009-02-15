@@ -5,6 +5,7 @@ EXTRA_DIST = $(CONTRIBS)
 all: copycontrib
 
 copycontrib: $(CONTRIBS)
+	mkdir -p $(BUILD_DIR)
 	for i in $(CONTRIBS); do cp -v $$i $(BUILD_DIR)/$$i; done
 
 clean-local:
