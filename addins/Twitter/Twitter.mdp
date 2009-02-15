@@ -35,10 +35,10 @@
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Xmpp" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Services" />
-    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
-    <ProjectReference type="Project" localcopy="True" refto="Synapse.QtClient" />
-    <ProjectReference type="Gac" localcopy="True" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
-    <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
+    <ProjectReference type="Assembly" localcopy="False" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
+    <ProjectReference type="Project" localcopy="False" refto="Synapse.QtClient" />
+    <ProjectReference type="Gac" localcopy="False" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
+    <ProjectReference type="Project" localcopy="False" refto="Synapse.Core" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />

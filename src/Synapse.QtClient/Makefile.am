@@ -90,6 +90,7 @@ RESOURCES =  \
 	resources/music-16.png \
 	resources/newtab.html \
 	resources/oceanbg.png \
+	resources/octy.png \
 	resources/octy.svg \
 	resources/octy-22.png \
 	resources/octy-32.png \
@@ -100,6 +101,7 @@ RESOURCES =  \
 	resources/simple-search.png \
 	resources/stock-close_12.png \
 	resources/Template.html \
+	resources/text.png \
 	resources/view-grid.png \
 	resources/view-list.png \
 	Synapse.QtClient.addin.xml 

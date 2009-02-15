@@ -146,22 +146,11 @@ namespace Synapse.QtClient.Widgets
 		{
 			if (jid == m_Account.Jid.Bare) {				
 				QApplication.Invoke(delegate {		
-					QPixmap pixmap = new QPixmap(32, 32);
+					QPixmap pixmap = new QPixmap(36, 36);
 					pixmap.Fill(GlobalColor.transparent);
-	
-					QPainterPath path = new QPainterPath();
-					path.AddRoundedRect(0, 0, 32, 32, 5, 5);
-					
+			
 					QPainter painter = new QPainter(pixmap);
-					painter.SetRenderHint(QPainter.RenderHint.Antialiasing, true);
-					painter.SetClipPath(path);
-					painter.DrawPixmap(0, 0, 32, 32, (QPixmap)AvatarManager.GetAvatar(hash));
-					painter.SetClipping(false);
-	
-					// FIXME: Do this only if the corner pixels are not transparent
-					//painter.SetPen(new QPen(new QBrush(new QColor("#CECECC")), 0.5 ));
-					//painter.DrawPath(path);
-					
+					Gui.DrawAvatar(painter, m_AvatarLabel.Width(), m_AvatarLabel.Height(), (QPixmap)AvatarManager.GetAvatar(hash));
 					painter.Dispose();
 	
 					m_AvatarLabel.Pixmap = pixmap;

@@ -61,7 +61,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex" >
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="usesScrollButtons" >
           <bool>true</bool>
@@ -285,6 +285,9 @@ p, li { white-space: pre-wrap; }
                   <property name="text" >
                    <string>Room:</string>
                   </property>
+                  <property name="buddy" >
+                   <cstring>mucRoomLineEdit</cstring>
+                  </property>
                  </widget>
                 </item>
                 <item row="1" column="0" >
@@ -292,18 +295,32 @@ p, li { white-space: pre-wrap; }
                   <property name="text" >
                    <string>Server:</string>
                   </property>
+                  <property name="buddy" >
+                   <cstring>mucServerLineEdit</cstring>
+                  </property>
                  </widget>
                 </item>
                 <item row="1" column="1" >
-                 <widget class="QLineEdit" name="mucServerLineEdit" />
+                 <widget class="QLineEdit" name="mucServerLineEdit" >
+                  <property name="text" >
+                   <string>conference.extremeboredom.net</string>
+                  </property>
+                 </widget>
                 </item>
                 <item row="0" column="1" >
-                 <widget class="QLineEdit" name="mucRoomLineEdit" />
+                 <widget class="QLineEdit" name="mucRoomLineEdit" >
+                  <property name="text" >
+                   <string>synapse</string>
+                  </property>
+                 </widget>
                 </item>
                 <item row="2" column="0" >
                  <widget class="QLabel" name="label_6" >
                   <property name="text" >
                    <string>Nickname:</string>
+                  </property>
+                  <property name="buddy" >
+                   <cstring>mucNicknameLineEdit</cstring>
                   </property>
                  </widget>
                 </item>
@@ -314,6 +331,9 @@ p, li { white-space: pre-wrap; }
                  <widget class="QLabel" name="label" >
                   <property name="text" >
                    <string>Password:</string>
+                  </property>
+                  <property name="buddy" >
+                   <cstring>mucPasswordLineEdit</cstring>
                   </property>
                  </widget>
                 </item>
@@ -737,12 +757,12 @@ p, li { white-space: pre-wrap; }
   <tabstop>mucServerLineEdit</tabstop>
   <tabstop>mucNicknameLineEdit</tabstop>
   <tabstop>mucPasswordLineEdit</tabstop>
-  <tabstop>pushButton</tabstop>
   <tabstop>m_JoinChatButton</tabstop>
   <tabstop>addMucBookmarkButton</tabstop>
   <tabstop>mucTree</tabstop>
   <tabstop>friendsMucTree</tabstop>
   <tabstop>m_ActivityWebView</tabstop>
+  <tabstop>pushButton</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>rosterSearchButton</tabstop>
   <tabstop>rosterViewButton</tabstop>
@@ -750,6 +770,12 @@ p, li { white-space: pre-wrap; }
   <tabstop>rosterGrid</tabstop>
   <tabstop>friendSearchLineEdit</tabstop>
   <tabstop>toggleJoinMucButton</tabstop>
+  <tabstop>m_ShoutButton</tabstop>
+  <tabstop>m_PostLinkButton</tabstop>
+  <tabstop>m_PostFileButton</tabstop>
+  <tabstop>feedFilterButton</tabstop>
+  <tabstop>shoutLineEdit</tabstop>
+  <tabstop>sendShoutButton</tabstop>
  </tabstops>
  <resources/>
  <connections>

@@ -45,9 +45,8 @@ namespace Synapse.QtClient.Widgets
 			m_GraphicsView.SetScene(m_Scene);
 			m_Scene.SetSceneRect(0, 0, 200, 200);
 			
-			QGraphicsSvgItem octy = new QGraphicsSvgItem("resource:/octy.svg");
+			var octy = new QGraphicsPixmapItem(new QPixmap("resource:/octy.png"));
 			octy.SetPos(0, 10);
-			octy.SetParent(m_Scene);
 			m_Scene.AddItem(octy);
 
 			// TODO: Add bubbles!
@@ -65,7 +64,7 @@ namespace Synapse.QtClient.Widgets
 		}
 		
 		[Q_SLOT]
-		protected void TimerFinished()
+		void TimerFinished()
 		{
 			m_TimeLine.ToggleDirection();
 			m_TimeLine.Start();

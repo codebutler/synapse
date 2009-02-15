@@ -19,16 +19,23 @@ namespace Synapse.QtClient.Windows {
         
         protected QGraphicsView graphicsView;
         
-        protected QLabel label;
+        protected QLabel textLabel;
+        
+        protected QTextBrowser textBrowser;
+        
+        protected QPushButton sendFeedbackButton;
         
         protected QDialogButtonBox buttonBox;
         
         protected void SetupUi() {
             base.ObjectName = "AboutDialog";
-            this.Geometry = new QRect(0, 0, 492, 349);
+            this.Geometry = new QRect(0, 0, 384, 492);
+            this.MinimumSize = new QSize(384, 0);
             this.WindowTitle = "About Synapse";
+            this.StyleSheet = "#AboutDialog {\n\tmax-width: 384px;\n\tbackground: #010409 url(resource:/oceanbg.png) no-repeat top center;\n}\n\nQWidget {\n\tcolor: white;\n}\n\nQGraphicsView, QTextBrowser {\n\tbackground: transparent;\n}\n\nQPushButton[flat=\"false\"] {\n\tborder: 1px solid #2B2D31;\n\tborder-radius: 3px;\n\tbackground-color: #2B2D31;\n\tpadding: 3px;\n}\n\n#textLabel {\n\tmargin-bottom: 12px;\n}\n\nQScrollBar:vertical {\n\tborder: 0px;\n\tbackground: transparent;\n\twidth: 15px;\n\tmargin: 0px;\n}\n\nQScrollBar::handle:vertical {\n\tbackground: #4F4F4F;\n\tmin-height: 20px;\n\tborder: 1px solid #4F4F4F;\n\tborder-radius: 5px;\n}\n\nQScrollBar::add-line:vertical {\n\theight: 0px;\n\tborder: 0px;\n}\n\nQScrollBar::sub-line:vertical {\n\theight: 0px;\n}\n\nQScrollBar::add-page:vertical, \nQScrollBar::sub-page:vertical {\n\tbackground: none;\n}";
             QVBoxLayout verticalLayout;
             verticalLayout = new QVBoxLayout(this);
+            verticalLayout.Spacing = 6;
             verticalLayout.Margin = 6;
             this.widget = new QWidget(this);
             this.widget.ObjectName = "widget";
@@ -37,20 +44,36 @@ namespace Synapse.QtClient.Windows {
             horizontalLayout.Margin = 0;
             this.graphicsView = new QGraphicsView(this.widget);
             this.graphicsView.ObjectName = "graphicsView";
+            this.graphicsView.MinimumSize = new QSize(0, 250);
             this.graphicsView.FrameShape = QFrame.Shape.NoFrame;
             horizontalLayout.AddWidget(this.graphicsView);
-            this.label = new QLabel(this.widget);
-            this.label.ObjectName = "label";
-            this.label.Text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Bitstream Vera Sans'; font-size:9pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Created By</span></p>\n<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"><span style=\" font-weight:400;\">Eric Butler</span></p>\n<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Special Thanks To</span></p>\n<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"><span style=\" font-weight:400;\">Chris Hergert</span></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Darryl Ring</p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Allison Hughes</p></body></html>";
-            this.label.Alignment = global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignCenter");
-            horizontalLayout.AddWidget(this.label);
             verticalLayout.AddWidget(this.widget);
+            this.textLabel = new QLabel(this);
+            this.textLabel.ObjectName = "textLabel";
+            this.textLabel.Text = "";
+            this.textLabel.Alignment = global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignCenter");
+            verticalLayout.AddWidget(this.textLabel);
+            this.textBrowser = new QTextBrowser(this);
+            this.textBrowser.ObjectName = "textBrowser";
+            this.textBrowser.MaximumSize = new QSize(16777215, 120);
+            this.textBrowser.FrameShape = QFrame.Shape.NoFrame;
+            this.textBrowser.FrameShadow = QFrame.Shadow.Plain;
+            this.textBrowser.Html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Bitstream Vera Sans'; font-size:9pt; font-weight:400; font-style:normal;\">\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Created By</span></p>\n<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"></p>\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"><a href=\"#message-eric\"><span style=\" font-weight:400; text-decoration: underline; color:#ffffff;\">Eric Butler</span></a></p>\n<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"></p>\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Special Thanks To</span></p>\n<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"></p>\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"><span style=\" font-weight:400;\">Chris Hergert</span></p>\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Darryl Ring</p>\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Allison Hughes</p></body></html>";
+            verticalLayout.AddWidget(this.textBrowser);
+            QHBoxLayout horizontalLayout_2;
+            horizontalLayout_2 = new QHBoxLayout();
+            verticalLayout.AddLayout(horizontalLayout_2);
+            this.sendFeedbackButton = new QPushButton(this);
+            this.sendFeedbackButton.ObjectName = "sendFeedbackButton";
+            this.sendFeedbackButton.Text = "Send Feedback";
+            horizontalLayout_2.AddWidget(this.sendFeedbackButton);
             this.buttonBox = new QDialogButtonBox(this);
             this.buttonBox.ObjectName = "buttonBox";
             this.buttonBox.Orientation = Qt.Orientation.Horizontal;
             this.buttonBox.StandardButtons = global::Qyoto.Qyoto.GetCPPEnumValue("QDialogButtonBox", "Close");
-            verticalLayout.AddWidget(this.buttonBox);
+            horizontalLayout_2.AddWidget(this.buttonBox);
             QObject.Connect(buttonBox, Qt.SIGNAL("rejected()"), this, Qt.SLOT("reject()"));
+            QObject.Connect(buttonBox, Qt.SIGNAL("accepted()"), this, Qt.SLOT("accept()"));
             QObject.Connect(buttonBox, Qt.SIGNAL("accepted()"), this, Qt.SLOT("accept()"));
             QMetaObject.ConnectSlotsByName(this);
         }

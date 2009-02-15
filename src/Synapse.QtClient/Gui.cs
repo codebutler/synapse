@@ -142,5 +142,41 @@ namespace Synapse.QtClient
 				return new QIcon();
 			}			
 		}
+		
+		public static void DrawAvatar (QPainter painter, int width, int height, QPixmap avatarPixmap)
+		{
+				QPainterPath path = new QPainterPath();
+				
+				// Draw a rect without corners.
+				path.MoveTo(0, 1);
+				path.LineTo(1, 1);
+				path.LineTo(1, 0);
+				path.LineTo(width - 1, 0);
+				path.LineTo(width, 1);
+				path.LineTo(width, height - 1);
+				path.LineTo(width - 1, height - 1);
+				path.LineTo(width - 1, height);
+				path.LineTo(1, height);
+				path.LineTo(1, height - 1);
+				path.LineTo(0, height - 1);
+				path.LineTo(0, 1);
+														
+				QLinearGradient g1 = new QLinearGradient(0, 0, 0, height);
+				g1.SetColorAt(0, new QColor("#888781"));
+				g1.SetColorAt(1, new QColor("#abaaa8"));
+				QBrush b1 = new QBrush(g1);
+				
+				painter.FillPath(path, b1);
+				painter.FillRect(1, 1, width - 2, height - 2, new QBrush(Qt.GlobalColor.black));
+				
+				// Darken the corners...
+				var b2 = new QBrush(new QColor(61, 61, 61, 102));
+				painter.FillRect(0, 0, 3, 3, b2);
+				painter.FillRect(width - 3, 0, 3, 3, b2);
+				painter.FillRect(0, width - 3, 3, 3, b2);
+				painter.FillRect(width - 3, width - 3, 3, 3, b2);
+				
+				painter.DrawPixmap(2, 2, width - 4, height - 4, avatarPixmap);
+		}
 	}
 }
