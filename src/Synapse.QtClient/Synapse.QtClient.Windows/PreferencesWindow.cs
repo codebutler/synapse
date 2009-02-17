@@ -97,7 +97,6 @@ namespace Synapse.QtClient.Windows
 				
 				var accountService = ServiceManager.Get<AccountService>();
 				
-				Console.WriteLine(jid);
 				Account account = accountService.GetAccount(jid);
 				if (account != null) {
 					if (!account.IsReadOnly) {
