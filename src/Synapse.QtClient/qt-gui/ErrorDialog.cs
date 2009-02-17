@@ -102,6 +102,7 @@ namespace Synapse.QtClient.Windows {
             verticalLayout.AddWidget(this.showDetailsButtonContainer);
             this.detailsTextEdit = new QPlainTextEdit(this);
             this.detailsTextEdit.ObjectName = "detailsTextEdit";
+            this.detailsTextEdit.ReadOnly = true;
             verticalLayout.AddWidget(this.detailsTextEdit);
             this.buttonBox = new QDialogButtonBox(this);
             this.buttonBox.ObjectName = "buttonBox";
