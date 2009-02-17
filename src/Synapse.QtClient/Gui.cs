@@ -178,5 +178,12 @@ namespace Synapse.QtClient
 				
 				painter.DrawPixmap(2, 2, width - 4, height - 4, avatarPixmap);
 		}
+
+		public static void ShowErrorWindow (string errorTitle, string errorMessage, string errorDetail)
+		{
+			ErrorDialog dialog = new ErrorDialog(errorTitle, errorMessage, errorDetail, Gui.MainWindow);
+			dialog.Show();
+			dialog.Exec();
+		}
 	}
 }

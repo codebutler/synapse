@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Synapse
+GenericName=Synapse
+Comment=An instant messaging application.
+Exec=synapse
+Icon=synapse
+StartupNotify=true
+Terminal=false
+Type=Application
+MimeType=
+Categories=Application;Network;InstantMessaging;

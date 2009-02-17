@@ -72,7 +72,33 @@ namespace Synapse.QtClient.Windows
 			base.Show();
 			Gui.CenterWidgetOnScreen(this);
 		}
+		
+		[Q_SLOT]
+		void on_addAccountButton_clicked ()
+		{
+			
+		}		
 	
+		[Q_SLOT]
+		void on_editAccountButton_clicked ()
+		{
+			var selected = accountsList.SelectionModel().SelectedIndexes();
+			if (selected.Count > 0) {
+				var data = accountsList.Model().Data(selected[0], (int)Qt.ItemDataRole.DisplayRole);
+				var jid = new jabber.JID((string)data);
+				
+				var accountService = ServiceManager.Get<AccountService>();
+				
+				Account account = accountService.GetAccount(jid);
+					
+				var dialog = new EditAccountDialog(account, this);
+				dialog.Show();
+				dialog.Exec();
+				
+				accountsList.Update();
+			}
+		}
+		
 		class AccountsItemModel : QAbstractItemModel
 		{
 			public AccountsItemModel (QObject parent) : base (parent)

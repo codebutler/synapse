@@ -458,10 +458,14 @@ namespace Synapse.QtClient.Widgets
 			Account selectedAccount = Gui.ShowAccountSelectMenu(m_JoinChatButton);
 			if (selectedAccount != null) {
 				JID jid = null;
-				if (JID.TryParse(String.Format("{0}@{1}", mucRoomLineEdit.Text, mucServerLineEdit.Text), out jid)) {
+				string nick = (!String.IsNullOrEmpty(mucNicknameLineEdit.Text)) ? mucNicknameLineEdit.Text : selectedAccount.ConferenceManager.DefaultNick;
+				if (JID.TryParse(String.Format("{0}@{1}/{2}", mucRoomLineEdit.Text, mucServerLineEdit.Text, nick), out jid)) {
 					if (!String.IsNullOrEmpty(jid.User) && !String.IsNullOrEmpty(jid.Server)) {
-						selectedAccount.JoinMuc(jid);
-						mucRoomLineEdit.Text = String.Empty;
+						try {
+							selectedAccount.JoinMuc(jid, mucPasswordLineEdit.Text);
+						} catch (UserException ex) {
+							QMessageBox.Critical(this.TopLevelWidget(), "Synapse Error", ex.Message);
+						}
 					} else {
 						QMessageBox.Critical(null, "Synapse", "Invalid JID");
 					}
@@ -479,7 +483,7 @@ namespace Synapse.QtClient.Widgets
 					Account account = (Account)index.Parent().InternalPointer();
 					BookmarkConference conf = (BookmarkConference)index.InternalPointer();
 					try {
-						account.JoinMuc(conf.JID);
+						account.JoinMuc(conf.JID, conf.Password);
 					} catch (UserException e) {
 						QMessageBox.Critical(this.TopLevelWidget(), "Synapse", e.Message);
 					}

@@ -31,15 +31,13 @@ namespace Synapse.QtClient.Windows {
         
         protected QComboBox comboBox;
         
-        protected QCheckBox checkBox;
-        
         protected QWidget widget;
         
         protected QPushButton pushButton;
         
-        protected QWidget tab_2;
-        
         protected QWidget tab_4;
+        
+        protected QLabel label_5;
         
         protected QLabel label_4;
         
@@ -51,14 +49,18 @@ namespace Synapse.QtClient.Windows {
         
         protected QLabel label_7;
         
+        protected QWidget tab_2;
+        
+        protected QCheckBox checkBox;
+        
         protected QWidget tab_3;
         
         protected QDialogButtonBox buttonBox;
         
         protected void SetupUi() {
             base.ObjectName = "EditAccountDialog";
-            this.Geometry = new QRect(0, 0, 400, 300);
-            this.WindowTitle = "EditAccountDialog";
+            this.Geometry = new QRect(0, 0, 368, 263);
+            this.WindowTitle = "Edit Account";
             QVBoxLayout verticalLayout;
             verticalLayout = new QVBoxLayout(this);
             verticalLayout.Margin = 6;
@@ -70,36 +72,30 @@ namespace Synapse.QtClient.Windows {
             this.tab.ObjectName = "tab";
             QVBoxLayout verticalLayout_2;
             verticalLayout_2 = new QVBoxLayout(this.tab);
-            QGridLayout gridLayout;
-            gridLayout = new QGridLayout();
-            verticalLayout_2.AddLayout(gridLayout);
+            verticalLayout_2.Margin = 6;
+            QFormLayout formLayout;
+            formLayout = new QFormLayout();
+            verticalLayout_2.AddLayout(formLayout);
             this.label = new QLabel(this.tab);
             this.label.ObjectName = "label";
             this.label.Text = "Jabber ID:";
-            gridLayout.AddWidget(this.label, 0, 0, 1, 1);
             this.lineEdit = new QLineEdit(this.tab);
             this.lineEdit.ObjectName = "lineEdit";
-            gridLayout.AddWidget(this.lineEdit, 0, 1, 1, 1);
+            formLayout.InsertRow(0, this.label, this.lineEdit);
             this.label_2 = new QLabel(this.tab);
             this.label_2.ObjectName = "label_2";
             this.label_2.Text = "Password:";
-            gridLayout.AddWidget(this.label_2, 1, 0, 1, 1);
             this.lineEdit_2 = new QLineEdit(this.tab);
             this.lineEdit_2.ObjectName = "lineEdit_2";
             this.lineEdit_2.echoMode = QLineEdit.EchoMode.Password;
-            gridLayout.AddWidget(this.lineEdit_2, 1, 1, 1, 1);
+            formLayout.InsertRow(1, this.label_2, this.lineEdit_2);
             this.label_3 = new QLabel(this.tab);
             this.label_3.ObjectName = "label_3";
             this.label_3.Text = "Resource:";
-            gridLayout.AddWidget(this.label_3, 2, 0, 1, 1);
             this.comboBox = new QComboBox(this.tab);
             this.comboBox.ObjectName = "comboBox";
             this.comboBox.Editable = true;
-            gridLayout.AddWidget(this.comboBox, 2, 1, 1, 1);
-            this.checkBox = new QCheckBox(this.tab);
-            this.checkBox.ObjectName = "checkBox";
-            this.checkBox.Text = "Connect Automatically";
-            verticalLayout_2.AddWidget(this.checkBox);
+            formLayout.InsertRow(2, this.label_3, this.comboBox);
             QSpacerItem verticalSpacer;
             verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
             verticalLayout_2.AddItem(verticalSpacer);
@@ -117,43 +113,57 @@ namespace Synapse.QtClient.Windows {
             horizontalLayout.AddItem(horizontalSpacer);
             verticalLayout_2.AddWidget(this.widget);
             this.tabWidget.AddTab(this.tab, "Account");
-            this.tab_2 = new QWidget(this.tabWidget);
-            this.tab_2.ObjectName = "tab_2";
-            this.tabWidget.AddTab(this.tab_2, "Profile");
             this.tab_4 = new QWidget(this.tabWidget);
             this.tab_4.ObjectName = "tab_4";
             QVBoxLayout verticalLayout_3;
             verticalLayout_3 = new QVBoxLayout(this.tab_4);
-            QGridLayout gridLayout_2;
-            gridLayout_2 = new QGridLayout();
-            verticalLayout_3.AddLayout(gridLayout_2);
+            verticalLayout_3.Margin = 6;
+            this.label_5 = new QLabel(this.tab_4);
+            this.label_5.ObjectName = "label_5";
+            this.label_5.Text = "Synapse will attempt to automatically discover your connect server if you leave this field blank.";
+            this.label_5.WordWrap = true;
+            verticalLayout_3.AddWidget(this.label_5);
+            QFormLayout formLayout_2;
+            formLayout_2 = new QFormLayout();
+            verticalLayout_3.AddLayout(formLayout_2);
             this.label_4 = new QLabel(this.tab_4);
             this.label_4.ObjectName = "label_4";
             this.label_4.Text = "Connect Server:";
-            gridLayout_2.AddWidget(this.label_4, 0, 0, 1, 1);
             this.lineEdit_3 = new QLineEdit(this.tab_4);
             this.lineEdit_3.ObjectName = "lineEdit_3";
-            gridLayout_2.AddWidget(this.lineEdit_3, 0, 1, 1, 1);
+            formLayout_2.InsertRow(0, this.label_4, this.lineEdit_3);
             this.label_6 = new QLabel(this.tab_4);
             this.label_6.ObjectName = "label_6";
             this.label_6.Text = "Port:";
-            gridLayout_2.AddWidget(this.label_6, 0, 2, 1, 1);
             this.spinBox = new QSpinBox(this.tab_4);
             this.spinBox.ObjectName = "spinBox";
             this.spinBox.Maximum = 9999999;
             this.spinBox.SingleStep = 1;
             this.spinBox.Value = 5222;
-            gridLayout_2.AddWidget(this.spinBox, 0, 3, 1, 1);
+            formLayout_2.InsertRow(1, this.label_6, this.spinBox);
             this.label_7 = new QLabel(this.tab_4);
             this.label_7.ObjectName = "label_7";
             this.label_7.Enabled = false;
-            this.label_7.Text = "(Encryption is required)";
-            this.label_7.Alignment = global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignCenter");
+            this.label_7.Text = "Note that the server must support TLS encryption.";
+            this.label_7.Alignment = ((global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeading") | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignLeft")) | global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignVCenter"));
             verticalLayout_3.AddWidget(this.label_7);
             QSpacerItem verticalSpacer_2;
             verticalSpacer_2 = new QSpacerItem(20, 170, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
             verticalLayout_3.AddItem(verticalSpacer_2);
             this.tabWidget.AddTab(this.tab_4, "Connection");
+            this.tab_2 = new QWidget(this.tabWidget);
+            this.tab_2.ObjectName = "tab_2";
+            QVBoxLayout verticalLayout_4;
+            verticalLayout_4 = new QVBoxLayout(this.tab_2);
+            verticalLayout_4.Margin = 6;
+            this.checkBox = new QCheckBox(this.tab_2);
+            this.checkBox.ObjectName = "checkBox";
+            this.checkBox.Text = "Connect Automatically";
+            verticalLayout_4.AddWidget(this.checkBox);
+            QSpacerItem verticalSpacer_3;
+            verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
+            verticalLayout_4.AddItem(verticalSpacer_3);
+            this.tabWidget.AddTab(this.tab_2, "Options");
             this.tab_3 = new QWidget(this.tabWidget);
             this.tab_3.ObjectName = "tab_3";
             this.tabWidget.AddTab(this.tab_3, "Privacy");
@@ -162,6 +172,8 @@ namespace Synapse.QtClient.Windows {
             this.buttonBox.Orientation = Qt.Orientation.Horizontal;
             this.buttonBox.StandardButtons = (global::Qyoto.Qyoto.GetCPPEnumValue("QDialogButtonBox", "Cancel") | global::Qyoto.Qyoto.GetCPPEnumValue("QDialogButtonBox", "Ok"));
             verticalLayout.AddWidget(this.buttonBox);
+            QObject.Connect(buttonBox, Qt.SIGNAL("accepted()"), this, Qt.SLOT("accept()"));
+            QObject.Connect(buttonBox, Qt.SIGNAL("rejected()"), this, Qt.SLOT("reject()"));
             QMetaObject.ConnectSlotsByName(this);
         }
     }
