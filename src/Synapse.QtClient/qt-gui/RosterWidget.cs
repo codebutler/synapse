@@ -151,7 +151,7 @@ namespace Synapse.QtClient.Widgets {
             this.tabWidget.ObjectName = "tabWidget";
             this.tabWidget.tabPosition = QTabWidget.TabPosition.South;
             this.tabWidget.tabShape = QTabWidget.TabShape.Rounded;
-            this.tabWidget.CurrentIndex = 0;
+            this.tabWidget.CurrentIndex = 1;
             this.tabWidget.UsesScrollButtons = true;
             verticalLayout_2.AddWidget(this.tabWidget);
             this.friendsTab = new QWidget(this.tabWidget);
@@ -477,6 +477,10 @@ namespace Synapse.QtClient.Widgets {
             this.tabWidget.AddTab(this.activityTab, "Activity");
             this.splitter.AddWidget(this.widget);
             QObject.Connect(m_ShoutButton, Qt.SIGNAL("toggled(bool)"), shoutContainer, Qt.SLOT("setShown(bool)"));
+            QObject.Connect(mucRoomLineEdit, Qt.SIGNAL("returnPressed()"), m_JoinChatButton, Qt.SLOT("click()"));
+            QObject.Connect(mucPasswordLineEdit, Qt.SIGNAL("returnPressed()"), m_JoinChatButton, Qt.SLOT("click()"));
+            QObject.Connect(mucServerLineEdit, Qt.SIGNAL("returnPressed()"), m_JoinChatButton, Qt.SLOT("click()"));
+            QObject.Connect(mucNicknameLineEdit, Qt.SIGNAL("returnPressed()"), m_JoinChatButton, Qt.SLOT("click()"));
             QMetaObject.ConnectSlotsByName(this);
         }
     }

@@ -20,12 +20,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text.RegularExpressions;
+
+using Qyoto;
+
 using Synapse.ServiceStack;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
-using Qyoto;
-
 using Synapse.QtClient.Windows;
 
 namespace Synapse.QtClient
@@ -118,12 +122,24 @@ namespace Synapse.QtClient
 
 			QIcon icon = new QIcon();
 			int[] sizes = Gtk.IconTheme.Default.GetIconSizes(name);
-			if (sizes.Length == 0) {
-				Console.WriteLine(String.Format("Icon not found: {0}", name));
-			} else {
+			if (sizes.Length > 0) {
 				foreach (int size in sizes) {
 					var iconInfo = Gtk.IconTheme.Default.LookupIcon(name, size, 0);
 					icon.AddFile(iconInfo.Filename, new QSize(size, size), QIcon.Mode.Normal, QIcon.State.On);
+				}
+			} else {			
+				// If icon wasn't found in theme, try loading from resource instead...
+				var assembly = Assembly.GetExecutingAssembly();
+				foreach (string resourceName in assembly.GetManifestResourceNames()) {
+					string pattern =  "^" + Regex.Escape(name) + @"__(\d+)\.png$";
+					var match = Regex.Match(resourceName, pattern);
+					if (match.Success) {
+						icon.AddPixmap(new QPixmap("resource:/" + resourceName), QIcon.Mode.Normal, QIcon.State.On);
+					}
+				}
+				
+				if (icon.IsNull()) {
+					Console.WriteLine(String.Format("Icon not found: {0}", name));
 				}
 			}
 			return icon;
@@ -138,8 +154,15 @@ namespace Synapse.QtClient
 			if (iconInfo != null) {
 				return new QIcon(iconInfo.Filename);
 			} else {
-				Console.Error.WriteLine(String.Format("Icon not found: {0} ({1})", name, size));
-				return new QIcon();
+				// If icon wasn't found in theme, try loading from resource instead...
+				string resourceName = String.Format("{0}__{1}.png", name, size.ToString());
+				var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+				if (assembly.GetManifestResourceNames().Contains(resourceName)) {
+					return new QIcon(new QPixmap("resource:/" + resourceName));
+				} else {
+					Console.Error.WriteLine(String.Format("Icon not found: {0} ({1})", name, size));
+					return new QIcon();
+				}
 			}			
 		}
 		
@@ -177,6 +200,13 @@ namespace Synapse.QtClient
 				painter.FillRect(width - 3, width - 3, 3, 3, b2);
 				
 				painter.DrawPixmap(2, 2, width - 4, height - 4, avatarPixmap);
+		}
+
+		public static void ShowErrorWindow (string errorTitle, string errorMessage, string errorDetail)
+		{
+			ErrorDialog dialog = new ErrorDialog(errorTitle, errorMessage, errorDetail, Gui.MainWindow);
+			dialog.Show();
+			dialog.Exec();
 		}
 	}
 }

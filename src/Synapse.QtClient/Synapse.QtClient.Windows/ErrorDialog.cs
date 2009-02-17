@@ -1,7 +1,7 @@
 //
 // ErrorDialog.cs
 //
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -20,34 +20,30 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using GLib;
+using Qyoto;
 
-namespace Synapse.QtClient
+namespace Synapse.QtClient.Windows
 {
-	public partial class ErrorDialog : Gtk.Dialog
+	public partial class ErrorDialog : QDialog
 	{
-		public ErrorDialog(string errorTitle, Exception error)
+		public ErrorDialog (string errorTitle, string errorMessage, string errorDetail, QWidget parentWindow) : base (parentWindow)
 		{
-			this.Build();
+			SetupUi();
 			
-			titleLabel.Markup = String.Format("<b>{0}</b>", Markup.EscapeText(errorTitle));
-			if (error != null) {
-				messageLabel.Text = error.Message;
-				detailTextView.Buffer.Text = error.ToString();
+			iconLabel.Pixmap = Gui.LoadIcon("error").Pixmap(32);
+			
+			titleLabel.Text = "<b>" + Qt.Escape(errorTitle) + "</b>";
+			messageLabel.Text = !String.IsNullOrEmpty(errorMessage) ? errorMessage : String.Empty;
+			
+			detailsTextEdit.Hide();
+			
+			if (!String.IsNullOrEmpty(errorDetail)) {
+				detailsTextEdit.PlainText = errorDetail;	
 			} else {
-				messageLabel.Text = String.Empty;
-				expander.Hide();
+				showDetailsButtonContainer.Hide();
 			}
+			
+			Gui.CenterWidgetOnScreen(this);
 		}
-		
-		protected virtual void OnButtonOkClicked (object sender, System.EventArgs e)
-		{
-			this.Destroy();
-		}
-
-		protected virtual void expander_Activated (object sender, System.EventArgs e)
-		{
-			base.Resizable = expander.Expanded;
-		}		
 	}
 }

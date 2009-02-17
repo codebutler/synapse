@@ -62,7 +62,11 @@ namespace Synapse.QtClient
 			GLib.Global.ProgramName = "Synapse";
 			Gtk.Application.Init();
 
-			NDesk.DBus.BusG.Init();
+			try {
+				NDesk.DBus.BusG.Init();
+			} catch (Exception ex) {
+				Console.Error.WriteLine("Failed to initialize DBUS: " + ex);
+			}
 			
 			m_App = new QApplication(args);
 			m_App.ApplicationName = "Synapse";
@@ -167,12 +171,10 @@ namespace Synapse.QtClient
 			});
 		}
 
-		public override void ShowErrorWindow (string errorTitle, Exception error)
+		public override void ShowErrorWindow (string errorTitle, string errorMessage, string errorDetail)
 		{
-			InvokeAndBlock(delegate {
-				ErrorDialog dialog = new ErrorDialog(errorTitle, error);
-				dialog.Show();
-				dialog.Run();
+			QApplication.Invoke(delegate {
+				Gui.ShowErrorWindow(errorTitle, errorMessage, errorDetail);
 			});
 		}
 			
@@ -180,28 +182,6 @@ namespace Synapse.QtClient
 		{
 			Gui.TrayIcon.Dispose();
 			QCoreApplication.Quit();
-		}
-		
-		void InvokeAndBlock (NoArgDelegate dele)
-		{
-			ManualResetEvent mutex = new ManualResetEvent(false);
-			Invoke(delegate {
-				dele();
-				Console.WriteLine("DONE!");
-				mutex.Set();
-			});
-			mutex.WaitOne();
-		}
-		
-		void Invoke (NoArgDelegate dele) 
-		{
-			if (Thread.CurrentThread.ManagedThreadId != 1) {
-				QCoreApplication.Invoke(delegate {
-					dele();
-				});
-			} else {
-				dele();
-			}
 		}
 	}
 }

@@ -61,7 +61,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex" >
-          <number>0</number>
+          <number>1</number>
          </property>
          <property name="usesScrollButtons" >
           <bool>true</bool>
@@ -792,6 +792,70 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel" >
      <x>294</x>
      <y>80</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mucRoomLineEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>m_JoinChatButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>228</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>289</x>
+     <y>201</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mucPasswordLineEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>m_JoinChatButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>274</x>
+     <y>160</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>309</x>
+     <y>191</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mucServerLineEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>m_JoinChatButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>230</x>
+     <y>105</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>284</x>
+     <y>196</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mucNicknameLineEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>m_JoinChatButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>189</x>
+     <y>137</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>275</x>
+     <y>204</y>
     </hint>
    </hints>
   </connection>

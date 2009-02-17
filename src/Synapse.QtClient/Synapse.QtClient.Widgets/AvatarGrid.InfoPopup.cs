@@ -121,32 +121,39 @@ namespace Synapse.QtClient.Widgets
 						
 						m_Label.SetText(builder.ToString());
 						
+						base.SetFixedSize(base.SizeHint());
+						
 						m_Scene.SceneRect = m_Scene.ItemsBoundingRect();
 
 						var itemRect = m_Item.SceneBoundingRect();
 
-						var gridItemPoint = m_Grid.MapToGlobal(m_Grid.MapFromScene(itemRect.X(), itemRect.Y()));
+						var gridItemPoint = m_Grid.MapToGlobal(m_Grid.MapFromScene(itemRect.X(), itemRect.Y()));						
+						
+						// --- BEGIN JANKY CODE ---
+						
+						var boxLayout = (QHBoxLayout)base.Layout();
+						
+						boxLayout.SetDirection(QBoxLayout.Direction.LeftToRight);
 						
 						var desktop = QApplication.Desktop();
 						var screenGeometry = desktop.ScreenGeometry(desktop.ScreenNumber(Gui.MainWindow));
+												
 						if (gridItemPoint.X() + base.Width() > screenGeometry.Width()) {	
-							((QHBoxLayout)base.Layout()).SetDirection(QBoxLayout.Direction.RightToLeft);
+							boxLayout.SetDirection(QBoxLayout.Direction.RightToLeft);
 						} else {
-							((QHBoxLayout)base.Layout()).SetDirection(QBoxLayout.Direction.LeftToRight);
-						}
-
-						// FIXME: I cannot figure out how to make this work without doing this.
-						// Is there some method that does a complete re-layout?
-						if (base.IsVisible()) {
-							base.Hide();
-							base.Show();
+							boxLayout.SetDirection(QBoxLayout.Direction.LeftToRight);
 						}
 						
+						// --- END JANKY CODE ---
+						
+						// FIXME: If direction just changed above, this returns the wrong pos!
 						var avatarPoint = m_GraphicsView.MapToParent(m_GraphicsView.MapFromScene(m_PixmapItem.X(), m_PixmapItem.Y()));
 						
 						int x = gridItemPoint.X() - avatarPoint.X();
 						int y = gridItemPoint.Y() - avatarPoint.Y();						
+						
 						this.Move(x, y);
+						
 					} else {
 						this.Hide();
 						m_Label.SetText(String.Empty);

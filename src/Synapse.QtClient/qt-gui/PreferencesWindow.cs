@@ -23,11 +23,11 @@ namespace Synapse.QtClient.Windows {
         
         protected QWidget widget;
         
-        protected QPushButton pushButton;
+        protected QPushButton addAccountButton;
         
-        protected QPushButton pushButton_2;
+        protected QPushButton editAccountButton;
         
-        protected QPushButton pushButton_5;
+        protected QPushButton removeAccountButton;
         
         protected QWidget tab_4;
         
@@ -37,13 +37,13 @@ namespace Synapse.QtClient.Windows {
         
         protected QComboBox comboBox_3;
         
-        protected QLabel label_5;
-        
         protected QSlider horizontalSlider;
+        
+        protected QComboBox comboBox_4;
         
         protected QLabel label_7;
         
-        protected QComboBox comboBox_4;
+        protected QLabel label_5;
         
         protected QGroupBox groupBox_4;
         
@@ -85,10 +85,6 @@ namespace Synapse.QtClient.Windows {
         
         protected QCheckBox checkBox_5;
         
-        protected QFrame frame;
-        
-        protected QWebView webView_2;
-        
         protected QWidget tab_7;
         
         protected QWidget tab_8;
@@ -107,14 +103,14 @@ namespace Synapse.QtClient.Windows {
         
         protected void SetupUi() {
             base.ObjectName = "PreferencesWindow";
-            this.Geometry = new QRect(0, 0, 599, 540);
+            this.Geometry = new QRect(0, 0, 491, 491);
             this.WindowTitle = "Synapse Preferences";
             QVBoxLayout verticalLayout;
             verticalLayout = new QVBoxLayout(this);
             verticalLayout.Margin = 6;
             this.tabWidget = new QTabWidget(this);
             this.tabWidget.ObjectName = "tabWidget";
-            this.tabWidget.CurrentIndex = 1;
+            this.tabWidget.CurrentIndex = 0;
             verticalLayout.AddWidget(this.tabWidget);
             this.tab = new QWidget(this.tabWidget);
             this.tab.ObjectName = "tab";
@@ -135,21 +131,21 @@ namespace Synapse.QtClient.Windows {
             QHBoxLayout horizontalLayout;
             horizontalLayout = new QHBoxLayout(this.widget);
             horizontalLayout.Margin = 0;
-            this.pushButton = new QPushButton(this.widget);
-            this.pushButton.ObjectName = "pushButton";
-            this.pushButton.Enabled = false;
-            this.pushButton.Text = "Add Account";
-            horizontalLayout.AddWidget(this.pushButton);
-            this.pushButton_2 = new QPushButton(this.widget);
-            this.pushButton_2.ObjectName = "pushButton_2";
-            this.pushButton_2.Enabled = false;
-            this.pushButton_2.Text = "Edit Account";
-            horizontalLayout.AddWidget(this.pushButton_2);
-            this.pushButton_5 = new QPushButton(this.widget);
-            this.pushButton_5.ObjectName = "pushButton_5";
-            this.pushButton_5.Enabled = false;
-            this.pushButton_5.Text = "Remove Account";
-            horizontalLayout.AddWidget(this.pushButton_5);
+            this.addAccountButton = new QPushButton(this.widget);
+            this.addAccountButton.ObjectName = "addAccountButton";
+            this.addAccountButton.Enabled = true;
+            this.addAccountButton.Text = "Add Account";
+            horizontalLayout.AddWidget(this.addAccountButton);
+            this.editAccountButton = new QPushButton(this.widget);
+            this.editAccountButton.ObjectName = "editAccountButton";
+            this.editAccountButton.Enabled = true;
+            this.editAccountButton.Text = "Edit Account";
+            horizontalLayout.AddWidget(this.editAccountButton);
+            this.removeAccountButton = new QPushButton(this.widget);
+            this.removeAccountButton.ObjectName = "removeAccountButton";
+            this.removeAccountButton.Enabled = true;
+            this.removeAccountButton.Text = "Remove Account";
+            horizontalLayout.AddWidget(this.removeAccountButton);
             QSpacerItem horizontalSpacer;
             horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
             horizontalLayout.AddItem(horizontalSpacer);
@@ -163,13 +159,12 @@ namespace Synapse.QtClient.Windows {
             this.groupBox_5 = new QGroupBox(this.tab_4);
             this.groupBox_5.ObjectName = "groupBox_5";
             this.groupBox_5.Title = "Friends List";
-            QGridLayout gridLayout_5;
-            gridLayout_5 = new QGridLayout(this.groupBox_5);
-            gridLayout_5.Margin = 6;
+            QFormLayout formLayout_2;
+            formLayout_2 = new QFormLayout(this.groupBox_5);
+            formLayout_2.Margin = 6;
             this.label_4 = new QLabel(this.groupBox_5);
             this.label_4.ObjectName = "label_4";
             this.label_4.Text = "Display As:";
-            gridLayout_5.AddWidget(this.label_4, 0, 0, 1, 1);
             this.comboBox_3 = new QComboBox(this.groupBox_5);
             this.comboBox_3.ObjectName = "comboBox_3";
             QSizePolicy comboBox_3_sizePolicy;
@@ -178,11 +173,7 @@ namespace Synapse.QtClient.Windows {
             comboBox_3_sizePolicy.SetHorizontalStretch(0);
             comboBox_3_sizePolicy.SetHeightForWidth(this.comboBox_3.SizePolicy.HasHeightForWidth());
             this.comboBox_3.SizePolicy = comboBox_3_sizePolicy;
-            gridLayout_5.AddWidget(this.comboBox_3, 0, 1, 1, 1);
-            this.label_5 = new QLabel(this.groupBox_5);
-            this.label_5.ObjectName = "label_5";
-            this.label_5.Text = "Icon Size:";
-            gridLayout_5.AddWidget(this.label_5, 1, 0, 1, 1);
+            formLayout_2.InsertRow(0, this.label_4, this.comboBox_3);
             this.horizontalSlider = new QSlider(this.groupBox_5);
             this.horizontalSlider.ObjectName = "horizontalSlider";
             QSizePolicy horizontalSlider_sizePolicy;
@@ -191,12 +182,12 @@ namespace Synapse.QtClient.Windows {
             horizontalSlider_sizePolicy.SetHorizontalStretch(0);
             horizontalSlider_sizePolicy.SetHeightForWidth(this.horizontalSlider.SizePolicy.HasHeightForWidth());
             this.horizontalSlider.SizePolicy = horizontalSlider_sizePolicy;
+            this.horizontalSlider.Maximum = 48;
+            this.horizontalSlider.Value = 32;
             this.horizontalSlider.Orientation = Qt.Orientation.Horizontal;
-            gridLayout_5.AddWidget(this.horizontalSlider, 1, 1, 1, 1);
-            this.label_7 = new QLabel(this.groupBox_5);
-            this.label_7.ObjectName = "label_7";
-            this.label_7.Text = "Sort By:";
-            gridLayout_5.AddWidget(this.label_7, 2, 0, 1, 1);
+            this.horizontalSlider.InvertedAppearance = false;
+            this.horizontalSlider.InvertedControls = false;
+            formLayout_2.InsertRow(2, this.label_5, this.horizontalSlider);
             this.comboBox_4 = new QComboBox(this.groupBox_5);
             this.comboBox_4.ObjectName = "comboBox_4";
             QSizePolicy comboBox_4_sizePolicy;
@@ -205,10 +196,13 @@ namespace Synapse.QtClient.Windows {
             comboBox_4_sizePolicy.SetHorizontalStretch(0);
             comboBox_4_sizePolicy.SetHeightForWidth(this.comboBox_4.SizePolicy.HasHeightForWidth());
             this.comboBox_4.SizePolicy = comboBox_4_sizePolicy;
-            gridLayout_5.AddWidget(this.comboBox_4, 2, 1, 1, 1);
-            QSpacerItem horizontalSpacer_3;
-            horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
-            gridLayout_5.AddItem(horizontalSpacer_3);
+            formLayout_2.InsertRow(1, this.label_7, this.comboBox_4);
+            this.label_7 = new QLabel(this.groupBox_5);
+            this.label_7.ObjectName = "label_7";
+            this.label_7.Text = "Sort By:";
+            this.label_5 = new QLabel(this.groupBox_5);
+            this.label_5.ObjectName = "label_5";
+            this.label_5.Text = "Icon Size:";
             verticalLayout_6.AddWidget(this.groupBox_5);
             this.groupBox_4 = new QGroupBox(this.tab_4);
             this.groupBox_4.ObjectName = "groupBox_4";
@@ -235,12 +229,12 @@ namespace Synapse.QtClient.Windows {
             this.groupBox_3 = new QGroupBox(this.tab_5);
             this.groupBox_3.ObjectName = "groupBox_3";
             this.groupBox_3.Title = "Message Style";
-            QGridLayout gridLayout;
-            gridLayout = new QGridLayout(this.groupBox_3);
+            QFormLayout formLayout_3;
+            formLayout_3 = new QFormLayout(this.groupBox_3);
+            formLayout_3.Margin = 6;
             this.label = new QLabel(this.groupBox_3);
             this.label.ObjectName = "label";
             this.label.Text = "Message Style:";
-            gridLayout.AddWidget(this.label, 0, 0, 1, 1);
             this.comboBox = new QComboBox(this.groupBox_3);
             this.comboBox.ObjectName = "comboBox";
             QSizePolicy comboBox_sizePolicy;
@@ -249,11 +243,10 @@ namespace Synapse.QtClient.Windows {
             comboBox_sizePolicy.SetHorizontalStretch(0);
             comboBox_sizePolicy.SetHeightForWidth(this.comboBox.SizePolicy.HasHeightForWidth());
             this.comboBox.SizePolicy = comboBox_sizePolicy;
-            gridLayout.AddWidget(this.comboBox, 0, 1, 1, 1);
+            formLayout_3.InsertRow(0, this.label, this.comboBox);
             this.label_2 = new QLabel(this.groupBox_3);
             this.label_2.ObjectName = "label_2";
             this.label_2.Text = "Variant:";
-            gridLayout.AddWidget(this.label_2, 1, 0, 1, 1);
             this.comboBox_2 = new QComboBox(this.groupBox_3);
             this.comboBox_2.ObjectName = "comboBox_2";
             QSizePolicy comboBox_2_sizePolicy;
@@ -262,23 +255,22 @@ namespace Synapse.QtClient.Windows {
             comboBox_2_sizePolicy.SetHorizontalStretch(0);
             comboBox_2_sizePolicy.SetHeightForWidth(this.comboBox_2.SizePolicy.HasHeightForWidth());
             this.comboBox_2.SizePolicy = comboBox_2_sizePolicy;
-            gridLayout.AddWidget(this.comboBox_2, 1, 1, 1, 1);
+            formLayout_3.InsertRow(1, this.label_2, this.comboBox_2);
             this.checkBox = new QCheckBox(this.groupBox_3);
             this.checkBox.ObjectName = "checkBox";
             this.checkBox.Text = "Show avatars";
             this.checkBox.Checked = true;
-            gridLayout.AddWidget(this.checkBox, 2, 0, 1, 1);
             this.checkBox_2 = new QCheckBox(this.groupBox_3);
             this.checkBox_2.ObjectName = "checkBox_2";
             this.checkBox_2.Text = "Show header";
             this.checkBox_2.Checked = true;
-            gridLayout.AddWidget(this.checkBox_2, 3, 0, 1, 1);
             verticalLayout_4.AddWidget(this.groupBox_3);
             this.groupBox = new QGroupBox(this.tab_5);
             this.groupBox.ObjectName = "groupBox";
             this.groupBox.Title = "Text Display";
             QGridLayout gridLayout_2;
             gridLayout_2 = new QGridLayout(this.groupBox);
+            gridLayout_2.Margin = 6;
             this.label_3 = new QLabel(this.groupBox);
             this.label_3.ObjectName = "label_3";
             this.label_3.Text = "Font:";
@@ -309,6 +301,7 @@ namespace Synapse.QtClient.Windows {
             this.groupBox_6.Title = "Emoticons";
             QGridLayout gridLayout_6;
             gridLayout_6 = new QGridLayout(this.groupBox_6);
+            gridLayout_6.Margin = 6;
             this.comboBox_5 = new QComboBox(this.groupBox_6);
             this.comboBox_5.ObjectName = "comboBox_5";
             QSizePolicy comboBox_5_sizePolicy;
@@ -329,6 +322,7 @@ namespace Synapse.QtClient.Windows {
             this.groupBox_2.Title = "Background";
             QGridLayout gridLayout_3;
             gridLayout_3 = new QGridLayout(this.groupBox_2);
+            gridLayout_3.Margin = 6;
             this.checkBox_5 = new QCheckBox(this.groupBox_2);
             this.checkBox_5.ObjectName = "checkBox_5";
             this.checkBox_5.Text = "Use custom background";
@@ -337,18 +331,6 @@ namespace Synapse.QtClient.Windows {
             QSpacerItem verticalSpacer;
             verticalSpacer = new QSpacerItem(268, 17, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
             verticalLayout_4.AddItem(verticalSpacer);
-            this.frame = new QFrame(this.tab_5);
-            this.frame.ObjectName = "frame";
-            this.frame.FrameShape = QFrame.Shape.StyledPanel;
-            this.frame.FrameShadow = QFrame.Shadow.Raised;
-            QHBoxLayout horizontalLayout_4;
-            horizontalLayout_4 = new QHBoxLayout(this.frame);
-            horizontalLayout_4.Margin = 0;
-            this.webView_2 = new QWebView(this.frame);
-            this.webView_2.ObjectName = "webView_2";
-            this.webView_2.Url = new QUrl("about:blank");
-            horizontalLayout_4.AddWidget(this.webView_2);
-            horizontalLayout_3.AddWidget(this.frame);
             this.tabWidget.AddTab(this.tab_5, "Chat");
             this.tab_7 = new QWidget(this.tabWidget);
             this.tab_7.ObjectName = "tab_7";
@@ -394,6 +376,7 @@ namespace Synapse.QtClient.Windows {
             this.buttonBox.StandardButtons = global::Qyoto.Qyoto.GetCPPEnumValue("QDialogButtonBox", "Close");
             verticalLayout.AddWidget(this.buttonBox);
             QObject.Connect(buttonBox, Qt.SIGNAL("rejected()"), this, Qt.SLOT("close()"));
+            QObject.Connect(buttonBox, Qt.SIGNAL("accepted()"), this, Qt.SLOT("close()"));
             QMetaObject.ConnectSlotsByName(this);
         }
     }

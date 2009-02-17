@@ -95,7 +95,7 @@ namespace Synapse.QtClient.Windows
 				participantsGrid.AddAction(sliderAction);
 			
 				m_ConversationWidget.ChatName = mucHandler.Room.JID;
-				this.WindowTitle = mucHandler.Room.JID;
+				this.WindowTitle = mucHandler.Room.JID.User; // FIXME: Show only "user" in tab, show full room jid in title?
 				this.WindowIcon = Gui.LoadIcon("internet-group-chat");
 			} else {
 				var chatHandler = (ChatHandler)handler;

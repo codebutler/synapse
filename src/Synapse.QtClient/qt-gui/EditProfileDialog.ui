@@ -22,6 +22,9 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
+      <property name="enabled" >
+       <bool>false</bool>
+      </property>
       <attribute name="title" >
        <string>Personal Information</string>
       </attribute>
@@ -251,6 +254,9 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_4" >
+      <property name="enabled" >
+       <bool>false</bool>
+      </property>
       <attribute name="title" >
        <string>Work Information</string>
       </attribute>

@@ -61,7 +61,15 @@ namespace Synapse.ServiceStack
 		
 		public abstract object CreateImage (string fileName);
 
-		public abstract void ShowErrorWindow (string title, Exception error);
+		public abstract void ShowErrorWindow (string title, string errorMessage, string errorDetail);
+		
+		public void ShowErrorWindow (string errorTitle, Exception error)
+		{
+			if (error != null)
+				ShowErrorWindow(errorTitle, error.Message, error.ToString());
+			else
+				ShowErrorWindow(errorTitle, null, null);
+		}	
 		
 		public abstract void DesktopNotify (ActivityFeedItemTemplate template, IActivityFeedItem item, string text);
 		

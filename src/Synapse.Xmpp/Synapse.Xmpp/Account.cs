@@ -219,6 +219,8 @@ namespace Synapse.Xmpp
 		{
 			ConnectionState = AccountConnectionState.Connected;
 
+			// FIXME: Don't send presence until we have our roster.
+			
 			if (m_PendingStatus != null) {
 				Status = m_PendingStatus;
 			} else {
@@ -297,6 +299,17 @@ namespace Synapse.Xmpp
 					if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
 						if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
 							PostActivityFeedItem(pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status);
+						}
+					}
+				}
+			} else {
+				if (pres.Type == PresenceType.error) {
+					// Display MUC errors.
+					if (pres.GetElementsByTagName("x", "http://jabber.org/protocol/muc").Count > 0) {
+						var error = pres["error"];
+						if (error != null) {
+							string message = (error["text"] != null) ? error["text"].InnerText : error.FirstChild.Name;
+							Application.Client.ShowErrorWindow("Error with conference: " + pres.From.Bare, message, null);
 						}
 					}
 				}
@@ -668,11 +681,11 @@ namespace Synapse.Xmpp
 		}
 
 		#region Stuff that should be in jabber-net
-		public void JoinMuc (string roomJid)
+		public void JoinMuc (string roomJid, string password)
 		{
 			Room room = this.ConferenceManager.GetRoom(roomJid);
 			if (!room.IsParticipating)
-				room.Join();
+				room.Join(password);
 			else
 				throw new UserException("Already in this room");
 		}

@@ -160,6 +160,7 @@ namespace Synapse.QtClient.Windows {
             verticalLayout.AddWidget(this.mainTabWidget);
             this.tab = new QWidget(this.mainTabWidget);
             this.tab.ObjectName = "tab";
+            this.tab.Enabled = false;
             QHBoxLayout horizontalLayout;
             horizontalLayout = new QHBoxLayout(this.tab);
             horizontalLayout.Margin = 6;
@@ -285,6 +286,7 @@ namespace Synapse.QtClient.Windows {
             this.mainTabWidget.AddTab(this.tab, "Personal Information");
             this.tab_4 = new QWidget(this.mainTabWidget);
             this.tab_4.ObjectName = "tab_4";
+            this.tab_4.Enabled = false;
             QHBoxLayout horizontalLayout_5;
             horizontalLayout_5 = new QHBoxLayout(this.tab_4);
             horizontalLayout_5.Margin = 6;

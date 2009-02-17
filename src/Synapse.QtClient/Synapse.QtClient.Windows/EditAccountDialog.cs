@@ -19,17 +19,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 using System;
+
 using Qyoto;
+
+using Synapse.Xmpp;
 
 namespace Synapse.QtClient.Windows
 {
 	public partial class EditAccountDialog : QDialog
 	{
-		public EditAccountDialog ()
+		public EditAccountDialog (Account account, QWidget parentWindow) : base (parentWindow)
 		{
 			SetupUi();
+			
+			this.buttonBox.StandardButtons = (uint)QDialogButtonBox.StandardButton.Ok |
+			                                 (uint)QDialogButtonBox.StandardButton.Cancel;
+			
+			Gui.CenterWidgetOnScreen(this);
 		}
 	}
 }
