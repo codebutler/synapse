@@ -9,10 +9,6 @@ FILES =  \
 	Synapse.Services/SettingsService.cs \
 	Synapse.ServiceStack/Application.cs \
 	Synapse.ServiceStack/Client.cs \
-	Synapse.ServiceStack/DBusConnection.cs \
-	Synapse.ServiceStack/DBusServiceManager.cs \
-	Synapse.ServiceStack/IDBusExportable.cs \
-	Synapse.ServiceStack/IDBusObjectName.cs \
 	Synapse.ServiceStack/IDelayedInitializeService.cs \
 	Synapse.ServiceStack/IExtensionService.cs \
 	Synapse.ServiceStack/IInitializeService.cs \

@@ -81,6 +81,9 @@ namespace Synapse.Services
 		
 		public void Initialize ()
 		{
+			if (Application.CommandLine.Contains("disable-dbus"))
+				return;
+			
 			if (!Bus.System.NameHasOwner (BusName))
                 throw new ApplicationException(String.Format("Name {0} has no owner", BusName));
 			

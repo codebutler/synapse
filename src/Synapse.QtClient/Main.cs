@@ -61,12 +61,6 @@ namespace Synapse.QtClient
 			PlatformHacks.SetProcessName("synapse");
 			GLib.Global.ProgramName = "Synapse";
 			Gtk.Application.Init();
-
-			try {
-				NDesk.DBus.BusG.Init();
-			} catch (Exception ex) {
-				Console.Error.WriteLine("Failed to initialize DBUS: " + ex);
-			}
 			
 			m_App = new QApplication(args);
 			m_App.ApplicationName = "Synapse";
@@ -88,6 +82,16 @@ namespace Synapse.QtClient
 			}
 			
 			AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
+			
+			if (!Application.CommandLine.Contains("disable-dbus")) {
+				try {
+					NDesk.DBus.BusG.Init();
+				} catch (Exception ex) {
+					Console.Error.WriteLine("Failed to initialize DBUS: " + ex);
+				}
+			} else {
+				Console.WriteLine("DBus disabled by request.");
+			}
 			
 			// XXX: I dont like all of these being here.
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.XmppService>();
