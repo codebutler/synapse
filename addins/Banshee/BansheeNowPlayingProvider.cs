@@ -38,6 +38,9 @@ namespace Synapse.Addins.BansheeAddin
 		
 		public BansheeNowPlayingProvider()
 		{
+			if (Application.CommandLine.Contains("disable-dbus"))
+				return;
+			
 			Bus sessionBus = Bus.Session;
 
 			// FIXME: We check that the name exists because otherwise calling 

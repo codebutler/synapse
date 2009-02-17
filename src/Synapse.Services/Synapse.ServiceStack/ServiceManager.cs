@@ -96,7 +96,6 @@ namespace Synapse.ServiceStack
         private static void RegisterDefaultServices ()
         {
 			RegisterService<SettingsService>();
-			RegisterService<DBusServiceManager>();
 			RegisterService<ScreensaverService>();
 			RegisterService<NowPlayingService>();
 			RegisterService<NetworkService>();
@@ -274,10 +273,6 @@ namespace Synapse.ServiceStack
         {
             lock (self_mutex) {
                 services.Add (service.ServiceName, service);
-                
-                if(service is IDBusExportable) {
-                    DBusServiceManager.RegisterObject ((IDBusExportable)service);
-                }
             }
         }
         
@@ -366,10 +361,6 @@ namespace Synapse.ServiceStack
         
         public static bool IsInitialized {
             get { return is_initialized; }
-        }
-        
-        public static DBusServiceManager DBusServiceManager {
-            get { return Get<DBusServiceManager> (); }
         }
     }
 }
