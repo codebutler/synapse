@@ -39,11 +39,11 @@ namespace Synapse.QtClient
 		{
 			m_ShowMainWindowAction = new QAction("Show Synapse", this);
 			m_ShowMainWindowAction.Checkable = true;
-			QObject.Connect(m_ShowMainWindowAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowMainWindowActionTriggered()"));
+			QObject.Connect(m_ShowMainWindowAction, Qt.SIGNAL("triggered()"), HandleShowMainWindowActionTriggered);
 
 			m_ShowDebugWindowAction = new QAction("Debug Window", this);
 			m_ShowDebugWindowAction.Checkable = true;
-			QObject.Connect(m_ShowDebugWindowAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowDebugWindowActionTriggered()"));
+			QObject.Connect(m_ShowDebugWindowAction, Qt.SIGNAL("triggered()"), HandleShowDebugWindowActionTriggered);
 			
 			m_Menu = new QMenu();
 			m_Menu.AddAction(m_ShowMainWindowAction);
@@ -61,15 +61,14 @@ namespace Synapse.QtClient
 			m_Menu.AddAction(Gui.GlobalActions.SendFeedbackAction);
 			m_Menu.AddSeparator();
 			m_Menu.AddAction(Gui.GlobalActions.QuitAction);
-			QObject.Connect(m_Menu, Qt.SIGNAL("aboutToShow()"), new NoArgDelegate(HandleMenuAboutToShow));
+			QObject.Connect(m_Menu, Qt.SIGNAL("aboutToShow()"), HandleMenuAboutToShow);
 
 			QPixmap pixmap = new QPixmap("resource:/octy-22.png");
 			QIcon icon = new QIcon(pixmap);
 			m_Icon = new QSystemTrayIcon(icon);
 			m_Icon.SetContextMenu(m_Menu);
 			
-			QObject.Connect(m_Icon, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), 
-			                new OneArgDelegate<QSystemTrayIcon.ActivationReason>(HandleTrayActivated));
+			QObject.Connect<QSystemTrayIcon.ActivationReason>(m_Icon, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), HandleTrayActivated);
 		}
 
 		public bool IsVisible ()
@@ -100,7 +99,6 @@ namespace Synapse.QtClient
 			m_ShowDebugWindowAction.Checked = Gui.DebugWindow.IsVisible();
 		}
 		
-		[Q_SLOT]
 		void HandleShowMainWindowActionTriggered ()
 		{
 			if (m_ShowMainWindowAction.Checked)
@@ -109,7 +107,6 @@ namespace Synapse.QtClient
 				Gui.MainWindow.Hide();
 		}
 
-		[Q_SLOT]
 		void HandleShowDebugWindowActionTriggered ()
 		{
 			if (m_ShowDebugWindowAction.Checked)
@@ -118,7 +115,6 @@ namespace Synapse.QtClient
 				Gui.DebugWindow.Hide();	
 		}
 		
-		[Q_SLOT]
 		void HandleTrayActivated(QSystemTrayIcon.ActivationReason reason)
 		{
 			if (reason == QSystemTrayIcon.ActivationReason.Trigger) {

@@ -81,7 +81,7 @@ namespace Synapse.QtClient.Windows
 			
 			m_Toolbar.AddAction(m_GoAction);
 
-			QObject.Connect(m_Toolbar, Qt.SIGNAL("actionTriggered(QAction*)"), this, Qt.SLOT("toolbar_actionTriggered(QAction*)"));
+			QObject.Connect<QAction>(m_Toolbar, Qt.SIGNAL("actionTriggered(QAction*)"), HandleToolbarActionTriggered);
 			
 			((QBoxLayout)this.Layout()).InsertWidget(0, m_Toolbar);
 
@@ -135,8 +135,7 @@ namespace Synapse.QtClient.Windows
 			webView.SetHtml(html, new QUrl(uri.ToString()));
 		}
 
-		[Q_SLOT]
-		void toolbar_actionTriggered(QAction action)
+		void HandleToolbarActionTriggered(QAction action)
 		{
 			if (action == m_GoAction) {
 				RequestUrl(new Uri(m_AddresCombo.LineEdit().Text));

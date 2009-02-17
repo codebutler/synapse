@@ -42,14 +42,13 @@ namespace Synapse.QtClient
 			zoomSlider.Minimum = 16;
 			zoomSlider.Maximum = 60;
 			zoomSlider.Value = m_Grid.IconSize;
-			QObject.Connect(zoomSlider, Qt.SIGNAL("valueChanged(int)"), this, Qt.SLOT("zoomSlider_valueChanged(int)"));
+			QObject.Connect<int>(zoomSlider, Qt.SIGNAL("valueChanged(int)"), HandleZoomSliderValueChanged);
 			m_SliderContainer.Layout().AddWidget(zoomSlider);
 			
 			base.SetDefaultWidget(m_SliderContainer);
 		}
 		
-		[Q_SLOT]
-		void zoomSlider_valueChanged (int value)
+		void HandleZoomSliderValueChanged (int value)
 		{
 			m_Grid.IconSize = value;
 		}

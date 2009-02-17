@@ -27,7 +27,7 @@ namespace Synapse.QtClient.Windows
 			
 			m_TimeLine = new QTimeLine(2000, m_Scene);
 			m_TimeLine.curveShape = QTimeLine.CurveShape.EaseOutCurve;
-			QObject.Connect(m_TimeLine, Qt.SIGNAL("finished()"), this, Qt.SLOT("TimerFinished()"));
+			QObject.Connect(m_TimeLine, Qt.SIGNAL("finished()"), TimerFinished);
 
 			QGraphicsItemAnimation animation = new QGraphicsItemAnimation(m_Scene);
 			animation.SetItem(octy);
@@ -39,7 +39,6 @@ namespace Synapse.QtClient.Windows
 			Gui.CenterWidgetOnScreen(this);
 		}
 		
-		[Q_SLOT]
 		void TimerFinished()
 		{
 			m_TimeLine.ToggleDirection();

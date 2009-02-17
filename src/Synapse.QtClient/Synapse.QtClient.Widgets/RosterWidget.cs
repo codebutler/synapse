@@ -106,10 +106,10 @@ namespace Synapse.QtClient.Widgets
 			rosterGrid.ContextMenuPolicy = Qt.ContextMenuPolicy.CustomContextMenu;
 			
 			m_RosterMenu = new QMenu(this);
-			QObject.Connect(m_RosterMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("rosterMenu_triggered(QAction*)"));
+			QObject.Connect<QAction>(m_RosterMenu, Qt.SIGNAL("triggered(QAction*)"), HandleRosterMenuTriggered);
 	
 			var rosterViewActionGroup = new QActionGroup(this);
-			QObject.Connect(rosterViewActionGroup, Qt.SIGNAL("triggered(QAction *)"), this, Qt.SLOT("rosterViewActionGroup_triggered(QAction*)"));
+			QObject.Connect<QAction>(rosterViewActionGroup, Qt.SIGNAL("triggered(QAction *)"), RosterViewActionGroupTriggered);
 	
 			m_GridModeAction = new QAction("View as Grid", this);
 			m_GridModeAction.SetActionGroup(rosterViewActionGroup);
@@ -144,9 +144,9 @@ namespace Synapse.QtClient.Widgets
 			m_InviteMenu.AddAction("New Conference...");
 	
 			m_RosterItemMenu = new QMenu(this);
-			QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("rosterItemMenu_triggered(QAction*)"));
-			QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("rosterItemMenu_aboutToShow()"));
-			QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("aboutToHide()"), this, Qt.SLOT("rosterItemMenu_aboutToHide()"));
+			QObject.Connect<QAction>(m_RosterItemMenu, Qt.SIGNAL("triggered(QAction*)"), HandleRosterItemMenuTriggered);
+			QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("aboutToShow()"), RosterItemMenuAboutToShow);
+			QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("aboutToHide()"), RosterItemMenuAboutToHide);
 	
 			m_ViewProfileAction = new QAction("View Profile", m_RosterItemMenu);
 			m_RosterItemMenu.AddAction(m_ViewProfileAction);
@@ -196,8 +196,8 @@ namespace Synapse.QtClient.Widgets
 	
 			var jsWindowObject = new SynapseJSObject(this);
 			m_ActivityWebView.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
-			QObject.Connect(m_ActivityWebView, Qt.SIGNAL("linkClicked(QUrl)"), this, Qt.SLOT("HandleActivityLinkClicked(QUrl)"));
-			QObject.Connect(m_ActivityWebView.Page(), Qt.SIGNAL("loadFinished(bool)"), this, Qt.SLOT("activityPage_loadFinished(bool)"));
+			QObject.Connect<QUrl>(m_ActivityWebView, Qt.SIGNAL("linkClicked(QUrl)"), HandleActivityLinkClicked);
+			QObject.Connect<bool>(m_ActivityWebView.Page(), Qt.SIGNAL("loadFinished(bool)"), HandleActivityPageLoadFinished);
 			QObject.Connect(m_ActivityWebView.Page().MainFrame(), Qt.SIGNAL("javaScriptWindowObjectCleared()"), delegate {
 				m_ActivityWebView.Page().MainFrame().AddToJavaScriptWindowObject("Synapse", jsWindowObject);
 			});
@@ -508,8 +508,7 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
-		void rosterItemMenu_triggered (QAction action)
+		void HandleRosterItemMenuTriggered (QAction action)
 		{
 			// FIXME: Actions should be handled in the controller.
 			
@@ -539,8 +538,7 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 		
-		[Q_SLOT]
-		void rosterMenu_triggered (QAction action)
+		void HandleRosterMenuTriggered (QAction action)
 		{
 			if (action == m_ShowOfflineAction) {
 				m_RosterModel.ShowOffline = action.Checked;
@@ -549,8 +547,7 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
-		void rosterViewActionGroup_triggered (QAction action)
+		void RosterViewActionGroupTriggered (QAction action)
 		{
 			if (action == m_ListModeAction) {
 				rosterGrid.ListMode = action.Checked;
@@ -567,8 +564,7 @@ namespace Synapse.QtClient.Widgets
 			m_RosterModel.TextFilter = friendSearchLineEdit.Text;
 		}
 	
-		[Q_SLOT]
-		void activityPage_loadFinished (bool ok)
+		void HandleActivityPageLoadFinished (bool ok)
 		{
 			if (m_ActivityWebView.Url.ToString() != "resource:/feed.html")
 				return;
@@ -603,7 +599,6 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
 		void HandleActivityLinkClicked (QUrl url)
 		{
 			try {
@@ -646,8 +641,7 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
-		void rosterItemMenu_aboutToShow ()
+		void RosterItemMenuAboutToShow ()
 		{
 			rosterGrid.SuppressTooltips = true;
 
@@ -658,8 +652,7 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
-		void rosterItemMenu_aboutToHide ()
+		void RosterItemMenuAboutToHide ()
 		{
 			rosterGrid.SuppressTooltips = false;
 		}

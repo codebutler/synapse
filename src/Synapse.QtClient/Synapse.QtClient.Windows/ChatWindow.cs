@@ -75,14 +75,14 @@ namespace Synapse.QtClient.Windows
 				var group = new QActionGroup(this);
 				
 				var gridModeAction = new QAction("View as Grid", this);
-				QObject.Connect(gridModeAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleGridModeActionTriggered()")); 
+				QObject.Connect(gridModeAction, Qt.SIGNAL("triggered()"), HandleGridModeActionTriggered); 
 				gridModeAction.SetActionGroup(group);
 				gridModeAction.Checkable = true;
 				gridModeAction.Checked = true;
 				participantsGrid.AddAction(gridModeAction);
 		
 				var listModeAction = new QAction("View as List", this);
-				QObject.Connect(listModeAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleListModeActionTriggered()"));
+				QObject.Connect(listModeAction, Qt.SIGNAL("triggered()"), HandleListModeActionTriggered);
 				listModeAction.SetActionGroup(group);
 				listModeAction.Checkable = true;
 				participantsGrid.AddAction(listModeAction);
@@ -249,7 +249,7 @@ namespace Synapse.QtClient.Windows
 				
 				// FIXME: Make this a menu with "View Profile" and "View History".
 				var viewProfileAction = new QAction(Gui.LoadIcon("info", 16), "View Profile", this);
-				QObject.Connect(viewProfileAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleViewProfileActionTriggered()"));
+				QObject.Connect(viewProfileAction, Qt.SIGNAL("triggered()"), HandleViewProfileActionTriggered);
 				toolbar.AddAction(viewProfileAction);
 			} else {
 				toWidgetAction.Visible = false;
@@ -374,19 +374,16 @@ namespace Synapse.QtClient.Windows
 			}
 		}
 		
-		[Q_SLOT]
 		void HandleGridModeActionTriggered ()
 		{
 			participantsGrid.ListMode = false;
 		}
 		
-		[Q_SLOT]
 		void HandleListModeActionTriggered ()
 		{
 			participantsGrid.ListMode = true;
 		}
 		
-		[Q_SLOT]
 		void HandleViewProfileActionTriggered ()
 		{
 			var window = new ProfileWindow(m_Handler.Account, ((ChatHandler)m_Handler).Jid);

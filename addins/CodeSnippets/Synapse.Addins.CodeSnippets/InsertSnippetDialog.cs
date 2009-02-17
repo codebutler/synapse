@@ -49,7 +49,7 @@ namespace Synapse.Addins.CodeSnippets
 				typeComboBox.AddItem(highlighter.FullName, highlighter.Name);
 			}
 
-			QObject.Connect(this, Qt.SIGNAL("accepted()"), this, Qt.SLOT("dialog_accepted()"));
+			QObject.Connect(this, Qt.SIGNAL("accepted()"), HandleDialogAccepted);
 			
 			Gui.CenterWidgetOnScreen(this);
 		}
@@ -68,8 +68,7 @@ namespace Synapse.Addins.CodeSnippets
 			}
 		}
 
-		[Q_SLOT]
-		void dialog_accepted ()
+		void HandleDialogAccepted ()
 		{	
 			var handler = ((ChatWindow)this.ParentWidget()).Handler;
 			

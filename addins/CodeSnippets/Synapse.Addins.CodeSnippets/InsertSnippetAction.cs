@@ -37,14 +37,13 @@ namespace Synapse.Addins.CodeSnippets
 		{
 			m_ChatWindow = (ChatWindow)parent;
 			
-			QObject.Connect(this, Qt.SIGNAL("triggered(bool)"), this, Qt.SLOT("on_triggered(bool)"));
+			QObject.Connect<bool>(this, Qt.SIGNAL("triggered(bool)"), HandleOnTriggered);
 			
 			base.Text = "Code Snippet...";
 			base.icon = Gui.LoadIcon("stock_script", 16);
 		}
-				
-		[Q_SLOT]
-		void on_triggered (bool isChecked)
+		
+		void HandleOnTriggered (bool isChecked)
 		{
 			var dialog = new InsertSnippetDialog(m_ChatWindow);
 			dialog.Show();
