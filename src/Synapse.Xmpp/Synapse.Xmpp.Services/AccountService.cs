@@ -151,7 +151,7 @@ namespace Synapse.Xmpp.Services
 
 		public Account GetAccount(JID jid)
 		{
-			return m_Accounts.Find(a => a.Jid == jid);
+			return m_Accounts.Find(a => a.Jid.Equals(jid));
 		}
 		
 		public void SaveAccounts ()
@@ -185,6 +185,11 @@ namespace Synapse.Xmpp.Services
 	
 	public class AccountInfo
 	{
+		public AccountInfo ()
+		{
+			ConnectPort = 5222;
+		}
+		
 		public string User {
 			get; set;
 		}
@@ -205,6 +210,10 @@ namespace Synapse.Xmpp.Services
 			get; set;
 		}
 
+		public int ConnectPort {
+			get; set;
+		}
+		
 		public bool AutoConnect {
 			get; set;
 		}

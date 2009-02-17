@@ -21,15 +21,15 @@ namespace Synapse.QtClient.Windows {
         
         protected QLabel label;
         
-        protected QLineEdit lineEdit;
+        protected QLineEdit jidLineEdit;
         
         protected QLabel label_2;
         
-        protected QLineEdit lineEdit_2;
+        protected QLineEdit passwordLineEdit;
         
         protected QLabel label_3;
         
-        protected QComboBox comboBox;
+        protected QComboBox resourceCombo;
         
         protected QWidget widget;
         
@@ -41,19 +41,17 @@ namespace Synapse.QtClient.Windows {
         
         protected QLabel label_4;
         
-        protected QLineEdit lineEdit_3;
+        protected QLineEdit serverLineEdit;
         
         protected QLabel label_6;
         
-        protected QSpinBox spinBox;
+        protected QSpinBox portSpinBox;
         
         protected QLabel label_7;
         
         protected QWidget tab_2;
         
-        protected QCheckBox checkBox;
-        
-        protected QWidget tab_3;
+        protected QCheckBox autoConnectCheckBox;
         
         protected QDialogButtonBox buttonBox;
         
@@ -61,11 +59,13 @@ namespace Synapse.QtClient.Windows {
             base.ObjectName = "EditAccountDialog";
             this.Geometry = new QRect(0, 0, 368, 263);
             this.WindowTitle = "Edit Account";
+            this.Modal = true;
             QVBoxLayout verticalLayout;
             verticalLayout = new QVBoxLayout(this);
             verticalLayout.Margin = 6;
             this.tabWidget = new QTabWidget(this);
             this.tabWidget.ObjectName = "tabWidget";
+            this.tabWidget.Enabled = true;
             this.tabWidget.CurrentIndex = 0;
             verticalLayout.AddWidget(this.tabWidget);
             this.tab = new QWidget(this.tabWidget);
@@ -79,23 +79,26 @@ namespace Synapse.QtClient.Windows {
             this.label = new QLabel(this.tab);
             this.label.ObjectName = "label";
             this.label.Text = "Jabber ID:";
-            this.lineEdit = new QLineEdit(this.tab);
-            this.lineEdit.ObjectName = "lineEdit";
-            formLayout.InsertRow(0, this.label, this.lineEdit);
+            formLayout.SetWidget(0, QFormLayout.ItemRole.LabelRole, this.label);
+            this.jidLineEdit = new QLineEdit(this.tab);
+            this.jidLineEdit.ObjectName = "jidLineEdit";
+            formLayout.SetWidget(0, QFormLayout.ItemRole.FieldRole, this.jidLineEdit);
             this.label_2 = new QLabel(this.tab);
             this.label_2.ObjectName = "label_2";
             this.label_2.Text = "Password:";
-            this.lineEdit_2 = new QLineEdit(this.tab);
-            this.lineEdit_2.ObjectName = "lineEdit_2";
-            this.lineEdit_2.echoMode = QLineEdit.EchoMode.Password;
-            formLayout.InsertRow(1, this.label_2, this.lineEdit_2);
+            formLayout.SetWidget(1, QFormLayout.ItemRole.LabelRole, this.label_2);
+            this.passwordLineEdit = new QLineEdit(this.tab);
+            this.passwordLineEdit.ObjectName = "passwordLineEdit";
+            this.passwordLineEdit.echoMode = QLineEdit.EchoMode.Password;
+            formLayout.SetWidget(1, QFormLayout.ItemRole.FieldRole, this.passwordLineEdit);
             this.label_3 = new QLabel(this.tab);
             this.label_3.ObjectName = "label_3";
             this.label_3.Text = "Resource:";
-            this.comboBox = new QComboBox(this.tab);
-            this.comboBox.ObjectName = "comboBox";
-            this.comboBox.Editable = true;
-            formLayout.InsertRow(2, this.label_3, this.comboBox);
+            formLayout.SetWidget(2, QFormLayout.ItemRole.LabelRole, this.label_3);
+            this.resourceCombo = new QComboBox(this.tab);
+            this.resourceCombo.ObjectName = "resourceCombo";
+            this.resourceCombo.Editable = true;
+            formLayout.SetWidget(2, QFormLayout.ItemRole.FieldRole, this.resourceCombo);
             QSpacerItem verticalSpacer;
             verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
             verticalLayout_2.AddItem(verticalSpacer);
@@ -106,6 +109,7 @@ namespace Synapse.QtClient.Windows {
             horizontalLayout.Margin = 0;
             this.pushButton = new QPushButton(this.widget);
             this.pushButton.ObjectName = "pushButton";
+            this.pushButton.Enabled = false;
             this.pushButton.Text = "Change Password...";
             horizontalLayout.AddWidget(this.pushButton);
             QSpacerItem horizontalSpacer;
@@ -129,18 +133,20 @@ namespace Synapse.QtClient.Windows {
             this.label_4 = new QLabel(this.tab_4);
             this.label_4.ObjectName = "label_4";
             this.label_4.Text = "Connect Server:";
-            this.lineEdit_3 = new QLineEdit(this.tab_4);
-            this.lineEdit_3.ObjectName = "lineEdit_3";
-            formLayout_2.InsertRow(0, this.label_4, this.lineEdit_3);
+            formLayout_2.SetWidget(0, QFormLayout.ItemRole.LabelRole, this.label_4);
+            this.serverLineEdit = new QLineEdit(this.tab_4);
+            this.serverLineEdit.ObjectName = "serverLineEdit";
+            formLayout_2.SetWidget(0, QFormLayout.ItemRole.FieldRole, this.serverLineEdit);
             this.label_6 = new QLabel(this.tab_4);
             this.label_6.ObjectName = "label_6";
             this.label_6.Text = "Port:";
-            this.spinBox = new QSpinBox(this.tab_4);
-            this.spinBox.ObjectName = "spinBox";
-            this.spinBox.Maximum = 9999999;
-            this.spinBox.SingleStep = 1;
-            this.spinBox.Value = 5222;
-            formLayout_2.InsertRow(1, this.label_6, this.spinBox);
+            formLayout_2.SetWidget(1, QFormLayout.ItemRole.LabelRole, this.label_6);
+            this.portSpinBox = new QSpinBox(this.tab_4);
+            this.portSpinBox.ObjectName = "portSpinBox";
+            this.portSpinBox.Maximum = 9999999;
+            this.portSpinBox.SingleStep = 1;
+            this.portSpinBox.Value = 5222;
+            formLayout_2.SetWidget(1, QFormLayout.ItemRole.FieldRole, this.portSpinBox);
             this.label_7 = new QLabel(this.tab_4);
             this.label_7.ObjectName = "label_7";
             this.label_7.Enabled = false;
@@ -156,17 +162,14 @@ namespace Synapse.QtClient.Windows {
             QVBoxLayout verticalLayout_4;
             verticalLayout_4 = new QVBoxLayout(this.tab_2);
             verticalLayout_4.Margin = 6;
-            this.checkBox = new QCheckBox(this.tab_2);
-            this.checkBox.ObjectName = "checkBox";
-            this.checkBox.Text = "Connect Automatically";
-            verticalLayout_4.AddWidget(this.checkBox);
+            this.autoConnectCheckBox = new QCheckBox(this.tab_2);
+            this.autoConnectCheckBox.ObjectName = "autoConnectCheckBox";
+            this.autoConnectCheckBox.Text = "Connect Automatically";
+            verticalLayout_4.AddWidget(this.autoConnectCheckBox);
             QSpacerItem verticalSpacer_3;
             verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
             verticalLayout_4.AddItem(verticalSpacer_3);
             this.tabWidget.AddTab(this.tab_2, "Options");
-            this.tab_3 = new QWidget(this.tabWidget);
-            this.tab_3.ObjectName = "tab_3";
-            this.tabWidget.AddTab(this.tab_3, "Privacy");
             this.buttonBox = new QDialogButtonBox(this);
             this.buttonBox.ObjectName = "buttonBox";
             this.buttonBox.Orientation = Qt.Orientation.Horizontal;

@@ -51,6 +51,7 @@ namespace Synapse.Xmpp
 		string m_Resource;
 		string m_Password;
 		string m_ConnectServer;
+		int    m_ConnectPort;
 		bool   m_AutoConnect;
 
 		bool m_NetworkDisconnected = false;
@@ -81,17 +82,16 @@ namespace Synapse.Xmpp
 
 		List<StreamTypeInfo> m_StreamTypes = new List<StreamTypeInfo>();
 		
-		public event AccountEventHandler Changed; // XXX: is this used?
 		public event AccountEventHandler ConnectionStateChanged;
 		public event AccountEventHandler StatusChanged;
 		public event EventHandler        MyVCardUpdated;
 		public event PropertyEventHandler PropertyChanged;
 		
-		public Account (string user, string domain, string resource) : this (user, domain, resource, null)
+		public Account (string user, string domain, string resource) : this (user, domain, resource, null, 5222)
 		{
 		}
 		
-		public Account (string user, string domain, string resource, string connectServer) : this ()
+		public Account (string user, string domain, string resource, string connectServer, int connectPort) : this ()
 		{
 			if (String.IsNullOrEmpty(user)) throw new ArgumentNullException("user");
 			if (String.IsNullOrEmpty(domain)) throw new ArgumentNullException("domain");
@@ -101,13 +101,14 @@ namespace Synapse.Xmpp
 			m_Domain   = domain;
 			m_Resource = resource;
 			m_ConnectServer = connectServer;
+			m_ConnectPort = connectPort;
 
 			m_UserPresenceCache = new Dictionary<JID, Presence>();
 		}
 
 		public static Account FromAccountInfo(AccountInfo info)
 		{
-			Account account = new Account(info.User, info.Domain, info.Resource, info.ConnectServer);
+			Account account = new Account(info.User, info.Domain, info.Resource, info.ConnectServer, info.ConnectPort);
 			account.Password = info.Password;
 			account.AutoConnect = info.AutoConnect;
 			account.Properties = info.Properties;
@@ -366,6 +367,7 @@ namespace Synapse.Xmpp
 				return m_AutoConnect;
 			}
 			set {
+				CheckIfReadOnly();
 				m_AutoConnect = value;
 			}
 		}
@@ -384,7 +386,6 @@ namespace Synapse.Xmpp
 			set {
 				CheckIfReadOnly();
 				this.m_Password = value;
-				OnChanged();
 			}
 		}
 		
@@ -395,7 +396,6 @@ namespace Synapse.Xmpp
 			set {
 				CheckIfReadOnly();
 				m_User = value;
-				OnChanged();
 			}
 		}
 		
@@ -406,7 +406,6 @@ namespace Synapse.Xmpp
 			set {
 				CheckIfReadOnly();
 				m_Domain = value;
-				OnChanged();
 			}
 		}
 		
@@ -417,7 +416,6 @@ namespace Synapse.Xmpp
 			set {
 				CheckIfReadOnly();
 				m_Resource = value;
-				OnChanged();
 			}
 		}
 		
@@ -428,7 +426,16 @@ namespace Synapse.Xmpp
 			set {
 				CheckIfReadOnly();
 				m_ConnectServer = value;
-				OnChanged();
+			}
+		}
+		
+		public int ConnectPort {
+			get {
+				return m_ConnectPort;
+			}
+			set {
+				CheckIfReadOnly();
+				m_ConnectPort = value;
 			}
 		}
 		
@@ -572,6 +579,7 @@ namespace Synapse.Xmpp
 			m_Client.Server      = m_Domain;
 			m_Client.Resource    = m_Resource;
 			m_Client.NetworkHost = m_ConnectServer;
+			m_Client.Port        = m_ConnectPort;
 			m_Client.Password    = m_Password;
 			
 			ConnectionState = AccountConnectionState.Connecting;
@@ -664,6 +672,7 @@ namespace Synapse.Xmpp
 			info.Resource = m_Resource;
 			info.Password = m_Password;
 			info.ConnectServer = m_ConnectServer;
+			info.ConnectPort = m_ConnectPort;
 			info.AutoConnect = m_AutoConnect;
 			info.Properties = m_Properties;
 			return info;
@@ -753,14 +762,6 @@ namespace Synapse.Xmpp
 		protected virtual void OnStateChanged ()
 		{
 			AccountEventHandler handler = ConnectionStateChanged;
-			if (handler != null) {
-				handler(this);
-			}
-		}
-		
-		protected virtual void OnChanged ()
-		{
-			AccountEventHandler handler = Changed;
 			if (handler != null) {
 				handler(this);
 			}
