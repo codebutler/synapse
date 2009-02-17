@@ -248,7 +248,9 @@ namespace Synapse.QtClient.Windows
 				}			
 				
 				// FIXME: Make this a menu with "View Profile" and "View History".
-				toolbar.AddAction(Gui.LoadIcon("info", 16), "View Profile");			
+				var viewProfileAction = new QAction(Gui.LoadIcon("info", 16), "View Profile", this);
+				QObject.Connect(viewProfileAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleViewProfileActionTriggered()"));
+				toolbar.AddAction(viewProfileAction);
 			} else {
 				toWidgetAction.Visible = false;
 			}
@@ -382,6 +384,13 @@ namespace Synapse.QtClient.Windows
 		void HandleListModeActionTriggered ()
 		{
 			participantsGrid.ListMode = true;
+		}
+		
+		[Q_SLOT]
+		void HandleViewProfileActionTriggered ()
+		{
+			var window = new ProfileWindow(m_Handler.Account, ((ChatHandler)m_Handler).Jid);
+			window.Show();
 		}
 	}
 }

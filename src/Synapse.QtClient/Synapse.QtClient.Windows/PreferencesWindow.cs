@@ -76,9 +76,17 @@ namespace Synapse.QtClient.Windows
 		[Q_SLOT]
 		void on_addAccountButton_clicked ()
 		{
-			
+			// FIXME:
+			QMessageBox.Information(this, "Not Implemented", "This feature has not yet been implemented.");
 		}		
 	
+		[Q_SLOT]
+		void on_removeAccountButton_clicked ()
+		{
+			// FIXME:
+			QMessageBox.Information(this, "Not Implemented", "This feature has not yet been implemented.");
+		}
+		
 		[Q_SLOT]
 		void on_editAccountButton_clicked ()
 		{
@@ -89,13 +97,19 @@ namespace Synapse.QtClient.Windows
 				
 				var accountService = ServiceManager.Get<AccountService>();
 				
+				Console.WriteLine(jid);
 				Account account = accountService.GetAccount(jid);
-					
-				var dialog = new EditAccountDialog(account, this);
-				dialog.Show();
-				dialog.Exec();
-				
-				accountsList.Update();
+				if (account != null) {
+					if (!account.IsReadOnly) {
+						var dialog = new EditAccountDialog(account, this);
+						dialog.Show();
+						dialog.Exec();
+						
+						accountsList.Update();
+					} else {
+						QMessageBox.Critical(this, "Error", "Cannot modify account while connected.");
+					}
+				}
 			}
 		}
 		
@@ -136,7 +150,7 @@ namespace Synapse.QtClient.Windows
 				Account account = (Account)index.InternalPointer();
 				if (index.Column() == 0) {
 					if (role == (int)Qt.ItemDataRole.DisplayRole) {
-						return account.Jid.Bare;
+						return account.Jid.ToString();
 					} else if (role == (int)Qt.ItemDataRole.CheckStateRole) {
 						return (int)Qt.CheckState.Checked;
 					}

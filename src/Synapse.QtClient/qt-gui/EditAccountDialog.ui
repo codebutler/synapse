@@ -12,12 +12,18 @@
   <property name="windowTitle" >
    <string>Edit Account</string>
   </property>
+  <property name="modal" >
+   <bool>true</bool>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <property name="margin" >
     <number>6</number>
    </property>
    <item>
     <widget class="QTabWidget" name="tabWidget" >
+     <property name="enabled" >
+      <bool>true</bool>
+     </property>
      <property name="currentIndex" >
       <number>0</number>
      </property>
@@ -39,7 +45,7 @@
           </widget>
          </item>
          <item row="0" column="1" >
-          <widget class="QLineEdit" name="lineEdit" />
+          <widget class="QLineEdit" name="jidLineEdit" />
          </item>
          <item row="1" column="0" >
           <widget class="QLabel" name="label_2" >
@@ -49,7 +55,7 @@
           </widget>
          </item>
          <item row="1" column="1" >
-          <widget class="QLineEdit" name="lineEdit_2" >
+          <widget class="QLineEdit" name="passwordLineEdit" >
            <property name="echoMode" >
             <enum>QLineEdit::Password</enum>
            </property>
@@ -63,10 +69,25 @@
           </widget>
          </item>
          <item row="2" column="1" >
-          <widget class="QComboBox" name="comboBox" >
+          <widget class="QComboBox" name="resourceCombo" >
            <property name="editable" >
             <bool>true</bool>
            </property>
+           <item>
+            <property name="text" >
+             <string>Home Computer</string>
+            </property>
+           </item>
+           <item>
+            <property name="text" >
+             <string>Work Computer</string>
+            </property>
+           </item>
+           <item>
+            <property name="text" >
+             <string>Laptop</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>
@@ -92,6 +113,9 @@
           </property>
           <item>
            <widget class="QPushButton" name="pushButton" >
+            <property name="enabled" >
+             <bool>false</bool>
+            </property>
             <property name="text" >
              <string>Change Password...</string>
             </property>
@@ -143,7 +167,7 @@
           </widget>
          </item>
          <item row="0" column="1" >
-          <widget class="QLineEdit" name="lineEdit_3" />
+          <widget class="QLineEdit" name="serverLineEdit" />
          </item>
          <item row="1" column="0" >
           <widget class="QLabel" name="label_6" >
@@ -153,7 +177,7 @@
           </widget>
          </item>
          <item row="1" column="1" >
-          <widget class="QSpinBox" name="spinBox" >
+          <widget class="QSpinBox" name="portSpinBox" >
            <property name="maximum" >
             <number>9999999</number>
            </property>
@@ -204,7 +228,7 @@
         <number>6</number>
        </property>
        <item>
-        <widget class="QCheckBox" name="checkBox" >
+        <widget class="QCheckBox" name="autoConnectCheckBox" >
          <property name="text" >
           <string>Connect Automatically</string>
          </property>
@@ -224,11 +248,6 @@
         </spacer>
        </item>
       </layout>
-     </widget>
-     <widget class="QWidget" name="tab_3" >
-      <attribute name="title" >
-       <string>Privacy</string>
-      </attribute>
      </widget>
     </widget>
    </item>

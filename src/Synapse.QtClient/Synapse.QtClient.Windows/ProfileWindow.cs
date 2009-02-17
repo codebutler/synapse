@@ -46,6 +46,8 @@ namespace Synapse.QtClient.Windows
 				else
 					Populate(null);
 			}, null);
+			
+			Gui.CenterWidgetOnScreen(this);
 		}
 	
 		void Populate (VCard vcard)

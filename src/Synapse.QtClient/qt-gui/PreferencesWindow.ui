@@ -445,8 +445,6 @@
         </layout>
        </item>
       </layout>
-      <zorder>frame</zorder>
-      <zorder>groupBox</zorder>
      </widget>
      <widget class="QWidget" name="tab_7" >
       <attribute name="title" >
