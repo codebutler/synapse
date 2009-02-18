@@ -350,11 +350,7 @@ namespace Synapse.QtClient.Windows
 		bool HandleKeyEvent(QKeyEvent kevent)
 		{
 			if ((kevent.Modifiers() & (uint)Qt.KeyboardModifier.ControlModifier) == 0 && kevent.Key() == (int)Qt.Key.Key_Return || kevent.Key() == (int)Qt.Key.Key_Enter) {
-				// FIXME: Need to clean this HTML up...
-				// string html = textEdit.Html;
-				string html = textEdit.PlainText;
-				
-				
+				string html = textEdit.ToHtml();			
 				if (m_Handler is ChatHandler) {
 					string resource = m_ToComboBox.ItemData(m_ToComboBox.CurrentIndex);
 					((ChatHandler)m_Handler).Resource = (resource == "auto") ? null : resource;

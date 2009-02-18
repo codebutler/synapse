@@ -139,10 +139,9 @@ namespace Synapse.QtClient
 			if (!m_ThemeLoaded)
 				throw new Exception("Call LoadTheme() first!");
 
-			Page().MainFrame().EvaluateJavaScript(ScriptForAppendingContent(content,
-			                                                                contentIsSimilar,
-			                                                                willAddMoreContentObjects,
-			                                                                replaceLastContent));
+
+			var js = ScriptForAppendingContent(content, contentIsSimilar, willAddMoreContentObjects, replaceLastContent);
+			Page().MainFrame().EvaluateJavaScript(js);
 		}
 				
 		public void LoadTheme(string themeName, string variantName)

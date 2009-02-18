@@ -46,21 +46,20 @@ namespace Synapse.QtClient.Widgets
 			
 			var document = base.Document();
 			
+			bool isFirstBlock = true;
 			var block = document.Begin();
 			while (block.IsValid()) {			
-				builder.Append("<p>");
+				if (!isFirstBlock)
+					builder.Append("<br/>");
+				isFirstBlock = false;
 				
 				QTextBlock.iterator it;
-				
 				for (it = block.Begin(); !it.AtEnd(); it = it++) {
 					var fragment = it.Fragment();
 					var format = fragment.CharFormat();
-					
 					if (format.IsImageFormat()) {					
 						var imageFormat = format.ToImageFormat();
-						
 						var name = imageFormat.Name();
-						
 						var data = document.Resource((int)QTextDocument.ResourceType.ImageResource, new QUrl(name));
 						if (data.type() == QVariant.TypeOf.Pixmap) {
 							var pixmap = (QPixmap)data;
@@ -69,29 +68,43 @@ namespace Synapse.QtClient.Widgets
 							pixmap.Save(tempBuffer, "PNG");
 						
 							string imageString = tempArray.ToBase64().ConstData();
-							builder.AppendFormat("<img src=\"data:image/png;base64,{0}\" />", imageString);
+							builder.AppendFormat("<img alt=\"[embeded image]\" src=\"data:image/png;base64,{0}\" />", imageString);
 						}						
 					} else {
+						var link = format.AnchorHref();
 						var bold = (format.FontWeight() == (int)QFont.Weight.Bold);
 						var underline = format.FontUnderline();
 						var italic = format.FontItalic();
 						var strike = format.FontStrikeOut();
 						
+						if (!String.IsNullOrEmpty(link))
+							builder.AppendFormat("<a href=\"{0}\" title=\"{0}\">", link);
+
 						if (bold) builder.Append("<b>");						
 						if (underline) builder.Append("<u>");
 						if (italic) builder.Append("<i>");
 						if (strike) builder.Append("<s>");
-						
-						builder.Append(fragment.Text());
+							
+						var text = fragment.Text();
+
+						text = text.Replace("  ", "&#160;");
+						text = text.Replace("\t", " &#160;&#160;&#160;");
+						text = text.Replace("\r\n", "<br/>");
+						text = text.Replace("\r", "<br/>");
+						text = text.Replace("\n", "<br/>");
+						text = text.Replace("\u2028", "<br/>");
+
+						builder.Append(text);
 						
 						if (bold) builder.Append("</b>");
 						if (underline) builder.Append("</u>");
 						if (italic) builder.Append("</i>");
 						if (strike) builder.Append("</s>");
+
+						if (!String.IsNullOrEmpty(link))
+							builder.Append("</a>");
 					}
 				}			
-				
-				builder.Append("</p>");
 				
 				block = block.Next();
 			}
