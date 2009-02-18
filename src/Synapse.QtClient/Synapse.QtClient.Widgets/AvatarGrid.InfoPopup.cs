@@ -129,6 +129,8 @@ namespace Synapse.QtClient.Widgets
 
 						var gridItemPoint = m_Grid.MapToGlobal(m_Grid.MapFromScene(itemRect.X(), itemRect.Y()));						
 						
+						/* FIXME: Commenting this out because its broken to the point of being extremely annoying.
+						
 						// --- BEGIN JANKY CODE ---
 						
 						var boxLayout = (QHBoxLayout)base.Layout();
@@ -147,6 +149,8 @@ namespace Synapse.QtClient.Widgets
 						// --- END JANKY CODE ---
 						
 						// FIXME: If direction just changed above, this returns the wrong pos!
+						*/
+						
 						var avatarPoint = m_GraphicsView.MapToParent(m_GraphicsView.MapFromScene(m_PixmapItem.X(), m_PixmapItem.Y()));
 						
 						int x = gridItemPoint.X() - avatarPoint.X();

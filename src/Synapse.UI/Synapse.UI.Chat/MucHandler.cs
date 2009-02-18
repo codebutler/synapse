@@ -48,13 +48,13 @@ namespace Synapse.UI.Chat
 			// FIXME: Handle room.OnLeave .. kicks... everything else..
 		}
 		
-		public override void Send (string text)
+		public override void Send (string html)
 		{
-			if (!String.IsNullOrEmpty(text)) {
+			if (!String.IsNullOrEmpty(html)) {
 				Message message = new Message(base.Account.Client.Document);
 				message.Type = MessageType.groupchat;
 				message.To = m_Room.JID;
-				message.Body = text; // FIXME: Send this as HTML
+				message.Html = html;
 
 				var activeElem = base.Account.Client.Document.CreateElement("active");
 				activeElem.SetAttribute("xmlns", "http://jabber.org/protocol/chatstates");
