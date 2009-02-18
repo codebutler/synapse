@@ -175,9 +175,9 @@ THEMES_DIR = resources/themes
 INSTALLED_THEMES_DIR = $(prefix)/share/synapse/themes/
 
 install-data-hook:
-	mkdir -p $(INSTALLED_THEMES_DIR)
+	mkdir -p $(DESTDIR)$(INSTALLED_THEMES_DIR)
 	echo "Installing Themes..."
-	cd $(THEMES_DIR) && find . -type f -exec $(INSTALL_DATA) -D -v '{}' '$(INSTALLED_THEMES_DIR){}' \; ;
+	cd $(THEMES_DIR) && find . -type f -exec $(INSTALL_DATA) -D -v '{}' '$(DESTDIR)$(INSTALLED_THEMES_DIR){}' \; ;
 
 uninstall-hook:
 	rm -rf $(INSTALLED_THEMES_DIR)

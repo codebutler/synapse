@@ -12,7 +12,7 @@ clean-local:
 	for i in $(CONTRIBS); do rm -fv $(BUILD_DIR)/$$i; done
 
 install-data-hook:
-	for i in $(CONTRIBS); do $(INSTALL_DATA) -D -v $$i $(prefix)/lib/synapse/$$i; done
+	for i in $(CONTRIBS); do $(INSTALL_DATA) -D -v $$i $(DESTDIR)$(prefix)/lib/synapse/$$i; done
 
 uninstall-hook:
 	for i in $(CONTRIBS); do rm -fv $(prefix)/lib/synapse/$$i; done
