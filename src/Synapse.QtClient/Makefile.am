@@ -8,7 +8,6 @@ FILES =  \
 	AvatarGridZoomAction.cs \
 	BookmarkedMUCsModel.cs \
 	GlobalActions.cs \
-	gtk-gui/generated.cs \
 	Gui.cs \
 	IUpdateableAction.cs \
 	IWebIdentityConfigurator.cs \
@@ -75,7 +74,6 @@ FILES =  \
 	WindowMover.cs 
 
 RESOURCES =  \
-	gtk-gui/gui.stetic \
 	resources/collapse.png \
 	resources/default-avatar.png \
 	resources/effects.js \
