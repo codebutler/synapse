@@ -64,19 +64,21 @@ namespace Synapse.UI.Chat
 			base.AppendStatus(message);
 		}
 
-		public override void Send (string text)
+		public override void Send (string html)
 		{	
-			if (!String.IsNullOrEmpty(text)) {
+			if (!String.IsNullOrEmpty(html)) {
 				Message message = new Message(base.Account.Client.Document);
 				message.Type = MessageType.chat;
 				message.To = new JID(m_Jid.User, m_Jid.Server, Resource);
-				message.Body = text;
+				message.Html = html;
 
 				var activeElem = base.Account.Client.Document.CreateElement("active");
 				activeElem.SetAttribute("xmlns", "http://jabber.org/protocol/chatstates");
 				message.AppendChild(activeElem);
 
+				// FIXME: For some reason this blocks on large messages.
 				base.Account.Client.Write(message);
+
 				base.AppendMessage(false, message);
 			}			
 		}

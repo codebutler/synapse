@@ -79,8 +79,8 @@ namespace Synapse.QtClient.Widgets
 			m_NameLabel.TextFormat = TextFormat.RichText;
 	
 			m_PresenceMenu = new QMenu(this);
-			QObject.Connect(m_PresenceMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("HandlePresenceMenuAboutToShow()"));
-			QObject.Connect(m_PresenceMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("HandlePresenceMenuTriggered(QAction*)"));
+			QObject.Connect(m_PresenceMenu, Qt.SIGNAL("aboutToShow()"), HandlePresenceMenuAboutToShow);
+			QObject.Connect<QAction>(m_PresenceMenu, Qt.SIGNAL("triggered(QAction*)"), HandlePresenceMenuTriggered);
 	
 			QActionGroup group = new QActionGroup(this);
 			group.Exclusive = true;
@@ -178,13 +178,11 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
 		void HandlePresenceMenuTriggered(QAction action)
 		{
 			m_Account.Status = new ClientStatus(action.Text, String.Empty);
 		}
 	
-		[Q_SLOT]
 		void HandlePresenceMenuAboutToShow()
 		{
 			if (m_Account.Status != null) {

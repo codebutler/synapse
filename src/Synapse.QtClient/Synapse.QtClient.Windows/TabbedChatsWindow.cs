@@ -58,7 +58,7 @@ namespace Synapse.QtClient.Windows
 			newTabButton.AutoRaise = true;
 			newTabButton.SetDefaultAction(new QAction(Gui.LoadIcon("stock_new-tab", 16), "New Tab", newTabButton));
 			newTabButton.SetToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly);
-			QObject.Connect(newTabButton, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("newTab(QAction*)"));
+			QObject.Connect<QAction>(newTabButton, Qt.SIGNAL("triggered(QAction*)"), HandleNewTab);
 			m_Tabs.SetCornerWidget(newTabButton, Qt.Corner.BottomLeftCorner);
 
 			QHBoxLayout rightButtonsLayout = new QHBoxLayout();			
@@ -69,7 +69,7 @@ namespace Synapse.QtClient.Windows
 			closeTabButton.SetToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly);
 			closeTabButton.AutoRaise = true;
 			closeTabButton.SetDefaultAction(new QAction(Gui.LoadIcon("stock_close", 16), "Close Tab", closeTabButton));
-			QObject.Connect(closeTabButton, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("closeTab(QAction*)"));
+			QObject.Connect<QAction>(closeTabButton, Qt.SIGNAL("triggered(QAction*)"), HandleCloseTab);
 			rightButtonsLayout.AddWidget(closeTabButton);
 
 			QMenu menu = new QMenu(this);
@@ -95,7 +95,7 @@ namespace Synapse.QtClient.Windows
 			layout.AddWidget(m_Tabs, 1, 0);
 			this.SetLayout(layout);
 
-			QObject.Connect(m_Tabs, Qt.SIGNAL("currentChanged(int)"), this, Qt.SLOT("currentChanged(int)"));
+			QObject.Connect<int>(m_Tabs, Qt.SIGNAL("currentChanged(int)"), HandleCurrentChanged);
 			
 			this.SetGeometry(0, 0, 445, 370);
 			Gui.CenterWidgetOnScreen(this);
@@ -103,7 +103,7 @@ namespace Synapse.QtClient.Windows
 			var closeShortcuts = new [] { "Ctrl+w", "Esc" };
 			closeShortcuts.ForEach(shortcut => {
 				QAction closeAction = new QAction(this);
-				QObject.Connect(closeAction, Qt.SIGNAL("triggered(bool)"), this, Qt.SLOT("closeAction_triggered(bool)"));
+				QObject.Connect<bool>(closeAction, Qt.SIGNAL("triggered(bool)"), HandleCloseActionTriggered);
 				closeAction.Shortcut = new QKeySequence(shortcut);
 				this.AddAction(closeAction);
 			});
@@ -230,8 +230,7 @@ namespace Synapse.QtClient.Windows
 				QApplication.Alert(this);
 		}
 		
-		[Q_SLOT]
-		void currentChanged(int index)
+		void HandleCurrentChanged(int index)
 		{
 			if (m_Tabs.Widget(index) != null) {
 				m_Tabs.Widget(index).SetFocus();
@@ -240,8 +239,7 @@ namespace Synapse.QtClient.Windows
 			}
 		}
 			
-		[Q_SLOT]
-		void newTab (QAction action)
+		void HandleNewTab (QAction action)
 		{
 			var tab = new EmptyTab();
 			int index = m_Tabs.CurrentIndex + 1;
@@ -251,8 +249,7 @@ namespace Synapse.QtClient.Windows
 			TabAdded();
 		}
 		
-		[Q_SLOT]
-		void closeTab (QAction action)
+		void HandleCloseTab (QAction action)
 		{
 			int index = m_Tabs.CurrentIndex;
 			var widget = m_Tabs.CurrentWidget();
@@ -263,10 +260,9 @@ namespace Synapse.QtClient.Windows
 			}
 		}
 
-		[Q_SLOT]
-		void closeAction_triggered (bool chkd)
+		void HandleCloseActionTriggered (bool chkd)
 		{
-			closeTab(null);
+			HandleCloseTab(null);
 		}
 		 
 		void TabAdded ()
@@ -284,7 +280,7 @@ namespace Synapse.QtClient.Windows
 		protected override void CloseEvent(QCloseEvent evnt)
 		{
 			while (m_Tabs.Count > 0)
-				closeTab(null);
+				HandleCloseTab(null);
 			
 			this.Hide();
 			evnt.Accept();

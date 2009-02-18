@@ -26,6 +26,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 
 using Synapse.Core;
 
@@ -41,7 +42,84 @@ namespace Synapse.QtClient.Widgets
 		
 		public new string ToHtml ()
 		{
-			throw new NotImplementedException();
+			var builder = new StringBuilder();
+			
+			var document = base.Document();
+			
+			bool isFirstBlock = true;
+			var block = document.Begin();
+			while (block.IsValid()) {			
+				if (!isFirstBlock)
+					builder.Append("<br/>");
+				isFirstBlock = false;
+				
+				QTextBlock.iterator it;
+				for (it = block.Begin(); !it.AtEnd(); it = it++) {
+					var fragment = it.Fragment();
+					var format = fragment.CharFormat();
+					if (format.IsImageFormat()) {					
+						var imageFormat = format.ToImageFormat();
+						var name = imageFormat.Name();
+						var data = document.Resource((int)QTextDocument.ResourceType.ImageResource, new QUrl(name));
+						if (data.type() == QVariant.TypeOf.Pixmap) {
+							var pixmap = (QPixmap)data;
+							var tempArray = new QByteArray();
+							var tempBuffer = new QBuffer(tempArray);
+							pixmap.Save(tempBuffer, "PNG");
+						
+							string imageString = tempArray.ToBase64().ConstData();
+							builder.AppendFormat("<img alt=\"[embeded image]\" src=\"data:image/png;base64,{0}\" />", imageString);
+						}						
+					} else {
+						var link = format.AnchorHref();
+						var bold = (format.FontWeight() == (int)QFont.Weight.Bold);
+						var underline = format.FontUnderline();
+						var italic = format.FontItalic();
+						var strike = format.FontStrikeOut();
+						
+						if (!String.IsNullOrEmpty(link))
+							builder.AppendFormat("<a href=\"{0}\" title=\"{0}\">", link);
+
+						if (bold) builder.Append("<b>");						
+						if (underline) builder.Append("<u>");
+						if (italic) builder.Append("<i>");
+						if (strike) builder.Append("<s>");
+							
+						var text = fragment.Text();
+
+						text = text.Replace("  ", "&#160;");
+						text = text.Replace("\t", " &#160;&#160;&#160;");
+						text = text.Replace("\r\n", "<br/>");
+						text = text.Replace("\r", "<br/>");
+						text = text.Replace("\n", "<br/>");
+						text = text.Replace("\u2028", "<br/>");
+
+						builder.Append(text);
+						
+						if (bold) builder.Append("</b>");
+						if (underline) builder.Append("</u>");
+						if (italic) builder.Append("</i>");
+						if (strike) builder.Append("</s>");
+
+						if (!String.IsNullOrEmpty(link))
+							builder.Append("</a>");
+					}
+				}			
+				
+				block = block.Next();
+			}
+			
+			return builder.ToString();
+		}
+
+		public void InsertImage (string fileName)
+		{
+			var magic = new Magic(true);
+			string mimeType = magic.Lookup(fileName);
+			if (mimeType.StartsWith("image/")) {
+				var cursor = base.TextCursor();
+				cursor.InsertHtml(String.Format("<img src=\"{0}\" />", fileName));
+			}
 		}
 		
 		protected override bool CanInsertFromMimeData (Qyoto.QMimeData source)
@@ -57,19 +135,21 @@ namespace Synapse.QtClient.Widgets
 			var cursor = base.TextCursor();
 			
 			if (source.HasImage()) {
-				var image = (QImage)source.ImageData();
+				var image = QPixmap.FromImage((QImage)source.ImageData());
 				var document = base.Document();
 				var imageName = Guid.NewGuid().ToString();
 				document.AddResource((int)QTextDocument.ResourceType.ImageResource, new QUrl(imageName), image);
 				cursor.InsertImage(imageName);
 			} else if (source.HasUrls()) {				
-				var magic = new Magic(true);				
+				var magic = new Magic(true);
 				foreach (var url in source.Urls()) {
 					if (url.Scheme() == "file") {
 						string fileName = url.Path();
 						if (File.Exists(fileName)) {
 							string mimeType = magic.Lookup(url.Path());
 							if (mimeType.StartsWith("image/")) {
+								// FIXME: If image is over a certain size, send as file transfer rather
+								// than encoded inline.
 								cursor.InsertHtml(String.Format("<img src=\"{0}\" />", fileName));
 							} else {
 								// FIXME: Generate and insert an image representing a file.

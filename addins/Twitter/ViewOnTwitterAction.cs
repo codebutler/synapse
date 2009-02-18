@@ -39,7 +39,7 @@ namespace Synapse.Addins.Twitter
 			base.Text = "View on Twitter";
 			base.icon = new QIcon(new QPixmap("resource:/twitter/twitm-16.png"));
 			
-			QObject.Connect(this, Qt.SIGNAL("triggered(bool)"), this, Qt.SLOT("on_triggered(bool)"));
+			QObject.Connect<bool>(this, Qt.SIGNAL("triggered(bool)"), HandleTriggered);
 		}
 		
 		public void Update ()
@@ -49,8 +49,7 @@ namespace Synapse.Addins.Twitter
 			base.Visible = !String.IsNullOrEmpty(twitterId);
 		}
 		
-		[Q_SLOT]
-		void on_triggered (bool isChecked)
+		void HandleTriggered (bool isChecked)
 		{
 			RosterItem item = ((RosterWidget)base.Parent()).SelectedItem;
 			string twitterId = item.Account.GetFeature<UserWebIdentities>().GetIdentity(item.Item.JID, "twitter");

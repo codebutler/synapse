@@ -92,9 +92,7 @@ namespace Synapse.QtClient.Windows
 					buffer = stream.GetBuffer();
 				}
 				
-				QApplication.Invoke(delegate {
-					SetAvatar(buffer, image.RawFormat);
-				});
+				SetAvatar(buffer, image.RawFormat);
 			}, null);
 		}
 		
@@ -133,17 +131,13 @@ namespace Synapse.QtClient.Windows
 		}
 	
 		void SetAvatar (byte[] buffer, ImageFormat format)
-		{
-			QPixmap pixmap = new QPixmap();
-			
+		{			
 			// FIXME: Handle this more gracefully, or prevent it from happening (see Account#HandleOnAuthenticate).
 			if (m_Account.VCard == null) {
 				throw new Exception("No VCard!");
 			}
 			
-			if (buffer == null) {
-				pixmap = new QPixmap("resource:/default-avatar.png");
-				
+			if (buffer == null) {		
 				if (m_Account.VCard.Photo != null) {
 					m_Account.VCard.Photo.BinVal    = null;
 					m_Account.VCard.Photo.ImageType = null;
@@ -160,12 +154,6 @@ namespace Synapse.QtClient.Windows
 				if (m_Account.VCard.Photo == null) {
 					m_Account.VCard.Photo = new VCard.VPhoto(m_Account.Client.Document);
 				}
-				
-				Console.WriteLine(m_Account.VCard.OuterXml);
-				Console.WriteLine("VPhoto: " + (m_Account.VCard.Photo == null));
-				Console.WriteLine(m_Account.VCard["PHOTO"]);
-				Console.WriteLine(m_Account.VCard["PHOTO"].Name);
-				Console.WriteLine(m_Account.VCard["PHOTO"].GetType());
 				
 				m_Account.VCard.Photo.ImageType = format;
 				m_Account.VCard.Photo.BinVal = buffer;

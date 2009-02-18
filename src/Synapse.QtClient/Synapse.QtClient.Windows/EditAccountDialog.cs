@@ -39,7 +39,7 @@ namespace Synapse.QtClient.Windows
 		{
 			SetupUi();
 			
-			QObject.Connect(this, Qt.SIGNAL("accepted()"), this, Qt.SLOT("HandleDialogAccepted()"));
+			QObject.Connect(this, Qt.SIGNAL("accepted()"), HandleDialogAccepted);
 			
 			m_Account = account;
 			
@@ -58,7 +58,6 @@ namespace Synapse.QtClient.Windows
 			Gui.CenterWidgetOnScreen(this);
 		}
 		
-		[Q_SLOT]
 		void HandleDialogAccepted ()
 		{
 			JID jid = null;

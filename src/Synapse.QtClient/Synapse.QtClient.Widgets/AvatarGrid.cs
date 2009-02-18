@@ -78,7 +78,7 @@ namespace Synapse.QtClient.Widgets
 			m_TooltipTimer = new QTimer(this);
 			m_TooltipTimer.SingleShot = true;
 			m_TooltipTimer.Interval = 500;
-			QObject.Connect(m_TooltipTimer, Qt.SIGNAL("timeout()"), this, Qt.SLOT("tooltipTimer_timeout()"));
+			QObject.Connect(m_TooltipTimer, Qt.SIGNAL("timeout()"), HandleTooltipTimerTimeout);
 
 			this.AcceptDrops = true;
 		}
@@ -544,8 +544,7 @@ namespace Synapse.QtClient.Widgets
 			//}
 		}		
 
-		[Q_SLOT]
-		void tooltipTimer_timeout()
+		void HandleTooltipTimerTimeout()
 		{
 			UpdateHoverItem();
 			if (m_InfoPopup.Item != null) {

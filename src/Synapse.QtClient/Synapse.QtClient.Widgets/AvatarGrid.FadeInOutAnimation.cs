@@ -30,6 +30,8 @@ namespace Synapse.QtClient.Widgets
 		{
 			bool m_FadeIn;
 			
+			IFadableItem m_Item;
+			
 			public FadeInOutAnimation () : base ()
 			{
 			}
@@ -41,6 +43,7 @@ namespace Synapse.QtClient.Widgets
 			public new void SetItem (QGraphicsItem item)
 			{			
 				base.SetItem(item);
+				m_Item = (IFadableItem)item;
 			}
 			
 			public bool FadeIn {
@@ -49,10 +52,11 @@ namespace Synapse.QtClient.Widgets
 				}
 				set {
 					m_FadeIn = value;
-					var fadeItem = (IFadableItem)base.Item();
-					fadeItem.Opacity = m_FadeIn ? 0 : 1;
-					fadeItem.SetVisible(m_FadeIn);
-					fadeItem.Update();	
+					if (m_Item != null) {
+						m_Item.Opacity = m_FadeIn ? 0 : 1;
+						m_Item.SetVisible(m_FadeIn);
+						m_Item.Update();
+					}
 				}
 			}
 			
@@ -60,13 +64,14 @@ namespace Synapse.QtClient.Widgets
 			{
 				base.AfterAnimationStep (step);
 				
-				var opacity = m_FadeIn ? step : 1 - step;
+				if (m_Item != null) {
+					var opacity = m_FadeIn ? step : 1 - step;
 
-				var fadeItem = (IFadableItem)base.Item();
-				fadeItem.Opacity = opacity;
+					m_Item.Opacity = opacity;
 				
-				if (step == 1 && !m_FadeIn) {
-					fadeItem.SetVisible(false);
+					if (step == 1 && !m_FadeIn) {
+						m_Item.SetVisible(false);
+					}
 				}
 			}
 		}

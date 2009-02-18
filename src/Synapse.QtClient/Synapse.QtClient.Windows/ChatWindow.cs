@@ -52,6 +52,9 @@ namespace Synapse.QtClient.Windows
 		QAction m_UnderlineAction;
 		QAction m_ItalicAction;
 		QAction m_StrikethroughAction;
+		QAction m_ClearFormattingAction;
+
+		QAction m_InsertPhotoAction;
 
 		QComboBox m_ToComboBox;
 	
@@ -75,14 +78,14 @@ namespace Synapse.QtClient.Windows
 				var group = new QActionGroup(this);
 				
 				var gridModeAction = new QAction("View as Grid", this);
-				QObject.Connect(gridModeAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleGridModeActionTriggered()")); 
+				QObject.Connect(gridModeAction, Qt.SIGNAL("triggered()"), HandleGridModeActionTriggered); 
 				gridModeAction.SetActionGroup(group);
 				gridModeAction.Checkable = true;
 				gridModeAction.Checked = true;
 				participantsGrid.AddAction(gridModeAction);
 		
 				var listModeAction = new QAction("View as List", this);
-				QObject.Connect(listModeAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleListModeActionTriggered()"));
+				QObject.Connect(listModeAction, Qt.SIGNAL("triggered()"), HandleListModeActionTriggered);
 				listModeAction.SetActionGroup(group);
 				listModeAction.Checkable = true;
 				participantsGrid.AddAction(listModeAction);
@@ -117,8 +120,10 @@ namespace Synapse.QtClient.Windows
 			QToolBar toolbar = new QToolBar(this);
 			toolbar.IconSize = new QSize(16, 16);
 						
-			var formatMenu = new QMenu(this);			
 			var formatMenuButton = new QToolButton(this);
+
+			var formatMenu = new QMenu(this);			
+			QObject.Connect<QAction>(formatMenu, Qt.SIGNAL("triggered(QAction*)"), HandleFormatMenuActionTriggered);
 			formatMenuButton.ToolButtonStyle = ToolButtonStyle.ToolButtonTextBesideIcon;
 			formatMenuButton.Text = "Format";
 			formatMenuButton.icon = Gui.LoadIcon("fonts", 16);
@@ -148,8 +153,9 @@ namespace Synapse.QtClient.Windows
 			
 			formatMenu.AddSeparator();
 			
-			formatMenu.AddAction(Gui.LoadIcon("edit-clear", 16), "Clear Formatting");
-			
+			m_ClearFormattingAction = new QAction(Gui.LoadIcon("edit-clear", 16), "Clear Formatting", this);
+			formatMenu.AddAction(m_ClearFormattingAction);
+
 			var insertMenu = new QMenu(this);			
 			var insertMenuButton = new QToolButton(this);
 			insertMenuButton.ToolButtonStyle = ToolButtonStyle.ToolButtonTextBesideIcon;
@@ -159,7 +165,10 @@ namespace Synapse.QtClient.Windows
 			insertMenuButton.SetMenu(insertMenu);
 			toolbar.AddWidget(insertMenuButton);
 			
-			insertMenu.AddAction(Gui.LoadIcon("insert-image", 16), "Photo...");
+			m_InsertPhotoAction = new QAction(Gui.LoadIcon("insert-image", 16), "Photo...", this);
+			QObject.Connect(m_InsertPhotoAction, Qt.SIGNAL("triggered()"), HandleInsertImageActionTriggered);
+			insertMenu.AddAction(m_InsertPhotoAction);
+
 			insertMenu.AddAction(Gui.LoadIcon("insert-link", 16), "Link...");
 			
 			foreach (IActionCodon node in AddinManager.GetExtensionNodes("/Synapse/QtClient/ChatWindow/InsertActions")) {
@@ -249,7 +258,7 @@ namespace Synapse.QtClient.Windows
 				
 				// FIXME: Make this a menu with "View Profile" and "View History".
 				var viewProfileAction = new QAction(Gui.LoadIcon("info", 16), "View Profile", this);
-				QObject.Connect(viewProfileAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleViewProfileActionTriggered()"));
+				QObject.Connect(viewProfileAction, Qt.SIGNAL("triggered()"), HandleViewProfileActionTriggered);
 				toolbar.AddAction(viewProfileAction);
 			} else {
 				toWidgetAction.Visible = false;
@@ -350,11 +359,7 @@ namespace Synapse.QtClient.Windows
 		bool HandleKeyEvent(QKeyEvent kevent)
 		{
 			if ((kevent.Modifiers() & (uint)Qt.KeyboardModifier.ControlModifier) == 0 && kevent.Key() == (int)Qt.Key.Key_Return || kevent.Key() == (int)Qt.Key.Key_Enter) {
-				// FIXME: Need to clean this HTML up...
-				// string html = textEdit.Html;
-				string html = textEdit.PlainText;
-				
-				
+				string html = textEdit.ToHtml();			
 				if (m_Handler is ChatHandler) {
 					string resource = m_ToComboBox.ItemData(m_ToComboBox.CurrentIndex);
 					((ChatHandler)m_Handler).Resource = (resource == "auto") ? null : resource;
@@ -374,23 +379,65 @@ namespace Synapse.QtClient.Windows
 			}
 		}
 		
-		[Q_SLOT]
 		void HandleGridModeActionTriggered ()
 		{
 			participantsGrid.ListMode = false;
 		}
 		
-		[Q_SLOT]
 		void HandleListModeActionTriggered ()
 		{
 			participantsGrid.ListMode = true;
 		}
 		
-		[Q_SLOT]
 		void HandleViewProfileActionTriggered ()
 		{
 			var window = new ProfileWindow(m_Handler.Account, ((ChatHandler)m_Handler).Jid);
 			window.Show();
+		}
+
+		void HandleFormatMenuActionTriggered (QAction action)
+		{
+			var cursor = textEdit.TextCursor();
+
+			QTextCharFormat fmt = new QTextCharFormat();
+
+			if (action == m_ClearFormattingAction) {
+				cursor.SetCharFormat(fmt);
+				textEdit.SetCurrentCharFormat(fmt);
+				return;
+			}
+
+			if (action == m_BoldAction)
+				fmt.SetFontWeight(action.Checked ? (int)QFont.Weight.Bold : (int)QFont.Weight.Normal);
+			else if (action == m_ItalicAction)
+				fmt.SetFontItalic(action.Checked);
+			else if (action == m_UnderlineAction)
+				fmt.SetFontUnderline(action.Checked);
+			else if (action == m_StrikethroughAction)
+				fmt.SetFontStrikeOut(action.Checked);
+
+			cursor.MergeCharFormat(fmt);
+			textEdit.MergeCurrentCharFormat(fmt);
+		}
+
+		void HandleInsertImageActionTriggered ()
+		{
+			var dialog = new QFileDialog(this.TopLevelWidget(), "Select Avatar");
+			dialog.fileMode = QFileDialog.FileMode.ExistingFile;
+			if (dialog.Exec() == (int)QFileDialog.DialogCode.Accepted && dialog.SelectedFiles().Count > 0) {
+				string fileName = dialog.SelectedFiles()[0];
+				textEdit.InsertImage(fileName);
+			}
+		}
+
+		[Q_SLOT]
+		void on_textEdit_currentCharFormatChanged (QTextCharFormat format)
+		{
+			var font = format.Font();
+			m_BoldAction.Checked = font.Bold();
+			m_ItalicAction.Checked = font.Italic();
+			m_UnderlineAction.Checked = font.Underline();
+			m_StrikethroughAction.Checked = font.StrikeOut();
 		}
 	}
 }

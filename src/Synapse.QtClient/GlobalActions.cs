@@ -37,26 +37,26 @@ namespace Synapse.QtClient
 			m_AccountsMenu = new QMenu();
 			
 			m_QuitAction = new QAction(Gui.LoadIcon("gtk-quit"), "Quit", this);
-			QObject.Connect(m_QuitAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleQuitActionTriggered()"));
+			QObject.Connect(m_QuitAction, Qt.SIGNAL("triggered()"), HandleQuitActionTriggered);
 			
 			m_ShowPreferencesAction = new QAction(Gui.LoadIcon("gtk-preferences"), "Preferences", this);
-			QObject.Connect(m_ShowPreferencesAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowPreferencesActionTriggered()"));
+			QObject.Connect(m_ShowPreferencesAction, Qt.SIGNAL("triggered()"), HandleShowPreferencesActionTriggered);
 			
 			m_SendFeedbackAction = new QAction("Send Feedback...", this);
-			QObject.Connect(m_SendFeedbackAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleSendFeedbackActionTriggered()"));			
+			QObject.Connect(m_SendFeedbackAction, Qt.SIGNAL("triggered()"), HandleSendFeedbackActionTriggered);
 			
 			m_ShowBrowserAction = new QAction(Gui.LoadIcon("search"), "Discover Services...", this);
-			QObject.Connect(m_ShowBrowserAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowBrowserActionTriggered()"));
+			QObject.Connect(m_ShowBrowserAction, Qt.SIGNAL("triggered()"), HandleShowBrowserActionTriggered);
 						
 			m_NewMessageAction = new QAction(Gui.LoadIcon("gtk-new"), "New Message...", this);
 			
 			m_JoinMucAction = new QAction(Gui.LoadIcon("internet-group-chat"), "Create/Join Conference...", this);
 			
 			m_EditProfileAction = new QAction(Gui.LoadIcon("stock_person"), "Edit Profile...", this);
-			QObject.Connect(m_EditProfileAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleEditProfileActionTriggered()"));
+			QObject.Connect(m_EditProfileAction, Qt.SIGNAL("triggered()"), HandleEditProfileActionTriggered);
 			
 			m_AboutAction = new QAction(Gui.LoadIcon("help-about"), "About", this);
-			QObject.Connect(m_AboutAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleAboutActionTriggered()"));
+			QObject.Connect(m_AboutAction, Qt.SIGNAL("triggered()"), HandleAboutActionTriggered);
 
 			m_PresenceMenu = new QMenu();
 
@@ -147,25 +147,21 @@ namespace Synapse.QtClient
 			}
 		}
 		
-		[Q_SLOT]
 		void HandleQuitActionTriggered ()
 		{
 			Application.Shutdown();
 		}
 		
-		[Q_SLOT]
 		void HandleShowPreferencesActionTriggered ()
 		{
 			Gui.PreferencesWindow.Show();
 		}
 		
-		[Q_SLOT]
 		void HandleSendFeedbackActionTriggered ()
 		{
 			Util.Open("http://firerabbit.lighthouseapp.com/projects/23238-synapse/tickets/new");
 		}
 		
-		[Q_SLOT]
 		void HandleShowBrowserActionTriggered ()
 		{
 			// FIXME: Using ShowAccountMenu here looks really bad.
@@ -177,7 +173,6 @@ namespace Synapse.QtClient
 			}
 		}
 		
-		[Q_SLOT]
 		void HandleEditProfileActionTriggered ()
 		{
 			// FIXME: Using ShowAccountMenu here looks really bad.
@@ -189,7 +184,6 @@ namespace Synapse.QtClient
 			}
 		}
 		
-		[Q_SLOT]
 		void HandleAboutActionTriggered ()
 		{
 			var aboutDialog = new AboutDialog(Gui.MainWindow);

@@ -107,7 +107,7 @@ namespace Synapse.QtClient
 		{
 			m_JSWindowObject = new SynapseJSObject(this);
 			
-			QObject.Connect(this.Page().MainFrame(), Qt.SIGNAL("javaScriptWindowObjectCleared()"), this, Qt.SLOT("OnJavaScriptWindowObjectCleared()"));
+			QObject.Connect(this.Page().MainFrame(), Qt.SIGNAL("javaScriptWindowObjectCleared()"), HandleJavaScriptWindowObjectCleared);
 
 			if (ConversationWidget.ThemesDirectory == null) {
 				throw new Exception("Set ThemesDirectory first");
@@ -125,7 +125,7 @@ namespace Synapse.QtClient
 			//m_Menu.AddAction(this.PageAction(QWebPage.WebAction.CopyImageToClipboard));
 
 			this.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
-			QObject.Connect(this, Qt.SIGNAL("linkClicked(QUrl)"), new OneArgDelegate<QUrl>(HandleLinkClicked));
+			QObject.Connect<QUrl>(this, Qt.SIGNAL("linkClicked(QUrl)"), HandleLinkClicked);
 		}
 		#endregion
 		
@@ -139,10 +139,9 @@ namespace Synapse.QtClient
 			if (!m_ThemeLoaded)
 				throw new Exception("Call LoadTheme() first!");
 
-			Page().MainFrame().EvaluateJavaScript(ScriptForAppendingContent(content,
-			                                                                contentIsSimilar,
-			                                                                willAddMoreContentObjects,
-			                                                                replaceLastContent));
+
+			var js = ScriptForAppendingContent(content, contentIsSimilar, willAddMoreContentObjects, replaceLastContent);
+			Page().MainFrame().EvaluateJavaScript(js);
 		}
 				
 		public void LoadTheme(string themeName, string variantName)
@@ -237,7 +236,7 @@ namespace Synapse.QtClient
 				*/
 			}
 			
-			OnJavaScriptWindowObjectCleared();
+			HandleJavaScriptWindowObjectCleared();
 
 			m_ThemeLoaded = true;
 		}
@@ -528,8 +527,7 @@ namespace Synapse.QtClient
 		#endregion
 
 		#region Signal Handlers
-		[Q_SLOT]
-		private void OnJavaScriptWindowObjectCleared ()
+		void HandleJavaScriptWindowObjectCleared ()
 		{
 			base.Page().MainFrame().AddToJavaScriptWindowObject("Synapse", m_JSWindowObject);
 			
