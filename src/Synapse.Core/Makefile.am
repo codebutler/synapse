@@ -4,6 +4,7 @@ FILES =  \
 	AssemblyInfo.cs \
 	Synapse.Core.ExtensionMethods/IEnumerable.cs \
 	Synapse.Core.ExtensionMethods/StringExtensions.cs \
+	Synapse.Core/HtmlSanitizer.cs \
 	Synapse.Core/Magic.cs \
 	Synapse.Core/Paths.cs \
 	Synapse.Core/PlatformHacks.cs \

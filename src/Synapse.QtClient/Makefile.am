@@ -23,6 +23,7 @@ FILES =  \
 	qt-gui/EditGroupsWindow.cs \
 	qt-gui/EditProfileDialog.cs \
 	qt-gui/ErrorDialog.cs \
+	qt-gui/InsertLinkDialog.cs \
 	qt-gui/MainWindow.cs \
 	qt-gui/NoAccountsWidget.cs \
 	qt-gui/PreferencesWindow.cs \
@@ -64,6 +65,7 @@ FILES =  \
 	Synapse.QtClient.Windows/EditProfileDialog.cs \
 	Synapse.QtClient.Windows/EditProfileDialog.WebIdentitiesTab.cs \
 	Synapse.QtClient.Windows/ErrorDialog.cs \
+	Synapse.QtClient.Windows/InsertLinkDialog.cs \
 	Synapse.QtClient.Windows/MainWindow.cs \
 	Synapse.QtClient.Windows/PreferencesWindow.cs \
 	Synapse.QtClient.Windows/ProfileWindow.cs \

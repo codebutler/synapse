@@ -29,6 +29,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Linq;
 using IO = System.IO;
 using Qyoto;
 using Synapse.Core;
@@ -421,7 +422,16 @@ namespace Synapse.QtClient
 		
 		void HandleLinkClicked (QUrl url)
 		{
-			Util.Open(url);
+			// We don't open arbitrary links for security reasons.
+			var validSchemes = new [] { "http", "https", "ftp", "xmpp" };
+			if (validSchemes.Contains(url.Scheme().ToLower())) {
+				Util.Open(url);
+			} else if (url.Scheme().ToLower() == "xmpp") {
+				// FIXME: Add xmpp: uri handler.
+				QMessageBox.Information(this.TopLevelWidget(), "Not implenented", "xmpp: uris not yet supported.");
+			} else {
+				QMessageBox.Information(this.TopLevelWidget(), "Link URL", url.ToString());
+			}
 		}
 		
 		string FormatBaseTemplate(PList themeProperties, string basePath, string mainPath, string variantPath, string headerHtml, string footerHtml)

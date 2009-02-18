@@ -55,6 +55,7 @@ namespace Synapse.QtClient.Windows
 		QAction m_ClearFormattingAction;
 
 		QAction m_InsertPhotoAction;
+		QAction m_InsertLinkAction;
 
 		QComboBox m_ToComboBox;
 	
@@ -169,7 +170,9 @@ namespace Synapse.QtClient.Windows
 			QObject.Connect(m_InsertPhotoAction, Qt.SIGNAL("triggered()"), HandleInsertImageActionTriggered);
 			insertMenu.AddAction(m_InsertPhotoAction);
 
-			insertMenu.AddAction(Gui.LoadIcon("insert-link", 16), "Link...");
+			m_InsertLinkAction = new QAction(Gui.LoadIcon("insert-link", 16), "Link...", this);
+			QObject.Connect(m_InsertLinkAction, Qt.SIGNAL("triggered()"), HandleInsertLinkActionTriggered);
+			insertMenu.AddAction(m_InsertLinkAction);
 			
 			foreach (IActionCodon node in AddinManager.GetExtensionNodes("/Synapse/QtClient/ChatWindow/InsertActions")) {
 				insertMenu.AddAction((QAction)node.CreateInstance(this));
@@ -427,6 +430,14 @@ namespace Synapse.QtClient.Windows
 			if (dialog.Exec() == (int)QFileDialog.DialogCode.Accepted && dialog.SelectedFiles().Count > 0) {
 				string fileName = dialog.SelectedFiles()[0];
 				textEdit.InsertImage(fileName);
+			}
+		}
+		
+		void HandleInsertLinkActionTriggered ()
+		{
+			var dialog = new InsertLinkDialog(this.TopLevelWidget());
+			if (dialog.Exec() == (int)QDialog.DialogCode.Accepted) {
+				textEdit.InsertLink(dialog.Text, dialog.Url);
 			}
 		}
 

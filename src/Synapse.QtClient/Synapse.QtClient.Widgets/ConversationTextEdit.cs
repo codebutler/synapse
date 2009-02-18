@@ -73,7 +73,7 @@ namespace Synapse.QtClient.Widgets
 					} else {
 						var link = format.AnchorHref();
 						var bold = (format.FontWeight() == (int)QFont.Weight.Bold);
-						var underline = format.FontUnderline();
+						var underline = format.FontUnderline() && String.IsNullOrEmpty(link);
 						var italic = format.FontItalic();
 						var strike = format.FontStrikeOut();
 						
@@ -97,10 +97,10 @@ namespace Synapse.QtClient.Widgets
 
 						builder.Append(text);
 						
-						if (bold) builder.Append("</b>");
-						if (underline) builder.Append("</u>");
-						if (italic) builder.Append("</i>");
 						if (strike) builder.Append("</s>");
+						if (italic) builder.Append("</i>");
+						if (underline) builder.Append("</u>");
+						if (bold) builder.Append("</b>");
 
 						if (!String.IsNullOrEmpty(link))
 							builder.Append("</a>");
@@ -121,6 +121,18 @@ namespace Synapse.QtClient.Widgets
 				var cursor = base.TextCursor();
 				cursor.InsertHtml(String.Format("<img src=\"{0}\" />", fileName));
 			}
+		}
+		
+		public void InsertLink (string text, string url)
+		{
+			if (String.IsNullOrEmpty(url))
+				throw new ArgumentNullException("url");
+			
+			if (String.IsNullOrEmpty(text))
+				text = url;
+			
+			var cursor = base.TextCursor();
+			cursor.InsertHtml(String.Format("<a title=\"{0}\" href=\"{0}\">{1}</a>", url, text));
 		}
 		
 		protected override bool CanInsertFromMimeData (Qyoto.QMimeData source)
