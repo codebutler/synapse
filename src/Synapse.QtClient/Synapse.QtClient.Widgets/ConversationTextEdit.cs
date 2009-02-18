@@ -87,6 +87,7 @@ namespace Synapse.QtClient.Widgets
 							
 						var text = fragment.Text();
 
+						text = Util.EscapeHtml(text);
 						text = text.Replace("  ", "&#160;");
 						text = text.Replace("\t", " &#160;&#160;&#160;");
 						text = text.Replace("\r\n", "<br/>");
