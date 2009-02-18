@@ -67,8 +67,6 @@
     <File name="resources/effects.js" subtype="Code" buildaction="EmbedAsResource" />
     <File name="gtk-gui/gui.stetic" subtype="Code" buildaction="EmbedAsResource" />
     <File name="gtk-gui/generated.cs" subtype="Code" buildaction="Compile" />
-    <File name="ErrorDialog.cs" subtype="Code" buildaction="Compile" />
-    <File name="gtk-gui/Synapse.QtClient.ErrorDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Windows/EditGroupsWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/EditGroupsWindow.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/friend-muclist.html" subtype="Code" buildaction="EmbedAsResource" />
@@ -77,7 +75,6 @@
     <File name="qt-gui/EditAccountDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="SynapseJSObject.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Windows/PreferencesWindow.cs" subtype="Code" buildaction="Compile" />
-    <File name="qt-gui/AvatarSelectDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/AvatarLabel.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/loading.gif" subtype="Code" buildaction="EmbedAsResource" />
     <File name="qt-gui/AddFriendWindow.cs" subtype="Code" buildaction="Compile" />
@@ -99,7 +96,7 @@
     <File name="Synapse.QtClient.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
     <File name="Synapse.QtClient.Widgets/EditGroupsWidget.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Windows/AddFriendWindow.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.QtClient.Windows/AvatarSelectDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/EditProfileDialog.AvatarTab.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Windows/EditAccountDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.ExtensionNodes/ActionCodon.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.ExtensionNodes/IActionCodon.cs" subtype="Code" buildaction="Compile" />
@@ -107,6 +104,26 @@
     <File name="IUpdateableAction.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/ConversationTextEdit.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.ExtensionNodes/QWidgetTypeExtensionNode.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/EditProfileDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/EditProfileDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Widgets/WebIdentityConfiguratorWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="IWebIdentityConfigurator.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/WebIdentityConfiguratorWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/EditProfileDialog.WebIdentitiesTab.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.ExtensionNodes/WebIdentityConfiguratorCodon.cs" subtype="Code" buildaction="Compile" />
+    <File name="resources/stock-close_12.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="resources/menu-icon.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="GlobalActions.cs" subtype="Code" buildaction="Compile" />
+    <File name="AboutDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/AboutDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvatarGridZoomAction.cs" subtype="Code" buildaction="Compile" />
+    <File name="resources/octy.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="resources/text.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="qt-gui/ErrorDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/ErrorDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="resources/stock_icons" subtype="Directory" buildaction="Compile" />
+    <File name="resources/stock_icons/internet-group-chat__16.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="resources/stock_icons/internet-group-chat__24.png" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/jabber-net.dll" />
@@ -129,6 +146,7 @@
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Xmpp" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
+    <ProjectReference type="Gac" localcopy="True" refto="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <Deployment.LinuxDeployData scriptName="synapse" />
@@ -154,9 +172,12 @@
       <QyotoForm UiFileName="ServiceBrowserWindow.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="EditGroupsWindow.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="EditAccountDialog.ui" Namespace="Synapse.QtClient.Windows" />
-      <QyotoForm UiFileName="AvatarSelectDialog.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="AddFriend.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="EditGroupsWidget.ui" Namespace="Synapse.QtClient.Widgets" />
+      <QyotoForm UiFileName="EditProfileDialog.ui" Namespace="Synapse.QtClient.Windows" />
+      <QyotoForm UiFileName="WebIdentityConfiguratorWidget.ui" Namespace="Synapse.QtClient.Widgets" />
+      <QyotoForm UiFileName="AboutDialog.ui" Namespace="Synapse.QtClient.Windows" />
+      <QyotoForm UiFileName="ErrorDialog.ui" Namespace="Synapse.QtClient.Windows" />
     </Forms>
   </QyotoDesignInfo>
 </Project>

@@ -20,9 +20,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using Synapse.UI;
+
 using Synapse.ServiceStack;
+using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
+using Synapse.UI;
+
 using Qyoto;
+
+using jabber;
 
 namespace Synapse.QtClient.Widgets
 {	
@@ -39,16 +45,15 @@ namespace Synapse.QtClient.Widgets
 			m_GraphicsView.SetScene(m_Scene);
 			m_Scene.SetSceneRect(0, 0, 200, 200);
 			
-			QGraphicsSvgItem octy = new QGraphicsSvgItem("resource:/octy.svg");
+			var octy = new QGraphicsPixmapItem(new QPixmap("resource:/octy.png"));
 			octy.SetPos(0, 10);
-			octy.SetParent(m_Scene);
 			m_Scene.AddItem(octy);
 
 			// TODO: Add bubbles!
 
 			m_TimeLine = new QTimeLine(2000, m_Scene);
 			m_TimeLine.curveShape = QTimeLine.CurveShape.EaseOutCurve;
-			QObject.Connect(m_TimeLine, Qt.SIGNAL("finished()"), this, Qt.SLOT("TimerFinished()"));
+			QObject.Connect(m_TimeLine, Qt.SIGNAL("finished()"), HandleTimerFinished);
 
 			QGraphicsItemAnimation animation = new QGraphicsItemAnimation(m_Scene);
 			animation.SetItem(octy);
@@ -57,21 +62,8 @@ namespace Synapse.QtClient.Widgets
 			
 			m_TimeLine.Start();
 		}
-
-		public string Login {
-			get {
-				return m_LoginLineEdit.Text;
-			}
-		}
-
-		public string Password {
-			get {
-				return m_PasswordLineEdit.Text;
-			}
-		}
 		
-		[Q_SLOT]
-		protected void TimerFinished()
+		void HandleTimerFinished()
 		{
 			m_TimeLine.ToggleDirection();
 			m_TimeLine.Start();
@@ -98,27 +90,22 @@ namespace Synapse.QtClient.Widgets
 		[Q_SLOT]
 		private void on_saveAccountButton_clicked()
 		{
-			/*
-			DialogValidationResult result = new DialogValidationResult();
 			JID jid = null;
 			
-			if (String.IsNullOrEmpty(View.Login))
-				result.Errors.Add("Login", "may not be empty");
-			else
-				if (!JID.TryParse(View.Login, out jid))
-					result.Errors.Add("Login", "is not valid Jabber ID");
-			
-			if (String.IsNullOrEmpty(View.Password))
-				result.Errors.Add("Password", "may not be empty");
-			
-			if (result.IsValid) {
+			if (String.IsNullOrEmpty(m_LoginLineEdit.Text))
+				QMessageBox.Critical(this.TopLevelWidget(), "Synapse", "Login may not be empty.");
+			else if (!JID.TryParse(m_LoginLineEdit.Text, out jid))
+				QMessageBox.Critical(this.TopLevelWidget(), "Synapse", "Login should look like 'user@server'.");
+			else if (String.IsNullOrEmpty(new JID(m_LoginLineEdit.Text).User))
+				QMessageBox.Critical(this.TopLevelWidget(), "Synapse", "Login should look like 'user@server'.");
+			else if (String.IsNullOrEmpty(m_PasswordLineEdit.Text))
+				QMessageBox.Critical(this.TopLevelWidget(), "Synapse", "Password may not be empty");
+			else {
 				Account account = new Account(jid.User, jid.Server, "Synapse");
-				account.Password = View.Password;
+				account.Password = m_PasswordLineEdit.Text;
 				AccountService service = ServiceManager.Get<AccountService>();
 				service.AddAccount(account);
 			}
-			return result;
-			*/
 		}		
 	}
 }

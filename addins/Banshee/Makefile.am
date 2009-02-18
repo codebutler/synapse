@@ -1,27 +1,4 @@
-
-EXTRA_DIST =  
-
-ASSEMBLY_COMPILER_COMMAND = gmcs
-ASSEMBLY_COMPILER_FLAGS =  -noconfig -codepage:utf8 -warn:4 -optimize- -debug "-define:DEBUG"
-ASSEMBLY = ../../build/Debug/addins/Banshee.dll
-ASSEMBLY_MDB = $(ASSEMBLY).mdb
-COMPILE_TARGET = library
-PROJECT_REFERENCES = ../../build/Debug/Synapse.Services.dll
-BUILD_DIR = ../../build/Debug/addins
-
-BANSHEE_DLL_MDB_SOURCE=../../build/Debug/addins/Banshee.dll.mdb
-BANSHEE_DLL_MDB=$(BUILD_DIR)/Banshee.dll.mdb
-
-AL=al2
-SATELLITE_ASSEMBLY_NAME=$(notdir $(basename $(ASSEMBLY))).resources.dll
-
-PROGRAMFILES = \
-	$(BANSHEE_DLL_MDB)  
-
-
-RESGEN=resgen2
-	
-all: $(ASSEMBLY) $(PROGRAMFILES) 
+# Begin MonoDevelop-maintained variables
 
 FILES =  \
 	AssemblyInfo.cs \
@@ -29,27 +6,26 @@ FILES =  \
 	IPlayerEngineService.cs \
 	PlayerEvent.cs 
 
-DATA_FILES = 
-
 RESOURCES = Banshee.addin.xml 
-
-EXTRAS = 
 
 REFERENCES = System
 
+PROJECT_REFERENCES = ../../build/Debug/Synapse.Services.dll
+
 DLL_REFERENCES = ../../contrib/NDesk.DBus.dll
 
-CLEANFILES = $(PROGRAMFILES) 
+# End MonoDevelop-maintained variables
+
+pkglibdir = $(prefix)/lib/synapse/addins
+BUILD_DIR = $(top_builddir)/build/Debug/addins
+
+ASSEMBLY = $(BUILD_DIR)/Banshee.dll
+ASSEMBLY_MDB = $(ASSEMBLY).mdb
+
+all: $(ASSEMBLY) $(ASSEMBLY_MDB)
 
 include $(top_srcdir)/Makefile.include
 
-
-
-
-$(eval $(call emit_resgen_targets))
-$(build_xamlg_list): %.xaml.g.cs: %.xaml
-	xamlg '$<'
-
-$(ASSEMBLY) $(ASSEMBLY_MDB): $(build_sources) $(build_resources) $(build_datafiles) $(DLL_REFERENCES) $(PROJECT_REFERENCES) $(build_xamlg_list) $(build_satellite_assembly_list)
+$(ASSEMBLY) $(ASSEMBLY_MDB): $(build_sources) $(build_resources) $(DLL_REFERENCES) $(PROJECT_REFERENCES)
 	mkdir -p $(shell dirname $(ASSEMBLY))
-	$(ASSEMBLY_COMPILER_COMMAND) $(ASSEMBLY_COMPILER_FLAGS) -out:$(ASSEMBLY) -target:$(COMPILE_TARGET) $(build_sources_embed) $(build_resources_embed) $(build_references_ref)
+	$(MCS) $(MCS_FLAGS) -out:$(ASSEMBLY) -target:library $(build_sources) $(build_resources_embed) $(build_references_ref)

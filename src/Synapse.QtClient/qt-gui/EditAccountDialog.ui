@@ -5,12 +5,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>368</width>
+    <height>263</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>EditAccountDialog</string>
+   <string>Edit Account</string>
+  </property>
+  <property name="modal" >
+   <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <property name="margin" >
@@ -18,6 +21,9 @@
    </property>
    <item>
     <widget class="QTabWidget" name="tabWidget" >
+     <property name="enabled" >
+      <bool>true</bool>
+     </property>
      <property name="currentIndex" >
       <number>0</number>
      </property>
@@ -26,11 +32,11 @@
        <string>Account</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2" >
+       <property name="margin" >
+        <number>6</number>
+       </property>
        <item>
-        <layout class="QGridLayout" name="gridLayout" >
-         <property name="topMargin" >
-          <number>0</number>
-         </property>
+        <layout class="QFormLayout" name="formLayout" >
          <item row="0" column="0" >
           <widget class="QLabel" name="label" >
            <property name="text" >
@@ -39,7 +45,7 @@
           </widget>
          </item>
          <item row="0" column="1" >
-          <widget class="QLineEdit" name="lineEdit" />
+          <widget class="QLineEdit" name="jidLineEdit" />
          </item>
          <item row="1" column="0" >
           <widget class="QLabel" name="label_2" >
@@ -49,7 +55,7 @@
           </widget>
          </item>
          <item row="1" column="1" >
-          <widget class="QLineEdit" name="lineEdit_2" >
+          <widget class="QLineEdit" name="passwordLineEdit" >
            <property name="echoMode" >
             <enum>QLineEdit::Password</enum>
            </property>
@@ -63,20 +69,28 @@
           </widget>
          </item>
          <item row="2" column="1" >
-          <widget class="QComboBox" name="comboBox" >
+          <widget class="QComboBox" name="resourceCombo" >
            <property name="editable" >
             <bool>true</bool>
            </property>
+           <item>
+            <property name="text" >
+             <string>Home Computer</string>
+            </property>
+           </item>
+           <item>
+            <property name="text" >
+             <string>Work Computer</string>
+            </property>
+           </item>
+           <item>
+            <property name="text" >
+             <string>Laptop</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox" >
-         <property name="text" >
-          <string>Connect Automatically</string>
-         </property>
-        </widget>
        </item>
        <item>
         <spacer name="verticalSpacer" >
@@ -99,6 +113,9 @@
           </property>
           <item>
            <widget class="QPushButton" name="pushButton" >
+            <property name="enabled" >
+             <bool>false</bool>
+            </property>
             <property name="text" >
              <string>Change Password...</string>
             </property>
@@ -122,18 +139,26 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2" >
-      <attribute name="title" >
-       <string>Profile</string>
-      </attribute>
-     </widget>
      <widget class="QWidget" name="tab_4" >
       <attribute name="title" >
        <string>Connection</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3" >
+       <property name="margin" >
+        <number>6</number>
+       </property>
        <item>
-        <layout class="QGridLayout" name="gridLayout_2" >
+        <widget class="QLabel" name="label_5" >
+         <property name="text" >
+          <string>Synapse will attempt to automatically discover your connect server if you leave this field blank.</string>
+         </property>
+         <property name="wordWrap" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QFormLayout" name="formLayout_2" >
          <item row="0" column="0" >
           <widget class="QLabel" name="label_4" >
            <property name="text" >
@@ -142,17 +167,17 @@
           </widget>
          </item>
          <item row="0" column="1" >
-          <widget class="QLineEdit" name="lineEdit_3" />
+          <widget class="QLineEdit" name="serverLineEdit" />
          </item>
-         <item row="0" column="2" >
+         <item row="1" column="0" >
           <widget class="QLabel" name="label_6" >
            <property name="text" >
             <string>Port:</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="3" >
-          <widget class="QSpinBox" name="spinBox" >
+         <item row="1" column="1" >
+          <widget class="QSpinBox" name="portSpinBox" >
            <property name="maximum" >
             <number>9999999</number>
            </property>
@@ -172,10 +197,10 @@
           <bool>false</bool>
          </property>
          <property name="text" >
-          <string>(Encryption is required)</string>
+          <string>Note that the server must support TLS encryption.</string>
          </property>
          <property name="alignment" >
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -194,10 +219,35 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_3" >
+     <widget class="QWidget" name="tab_2" >
       <attribute name="title" >
-       <string>Privacy</string>
+       <string>Options</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4" >
+       <property name="margin" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QCheckBox" name="autoConnectCheckBox" >
+         <property name="text" >
+          <string>Connect Automatically</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3" >
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>
@@ -216,5 +266,38 @@
   <zorder>tabWidget</zorder>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>EditAccountDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>221</x>
+     <y>243</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>296</x>
+     <y>-17</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>EditAccountDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>326</x>
+     <y>232</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>367</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

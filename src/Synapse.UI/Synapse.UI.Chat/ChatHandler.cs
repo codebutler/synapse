@@ -35,10 +35,7 @@ namespace Synapse.UI.Chat
 			: base (account)
 		{
 			m_Jid = jid;
-		}
-
-		public override void Start()
-		{
+			
 			base.Account.ConnectionStateChanged += HandleConnectionStateChanged;
 			base.Ready = (base.Account.ConnectionState == AccountConnectionState.Connected);
 		}

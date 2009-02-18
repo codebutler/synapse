@@ -25,14 +25,10 @@
     <File name="Synapse.ServiceStack/IExtensionService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/ServiceStartedHandler.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/IDelayedInitializeService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/DBusServiceManager.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/IDBusExportable.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/Application.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/Client.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/IDBusObjectName.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.ServiceStack/IRegisterOnDemandService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="Synapse.ServiceStack/DBusConnection.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services/SettingsService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Services/ActivityFeedService.cs" subtype="Code" buildaction="Compile" />
     <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
@@ -43,7 +39,6 @@
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.dll" />
-    <ProjectReference type="Gac" localcopy="True" refto="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/NDesk.DBus.dll" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

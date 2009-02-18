@@ -95,16 +95,6 @@ namespace Synapse.ServiceStack
             return !String.IsNullOrEmpty (Environment.GetEnvironmentVariable (env));
         }
 
-		public static void Invoke (InvokeHandler handler)
-		{
-			s_Client.Invoke(handler);
-		}
-		
-		public static void InvokeAndBlock (InvokeHandler handler)
-		{
-			s_Client.InvokeAndBlock(handler);
-		}
-
 		public static object CreateImage (byte[] data)
 		{
 			return s_Client.CreateImage(data);

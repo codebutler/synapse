@@ -20,18 +20,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text.RegularExpressions;
+
+using Qyoto;
+
 using Synapse.ServiceStack;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
-using Qyoto;
-
 using Synapse.QtClient.Windows;
 
 namespace Synapse.QtClient
 {
 	public static class Gui
 	{
+		static GlobalActions s_GlobalActions;
+		
 		public static MainWindow MainWindow {
 			get;
 			set;
@@ -57,12 +63,21 @@ namespace Synapse.QtClient
 			set;
 		}
 		
+		public static GlobalActions GlobalActions {
+			get {
+				if (s_GlobalActions == null)
+					s_GlobalActions = new GlobalActions();
+				return s_GlobalActions;
+			}
+		}
+		
 		public static Account ShowAccountSelectMenu (QWidget attachWidget)
 		{
 			AccountService accountService = ServiceManager.Get<AccountService>();
 	
 			if (accountService.ConnectedAccounts.Count == 0) {
-				QMessageBox.Critical(attachWidget.TopLevelWidget(), "Synapse", "You are not connected.");
+				var widget = (attachWidget != null) ? attachWidget.TopLevelWidget() : Gui.MainWindow;
+				QMessageBox.Critical(widget, "Synapse", "You are not connected.");
 				return null;
 			}			
 
@@ -77,8 +92,11 @@ namespace Synapse.QtClient
 						menu.SetActiveAction(action);
 				}
 				
-				QAction selectedAction = menu.Exec(attachWidget.MapToGlobal(new QPoint(0, attachWidget.Height())));
-				selectedAccount = accountService.GetAccount(new jabber.JID(selectedAction.Text));
+				var pos = (attachWidget != null) ? attachWidget.MapToGlobal(new QPoint(0, attachWidget.Height())) : QCursor.Pos();
+				QAction selectedAction = menu.Exec(pos);
+				if (selectedAction != null) {
+					selectedAccount = accountService.GetAccount(new jabber.JID(selectedAction.Text));
+				}
 			} else {
 				selectedAccount = accountService.ConnectedAccounts[0];
 			}
@@ -104,12 +122,24 @@ namespace Synapse.QtClient
 
 			QIcon icon = new QIcon();
 			int[] sizes = Gtk.IconTheme.Default.GetIconSizes(name);
-			if (sizes.Length == 0) {
-				Console.WriteLine(String.Format("Icon not found: {0}", name));
-			} else {
+			if (sizes.Length > 0) {
 				foreach (int size in sizes) {
 					var iconInfo = Gtk.IconTheme.Default.LookupIcon(name, size, 0);
 					icon.AddFile(iconInfo.Filename, new QSize(size, size), QIcon.Mode.Normal, QIcon.State.On);
+				}
+			} else {			
+				// If icon wasn't found in theme, try loading from resource instead...
+				var assembly = Assembly.GetExecutingAssembly();
+				foreach (string resourceName in assembly.GetManifestResourceNames()) {
+					string pattern =  "^" + Regex.Escape(name) + @"__(\d+)\.png$";
+					var match = Regex.Match(resourceName, pattern);
+					if (match.Success) {
+						icon.AddPixmap(new QPixmap("resource:/" + resourceName), QIcon.Mode.Normal, QIcon.State.On);
+					}
+				}
+				
+				if (icon.IsNull()) {
+					Console.WriteLine(String.Format("Icon not found: {0}", name));
 				}
 			}
 			return icon;
@@ -124,9 +154,59 @@ namespace Synapse.QtClient
 			if (iconInfo != null) {
 				return new QIcon(iconInfo.Filename);
 			} else {
-				Console.Error.WriteLine(String.Format("Icon not found: {0} ({1})", name, size));
-				return new QIcon();
+				// If icon wasn't found in theme, try loading from resource instead...
+				string resourceName = String.Format("{0}__{1}.png", name, size.ToString());
+				var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+				if (assembly.GetManifestResourceNames().Contains(resourceName)) {
+					return new QIcon(new QPixmap("resource:/" + resourceName));
+				} else {
+					Console.Error.WriteLine(String.Format("Icon not found: {0} ({1})", name, size));
+					return new QIcon();
+				}
 			}			
+		}
+		
+		public static void DrawAvatar (QPainter painter, int width, int height, QPixmap avatarPixmap)
+		{
+				QPainterPath path = new QPainterPath();
+				
+				// Draw a rect without corners.
+				path.MoveTo(0, 1);
+				path.LineTo(1, 1);
+				path.LineTo(1, 0);
+				path.LineTo(width - 1, 0);
+				path.LineTo(width, 1);
+				path.LineTo(width, height - 1);
+				path.LineTo(width - 1, height - 1);
+				path.LineTo(width - 1, height);
+				path.LineTo(1, height);
+				path.LineTo(1, height - 1);
+				path.LineTo(0, height - 1);
+				path.LineTo(0, 1);
+														
+				QLinearGradient g1 = new QLinearGradient(0, 0, 0, height);
+				g1.SetColorAt(0, new QColor("#888781"));
+				g1.SetColorAt(1, new QColor("#abaaa8"));
+				QBrush b1 = new QBrush(g1);
+				
+				painter.FillPath(path, b1);
+				painter.FillRect(1, 1, width - 2, height - 2, new QBrush(Qt.GlobalColor.black));
+				
+				// Darken the corners...
+				var b2 = new QBrush(new QColor(61, 61, 61, 102));
+				painter.FillRect(0, 0, 3, 3, b2);
+				painter.FillRect(width - 3, 0, 3, 3, b2);
+				painter.FillRect(0, width - 3, 3, 3, b2);
+				painter.FillRect(width - 3, width - 3, 3, 3, b2);
+				
+				painter.DrawPixmap(2, 2, width - 4, height - 4, avatarPixmap);
+		}
+
+		public static void ShowErrorWindow (string errorTitle, string errorMessage, string errorDetail)
+		{
+			ErrorDialog dialog = new ErrorDialog(errorTitle, errorMessage, errorDetail, Gui.MainWindow);
+			dialog.Show();
+			dialog.Exec();
 		}
 	}
 }

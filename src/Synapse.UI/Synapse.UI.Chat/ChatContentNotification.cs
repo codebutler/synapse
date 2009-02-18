@@ -31,8 +31,8 @@ namespace Synapse.UI.Chat
 	{
 		NotificationType m_NotificationType;
 		
-		public ChatContentNotification(Account account, JID source, JID destination, DateTime date, NotificationType type)
-			: base (account, source, destination, date)
+		public ChatContentNotification(Account account, JID source, string sourceDisplayName, JID destination, DateTime date, NotificationType type)
+			: base (account, source, sourceDisplayName, destination, date)
 		{
 			m_NotificationType = type;
 		}

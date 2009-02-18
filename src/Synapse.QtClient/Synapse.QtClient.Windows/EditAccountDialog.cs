@@ -19,17 +19,70 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 using System;
+
 using Qyoto;
+using jabber;
+
+using Synapse.Core;
+using Synapse.ServiceStack;
+using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 
 namespace Synapse.QtClient.Windows
 {
 	public partial class EditAccountDialog : QDialog
 	{
-		public EditAccountDialog ()
+		Account m_Account;
+		
+		public EditAccountDialog (Account account, QWidget parentWindow) : base (parentWindow)
 		{
 			SetupUi();
+			
+			QObject.Connect(this, Qt.SIGNAL("accepted()"), HandleDialogAccepted);
+			
+			m_Account = account;
+			
+			jidLineEdit.Text = account.Jid.Bare;
+			passwordLineEdit.Text = account.Password;
+			resourceCombo.SetEditText(account.Resource);
+			
+			serverLineEdit.Text = account.ConnectServer;
+			portSpinBox.Value = account.ConnectPort;
+			
+			autoConnectCheckBox.Checked = account.AutoConnect;
+			
+			this.buttonBox.StandardButtons = (uint)QDialogButtonBox.StandardButton.Ok |
+			                                 (uint)QDialogButtonBox.StandardButton.Cancel;
+			
+			Gui.CenterWidgetOnScreen(this);
+		}
+		
+		void HandleDialogAccepted ()
+		{
+			JID jid = null;
+			if (!JID.TryParse(jidLineEdit.Text, out jid))
+				QMessageBox.Critical(this, "Problem saving account", "JID is invalid");
+			else if (String.IsNullOrEmpty(jid.User))
+				QMessageBox.Critical(this, "Problem saving account", "JID must have a username");
+			else if (String.IsNullOrEmpty(jid.Server))
+				QMessageBox.Critical(this, "Problem saving account", "JID must have a server");
+			else if (resourceCombo.CurrentText.Trim() == String.Empty)
+				QMessageBox.Critical(this, "Problem saving account", "Password may not be blank");
+			else if (resourceCombo.CurrentText.Trim() == String.Empty)
+				QMessageBox.Critical(this, "Problem saving account", "Resource may not be blank");
+			
+			m_Account.User = jid.User;
+			m_Account.Domain = jid.Server;
+			m_Account.Password = passwordLineEdit.Text;
+			m_Account.Resource = resourceCombo.CurrentText;
+			
+			m_Account.ConnectServer = serverLineEdit.Text;
+			m_Account.ConnectPort = portSpinBox.Value;
+			
+			m_Account.AutoConnect = autoConnectCheckBox.Checked;
+			
+			ServiceManager.Get<AccountService>().SaveAccounts();
 		}
 	}
 }

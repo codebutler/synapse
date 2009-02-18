@@ -28,6 +28,12 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QSplitter" name="splitter" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+        <horstretch>1</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="orientation" >
        <enum>Qt::Vertical</enum>
       </property>

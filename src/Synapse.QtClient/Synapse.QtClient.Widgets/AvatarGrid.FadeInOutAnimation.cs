@@ -30,31 +30,48 @@ namespace Synapse.QtClient.Widgets
 		{
 			bool m_FadeIn;
 			
-			public FadeInOutAnimation (bool fadeIn, QObject parent) : base (parent)
+			IFadableItem m_Item;
+			
+			public FadeInOutAnimation () : base ()
 			{
-				m_FadeIn = fadeIn;
+			}
+			
+			public FadeInOutAnimation (QObject parent) : base (parent)
+			{
 			}
 
 			public new void SetItem (QGraphicsItem item)
-			{
-				var fadeItem = (IFadableItem)item;
-				fadeItem.Opacity = m_FadeIn ? 0 : 1;
-				fadeItem.SetVisible(m_FadeIn);
-				fadeItem.Update();				
+			{			
 				base.SetItem(item);
+				m_Item = (IFadableItem)item;
+			}
+			
+			public bool FadeIn {
+				get {
+					return m_FadeIn;
+				}
+				set {
+					m_FadeIn = value;
+					if (m_Item != null) {
+						m_Item.Opacity = m_FadeIn ? 0 : 1;
+						m_Item.SetVisible(m_FadeIn);
+						m_Item.Update();
+					}
+				}
 			}
 			
 			protected override void AfterAnimationStep (double step)
 			{
 				base.AfterAnimationStep (step);
 				
-				var opacity = m_FadeIn ? step : 1 - step;
+				if (m_Item != null) {
+					var opacity = m_FadeIn ? step : 1 - step;
 
-				var fadeItem = (IFadableItem)base.Item();
-				fadeItem.Opacity = opacity;
+					m_Item.Opacity = opacity;
 				
-				if (step == 1 && !m_FadeIn) {
-					fadeItem.SetVisible(false);
+					if (step == 1 && !m_FadeIn) {
+						m_Item.SetVisible(false);
+					}
 				}
 			}
 		}

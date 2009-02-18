@@ -32,8 +32,8 @@ namespace Synapse.UI.Chat
 	{
 		string m_StatusType;
 		
-		public ChatContentStatus(Account account, JID source, JID destination, DateTime date, string status)
-			: base (account, source, destination, date)
+		public ChatContentStatus(Account account, JID source, string sourceName, JID destination, DateTime date, string status)
+			: base (account, source, sourceName, destination, date)
 		{
 			m_StatusType = status;
 		}

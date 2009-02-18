@@ -46,6 +46,8 @@ namespace Synapse.QtClient.Windows
 				else
 					Populate(null);
 			}, null);
+			
+			Gui.CenterWidgetOnScreen(this);
 		}
 	
 		void Populate (VCard vcard)
@@ -115,7 +117,7 @@ namespace Synapse.QtClient.Windows
 				else
 					template = template.Replace("@@WORK_PHONE@@", String.Empty);
 			}
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				webView.SetHtml(template);
 			});
 		}

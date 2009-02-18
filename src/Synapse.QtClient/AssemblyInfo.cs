@@ -22,7 +22,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitle("Synapse.QtClient")]
+[assembly: AssemblyTitle("Synapse")]
 [assembly: AssemblyDescription("Synapse Qt graphical frontened.")]
 [assembly: AssemblyProduct("Synapse")]
 [assembly: AssemblyCopyright("(C) 2008-2009 Eric Butler")]

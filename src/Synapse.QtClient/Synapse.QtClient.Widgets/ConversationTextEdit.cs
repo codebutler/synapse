@@ -44,28 +44,57 @@ namespace Synapse.QtClient.Widgets
 		{
 			var builder = new StringBuilder();
 			
-			builder.Append("<body xmlns='http://www.w3.org/1999/xhtml'>");
-			
 			var document = base.Document();
 			
 			var block = document.Begin();
 			while (block.IsValid()) {			
 				builder.Append("<p>");
 				
-				/*			
 				QTextBlock.iterator it;
-				for (it = block.Begin(); !it.AtEnd(); it = it.Next()) {
-					QTextFragment fragment = it.Fragment();
-					
-				}			
-				*/
 				
-				builder.Append("</b>");
+				for (it = block.Begin(); !it.AtEnd(); it = it++) {
+					var fragment = it.Fragment();
+					var format = fragment.CharFormat();
+					
+					if (format.IsImageFormat()) {					
+						var imageFormat = format.ToImageFormat();
+						
+						var name = imageFormat.Name();
+						
+						var data = document.Resource((int)QTextDocument.ResourceType.ImageResource, new QUrl(name));
+						if (data.type() == QVariant.TypeOf.Pixmap) {
+							var pixmap = (QPixmap)data;
+							var tempArray = new QByteArray();
+							var tempBuffer = new QBuffer(tempArray);
+							pixmap.Save(tempBuffer, "PNG");
+						
+							string imageString = tempArray.ToBase64().ConstData();
+							builder.AppendFormat("<img src=\"data:image/png;base64,{0}\" />", imageString);
+						}						
+					} else {
+						var bold = (format.FontWeight() == (int)QFont.Weight.Bold);
+						var underline = format.FontUnderline();
+						var italic = format.FontItalic();
+						var strike = format.FontStrikeOut();
+						
+						if (bold) builder.Append("<b>");						
+						if (underline) builder.Append("<u>");
+						if (italic) builder.Append("<i>");
+						if (strike) builder.Append("<s>");
+						
+						builder.Append(fragment.Text());
+						
+						if (bold) builder.Append("</b>");
+						if (underline) builder.Append("</u>");
+						if (italic) builder.Append("</i>");
+						if (strike) builder.Append("</s>");
+					}
+				}			
+				
+				builder.Append("</p>");
 				
 				block = block.Next();
 			}
-			
-			builder.Append("</body>");
 			
 			return builder.ToString();
 		}
@@ -83,7 +112,7 @@ namespace Synapse.QtClient.Widgets
 			var cursor = base.TextCursor();
 			
 			if (source.HasImage()) {
-				var image = (QImage)source.ImageData();
+				var image = QPixmap.FromImage((QImage)source.ImageData());
 				var document = base.Document();
 				var imageName = Guid.NewGuid().ToString();
 				document.AddResource((int)QTextDocument.ResourceType.ImageResource, new QUrl(imageName), image);

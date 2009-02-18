@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Qyoto;
+
 using Synapse.Core;
 using Synapse.UI;
 using Synapse.ServiceStack;
@@ -31,12 +31,16 @@ using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
 using Synapse.QtClient.Widgets;
 
+using Qyoto;
+
 namespace Synapse.QtClient.Windows
 {
 	public partial class MainWindow : QWidget
 	{
 		NoAccountsWidget m_NoAccountsWidget;
 		RosterWidget     m_RosterWidget;
+		
+		QMenu m_MainMenu;
 
 		string m_StyleSheet;
 		string m_NoAccountsStyleSheet;
@@ -45,6 +49,9 @@ namespace Synapse.QtClient.Windows
 		{
 			SetupUi();
 			base.WindowFlags = (uint)Qt.WindowType.FramelessWindowHint;
+			
+			closeButton.icon = new QIcon(new QPixmap("resource:/stock-close_12.png"));
+			menuButton.icon = new QIcon(new QPixmap("resource:/menu-icon.png"));
 
 			// FIXME: Add a global "Application Icon" somewhere that contains multiple sizes.
 			QPixmap pixmap = new QPixmap("resource:/octy-22.png");
@@ -64,6 +71,20 @@ namespace Synapse.QtClient.Windows
 			
 			m_NoAccountsWidget = new NoAccountsWidget(contentWidget);
 			contentWidget.Layout().AddWidget(m_NoAccountsWidget);
+			
+			m_MainMenu = new QMenu(this);
+			m_MainMenu.AddAction(Gui.GlobalActions.NewMessageAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.JoinConferenceAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.ShowBrowserAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.EditProfileAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.ChangeStatusAction);
+			m_MainMenu.AddSeparator();
+			m_MainMenu.AddAction(Gui.GlobalActions.ShowPreferencesAction);
+			m_MainMenu.AddSeparator();
+			m_MainMenu.AddAction(Gui.GlobalActions.AboutAction);
+			m_MainMenu.AddAction(Gui.GlobalActions.SendFeedbackAction);
+			m_MainMenu.AddSeparator();
+			m_MainMenu.AddAction(Gui.GlobalActions.QuitAction);
 
 			Gui.CenterWidgetOnScreen(this);
 
@@ -84,21 +105,9 @@ namespace Synapse.QtClient.Windows
 			base.Show();
 		}
 		
-		public string Login {
-			get {
-				return m_NoAccountsWidget.Login;
-			}
-		}
-
-		public string Password {
-			get {
-				return m_NoAccountsWidget.Password;
-			}
-		}
-		
 		public void AddAccount(Account account)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				m_RosterWidget.AddAccount(account);
 				HideShowNoAccountsWidget();
 			});
@@ -106,7 +115,7 @@ namespace Synapse.QtClient.Windows
 
 		public void RemoveAccount(Account account)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				m_RosterWidget.RemoveAccount(account);
 				HideShowNoAccountsWidget();
 			});
@@ -135,6 +144,19 @@ namespace Synapse.QtClient.Windows
 				m_RosterWidget.Hide();
 				m_NoAccountsWidget.Show();
 			}
+		}
+		
+		[Q_SLOT]
+		void on_closeButton_clicked ()
+		{
+			base.Hide();
+		}
+		
+		[Q_SLOT]
+		void on_menuButton_clicked ()
+		{
+			var buttonPos = menuButton.MapToGlobal(new QPoint(0, menuButton.Height()));
+			m_MainMenu.Popup(buttonPos);
 		}
 	}
 }

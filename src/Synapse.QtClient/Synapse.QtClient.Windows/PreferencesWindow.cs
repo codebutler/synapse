@@ -72,7 +72,46 @@ namespace Synapse.QtClient.Windows
 			base.Show();
 			Gui.CenterWidgetOnScreen(this);
 		}
+		
+		[Q_SLOT]
+		void on_addAccountButton_clicked ()
+		{
+			// FIXME:
+			QMessageBox.Information(this, "Not Implemented", "This feature has not yet been implemented.");
+		}		
 	
+		[Q_SLOT]
+		void on_removeAccountButton_clicked ()
+		{
+			// FIXME:
+			QMessageBox.Information(this, "Not Implemented", "This feature has not yet been implemented.");
+		}
+		
+		[Q_SLOT]
+		void on_editAccountButton_clicked ()
+		{
+			var selected = accountsList.SelectionModel().SelectedIndexes();
+			if (selected.Count > 0) {
+				var data = accountsList.Model().Data(selected[0], (int)Qt.ItemDataRole.DisplayRole);
+				var jid = new jabber.JID((string)data);
+				
+				var accountService = ServiceManager.Get<AccountService>();
+				
+				Account account = accountService.GetAccount(jid);
+				if (account != null) {
+					if (!account.IsReadOnly) {
+						var dialog = new EditAccountDialog(account, this);
+						dialog.Show();
+						dialog.Exec();
+						
+						accountsList.Update();
+					} else {
+						QMessageBox.Critical(this, "Error", "Cannot modify account while connected.");
+					}
+				}
+			}
+		}
+		
 		class AccountsItemModel : QAbstractItemModel
 		{
 			public AccountsItemModel (QObject parent) : base (parent)
@@ -110,7 +149,7 @@ namespace Synapse.QtClient.Windows
 				Account account = (Account)index.InternalPointer();
 				if (index.Column() == 0) {
 					if (role == (int)Qt.ItemDataRole.DisplayRole) {
-						return account.Jid.Bare;
+						return account.Jid.ToString();
 					} else if (role == (int)Qt.ItemDataRole.CheckStateRole) {
 						return (int)Qt.CheckState.Checked;
 					}
@@ -135,7 +174,7 @@ namespace Synapse.QtClient.Windows
 	
 			void HandleAccountsChanged (Account account)
 			{
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					Emit.LayoutChanged();
 				});
 			}

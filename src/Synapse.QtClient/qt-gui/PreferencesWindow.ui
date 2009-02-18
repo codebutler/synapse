@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>599</width>
-    <height>540</height>
+    <width>491</width>
+    <height>491</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -19,7 +19,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget" >
      <property name="currentIndex" >
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
       <attribute name="title" >
@@ -58,9 +58,9 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QPushButton" name="pushButton" >
+           <widget class="QPushButton" name="addAccountButton" >
             <property name="enabled" >
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text" >
              <string>Add Account</string>
@@ -68,9 +68,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2" >
+           <widget class="QPushButton" name="editAccountButton" >
             <property name="enabled" >
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text" >
              <string>Edit Account</string>
@@ -78,9 +78,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_5" >
+           <widget class="QPushButton" name="removeAccountButton" >
             <property name="enabled" >
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text" >
              <string>Remove Account</string>
@@ -118,7 +118,7 @@
          <property name="title" >
           <string>Friends List</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_5" >
+         <layout class="QFormLayout" name="formLayout_2" >
           <property name="margin" >
            <number>6</number>
           </property>
@@ -149,14 +149,7 @@
             </item>
            </widget>
           </item>
-          <item row="1" column="0" >
-           <widget class="QLabel" name="label_5" >
-            <property name="text" >
-             <string>Icon Size:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1" >
+          <item row="2" column="1" >
            <widget class="QSlider" name="horizontalSlider" >
             <property name="sizePolicy" >
              <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
@@ -164,19 +157,24 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="maximum" >
+             <number>48</number>
+            </property>
+            <property name="value" >
+             <number>32</number>
+            </property>
             <property name="orientation" >
              <enum>Qt::Horizontal</enum>
             </property>
-           </widget>
-          </item>
-          <item row="2" column="0" >
-           <widget class="QLabel" name="label_7" >
-            <property name="text" >
-             <string>Sort By:</string>
+            <property name="invertedAppearance" >
+             <bool>false</bool>
+            </property>
+            <property name="invertedControls" >
+             <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="2" column="1" >
+          <item row="1" column="1" >
            <widget class="QComboBox" name="comboBox_4" >
             <property name="sizePolicy" >
              <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
@@ -196,18 +194,19 @@
             </item>
            </widget>
           </item>
-          <item row="0" column="2" >
-           <spacer name="horizontalSpacer_3" >
-            <property name="orientation" >
-             <enum>Qt::Horizontal</enum>
+          <item row="1" column="0" >
+           <widget class="QLabel" name="label_7" >
+            <property name="text" >
+             <string>Sort By:</string>
             </property>
-            <property name="sizeHint" stdset="0" >
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
+           </widget>
+          </item>
+          <item row="2" column="0" >
+           <widget class="QLabel" name="label_5" >
+            <property name="text" >
+             <string>Icon Size:</string>
             </property>
-           </spacer>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -261,7 +260,10 @@
            <property name="title" >
             <string>Message Style</string>
            </property>
-           <layout class="QGridLayout" name="gridLayout" >
+           <layout class="QFormLayout" name="formLayout_3" >
+            <property name="margin" >
+             <number>6</number>
+            </property>
             <item row="0" column="0" >
              <widget class="QLabel" name="label" >
               <property name="text" >
@@ -296,7 +298,7 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0" colspan="2" >
+            <item row="2" column="0" >
              <widget class="QCheckBox" name="checkBox" >
               <property name="text" >
                <string>Show avatars</string>
@@ -306,7 +308,7 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="0" colspan="2" >
+            <item row="3" column="0" >
              <widget class="QCheckBox" name="checkBox_2" >
               <property name="text" >
                <string>Show header</string>
@@ -325,6 +327,9 @@
             <string>Text Display</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_2" >
+            <property name="margin" >
+             <number>6</number>
+            </property>
             <item row="0" column="0" >
              <widget class="QLabel" name="label_3" >
               <property name="text" >
@@ -374,6 +379,9 @@
             <string>Emoticons</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_6" >
+            <property name="margin" >
+             <number>6</number>
+            </property>
             <item row="0" column="1" >
              <widget class="QComboBox" name="comboBox_5" >
               <property name="sizePolicy" >
@@ -408,6 +416,9 @@
             <string>Background</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_3" >
+            <property name="margin" >
+             <number>6</number>
+            </property>
             <item row="0" column="0" >
              <widget class="QCheckBox" name="checkBox_5" >
               <property name="text" >
@@ -432,30 +443,6 @@
           </spacer>
          </item>
         </layout>
-       </item>
-       <item>
-        <widget class="QFrame" name="frame" >
-         <property name="frameShape" >
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow" >
-          <enum>QFrame::Raised</enum>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_4" >
-          <property name="margin" >
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QWebView" name="webView_2" >
-            <property name="url" >
-             <url>
-              <string>about:blank</string>
-             </url>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
        </item>
       </layout>
      </widget>
@@ -554,13 +541,6 @@
   <zorder>buttonBox</zorder>
   <zorder>tabWidget</zorder>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QWebView</class>
-   <extends>QWidget</extends>
-   <header>QtWebKit/QWebView</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -570,12 +550,28 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>550</x>
-     <y>521</y>
+     <x>484</x>
+     <y>484</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>597</x>
-     <y>497</y>
+     <x>490</x>
+     <y>490</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>PreferencesWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>423</x>
+     <y>468</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>474</x>
+     <y>-6</y>
     </hint>
    </hints>
   </connection>

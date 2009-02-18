@@ -1,7 +1,7 @@
 //
 // Main.cs
 //
-// Copyright (C) 2008 Eric Butler
+// Copyright (C) 2008-2009 Eric Butler
 //
 // Authors:
 //   Eric Butler <eric@extremeboredom.net>
@@ -26,14 +26,17 @@ using System.IO;
 
 using Hyena;
 
-using Synapse.ServiceStack;
 using Synapse.Core;
+using Synapse.ServiceStack;
+using Synapse.Services;
 using Synapse.UI.Services;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
 
 using Qyoto;
 using QtWebKit;
+
+using Notifications;
 
 using Synapse.QtClient.Windows;
 
@@ -58,8 +61,6 @@ namespace Synapse.QtClient
 			PlatformHacks.SetProcessName("synapse");
 			GLib.Global.ProgramName = "Synapse";
 			Gtk.Application.Init();
-
-			NDesk.DBus.BusG.Init();
 			
 			m_App = new QApplication(args);
 			m_App.ApplicationName = "Synapse";
@@ -82,10 +83,21 @@ namespace Synapse.QtClient
 			
 			AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
 			
+			if (!Application.CommandLine.Contains("disable-dbus")) {
+				try {
+					NDesk.DBus.BusG.Init();
+				} catch (Exception ex) {
+					Console.Error.WriteLine("Failed to initialize DBUS: " + ex);
+				}
+			} else {
+				Console.WriteLine("DBus disabled by request.");
+			}
+			
 			// XXX: I dont like all of these being here.
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.XmppService>();
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.AccountService>();
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.ShoutService>();
+			ServiceManager.RegisterService<Synapse.Xmpp.Services.GeoService>();
 			ServiceManager.RegisterService<GuiService>();
 			
 			QWebSettings.GlobalSettings().SetAttribute(QWebSettings.WebAttribute.DeveloperExtrasEnabled, true);
@@ -97,7 +109,7 @@ namespace Synapse.QtClient
 			
 			Application.Run();
 				
-			Application.Client.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				/* Create the UI */
 				Gui.MainWindow = new MainWindow();
 				Gui.DebugWindow = new DebugWindow();
@@ -124,9 +136,9 @@ namespace Synapse.QtClient
 			string crashLog = args.ExceptionObject.ToString();
 			Util.WriteToFile(crashFileName, crashLog);
 
-			ShowErrorWindow("Oh no! An unhandled error has occured and Synapse must close.", ex);
+			// FIXME: Figure out how to show a damn error dialog.
 			
-			Environment.Exit(-1);
+			QCoreApplication.Quit();
 		}
 
 		public QApplication QApp {
@@ -139,28 +151,6 @@ namespace Synapse.QtClient
 			get { return "qtclient"; }
 		}
 
-		public override uint RunIdle (IdleHandler handler)
-		{
-			if (Thread.CurrentThread.ManagedThreadId != 1) {
-				QCoreApplication.Invoke(delegate {
-					handler();
-				});
-			} else {
-				handler();
-			}
-			return 0;
-		}
-
-		public override uint RunTimeout (uint milliseconds, Synapse.ServiceStack.TimeoutHandler handler)
-		{
-			throw new System.NotImplementedException ();
-		}
-
-		public override bool IdleTimeoutRemove (uint id)
-		{
-			throw new System.NotImplementedException ();
-		}
-
 		public override object CreateImage (string fileName)
 		{
 			return (object) new QPixmap(fileName);
@@ -170,13 +160,25 @@ namespace Synapse.QtClient
 		{
 			throw new NotImplementedException();
 		}
-
-		public override void ShowErrorWindow (string errorTitle, Exception error)
+		
+		public override void DesktopNotify (ActivityFeedItemTemplate template, IActivityFeedItem item, string text)
 		{
-			this.InvokeAndBlock(delegate {
-				ErrorDialog dialog = new ErrorDialog(errorTitle, error);
-				dialog.Show();
-				dialog.Run();
+			// FIXME: This will need to be different on windows/osx...
+			QApplication.Invoke(delegate {
+				Notification notif = new Notification(text, item.Content);
+				foreach (var action in template.Actions) {
+					notif.AddAction(action.Name, action.Label, delegate {
+						item.TriggerAction(action.Name);
+					});
+				}			
+				notif.Show ();
+			});
+		}
+
+		public override void ShowErrorWindow (string errorTitle, string errorMessage, string errorDetail)
+		{
+			QApplication.Invoke(delegate {
+				Gui.ShowErrorWindow(errorTitle, errorMessage, errorDetail);
 			});
 		}
 			

@@ -36,9 +36,6 @@ namespace Synapse.QtClient.Widgets
 		Account    m_Account;
 		MainWindow m_ParentWindow;
 	
-		QMenu   m_AccountMenu;
-		QAction m_ShowBrowserAction;
-	
 		QMenu   m_PresenceMenu;
 		QAction m_AvailableAction;
 		QAction m_FreeToChatAction;
@@ -47,7 +44,7 @@ namespace Synapse.QtClient.Widgets
 		QAction m_DoNotDisturbAction;
 		QAction m_OfflineAction;
 	
-		AvatarSelectDialog m_AvatarDialog;
+		EditProfileDialog m_EditProfileDialog;
 		
 		public AccountStatusWidget(Account account, RosterWidget parent, MainWindow parentWindow) : base (parent)
 		{
@@ -55,14 +52,13 @@ namespace Synapse.QtClient.Widgets
 			
 			m_ParentWindow = parentWindow;
 	
-			m_AvatarDialog = new AvatarSelectDialog(account, this.TopLevelWidget());
+			m_EditProfileDialog = new EditProfileDialog(account, this.TopLevelWidget());
 			
 			m_AvatarLabel.Cursor = new QCursor(CursorShape.PointingHandCursor);
 			m_AvatarLabel.Clicked += delegate {
 				if (m_Account.ConnectionState == AccountConnectionState.Connected) {
-					Gui.CenterWidgetOnScreen(m_AvatarDialog);
-					m_AvatarDialog.Show();
-					m_AvatarDialog.ActivateWindow();
+					m_EditProfileDialog.Show(2);
+					m_EditProfileDialog.ActivateWindow();
 				} else {
 					// FIXME: It really wouldn't be so hard to make this work. 
 					// On connect, check to see if it was changed and update server.
@@ -77,21 +73,14 @@ namespace Synapse.QtClient.Widgets
 			m_Account.AvatarManager.AvatarUpdated += HandleAvatarUpdated;
 			OnAccountStateChanged(account);
 	
-			m_AccountMenu = new QMenu(this);
-			QObject.Connect(m_AccountMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("HandleAccountMenuAboutToShow()"));
-			QObject.Connect(m_AccountMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("HandleAccountMenuTriggered(QAction*)"));
-			m_ShowBrowserAction = new QAction("Show Browser", this);
-			m_AccountMenu.AddAction(m_ShowBrowserAction);
-	
 			HandleAvatarUpdated(m_Account.Jid.Bare, null);
 			
 			HandleMyVCardUpdated(null, EventArgs.Empty);
 			m_NameLabel.TextFormat = TextFormat.RichText;
-			m_NameLabel.Clicked += HandleNameClicked;
 	
 			m_PresenceMenu = new QMenu(this);
-			QObject.Connect(m_PresenceMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("HandlePresenceMenuAboutToShow()"));
-			QObject.Connect(m_PresenceMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("HandlePresenceMenuTriggered(QAction*)"));
+			QObject.Connect(m_PresenceMenu, Qt.SIGNAL("aboutToShow()"), HandlePresenceMenuAboutToShow);
+			QObject.Connect<QAction>(m_PresenceMenu, Qt.SIGNAL("triggered(QAction*)"), HandlePresenceMenuTriggered);
 	
 			QActionGroup group = new QActionGroup(this);
 			group.Exclusive = true;
@@ -125,7 +114,7 @@ namespace Synapse.QtClient.Widgets
 		
 		void OnAccountStateChanged (Account account)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				string text = null;
 				string statusText = null;
 				if (account.Status != null) {
@@ -156,23 +145,12 @@ namespace Synapse.QtClient.Widgets
 		void HandleAvatarUpdated (string jid, string hash)
 		{
 			if (jid == m_Account.Jid.Bare) {				
-				Application.Invoke(delegate {		
-					QPixmap pixmap = new QPixmap(32, 32);
+				QApplication.Invoke(delegate {		
+					QPixmap pixmap = new QPixmap(36, 36);
 					pixmap.Fill(GlobalColor.transparent);
-	
-					QPainterPath path = new QPainterPath();
-					path.AddRoundedRect(0, 0, 32, 32, 5, 5);
-					
+			
 					QPainter painter = new QPainter(pixmap);
-					painter.SetRenderHint(QPainter.RenderHint.Antialiasing, true);
-					painter.SetClipPath(path);
-					painter.DrawPixmap(0, 0, 32, 32, (QPixmap)AvatarManager.GetAvatar(hash));
-					painter.SetClipping(false);
-	
-					// FIXME: Do this only if the corner pixels are not transparent
-					//painter.SetPen(new QPen(new QBrush(new QColor("#CECECC")), 0.5 ));
-					//painter.DrawPath(path);
-					
+					Gui.DrawAvatar(painter, m_AvatarLabel.Width(), m_AvatarLabel.Height(), (QPixmap)AvatarManager.GetAvatar(hash));
 					painter.Dispose();
 	
 					m_AvatarLabel.Pixmap = pixmap;
@@ -182,7 +160,7 @@ namespace Synapse.QtClient.Widgets
 		
 		void HandleMyVCardUpdated (object sender, EventArgs args)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				if (m_Account.VCard != null && !String.IsNullOrEmpty(m_Account.VCard.Nickname))
 					m_NameLabel.Text = m_Account.VCard.Nickname;
 				else
@@ -200,13 +178,11 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
 		void HandlePresenceMenuTriggered(QAction action)
 		{
 			m_Account.Status = new ClientStatus(action.Text, String.Empty);
 		}
 	
-		[Q_SLOT]
 		void HandlePresenceMenuAboutToShow()
 		{
 			if (m_Account.Status != null) {
@@ -234,26 +210,6 @@ namespace Synapse.QtClient.Widgets
 			} else {
 				m_OfflineAction.Checked = true;
 			}
-		}
-	
-		[Q_SLOT]
-		void HandleAccountMenuAboutToShow ()
-		{
-			
-		}
-	
-		[Q_SLOT]
-		void HandleAccountMenuTriggered (QAction action)
-		{
-			if (action == m_ShowBrowserAction) {
-				var window = new ServiceBrowserWindow(m_Account);
-				window.Show();
-			}
-		}
-	
-		void HandleNameClicked(object o, EventArgs args)
-		{
-			m_AccountMenu.Popup(m_NameLabel.MapToGlobal(m_NameLabel.Rect.BottomLeft()));
 		}
 	}
 }

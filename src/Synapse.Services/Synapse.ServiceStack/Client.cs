@@ -1,8 +1,9 @@
 //
 // Client.cs
 //
-// Author:
+// Authors:
 //   Aaron Bockover <abockover@novell.com>
+//   Eric Butler <eric@extremeboredom.net>
 //
 // Copyright (C) 2008 Novell, Inc.
 //
@@ -31,13 +32,10 @@
 using System;
 using System.Threading;
 using Synapse.Core;
+using Synapse.Services;
 
 namespace Synapse.ServiceStack
 {
-	public delegate void InvokeHandler ();
-	public delegate bool TimeoutHandler ();
-	public delegate bool IdleHandler ();
-	
     public abstract class Client : IDisposable
     {
         public event Action<Client> Started;
@@ -58,33 +56,22 @@ namespace Synapse.ServiceStack
         public bool IsStarted {
             get { return is_started; }
         }
-
-        public virtual void Invoke (InvokeHandler handler)
-        {
-            RunIdle (delegate { handler (); return false; });
-        }
-
-		public virtual void InvokeAndBlock (InvokeHandler handler)
-		{
-			ManualResetEvent mutex = new ManualResetEvent(false);
-			Invoke(delegate {
-				handler();
-				mutex.Set();
-			});
-			mutex.WaitOne();
-		}
-
-        public abstract uint RunIdle (IdleHandler handler);
-        
-        public abstract uint RunTimeout (uint milliseconds, TimeoutHandler handler);
-        
-        public abstract bool IdleTimeoutRemove (uint id);
 		
 		public abstract object CreateImage (byte[] data);
 		
 		public abstract object CreateImage (string fileName);
 
-		public abstract void ShowErrorWindow (string title, Exception error);
+		public abstract void ShowErrorWindow (string title, string errorMessage, string errorDetail);
+		
+		public void ShowErrorWindow (string errorTitle, Exception error)
+		{
+			if (error != null)
+				ShowErrorWindow(errorTitle, error.Message, error.ToString());
+			else
+				ShowErrorWindow(errorTitle, null, null);
+		}	
+		
+		public abstract void DesktopNotify (ActivityFeedItemTemplate template, IActivityFeedItem item, string text);
 		
         protected void OnStarted ()
         {

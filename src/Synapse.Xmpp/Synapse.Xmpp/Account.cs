@@ -42,6 +42,7 @@ namespace Synapse.Xmpp
 {
 	public delegate void AccountEventHandler (Account account);
 	public delegate void MessageEventHandler (Account account, Packet packet);
+	public delegate void PropertyEventHandler (Account account, string name, string oldValue, string newValue);
 	
 	public class Account
 	{
@@ -50,6 +51,7 @@ namespace Synapse.Xmpp
 		string m_Resource;
 		string m_Password;
 		string m_ConnectServer;
+		int    m_ConnectPort;
 		bool   m_AutoConnect;
 
 		bool m_NetworkDisconnected = false;
@@ -73,23 +75,23 @@ namespace Synapse.Xmpp
 		IQTracker         m_IQTracker;
 		AvatarManager     m_AvatarManager;
 		
-		Dictionary<Type, IDiscoverable> m_Features   = new Dictionary<Type, IDiscoverable>();
-		PropertyCollection              m_Properties = new PropertyCollection();
+		Dictionary<Type, IDiscoverable>        m_Features   = new Dictionary<Type, IDiscoverable>();
+		SerializableDictionary<string, string> m_Properties = new SerializableDictionary<string, string>();
 
 		Dictionary<JID, Presence> m_UserPresenceCache;
 
 		List<StreamTypeInfo> m_StreamTypes = new List<StreamTypeInfo>();
 		
-		public event AccountEventHandler Changed; // XXX: is this used?
 		public event AccountEventHandler ConnectionStateChanged;
 		public event AccountEventHandler StatusChanged;
-		public event EventHandler MyVCardUpdated;
+		public event EventHandler        MyVCardUpdated;
+		public event PropertyEventHandler PropertyChanged;
 		
-		public Account (string user, string domain, string resource) : this (user, domain, resource, null)
+		public Account (string user, string domain, string resource) : this (user, domain, resource, null, 5222)
 		{
 		}
 		
-		public Account (string user, string domain, string resource, string connectServer) : this ()
+		public Account (string user, string domain, string resource, string connectServer, int connectPort) : this ()
 		{
 			if (String.IsNullOrEmpty(user)) throw new ArgumentNullException("user");
 			if (String.IsNullOrEmpty(domain)) throw new ArgumentNullException("domain");
@@ -99,15 +101,17 @@ namespace Synapse.Xmpp
 			m_Domain   = domain;
 			m_Resource = resource;
 			m_ConnectServer = connectServer;
+			m_ConnectPort = connectPort;
 
 			m_UserPresenceCache = new Dictionary<JID, Presence>();
 		}
 
 		public static Account FromAccountInfo(AccountInfo info)
 		{
-			Account account = new Account(info.User, info.Domain, info.Resource, info.ConnectServer);
+			Account account = new Account(info.User, info.Domain, info.Resource, info.ConnectServer, info.ConnectPort);
 			account.Password = info.Password;
 			account.AutoConnect = info.AutoConnect;
+			account.Properties = info.Properties;
 			return account;
 		}
 		
@@ -216,6 +220,8 @@ namespace Synapse.Xmpp
 		{
 			ConnectionState = AccountConnectionState.Connected;
 
+			// FIXME: Don't send presence until we have our roster.
+			
 			if (m_PendingStatus != null) {
 				Status = m_PendingStatus;
 			} else {
@@ -275,24 +281,37 @@ namespace Synapse.Xmpp
 					StatusChanged(this);
 			}
 
-			var feed = ServiceManager.Get<ActivityFeedService>();
-			
-			if (pres.Type == PresenceType.error) {
-				// FIXME: Show error
-			} else if (pres.Type == PresenceType.probe) {
-				// FIXME: Do anything here?
-			} else if (pres.Type == PresenceType.subscribe) {
-				feed.PostItem(this, pres.From, "subscribe", null, pres.Status);
-			} else if (pres.Type == PresenceType.subscribed) {
-				feed.PostItem(this, pres.From, "subscribed", null, pres.Status);
-			} else if (pres.Type == PresenceType.unsubscribe) {
-				feed.PostItem(this, pres.From, "unsubscribe", null, pres.Status);
-			} else if (pres.Type == PresenceType.unsubscribed) {
-				feed.PostItem(this, pres.From, "unsubscribed", null, pres.Status);
-			} else if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable || pres.Type == PresenceType.invisible) {
-				if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
-					if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
-						PostActivityFeedItem(pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status);
+			if (m_Roster[pres.From.Bare] != null) {
+				var feed = ServiceManager.Get<ActivityFeedService>();
+				
+				if (pres.Type == PresenceType.error) {
+					// FIXME: Show error
+				} else if (pres.Type == PresenceType.probe) {
+					// FIXME: Do anything here?
+				} else if (pres.Type == PresenceType.subscribe) {
+					feed.PostItem(this, pres.From, "subscribe", null, pres.Status);
+				} else if (pres.Type == PresenceType.subscribed) {
+					feed.PostItem(this, pres.From, "subscribed", null, pres.Status);
+				} else if (pres.Type == PresenceType.unsubscribe) {
+					feed.PostItem(this, pres.From, "unsubscribe", null, pres.Status);
+				} else if (pres.Type == PresenceType.unsubscribed) {
+					feed.PostItem(this, pres.From, "unsubscribed", null, pres.Status);
+				} else if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable || pres.Type == PresenceType.invisible) {
+					if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
+						if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
+							PostActivityFeedItem(pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status);
+						}
+					}
+				}
+			} else {
+				if (pres.Type == PresenceType.error) {
+					// Display MUC errors.
+					if (pres.GetElementsByTagName("x", "http://jabber.org/protocol/muc").Count > 0) {
+						var error = pres["error"];
+						if (error != null) {
+							string message = (error["text"] != null) ? error["text"].InnerText : error.FirstChild.Name;
+							Application.Client.ShowErrorWindow("Error with conference: " + pres.From.Bare, message, null);
+						}
 					}
 				}
 			}
@@ -348,6 +367,7 @@ namespace Synapse.Xmpp
 				return m_AutoConnect;
 			}
 			set {
+				CheckIfReadOnly();
 				m_AutoConnect = value;
 			}
 		}
@@ -366,7 +386,6 @@ namespace Synapse.Xmpp
 			set {
 				CheckIfReadOnly();
 				this.m_Password = value;
-				OnChanged();
 			}
 		}
 		
@@ -377,7 +396,6 @@ namespace Synapse.Xmpp
 			set {
 				CheckIfReadOnly();
 				m_User = value;
-				OnChanged();
 			}
 		}
 		
@@ -388,7 +406,6 @@ namespace Synapse.Xmpp
 			set {
 				CheckIfReadOnly();
 				m_Domain = value;
-				OnChanged();
 			}
 		}
 		
@@ -399,7 +416,6 @@ namespace Synapse.Xmpp
 			set {
 				CheckIfReadOnly();
 				m_Resource = value;
-				OnChanged();
 			}
 		}
 		
@@ -410,7 +426,16 @@ namespace Synapse.Xmpp
 			set {
 				CheckIfReadOnly();
 				m_ConnectServer = value;
-				OnChanged();
+			}
+		}
+		
+		public int ConnectPort {
+			get {
+				return m_ConnectPort;
+			}
+			set {
+				CheckIfReadOnly();
+				m_ConnectPort = value;
 			}
 		}
 		
@@ -439,7 +464,7 @@ namespace Synapse.Xmpp
 
 		public RosterManager Roster {
 			get {
-				return this.m_Roster;
+				return m_Roster;
 			}
 		}
 
@@ -554,6 +579,7 @@ namespace Synapse.Xmpp
 			m_Client.Server      = m_Domain;
 			m_Client.Resource    = m_Resource;
 			m_Client.NetworkHost = m_ConnectServer;
+			m_Client.Port        = m_ConnectPort;
 			m_Client.Password    = m_Password;
 			
 			ConnectionState = AccountConnectionState.Connecting;
@@ -607,10 +633,35 @@ namespace Synapse.Xmpp
 			m_Client.Close();
 		}
 		
-		public PropertyCollection Properties {
+		internal SerializableDictionary<string, string> Properties {
 			get {
 				return m_Properties;
 			}
+			set {
+				if (value != null)
+					m_Properties = value;
+			}
+		}
+		
+		public string GetProperty (string name)
+		{
+			if (m_Properties.ContainsKey(name))
+				return m_Properties[name];
+			else
+				return null;
+		}
+		
+		public void SetProperty (string name, string value)
+		{
+			string oldValue = GetProperty(name);
+			
+			m_Properties[name] = value;
+			
+			var accountService = ServiceManager.Get<AccountService>();
+			accountService.SaveAccounts();
+			
+			if (PropertyChanged != null)
+				PropertyChanged(this, name, oldValue, value);
 		}
 
 		public AccountInfo ToAccountInfo ()
@@ -621,7 +672,9 @@ namespace Synapse.Xmpp
 			info.Resource = m_Resource;
 			info.Password = m_Password;
 			info.ConnectServer = m_ConnectServer;
+			info.ConnectPort = m_ConnectPort;
 			info.AutoConnect = m_AutoConnect;
+			info.Properties = m_Properties;
 			return info;
 		}
 
@@ -637,11 +690,11 @@ namespace Synapse.Xmpp
 		}
 
 		#region Stuff that should be in jabber-net
-		public void JoinMuc (string roomJid)
+		public void JoinMuc (string roomJid, string password)
 		{
 			Room room = this.ConferenceManager.GetRoom(roomJid);
 			if (!room.IsParticipating)
-				room.Join();
+				room.Join(password);
 			else
 				throw new UserException("Already in this room");
 		}
@@ -709,14 +762,6 @@ namespace Synapse.Xmpp
 		protected virtual void OnStateChanged ()
 		{
 			AccountEventHandler handler = ConnectionStateChanged;
-			if (handler != null) {
-				handler(this);
-			}
-		}
-		
-		protected virtual void OnChanged ()
-		{
-			AccountEventHandler handler = Changed;
 			if (handler != null) {
 				handler(this);
 			}

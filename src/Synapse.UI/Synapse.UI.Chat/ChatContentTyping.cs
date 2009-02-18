@@ -31,8 +31,8 @@ namespace Synapse.UI.Chat
 	{
 		TypingState m_TypingState;
 		
-		public ChatContentTyping (Account account, JID source, JID destination, TypingState state)
-			: base (account, source, destination)
+		public ChatContentTyping (Account account, JID source, string sourceDisplayName, JID destination, TypingState state)
+			: base (account, source, sourceDisplayName, destination)
 		{
 			m_TypingState = state;
 		}

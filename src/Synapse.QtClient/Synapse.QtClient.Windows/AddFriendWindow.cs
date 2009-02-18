@@ -89,11 +89,11 @@ namespace Synapse.QtClient.Windows
 		void AddRosterItemComplete (object sender, IQ response, object data)
 		{
 			if (response.Type == IQType.set) {
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					Gui.MainWindow.HideLightbox();
 				});
 			} else {
-				Application.Invoke(delegate {
+				QApplication.Invoke(delegate {
 					QMessageBox.Critical(base.TopLevelWidget(), "Failed to add user", "Server returned an error.");
 				});
 			}

@@ -43,7 +43,7 @@ namespace Synapse.QtClient.Widgets {
             m_AvatarLabel_sizePolicy.SetHorizontalStretch(0);
             m_AvatarLabel_sizePolicy.SetHeightForWidth(this.m_AvatarLabel.SizePolicy.HasHeightForWidth());
             this.m_AvatarLabel.SizePolicy = m_AvatarLabel_sizePolicy;
-            this.m_AvatarLabel.MinimumSize = new QSize(32, 32);
+            this.m_AvatarLabel.MinimumSize = new QSize(36, 36);
             this.m_AvatarLabel.MaximumSize = new QSize(32, 32);
             horizontalLayout.AddWidget(this.m_AvatarLabel);
             QVBoxLayout verticalLayout;

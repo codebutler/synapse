@@ -6,6 +6,10 @@ QWidget#containerWidget {
 	background: #010409 url(resource:/oceanbg.png) no-repeat top center;
 }
 
+QWidget#headerWidget {
+	background: transparent;
+}
+
 QLabel#headerLabel {
 	font-weight: bold;
 	background: transparent;
@@ -15,11 +19,20 @@ QGraphicsView {
 	background: transparent;
 }
 
-QPushButton {
+QPushButton[flat="false"] {
 	border: 1px solid #2B2D31;
 	border-radius: 3px;
 	background-color: #2B2D31;
 	padding: 3px;
+}
+
+#gridHeader QPushButton,
+#yourMucsHeader QPushButton,
+#joinMucHeader QPushButton {
+	min-width: 0px;
+	padding: 0px;
+	width: 16px;
+	height: 16px;
 }
 
 QLineEdit {

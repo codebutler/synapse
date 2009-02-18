@@ -31,56 +31,44 @@ namespace Synapse.QtClient
 		QSystemTrayIcon m_Icon;
 		
 		QMenu m_Menu;
-		QMenu m_StatusMenu;
 		
 		QAction m_ShowMainWindowAction;
-		QAction m_ShowPreferencesAction;
-		QAction m_NewMessageAction;
-		QAction m_JoinMucAction;
-		QAction m_QuitAction;
 		QAction m_ShowDebugWindowAction;
 		
 		public TrayIcon ()
 		{
 			m_ShowMainWindowAction = new QAction("Show Synapse", this);
 			m_ShowMainWindowAction.Checkable = true;
-			QObject.Connect(m_ShowMainWindowAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowMainWindowActionTriggered()"));
+			QObject.Connect(m_ShowMainWindowAction, Qt.SIGNAL("triggered()"), HandleShowMainWindowActionTriggered);
 
-			m_StatusMenu = new QMenu("Change Status");
-			
-			m_ShowPreferencesAction = new QAction("Preferences", this);
-			QObject.Connect(m_ShowPreferencesAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowPreferencesActionTriggered()"));
-			
-			m_NewMessageAction = new QAction("New Message...", this);
-			m_JoinMucAction    = new QAction("Create/Join Conference...", this);
-			
 			m_ShowDebugWindowAction = new QAction("Debug Window", this);
 			m_ShowDebugWindowAction.Checkable = true;
-			QObject.Connect(m_ShowDebugWindowAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleShowDebugWindowActionTriggered()"));
-			
-			m_QuitAction = new QAction("Quit", this);
-			QObject.Connect(m_QuitAction, Qt.SIGNAL("triggered()"), this, Qt.SLOT("HandleQuitActionTriggered()"));
+			QObject.Connect(m_ShowDebugWindowAction, Qt.SIGNAL("triggered()"), HandleShowDebugWindowActionTriggered);
 			
 			m_Menu = new QMenu();
 			m_Menu.AddAction(m_ShowMainWindowAction);
 			m_Menu.AddAction(m_ShowDebugWindowAction);
 			m_Menu.AddSeparator();
-			m_Menu.AddAction(m_NewMessageAction);
-			m_Menu.AddAction(m_JoinMucAction);
-			m_Menu.AddMenu(m_StatusMenu);
+			m_Menu.AddAction(Gui.GlobalActions.NewMessageAction);
+			m_Menu.AddAction(Gui.GlobalActions.JoinConferenceAction);
+			m_Menu.AddAction(Gui.GlobalActions.ShowBrowserAction);
+			m_Menu.AddAction(Gui.GlobalActions.EditProfileAction);
+			m_Menu.AddAction(Gui.GlobalActions.ChangeStatusAction);
 			m_Menu.AddSeparator();
-			m_Menu.AddAction(m_ShowPreferencesAction);
+			m_Menu.AddAction(Gui.GlobalActions.ShowPreferencesAction);
 			m_Menu.AddSeparator();
-			m_Menu.AddAction(m_QuitAction);
-			QObject.Connect(m_Menu, Qt.SIGNAL("aboutToShow()"), new NoArgDelegate(HandleMenuAboutToShow));
+			m_Menu.AddAction(Gui.GlobalActions.AboutAction);
+			m_Menu.AddAction(Gui.GlobalActions.SendFeedbackAction);
+			m_Menu.AddSeparator();
+			m_Menu.AddAction(Gui.GlobalActions.QuitAction);
+			QObject.Connect(m_Menu, Qt.SIGNAL("aboutToShow()"), HandleMenuAboutToShow);
 
 			QPixmap pixmap = new QPixmap("resource:/octy-22.png");
 			QIcon icon = new QIcon(pixmap);
 			m_Icon = new QSystemTrayIcon(icon);
 			m_Icon.SetContextMenu(m_Menu);
 			
-			QObject.Connect(m_Icon, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), 
-			                new OneArgDelegate<QSystemTrayIcon.ActivationReason>(HandleTrayActivated));
+			QObject.Connect<QSystemTrayIcon.ActivationReason>(m_Icon, Qt.SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), HandleTrayActivated);
 		}
 
 		public bool IsVisible ()
@@ -110,14 +98,7 @@ namespace Synapse.QtClient
 			m_ShowMainWindowAction.Checked = Gui.MainWindow.IsVisible();
 			m_ShowDebugWindowAction.Checked = Gui.DebugWindow.IsVisible();
 		}
-
-		[Q_SLOT]
-		void HandleQuitActionTriggered ()
-		{
-			Application.Shutdown();
-		}
-
-		[Q_SLOT]
+		
 		void HandleShowMainWindowActionTriggered ()
 		{
 			if (m_ShowMainWindowAction.Checked)
@@ -126,7 +107,6 @@ namespace Synapse.QtClient
 				Gui.MainWindow.Hide();
 		}
 
-		[Q_SLOT]
 		void HandleShowDebugWindowActionTriggered ()
 		{
 			if (m_ShowDebugWindowAction.Checked)
@@ -135,13 +115,6 @@ namespace Synapse.QtClient
 				Gui.DebugWindow.Hide();	
 		}
 		
-		[Q_SLOT]
-		void HandleShowPreferencesActionTriggered ()
-		{
-			Gui.PreferencesWindow.Show();
-		}
-		
-		[Q_SLOT]
 		void HandleTrayActivated(QSystemTrayIcon.ActivationReason reason)
 		{
 			if (reason == QSystemTrayIcon.ActivationReason.Trigger) {

@@ -26,7 +26,6 @@ using System.Text;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Services;
-using Notifications;
 using Mono.Addins;
 
 namespace Synapse.Services
@@ -100,7 +99,7 @@ namespace Synapse.Services
 				} else {
 					text.Append(":");
 				}
-				DesktopNotify(template, item, text.ToString());
+				Application.Client.DesktopNotify(template, item, text.ToString());
 			}
 		}		
 		
@@ -117,19 +116,6 @@ namespace Synapse.Services
 				while (m_Queue.Count > 0)
 					NewItem(m_Queue.Dequeue());
 			}
-		}
-
-		void DesktopNotify (ActivityFeedItemTemplate template, IActivityFeedItem item, string text)
-		{
-			Application.Invoke(delegate {
-				Notification notif = new Notification(text, item.Content);
-				foreach (var action in template.Actions) {
-					notif.AddAction(action.Name, action.Label, delegate {
-						item.TriggerAction(action.Name);
-					});
-				}			
-				notif.Show ();
-			});
 		}
 	}
 

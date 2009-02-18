@@ -1,0 +1,6 @@
+Name: Synapse.QtClient
+Description: Synapse.Qtclient
+Version: 
+
+Requires: 
+Libs: -r:@expanded_libdir@/@PACKAGE@/Synapse.exe

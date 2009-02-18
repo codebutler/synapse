@@ -23,9 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-using NDesk.DBus;
 using Synapse.Core;
-using org.freedesktop.DBus;
 using Synapse.ServiceStack;
 using Mono.Addins;
 
@@ -98,9 +96,6 @@ namespace Synapse.Services
 	
 		public void Initialize ()
 		{
-			Bus sessionBus = Bus.Session;
-			IBus bus = sessionBus.GetObject<IBus>("org.freedesktop.DBus", new ObjectPath("/org/freedesktop/DBus"));
-
 			AddinManager.AddExtensionNodeHandler("/Synapse/Services/NowPlaying/Providers", OnExtensionChanged);
 		}
 

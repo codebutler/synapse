@@ -31,13 +31,13 @@ namespace Synapse.UI.Chat
 	{
 		bool m_IsAutoReply = false;
 
-		public ChatContentMessage (Account account, JID source, JID destination, DateTime date)
-			 : this (account, source, destination, date, false)
+		public ChatContentMessage (Account account, JID source, string sourceDisplayName, JID destination, DateTime date)
+			 : this (account, source, sourceDisplayName, destination, date, false)
 		{			
 		}
 		
-		public ChatContentMessage (Account account, JID source, JID destination, DateTime date, bool isAutoReply)
-			: base (account, source, destination, date)
+		public ChatContentMessage (Account account, JID source, string sourceDisplayName, JID destination, DateTime date, bool isAutoReply)
+			: base (account, source, sourceDisplayName, destination, date)
 		{
 			if (source == null)
 				throw new ArgumentNullException("source");

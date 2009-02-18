@@ -24,7 +24,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
 using System.Linq;
+
 using Qyoto;
+
 using Synapse.Core;
 using Synapse.Core.ExtensionMethods;
 using Synapse.ServiceStack;
@@ -36,10 +38,12 @@ using Synapse.UI.Services;
 using Synapse.QtClient;
 using Synapse.QtClient.Windows;
 using Synapse.QtClient.ExtensionNodes;
+
 using jabber;
 using jabber.connection;
 using jabber.protocol.client;
 using jabber.protocol.iq;
+
 using Mono.Rocks;
 using Mono.Addins;
 
@@ -102,10 +106,10 @@ namespace Synapse.QtClient.Widgets
 			rosterGrid.ContextMenuPolicy = Qt.ContextMenuPolicy.CustomContextMenu;
 			
 			m_RosterMenu = new QMenu(this);
-			QObject.Connect(m_RosterMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("rosterMenu_triggered(QAction*)"));
+			QObject.Connect<QAction>(m_RosterMenu, Qt.SIGNAL("triggered(QAction*)"), HandleRosterMenuTriggered);
 	
 			var rosterViewActionGroup = new QActionGroup(this);
-			QObject.Connect(rosterViewActionGroup, Qt.SIGNAL("triggered(QAction *)"), this, Qt.SLOT("rosterViewActionGroup_triggered(QAction*)"));
+			QObject.Connect<QAction>(rosterViewActionGroup, Qt.SIGNAL("triggered(QAction *)"), RosterViewActionGroupTriggered);
 	
 			m_GridModeAction = new QAction("View as Grid", this);
 			m_GridModeAction.SetActionGroup(rosterViewActionGroup);
@@ -130,30 +134,19 @@ namespace Synapse.QtClient.Widgets
 	
 			m_RosterMenu.AddSeparator();
 	
-			var sliderAction = new QWidgetAction(this);
-			
-			var sliderContainer = new QWidget(this);
-			sliderContainer.SetLayout(new QHBoxLayout());
-			sliderContainer.Layout().AddWidget(new QLabel("Zoom:", sliderContainer));
-			var zoomSlider = new QSlider(Orientation.Horizontal, sliderContainer);
-			zoomSlider.Minimum = 16;
-			zoomSlider.Maximum = 60;
-			zoomSlider.Value = rosterGrid.IconSize;
-			QObject.Connect(zoomSlider, Qt.SIGNAL("valueChanged(int)"), this, Qt.SLOT("zoomSlider_valueChanged(int)"));
-			sliderContainer.Layout().AddWidget(zoomSlider);
-			sliderAction.SetDefaultWidget(sliderContainer);
+			var sliderAction = new AvatarGridZoomAction<Synapse.UI.RosterItem>(rosterGrid);
 			m_RosterMenu.AddAction(sliderAction);
-	
+			
 			m_InviteActions = new List<QAction>();
 			
-			m_InviteMenu = new QMenu(this);		
+			m_InviteMenu = new QMenu(this);
 			m_InviteMenu.MenuAction().Text = "Invite To";
 			m_InviteMenu.AddAction("New Conference...");
 	
 			m_RosterItemMenu = new QMenu(this);
-			QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("rosterItemMenu_triggered(QAction*)"));
-			QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("aboutToShow()"), this, Qt.SLOT("rosterItemMenu_aboutToShow()"));
-			QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("aboutToHide()"), this, Qt.SLOT("rosterItemMenu_aboutToHide()"));
+			QObject.Connect<QAction>(m_RosterItemMenu, Qt.SIGNAL("triggered(QAction*)"), HandleRosterItemMenuTriggered);
+			QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("aboutToShow()"), RosterItemMenuAboutToShow);
+			QObject.Connect(m_RosterItemMenu, Qt.SIGNAL("aboutToHide()"), RosterItemMenuAboutToHide);
 	
 			m_ViewProfileAction = new QAction("View Profile", m_RosterItemMenu);
 			m_RosterItemMenu.AddAction(m_ViewProfileAction);
@@ -203,8 +196,8 @@ namespace Synapse.QtClient.Widgets
 	
 			var jsWindowObject = new SynapseJSObject(this);
 			m_ActivityWebView.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
-			QObject.Connect(m_ActivityWebView, Qt.SIGNAL("linkClicked(QUrl)"), this, Qt.SLOT("HandleActivityLinkClicked(QUrl)"));
-			QObject.Connect(m_ActivityWebView.Page(), Qt.SIGNAL("loadFinished(bool)"), this, Qt.SLOT("activityPage_loadFinished(bool)"));
+			QObject.Connect<QUrl>(m_ActivityWebView, Qt.SIGNAL("linkClicked(QUrl)"), HandleActivityLinkClicked);
+			QObject.Connect<bool>(m_ActivityWebView.Page(), Qt.SIGNAL("loadFinished(bool)"), HandleActivityPageLoadFinished);
 			QObject.Connect(m_ActivityWebView.Page().MainFrame(), Qt.SIGNAL("javaScriptWindowObjectCleared()"), delegate {
 				m_ActivityWebView.Page().MainFrame().AddToJavaScriptWindowObject("Synapse", jsWindowObject);
 			});
@@ -245,14 +238,14 @@ namespace Synapse.QtClient.Widgets
 			UpdateOnlineCount();
 	
 			var shoutService = ServiceManager.Get<ShoutService>();
+			shoutService.HandlerAdded += HandleShoutHandlerAdded;
+			shoutService.HandlerRemoved += HandleShoutHandlerRemoved;
 			if (shoutService.Handlers.Count() > 0) {
 				foreach (IShoutHandler handler in shoutService.Handlers) {
-					QCheckBox check = new ShoutHandlerCheckBox(handler, shoutHandlersContainer);
-					check.Checked = true;
-					shoutHandlersContainer.Layout().AddWidget(check);
+					HandleShoutHandlerAdded(handler);
 				}
 			} else {
-				shoutHandlersContainer.Hide();
+				shoutHandlersBox.Hide();
 			}
 	
 			m_FeedFilterMenu = new QMenu(this);
@@ -306,7 +299,7 @@ namespace Synapse.QtClient.Widgets
 		
 		public void AddActivityFeedItem (IActivityFeedItem item)
 		{
-			Application.Invoke(delegate {					
+			QApplication.Invoke(delegate {					
 				string accountJid = (item is XmppActivityFeedItem && ((XmppActivityFeedItem)item).Account != null) ? ((XmppActivityFeedItem)item).Account.Jid.Bare : null;
 				string fromJid = (item is XmppActivityFeedItem) ? ((XmppActivityFeedItem)item).FromJid : null;
 				string content = Util.Linkify(item.Content);
@@ -342,9 +335,13 @@ namespace Synapse.QtClient.Widgets
 					}
 				}
 				
-				var service = ServiceManager.Get<ShoutService>();
-				service.Shout(shoutLineEdit.Text, selectedHandlers.ToArray());
-				shoutLineEdit.Clear();
+				try {
+					var service = ServiceManager.Get<ShoutService>();
+					service.Shout(shoutLineEdit.Text, selectedHandlers.ToArray());
+					shoutLineEdit.Clear();
+				} catch (UserException ex) {
+					QMessageBox.Critical(base.TopLevelWidget(), "Synapse", ex.Message);
+				}
 			}
 		}
 		
@@ -358,7 +355,7 @@ namespace Synapse.QtClient.Widgets
 			account.Client.OnPresence += HandleOnPresence;
 			account.ConnectionStateChanged += HandleConnectionStateChanged;
 	
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				UpdateOnlineCount();
 			});
 		}
@@ -368,21 +365,21 @@ namespace Synapse.QtClient.Widgets
 			account.Client.OnPresence -= HandleOnPresence;
 			account.ConnectionStateChanged -= HandleConnectionStateChanged;
 			
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				UpdateOnlineCount();
 			});
 		}
 	
 		void HandleOnPresence (object o, Presence pres)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				UpdateOnlineCount();
 			});
 		}
 	
 		void HandleConnectionStateChanged (Account account)
 		{
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				UpdateOnlineCount();
 			});
 		}
@@ -392,6 +389,36 @@ namespace Synapse.QtClient.Widgets
 			var accountService = ServiceManager.Get<AccountService>();
 			int num = accountService.Accounts.Sum(account => account.NumOnlineFriends);
 			statsLabel.Text = String.Format("{0} friends online", num);
+		}
+		
+		void HandleShoutHandlerAdded (IShoutHandler handler)
+		{
+			QCheckBox check = new ShoutHandlerCheckBox(handler, shoutHandlersContainer);
+			check.Checked = true;
+			shoutHandlersContainer.Layout().AddWidget(check);
+			
+			shoutHandlersBox.Show();
+		}
+		
+		void HandleShoutHandlerRemoved (IShoutHandler handler)
+		{
+			for (int x = 0; x < shoutHandlersContainer.Layout().Count(); x++) {
+				var item = shoutHandlersContainer.Layout().ItemAt(x);
+				if (item is QWidgetItem) {
+					var check = ((ShoutHandlerCheckBox)((QWidgetItem)item).Widget());
+					if (check.Handler == handler) {
+						shoutHandlersContainer.Layout().RemoveWidget(check);
+						check.SetParent(null);
+						check.Dispose();
+						break;
+					}
+				}
+			}
+			
+			var shoutService = ServiceManager.Get<ShoutService>();
+			if (shoutService.Handlers.Count() == 0) {
+				shoutHandlersBox.Hide();
+			}
 		}
 		
 		#region Private Slots
@@ -431,10 +458,14 @@ namespace Synapse.QtClient.Widgets
 			Account selectedAccount = Gui.ShowAccountSelectMenu(m_JoinChatButton);
 			if (selectedAccount != null) {
 				JID jid = null;
-				if (JID.TryParse(String.Format("{0}@{1}", mucRoomLineEdit.Text, mucServerLineEdit.Text), out jid)) {
+				string nick = (!String.IsNullOrEmpty(mucNicknameLineEdit.Text)) ? mucNicknameLineEdit.Text : selectedAccount.ConferenceManager.DefaultNick;
+				if (JID.TryParse(String.Format("{0}@{1}/{2}", mucRoomLineEdit.Text, mucServerLineEdit.Text, nick), out jid)) {
 					if (!String.IsNullOrEmpty(jid.User) && !String.IsNullOrEmpty(jid.Server)) {
-						selectedAccount.JoinMuc(jid);
-						mucRoomLineEdit.Text = String.Empty;
+						try {
+							selectedAccount.JoinMuc(jid, mucPasswordLineEdit.Text);
+						} catch (UserException ex) {
+							QMessageBox.Critical(this.TopLevelWidget(), "Synapse Error", ex.Message);
+						}
 					} else {
 						QMessageBox.Critical(null, "Synapse", "Invalid JID");
 					}
@@ -452,7 +483,7 @@ namespace Synapse.QtClient.Widgets
 					Account account = (Account)index.Parent().InternalPointer();
 					BookmarkConference conf = (BookmarkConference)index.InternalPointer();
 					try {
-						account.JoinMuc(conf.JID);
+						account.JoinMuc(conf.JID, conf.Password);
 					} catch (UserException e) {
 						QMessageBox.Critical(this.TopLevelWidget(), "Synapse", e.Message);
 					}
@@ -477,8 +508,7 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
-		void rosterItemMenu_triggered (QAction action)
+		void HandleRosterItemMenuTriggered (QAction action)
 		{
 			// FIXME: Actions should be handled in the controller.
 			
@@ -508,8 +538,7 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 		
-		[Q_SLOT]
-		void rosterMenu_triggered (QAction action)
+		void HandleRosterMenuTriggered (QAction action)
 		{
 			if (action == m_ShowOfflineAction) {
 				m_RosterModel.ShowOffline = action.Checked;
@@ -518,8 +547,7 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
-		void rosterViewActionGroup_triggered (QAction action)
+		void RosterViewActionGroupTriggered (QAction action)
 		{
 			if (action == m_ListModeAction) {
 				rosterGrid.ListMode = action.Checked;
@@ -531,19 +559,12 @@ namespace Synapse.QtClient.Widgets
 		}
 		
 		[Q_SLOT]
-		void zoomSlider_valueChanged (int value)
-		{
-			rosterGrid.IconSize = value;
-		}
-	
-		[Q_SLOT]
 		void on_friendSearchLineEdit_textChanged ()
 		{
 			m_RosterModel.TextFilter = friendSearchLineEdit.Text;
 		}
 	
-		[Q_SLOT]
-		void activityPage_loadFinished (bool ok)
+		void HandleActivityPageLoadFinished (bool ok)
 		{
 			if (m_ActivityWebView.Url.ToString() != "resource:/feed.html")
 				return;
@@ -578,7 +599,6 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
 		void HandleActivityLinkClicked (QUrl url)
 		{
 			try {
@@ -621,8 +641,7 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
-		void rosterItemMenu_aboutToShow ()
+		void RosterItemMenuAboutToShow ()
 		{
 			rosterGrid.SuppressTooltips = true;
 
@@ -633,8 +652,7 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
-		[Q_SLOT]
-		void rosterItemMenu_aboutToHide ()
+		void RosterItemMenuAboutToHide ()
 		{
 			rosterGrid.SuppressTooltips = false;
 		}

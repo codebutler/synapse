@@ -26,8 +26,6 @@ namespace Synapse.QtClient.Widgets
 {
 	public class FadingQLabel : QLabel
 	{
-		public event EventHandler Clicked;
-		
 		public FadingQLabel (QWidget parent) : base (parent)
 		{
 		}
@@ -63,14 +61,6 @@ namespace Synapse.QtClient.Widgets
 			var s = base.SizeHint();
 			s.SetWidth(-1);
 			return s;
-		}
-
-		protected override void MousePressEvent (Qyoto.QMouseEvent ev)
-		{
-			base.MousePressEvent (ev);
-
-			if (Clicked != null)
-				Clicked(this, EventArgs.Empty);
 		}
 	}
 }

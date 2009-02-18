@@ -44,6 +44,12 @@ namespace Synapse.QtClient.Windows {
             horizontalLayout.AddWidget(this.splitter_2);
             this.splitter = new QSplitter(this.splitter_2);
             this.splitter.ObjectName = "splitter";
+            QSizePolicy splitter_sizePolicy;
+            splitter_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding);
+            splitter_sizePolicy.SetVerticalStretch(0);
+            splitter_sizePolicy.SetHorizontalStretch(1);
+            splitter_sizePolicy.SetHeightForWidth(this.splitter.SizePolicy.HasHeightForWidth());
+            this.splitter.SizePolicy = splitter_sizePolicy;
             this.splitter.Orientation = Qt.Orientation.Vertical;
             this.splitter.OpaqueResize = true;
             this.splitter.ChildrenCollapsible = false;

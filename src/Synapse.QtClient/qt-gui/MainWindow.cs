@@ -17,7 +17,13 @@ namespace Synapse.QtClient.Windows {
         
         protected QWidget containerWidget;
         
+        protected QWidget headerWidget;
+        
         protected QLabel headerLabel;
+        
+        protected QPushButton menuButton;
+        
+        protected QPushButton closeButton;
         
         protected Synapse.QtClient.Widgets.LightboxContainerWidget stackedWidget;
         
@@ -39,18 +45,55 @@ namespace Synapse.QtClient.Windows {
             verticalLayout_2 = new QVBoxLayout(this.containerWidget);
             verticalLayout_2.Spacing = 0;
             verticalLayout_2.Margin = 0;
-            this.headerLabel = new QLabel(this.containerWidget);
+            this.headerWidget = new QWidget(this.containerWidget);
+            this.headerWidget.ObjectName = "headerWidget";
+            QHBoxLayout horizontalLayout_3;
+            horizontalLayout_3 = new QHBoxLayout(this.headerWidget);
+            horizontalLayout_3.Spacing = 3;
+            horizontalLayout_3.SetContentsMargins(0, 0, 3, 0);
+            this.headerLabel = new QLabel(this.headerWidget);
             this.headerLabel.ObjectName = "headerLabel";
             QSizePolicy headerLabel_sizePolicy;
-            headerLabel_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum);
+            headerLabel_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
             headerLabel_sizePolicy.SetVerticalStretch(0);
             headerLabel_sizePolicy.SetHorizontalStretch(0);
             headerLabel_sizePolicy.SetHeightForWidth(this.headerLabel.SizePolicy.HasHeightForWidth());
             this.headerLabel.SizePolicy = headerLabel_sizePolicy;
-            this.headerLabel.Text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Synapse</span></p></body></html>";
+            this.headerLabel.Text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'DejaVu Sans'; font-size:9pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:33px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Synapse</span></p></body></html>";
             this.headerLabel.Alignment = global::Qyoto.Qyoto.GetCPPEnumValue("Qt", "AlignCenter");
             this.headerLabel.Margin = 3;
-            verticalLayout_2.AddWidget(this.headerLabel);
+            horizontalLayout_3.AddWidget(this.headerLabel);
+            this.menuButton = new QPushButton(this.headerWidget);
+            this.menuButton.ObjectName = "menuButton";
+            QSizePolicy menuButton_sizePolicy;
+            menuButton_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed);
+            menuButton_sizePolicy.SetVerticalStretch(0);
+            menuButton_sizePolicy.SetHorizontalStretch(0);
+            menuButton_sizePolicy.SetHeightForWidth(this.menuButton.SizePolicy.HasHeightForWidth());
+            this.menuButton.SizePolicy = menuButton_sizePolicy;
+            this.menuButton.MinimumSize = new QSize(12, 12);
+            this.menuButton.MaximumSize = new QSize(12, 12);
+            this.menuButton.FocusPolicy = Qt.FocusPolicy.TabFocus;
+            this.menuButton.Text = "";
+            this.menuButton.IconSize = new QSize(7, 7);
+            this.menuButton.Flat = true;
+            horizontalLayout_3.AddWidget(this.menuButton);
+            this.closeButton = new QPushButton(this.headerWidget);
+            this.closeButton.ObjectName = "closeButton";
+            QSizePolicy closeButton_sizePolicy;
+            closeButton_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed);
+            closeButton_sizePolicy.SetVerticalStretch(0);
+            closeButton_sizePolicy.SetHorizontalStretch(0);
+            closeButton_sizePolicy.SetHeightForWidth(this.closeButton.SizePolicy.HasHeightForWidth());
+            this.closeButton.SizePolicy = closeButton_sizePolicy;
+            this.closeButton.MinimumSize = new QSize(12, 12);
+            this.closeButton.MaximumSize = new QSize(12, 12);
+            this.closeButton.FocusPolicy = Qt.FocusPolicy.TabFocus;
+            this.closeButton.Text = "";
+            this.closeButton.IconSize = new QSize(7, 7);
+            this.closeButton.Flat = true;
+            horizontalLayout_3.AddWidget(this.closeButton);
+            verticalLayout_2.AddWidget(this.headerWidget);
             this.stackedWidget = new Synapse.QtClient.Widgets.LightboxContainerWidget(this.containerWidget);
             this.stackedWidget.ObjectName = "stackedWidget";
             this.stackedWidget.CurrentIndex = 0;

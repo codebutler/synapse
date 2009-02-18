@@ -33,7 +33,7 @@ namespace Synapse.QtClient
 		{
 			StackTrace stack = new StackTrace();
 			ManualResetEvent mutex = new ManualResetEvent(false);			
-			Application.Invoke(delegate {
+			QApplication.Invoke(delegate {
 				string msg = String.Format("{0}{1}{2}{1}{1}{3}", message, Environment.NewLine, detailMessage, stack);
 
 				Console.Error.WriteLine("---");

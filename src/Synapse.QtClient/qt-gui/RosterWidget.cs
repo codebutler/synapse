@@ -105,7 +105,7 @@ namespace Synapse.QtClient.Widgets {
         
         protected QLabel shoutCharsLabel;
         
-        protected QWidget widget_2;
+        protected QWidget shoutHandlersBox;
         
         protected QLabel label_8;
         
@@ -151,7 +151,7 @@ namespace Synapse.QtClient.Widgets {
             this.tabWidget.ObjectName = "tabWidget";
             this.tabWidget.tabPosition = QTabWidget.TabPosition.South;
             this.tabWidget.tabShape = QTabWidget.TabShape.Rounded;
-            this.tabWidget.CurrentIndex = 2;
+            this.tabWidget.CurrentIndex = 1;
             this.tabWidget.UsesScrollButtons = true;
             verticalLayout_2.AddWidget(this.tabWidget);
             this.friendsTab = new QWidget(this.tabWidget);
@@ -263,20 +263,25 @@ namespace Synapse.QtClient.Widgets {
             this.label_2 = new QLabel(this.joinMucContainer);
             this.label_2.ObjectName = "label_2";
             this.label_2.Text = "Room:";
+            this.label_2.SetBuddy(mucRoomLineEdit);
             gridLayout.AddWidget(this.label_2, 0, 0, 1, 1);
             this.label_5 = new QLabel(this.joinMucContainer);
             this.label_5.ObjectName = "label_5";
             this.label_5.Text = "Server:";
+            this.label_5.SetBuddy(mucServerLineEdit);
             gridLayout.AddWidget(this.label_5, 1, 0, 1, 1);
             this.mucServerLineEdit = new QLineEdit(this.joinMucContainer);
             this.mucServerLineEdit.ObjectName = "mucServerLineEdit";
+            this.mucServerLineEdit.Text = "conference.extremeboredom.net";
             gridLayout.AddWidget(this.mucServerLineEdit, 1, 1, 1, 1);
             this.mucRoomLineEdit = new QLineEdit(this.joinMucContainer);
             this.mucRoomLineEdit.ObjectName = "mucRoomLineEdit";
+            this.mucRoomLineEdit.Text = "synapse";
             gridLayout.AddWidget(this.mucRoomLineEdit, 0, 1, 1, 1);
             this.label_6 = new QLabel(this.joinMucContainer);
             this.label_6.ObjectName = "label_6";
             this.label_6.Text = "Nickname:";
+            this.label_6.SetBuddy(mucNicknameLineEdit);
             gridLayout.AddWidget(this.label_6, 2, 0, 1, 1);
             this.mucNicknameLineEdit = new QLineEdit(this.joinMucContainer);
             this.mucNicknameLineEdit.ObjectName = "mucNicknameLineEdit";
@@ -284,6 +289,7 @@ namespace Synapse.QtClient.Widgets {
             this.label = new QLabel(this.joinMucContainer);
             this.label.ObjectName = "label";
             this.label.Text = "Password:";
+            this.label.SetBuddy(mucPasswordLineEdit);
             gridLayout.AddWidget(this.label, 3, 0, 1, 1);
             this.mucPasswordLineEdit = new QLineEdit(this.joinMucContainer);
             this.mucPasswordLineEdit.ObjectName = "mucPasswordLineEdit";
@@ -427,16 +433,16 @@ namespace Synapse.QtClient.Widgets {
             this.shoutCharsLabel.ObjectName = "shoutCharsLabel";
             this.shoutCharsLabel.Text = "140";
             horizontalLayout_2.AddWidget(this.shoutCharsLabel);
-            this.widget_2 = new QWidget(this.shoutContainer);
-            this.widget_2.ObjectName = "widget_2";
+            this.shoutHandlersBox = new QWidget(this.shoutContainer);
+            this.shoutHandlersBox.ObjectName = "shoutHandlersBox";
             QHBoxLayout horizontalLayout_10;
-            horizontalLayout_10 = new QHBoxLayout(this.widget_2);
+            horizontalLayout_10 = new QHBoxLayout(this.shoutHandlersBox);
             horizontalLayout_10.Margin = 0;
-            this.label_8 = new QLabel(this.widget_2);
+            this.label_8 = new QLabel(this.shoutHandlersBox);
             this.label_8.ObjectName = "label_8";
             this.label_8.Text = "Also Send To:";
             horizontalLayout_10.AddWidget(this.label_8);
-            this.shoutHandlersContainer = new QWidget(this.widget_2);
+            this.shoutHandlersContainer = new QWidget(this.shoutHandlersBox);
             this.shoutHandlersContainer.ObjectName = "shoutHandlersContainer";
             QHBoxLayout horizontalLayout_11;
             horizontalLayout_11 = new QHBoxLayout(this.shoutHandlersContainer);
@@ -446,7 +452,7 @@ namespace Synapse.QtClient.Widgets {
             QSpacerItem horizontalSpacer_4;
             horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
             horizontalLayout_10.AddItem(horizontalSpacer_4);
-            verticalLayout_8.AddWidget(this.widget_2);
+            verticalLayout_8.AddWidget(this.shoutHandlersBox);
             QHBoxLayout horizontalLayout_3;
             horizontalLayout_3 = new QHBoxLayout();
             verticalLayout_8.AddLayout(horizontalLayout_3);
@@ -471,6 +477,10 @@ namespace Synapse.QtClient.Widgets {
             this.tabWidget.AddTab(this.activityTab, "Activity");
             this.splitter.AddWidget(this.widget);
             QObject.Connect(m_ShoutButton, Qt.SIGNAL("toggled(bool)"), shoutContainer, Qt.SLOT("setShown(bool)"));
+            QObject.Connect(mucRoomLineEdit, Qt.SIGNAL("returnPressed()"), m_JoinChatButton, Qt.SLOT("click()"));
+            QObject.Connect(mucPasswordLineEdit, Qt.SIGNAL("returnPressed()"), m_JoinChatButton, Qt.SLOT("click()"));
+            QObject.Connect(mucServerLineEdit, Qt.SIGNAL("returnPressed()"), m_JoinChatButton, Qt.SLOT("click()"));
+            QObject.Connect(mucNicknameLineEdit, Qt.SIGNAL("returnPressed()"), m_JoinChatButton, Qt.SLOT("click()"));
             QMetaObject.ConnectSlotsByName(this);
         }
     }

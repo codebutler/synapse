@@ -1,9 +1,10 @@
-<Project name="Synapse.Xmpp" fileversion="2.0" language="C#" UseParentDirectoryAsNamespace="True" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
+<Project name="Synapse.Xmpp" fileversion="2.0" language="C#" DefaultNamespace="Synapse.Xmpp" UseParentDirectoryAsNamespace="True" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug" assembly="Synapse.Xmpp" />
       <Build debugmode="True" target="Library" />
       <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
+      <EnvironmentVariables />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
@@ -35,7 +36,7 @@
     <File name="Synapse.Xmpp.Services/XmppService.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/UserWebIdentities.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Xmpp/StreamTypeInfo.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Xmpp/OAuth.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.Xmpp.Services/GeoService.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -47,9 +48,10 @@
     <ProjectReference type="Gac" localcopy="True" refto="System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <ProjectReference type="Gac" localcopy="True" refto="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/OAuth.dll" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/OAuthXmpp.dll" />
+    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.dll" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />

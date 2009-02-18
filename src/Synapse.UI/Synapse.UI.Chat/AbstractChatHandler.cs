@@ -21,6 +21,7 @@
 
 using System;
 using System.Xml;
+using System.Collections.Generic;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.UI;
@@ -38,6 +39,8 @@ namespace Synapse.UI.Chat
 		
 		Account m_Account;
 		bool m_Ready = true;
+		
+		Queue<AbstractChatContent> m_ContentQueue = new Queue<AbstractChatContent>();
 
 		protected AbstractChatHandler (Account account)
 		{
@@ -61,7 +64,19 @@ namespace Synapse.UI.Chat
 			}
 		}
 
-		public abstract void Start ();
+		public void FireQueued ()
+		{
+			lock (m_ContentQueue) {
+				if (NewContent == null) {
+					throw new InvalidOperationException("You must add a NewContent event handler first!");
+				}
+				while (m_ContentQueue.Count > 0) {
+					OnNewContent(m_ContentQueue.Dequeue());
+				}
+				m_ContentQueue = null;
+			}
+		}
+		
 		public abstract void Send (string html);
 		public abstract void Send (XmlElement element);
 		public abstract void Dispose ();
@@ -115,8 +130,8 @@ namespace Synapse.UI.Chat
 						Console.WriteLine(String.Format("Unknown chatstate from {0}: {1}", from, child.LocalName));
 					}
 	
-					var typingContent = new ChatContentTyping(m_Account, null, null, state);
-					NewContent(this, typingContent);
+					var typingContent = new ChatContentTyping(m_Account, fromJid, from, null, state);
+					OnNewContent(typingContent);
 				}
 			}
 			
@@ -145,23 +160,43 @@ namespace Synapse.UI.Chat
 					}
 				}
 					
-				// FIXME: Add support for delayed message timestamps.
 				DateTime date = DateTime.Now;
 				
-				var content = new ChatContentMessage(m_Account, fromJid, msg.To, date);
+				var nsmgr = new XmlNamespaceManager(msg.OwnerDocument.NameTable);
+				nsmgr.AddNamespace("delay", "jabber:x:delay");
+				var delay = (XmlElement)msg.SelectSingleNode("delay:x", nsmgr);
+				if (delay != null) {
+					string stamp = delay.GetAttribute("stamp");
+					// CCYYMMDDThh:mm:ss
+					date = DateTime.ParseExact(stamp, @"yyyyMMdd\THH:mm:ss", null).ToLocalTime();
+				}
+				
+				var content = new ChatContentMessage(m_Account, fromJid, from, msg.To, date);
 				content.IsOutgoing = !incoming;
 				content.MessageHtml = body;
 				
-				NewContent(this, content);
+				OnNewContent(content);
 			}
 		}
 	
 		protected void AppendStatus (string message)
 		{
-			var content = new ChatContentStatus(m_Account, null, null, DateTime.Now, String.Empty);
+			var content = new ChatContentStatus(m_Account, null, null, null, DateTime.Now, String.Empty);
 			content.MessageHtml = message;
 
-			NewContent(this, content);
+			OnNewContent(content);
+		}
+		
+		protected virtual void OnNewContent (AbstractChatContent content)
+		{
+			var handler = NewContent;
+			if (NewContent != null) {
+				NewContent(this, content);
+			} else {
+				lock (m_ContentQueue) {
+					m_ContentQueue.Enqueue(content);
+				}
+			}
 		}
 	}
 }

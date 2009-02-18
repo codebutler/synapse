@@ -48,7 +48,7 @@ namespace Synapse.Xmpp.Services
 				Label = "Join Conference",
 				Callback = delegate (IActivityFeedItem item, NotificationAction action) {
 					var xmppItem = (XmppActivityFeedItem)item;
-					xmppItem.Account.JoinMuc(xmppItem.ActionItem);
+					xmppItem.Account.JoinMuc(xmppItem.ActionItem, null);
 				}
 			};
 			feed.AddTemplate("invite", null, "invites you to join {0}", "invites you to join {0}",
