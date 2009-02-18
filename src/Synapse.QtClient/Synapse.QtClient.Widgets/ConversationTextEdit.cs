@@ -111,6 +111,16 @@ namespace Synapse.QtClient.Widgets
 			
 			return builder.ToString();
 		}
+
+		public void InsertImage (string fileName)
+		{
+			var magic = new Magic(true);
+			string mimeType = magic.Lookup(fileName);
+			if (mimeType.StartsWith("image/")) {
+				var cursor = base.TextCursor();
+				cursor.InsertHtml(String.Format("<img src=\"{0}\" />", fileName));
+			}
+		}
 		
 		protected override bool CanInsertFromMimeData (Qyoto.QMimeData source)
 		{
@@ -131,13 +141,15 @@ namespace Synapse.QtClient.Widgets
 				document.AddResource((int)QTextDocument.ResourceType.ImageResource, new QUrl(imageName), image);
 				cursor.InsertImage(imageName);
 			} else if (source.HasUrls()) {				
-				var magic = new Magic(true);				
+				var magic = new Magic(true);
 				foreach (var url in source.Urls()) {
 					if (url.Scheme() == "file") {
 						string fileName = url.Path();
 						if (File.Exists(fileName)) {
 							string mimeType = magic.Lookup(url.Path());
 							if (mimeType.StartsWith("image/")) {
+								// FIXME: If image is over a certain size, send as file transfer rather
+								// than encoded inline.
 								cursor.InsertHtml(String.Format("<img src=\"{0}\" />", fileName));
 							} else {
 								// FIXME: Generate and insert an image representing a file.

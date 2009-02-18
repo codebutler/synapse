@@ -52,6 +52,9 @@ namespace Synapse.QtClient.Windows
 		QAction m_UnderlineAction;
 		QAction m_ItalicAction;
 		QAction m_StrikethroughAction;
+		QAction m_ClearFormattingAction;
+
+		QAction m_InsertPhotoAction;
 
 		QComboBox m_ToComboBox;
 	
@@ -117,8 +120,10 @@ namespace Synapse.QtClient.Windows
 			QToolBar toolbar = new QToolBar(this);
 			toolbar.IconSize = new QSize(16, 16);
 						
-			var formatMenu = new QMenu(this);			
 			var formatMenuButton = new QToolButton(this);
+
+			var formatMenu = new QMenu(this);			
+			QObject.Connect<QAction>(formatMenu, Qt.SIGNAL("triggered(QAction*)"), HandleFormatMenuActionTriggered);
 			formatMenuButton.ToolButtonStyle = ToolButtonStyle.ToolButtonTextBesideIcon;
 			formatMenuButton.Text = "Format";
 			formatMenuButton.icon = Gui.LoadIcon("fonts", 16);
@@ -148,8 +153,9 @@ namespace Synapse.QtClient.Windows
 			
 			formatMenu.AddSeparator();
 			
-			formatMenu.AddAction(Gui.LoadIcon("edit-clear", 16), "Clear Formatting");
-			
+			m_ClearFormattingAction = new QAction(Gui.LoadIcon("edit-clear", 16), "Clear Formatting", this);
+			formatMenu.AddAction(m_ClearFormattingAction);
+
 			var insertMenu = new QMenu(this);			
 			var insertMenuButton = new QToolButton(this);
 			insertMenuButton.ToolButtonStyle = ToolButtonStyle.ToolButtonTextBesideIcon;
@@ -159,7 +165,10 @@ namespace Synapse.QtClient.Windows
 			insertMenuButton.SetMenu(insertMenu);
 			toolbar.AddWidget(insertMenuButton);
 			
-			insertMenu.AddAction(Gui.LoadIcon("insert-image", 16), "Photo...");
+			m_InsertPhotoAction = new QAction(Gui.LoadIcon("insert-image", 16), "Photo...", this);
+			QObject.Connect(m_InsertPhotoAction, Qt.SIGNAL("triggered()"), HandleInsertImageActionTriggered);
+			insertMenu.AddAction(m_InsertPhotoAction);
+
 			insertMenu.AddAction(Gui.LoadIcon("insert-link", 16), "Link...");
 			
 			foreach (IActionCodon node in AddinManager.GetExtensionNodes("/Synapse/QtClient/ChatWindow/InsertActions")) {
@@ -384,6 +393,51 @@ namespace Synapse.QtClient.Windows
 		{
 			var window = new ProfileWindow(m_Handler.Account, ((ChatHandler)m_Handler).Jid);
 			window.Show();
+		}
+
+		void HandleFormatMenuActionTriggered (QAction action)
+		{
+			var cursor = textEdit.TextCursor();
+
+			QTextCharFormat fmt = new QTextCharFormat();
+
+			if (action == m_ClearFormattingAction) {
+				cursor.SetCharFormat(fmt);
+				textEdit.SetCurrentCharFormat(fmt);
+				return;
+			}
+
+			if (action == m_BoldAction)
+				fmt.SetFontWeight(action.Checked ? (int)QFont.Weight.Bold : (int)QFont.Weight.Normal);
+			else if (action == m_ItalicAction)
+				fmt.SetFontItalic(action.Checked);
+			else if (action == m_UnderlineAction)
+				fmt.SetFontUnderline(action.Checked);
+			else if (action == m_StrikethroughAction)
+				fmt.SetFontStrikeOut(action.Checked);
+
+			cursor.MergeCharFormat(fmt);
+			textEdit.MergeCurrentCharFormat(fmt);
+		}
+
+		void HandleInsertImageActionTriggered ()
+		{
+			var dialog = new QFileDialog(this.TopLevelWidget(), "Select Avatar");
+			dialog.fileMode = QFileDialog.FileMode.ExistingFile;
+			if (dialog.Exec() == (int)QFileDialog.DialogCode.Accepted && dialog.SelectedFiles().Count > 0) {
+				string fileName = dialog.SelectedFiles()[0];
+				textEdit.InsertImage(fileName);
+			}
+		}
+
+		[Q_SLOT]
+		void on_textEdit_currentCharFormatChanged (QTextCharFormat format)
+		{
+			var font = format.Font();
+			m_BoldAction.Checked = font.Bold();
+			m_ItalicAction.Checked = font.Italic();
+			m_UnderlineAction.Checked = font.Underline();
+			m_StrikethroughAction.Checked = font.StrikeOut();
 		}
 	}
 }
