@@ -74,8 +74,6 @@ namespace Synapse.QtClient
 		string               m_CustomBackgroundColor = null;
 		bool                 m_CombineConsecutive = true;
 		
-		QMenu m_Menu;
-		
 		SynapseJSObject m_JSWindowObject;
 		
 		static string s_ThemesDirectory = null;
@@ -115,15 +113,18 @@ namespace Synapse.QtClient
 			}
 			
 			this.m_TimeOpened = DateTime.Now;
+
+			this.ContextMenuPolicy = ContextMenuPolicy.ActionsContextMenu;
 			
-			m_Menu = new QMenu(this);
 			// FIXME: Need to selectively show certain actions depending on what's under the cursor.
-			//m_Menu.AddAction(this.PageAction(QWebPage.WebAction.OpenLink));
-			//m_Menu.AddSeparator();
-			m_Menu.AddAction(this.PageAction(QWebPage.WebAction.Copy));
-			m_Menu.AddAction(this.PageAction(QWebPage.WebAction.InspectElement));
-			//m_Menu.AddAction(this.PageAction(QWebPage.WebAction.CopyLinkToClipboard));
-			//m_Menu.AddAction(this.PageAction(QWebPage.WebAction.CopyImageToClipboard));
+			//this.AddAction(this.PageAction(QWebPage.WebAction.OpenLink));
+			//this.AddSeparator();
+			QAction copyAction = this.PageAction(QWebPage.WebAction.Copy);
+			copyAction.SetShortcuts(QKeySequence.StandardKey.Copy);
+			this.AddAction(copyAction);
+			this.AddAction(this.PageAction(QWebPage.WebAction.InspectElement));
+			//this.AddAction(this.PageAction(QWebPage.WebAction.CopyLinkToClipboard));
+			//this.AddAction(this.PageAction(QWebPage.WebAction.CopyImageToClipboard));
 
 			this.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
 			QObject.Connect<QUrl>(this, Qt.SIGNAL("linkClicked(QUrl)"), HandleLinkClicked);
@@ -289,11 +290,6 @@ namespace Synapse.QtClient
 			}
 		}
 #endregion
-
-		protected override void ContextMenuEvent (Qyoto.QContextMenuEvent arg1)
-		{			
-			m_Menu.Popup(arg1.GlobalPos());
-		}
 
 		int StyleVersion {
 			get {
