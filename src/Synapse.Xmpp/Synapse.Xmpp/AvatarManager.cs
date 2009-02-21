@@ -86,6 +86,17 @@ namespace Synapse.Xmpp
 			pres.AppendChild(vcardUpdateElem);
 		}
 
+		public static bool HasAvatarHash (JID jid)
+		{
+			if (jid != null) {
+				lock (s_HashCache) {
+					return s_HashCache.ContainsKey(jid.Bare);
+				}
+			} else {
+				return false;
+			}
+		}
+		
 		public static string GetAvatarHash (JID jid)
 		{
 			if (jid != null) {

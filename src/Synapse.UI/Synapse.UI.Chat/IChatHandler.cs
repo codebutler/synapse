@@ -25,6 +25,7 @@ using Synapse.Xmpp;
 
 namespace Synapse.UI.Chat
 {
+	public delegate void ChatHandlerEvent (IChatHandler handler);
 	public delegate void ChatContentEventHandler (IChatHandler handler, AbstractChatContent content);
 	
 	public interface IChatHandler : IDisposable
