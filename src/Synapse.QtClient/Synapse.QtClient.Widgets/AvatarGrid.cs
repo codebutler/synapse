@@ -61,7 +61,7 @@ namespace Synapse.QtClient.Widgets
 			// FIXME: Need a preference to turn this on/off.
 			// this.SetViewport(new QGLWidget());
 			
-			m_Scene = new Scene(this);
+			m_Scene = new AvatarGridScene(this);
 			this.SetScene(m_Scene);
 
 			m_InfoPopup = new InfoPopup<T>(this);
@@ -192,7 +192,6 @@ namespace Synapse.QtClient.Widgets
 				return;
 			}
 
-			var s = Environment.StackTrace;
 			QApplication.Invoke(delegate {
 				bool visibilityChanged = false;
 				bool groupsChanged = false;
@@ -402,7 +401,6 @@ namespace Synapse.QtClient.Widgets
 							if (m_ListMode)
 								perRow = 1;							
 							
-							int rows = Math.Max(itemCount / perRow, 1);
 							int x       = IconPadding;
 							int row     = 0;
 							int thisRow = 0;

@@ -166,7 +166,7 @@ namespace Synapse.QtClient.Widgets
 				}
 			}
 
-			public bool EventFilter (Qyoto.QObject arg1, Qyoto.QEvent arg2)
+			public new bool EventFilter (Qyoto.QObject arg1, Qyoto.QEvent arg2)
 			{
 				if (arg2.type() == QEvent.TypeOf.HoverMove) {
 					if (MouseMoved != null)

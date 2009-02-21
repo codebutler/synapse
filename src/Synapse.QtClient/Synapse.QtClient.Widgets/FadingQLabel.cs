@@ -34,7 +34,7 @@ namespace Synapse.QtClient.Widgets
 		{
 			using (QPainter p = new QPainter(this)) {
 				var rect = ContentsRect();
-				var fm = new QFontMetrics(Font);
+				//var fm = new QFontMetrics(Font);
 				
 				//if (fm.Width(Text) > rect.Width()) {
 					var gradient = new QLinearGradient(rect.TopLeft(), rect.TopRight());

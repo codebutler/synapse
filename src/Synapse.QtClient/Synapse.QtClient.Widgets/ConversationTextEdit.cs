@@ -40,7 +40,7 @@ namespace Synapse.QtClient.Widgets
 		{
 		}
 		
-		public new string ToHtml ()
+		public string ToHtml ()
 		{
 			var builder = new StringBuilder();
 			

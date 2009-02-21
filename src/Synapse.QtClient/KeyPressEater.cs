@@ -39,7 +39,7 @@ namespace Synapse.QtClient
 			this.KeyEvent += handler;
 		}
 			
-		private bool EventFilter(QObject obj, QEvent evnt)
+		public new bool EventFilter(QObject obj, QEvent evnt)
 		{
 			if (evnt.type() == QEvent.TypeOf.KeyPress) {
 				if (KeyEvent != null) {

@@ -77,7 +77,6 @@ namespace Synapse.QtClient
 			    return 0;
 			
 			int ilen = Convert.ToInt32(len);
-			int ipos = Convert.ToInt32(m_Pos);
 			for (int i = 0; i < ilen; i++) {
 				data[i] = (sbyte) m_Buffer[i];
  			}			

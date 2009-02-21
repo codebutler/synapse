@@ -25,14 +25,14 @@ namespace Synapse.QtClient.Widgets
 {
 	public partial class AvatarGrid<T> : QGraphicsView
 	{
-		class Scene : QGraphicsScene
+		class AvatarGridScene : QGraphicsScene
 		{
 			AvatarGrid<T> m_Grid;
 
 			QGraphicsLineItem m_GroupDropIndicatorItem;
 			RosterItemGroup   m_GroupDropBeforeGroup;
 				
-			public Scene (AvatarGrid<T> grid) : base (grid)
+			public AvatarGridScene (AvatarGrid<T> grid) : base (grid)
 			{
 				m_Grid = grid;
 

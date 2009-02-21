@@ -36,7 +36,7 @@ namespace Synapse.QtClient
 			m_ParentWidget = widget;
 		}
 
-		public bool EventFilter (QObject obj, QEvent evnt)
+		public new bool EventFilter (QObject obj, QEvent evnt)
 		{
 			var type = evnt.type();
 
