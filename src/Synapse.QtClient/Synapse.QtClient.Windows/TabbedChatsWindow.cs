@@ -337,31 +337,35 @@ namespace Synapse.QtClient.Windows
 				m_Account.Client.OnMessage -= HandleOnMessage;
 				m_Account.Client.OnPresence -= HandleOnPresence;
 			}
-				
-			public ChatHandler OpenChatWindow (JID jid, bool focus)
+			
+			public void OpenChatWindow (JID jid, bool focus)
 			{
-				lock (m_ChatWindows) {
-					if (!m_ChatWindows.ContainsKey(jid.Bare)) {
-						var handler = new ChatHandler(m_Account, jid);
-						QApplication.Invoke(delegate {
+				OpenChatWindow(jid, focus, null);
+			}
+			
+			public void OpenChatWindow (JID jid, bool focus, ChatHandlerEvent callback)
+			{
+				QApplication.Invoke(delegate {
+					IChatHandler handler = null;
+					lock (m_ChatWindows) {
+						if (!m_ChatWindows.ContainsKey(jid.Bare)) {
+							handler = new ChatHandler(m_Account, jid);
 							var window = new ChatWindow(handler);
 							window.Closed += HandleChatWindowClosed;
-							lock (m_ChatWindows) {
-								m_ChatWindows.Add(jid.Bare, window);
-							}
+							m_ChatWindows.Add(jid.Bare, window);
 							Gui.TabbedChatsWindow.AddChatWindow(window, focus);
-						});
-						return handler;
-					} else {
-						var window = m_ChatWindows[jid.Bare];
-						if (focus) {
-							QApplication.Invoke(delegate {
+						} else {
+							var window = m_ChatWindows[jid.Bare];
+							if (focus) {
 								Gui.TabbedChatsWindow.FocusChatWindow(window);
-							});
+							}
+							handler = (ChatHandler)window.Handler;
 						}
-						return (ChatHandler)window.Handler;
+					}					
+					if (callback != null) {
+						callback(handler);
 					}
-				}
+				});
 			}
 
 			void HandleOnJoin(Room room)
@@ -384,8 +388,9 @@ namespace Synapse.QtClient.Windows
 					// Some people like a "psycic" mode though, so this should be configurable.
 					lock (m_ChatWindows) {
 						if (m_ChatWindows.ContainsKey(message.From.Bare) || (message.Body != null || message.Html != null )) {
-							ChatHandler handler = OpenChatWindow(message.From, false);
-							handler.AppendMessage(message);
+							OpenChatWindow(message.From, false, delegate (IChatHandler handler) {
+								((ChatHandler)handler).AppendMessage(message);
+							});
 						}
 					}
 				}
