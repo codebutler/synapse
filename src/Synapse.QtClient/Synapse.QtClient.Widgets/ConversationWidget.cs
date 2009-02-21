@@ -143,6 +143,7 @@ namespace Synapse.QtClient
 			m_AllowsCustomBackground = true;
 			m_AllowsUserIcons = true;
 			
+			DateFormat = "t";
 			ShowUserIcons = true;
 			ShowHeader = true;
 			AllowTextBackgrounds = true;
@@ -302,6 +303,12 @@ namespace Synapse.QtClient
 		
 		// FIXME: Almost all of these public r/w properties aren't used...
 		// Need to integrate with preferences...
+		
+		
+		public string DateFormat {
+			get;
+			set;
+		}
 		
 		public bool UseCustomNameFormat {
 			get;
@@ -581,7 +588,7 @@ namespace Synapse.QtClient
 			headerTemplateHtml = headerTemplateHtml.Replace("%sourceName%", this.m_SourceName);
 			headerTemplateHtml = headerTemplateHtml.Replace("%destinationName%", this.m_DestinationName);
 			headerTemplateHtml = headerTemplateHtml.Replace("%destinationDisplayName%", this.m_DestinationDisplayName);
-			headerTemplateHtml = headerTemplateHtml.Replace("%timeOpened%", this.m_TimeOpened.ToString());
+			headerTemplateHtml = headerTemplateHtml.Replace("%timeOpened%", this.m_TimeOpened.ToString(this.DateFormat));
 			
 			string iconPath = null;
 			if (this.ChatHandler is ChatHandler) {
