@@ -98,7 +98,6 @@ namespace Synapse.QtClient.Windows
 				var sliderAction = new AvatarGridZoomAction<jabber.connection.RoomParticipant>(participantsGrid);
 				participantsGrid.AddAction(sliderAction);
 			
-				m_ConversationWidget.ChatName = mucHandler.Room.JID;
 				this.WindowTitle = mucHandler.Room.JID.User; // FIXME: Show only "user" in tab, show full room jid in title?
 				this.WindowIcon = Gui.LoadIcon("internet-group-chat");
 			} else {
@@ -107,6 +106,8 @@ namespace Synapse.QtClient.Windows
 				this.WindowTitle = chatHandler.Account.GetDisplayName(chatHandler.Jid);
 				this.WindowIcon = new QIcon((QPixmap)Synapse.Xmpp.AvatarManager.GetAvatar(chatHandler.Jid));
 			}
+			
+			m_ConversationWidget.ChatHandler = handler;
 
 			handler.NewContent += HandleNewContent;
 			handler.ReadyChanged += HandleReadyChanged;

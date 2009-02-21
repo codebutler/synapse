@@ -43,36 +43,46 @@ namespace Synapse.QtClient
 	public class ConversationWidget : QWebView
 	{
 		#region Private Variables
-		string m_BaseTemplateHtml       = null;
-		string m_StatusHtml             = null;
-		DateTime m_TimeOpened;		
-		PList  m_ThemeProperties         = null;
-		bool   m_UsingCustomTemplateHtml = false;
-
-		string m_ContentInHtml     = null;
-		string m_NextContentInHtml = null;
-		string m_ContextInHtml     = null;
-		string m_NextContextInHtml = null;
+		int    m_StyleVersion;
+		string m_StylePath;
+		PList m_StyleInfo;
 		
+		// Templates
+		string m_HeaderHtml;
+		string m_FooterHtml;
+		string m_BaseHtml;
+		string m_StatusHtml         = null;
+		string m_ContentInHtml      = null;
+		string m_NextContentInHtml  = null;
+		string m_ContextInHtml      = null;
+		string m_NextContextInHtml  = null;		
 		string m_ContentOutHtml     = null;
 		string m_NextContentOutHtml = null;
 		string m_ContextOutHtml     = null;
 		string m_NextContextOutHtml = null;
 		string m_FileTransferHtml   = null;
 
+		DateTime m_TimeOpened;
+		
 		bool m_ThemeLoaded = false;
 		
-		string m_ThemeName              = null;
-		string m_VariantName            = null;
 		string m_ChatName               = null;
 		string m_SourceName             = null;
 		string m_DestinationName        = null;
 		string m_DestinationDisplayName = null;
 		
-		CustomBackgroundType m_CustomBackgroundType  = CustomBackgroundType.BackgroundNormal;
-		string               m_CustomBackgroundPath  = null;
-		string               m_CustomBackgroundColor = null;
-		bool                 m_CombineConsecutive = true;
+		// Style settings
+		bool m_AllowsCustomBackground;
+		bool m_TransparentDefaultBackground;
+		bool m_AllowsUserIcons;
+		bool m_UsingCustomTemplateHtml;
+		
+		// Behavior
+		// FIXME: NSDateFormatter *timeStampFormatter;
+		// FIXME: AINameFormat nameFormat;
+		bool m_CombineConsecutive;
+		bool m_AllowsColors;
+		// FIXME: NSImage *userIconMask;
 		
 		SynapseJSObject m_JSWindowObject;
 		
@@ -105,6 +115,87 @@ namespace Synapse.QtClient
 		public ConversationWidget(QWidget parent) : base(parent)
 		{
 			m_JSWindowObject = new SynapseJSObject(this);
+		}
+		
+		#endregion
+		
+		#region Public Methods
+		public void LoadTheme(string themeName, string variantName)
+		{
+			string themeDirectory = System.IO.Path.Combine(ThemesDirectory, themeName) + ".AdiumMessageStyle";
+			if (!Directory.Exists(themeDirectory)) {
+				throw new DirectoryNotFoundException(themeDirectory);
+			}
+			
+			m_StylePath = Util.JoinPath(themeDirectory, "Contents", "Resources");
+			
+			string plistPath = Util.JoinPath(themeDirectory, "Contents", "Info.plist");
+			
+			// XXX: Add additional checks for other required files.
+			if (!File.Exists(plistPath)) {
+				throw new Exception("Missing required theme file: Info.plist");
+			}
+			
+			m_StyleInfo = new PList(plistPath);
+	
+			// Default Behavior
+			m_AllowsCustomBackground = true;
+			m_AllowsUserIcons = true;
+			
+			ShowUserIcons = true;
+			ShowHeader = true;
+			AllowTextBackgrounds = true;
+			ShowIncomingFont = true;
+			ShowIncomingColors = true;			
+			
+			m_StyleVersion = m_StyleInfo.GetInt("MessageViewVersion");
+			
+			// Pre-fetch our templates			
+			LoadTemplates();
+			
+			// Style flags
+			m_AllowsCustomBackground = !m_StyleInfo.Get<bool>("DisableCustomBackground");
+			m_TransparentDefaultBackground = m_StyleInfo.Get<bool>("DefaultBackgroundIsTransparent");
+			if (m_TransparentDefaultBackground) {
+				// FIXME:
+				Console.WriteLine("Transparent background not supported");
+			}
+			
+			m_CombineConsecutive = !m_StyleInfo.Get<bool>("DisableCombineConsecutive");
+			
+			if (m_StyleInfo.ContainsKey("ShowsUserIcons")) {
+				m_AllowsUserIcons = m_StyleInfo.Get<bool>("ShowsUserIcons");
+				Console.WriteLine("Shows User Icons !! " + m_AllowsUserIcons);
+			}
+			
+			// User icon masking
+			var maskName = m_StyleInfo.Get<string>("ImageMask");
+			if (!String.IsNullOrEmpty(maskName)) {
+				// FIXME:
+				Console.WriteLine("ImageMask not supported");
+			}
+			
+			m_AllowsColors = m_StyleInfo.Get<bool>("AllowTextColors");
+			if (!m_AllowsColors) {
+				Console.WriteLine("AllowTextColors not supported");
+			}
+			
+			// FIXME: Need to selectively show certain actions depending on what's under the cursor.
+			//this.AddAction(this.PageAction(QWebPage.WebAction.OpenLink));
+			//this.AddAction(this.PageAction(QWebPage.WebAction.CopyLinkToClipboard));
+			//this.AddAction(this.PageAction(QWebPage.WebAction.CopyImageToClipboard));
+			//this.AddSeparator();
+			QAction copyAction = this.PageAction(QWebPage.WebAction.Copy);
+			copyAction.SetShortcuts(QKeySequence.StandardKey.Copy);
+			this.AddAction(copyAction);
+			this.AddAction(this.PageAction(QWebPage.WebAction.InspectElement));
+			
+			// Create the base template
+			string baseUri = "file://" + m_StylePath + "/";
+			string mainCssPath = "main.css";
+			string variantCssPath = PathForVariant(variantName);
+			var formattedBaseTemplate = FormatBaseTemplate(baseUri, mainCssPath, variantCssPath);
+			base.Page().MainFrame().SetHtml(formattedBaseTemplate, themeDirectory);
 			
 			QObject.Connect(this.Page().MainFrame(), Qt.SIGNAL("javaScriptWindowObjectCleared()"), HandleJavaScriptWindowObjectCleared);
 
@@ -116,89 +207,39 @@ namespace Synapse.QtClient
 
 			this.ContextMenuPolicy = ContextMenuPolicy.ActionsContextMenu;
 			
-			// FIXME: Need to selectively show certain actions depending on what's under the cursor.
-			//this.AddAction(this.PageAction(QWebPage.WebAction.OpenLink));
-			//this.AddSeparator();
-			QAction copyAction = this.PageAction(QWebPage.WebAction.Copy);
-			copyAction.SetShortcuts(QKeySequence.StandardKey.Copy);
-			this.AddAction(copyAction);
-			this.AddAction(this.PageAction(QWebPage.WebAction.InspectElement));
-			//this.AddAction(this.PageAction(QWebPage.WebAction.CopyLinkToClipboard));
-			//this.AddAction(this.PageAction(QWebPage.WebAction.CopyImageToClipboard));
-
 			this.Page().linkDelegationPolicy = QWebPage.LinkDelegationPolicy.DelegateAllLinks;
 			QObject.Connect<QUrl>(this, Qt.SIGNAL("linkClicked(QUrl)"), HandleLinkClicked);
+			
+			m_ThemeLoaded = true;
+			
+			HandleJavaScriptWindowObjectCleared();
 		}
-		#endregion
-		
-		#region Public Methods
-		public void AppendContent(AbstractChatContent content, bool contentIsSimilar, bool willAddMoreContentObjects, 
-		                          bool replaceLastContent)
+	
+		void LoadTemplates ()
 		{
-			if (content == null)
-				throw new ArgumentNullException("content");
-			
-			if (!m_ThemeLoaded)
-				throw new Exception("Call LoadTheme() first!");
-
-
-			var js = ScriptForAppendingContent(content, contentIsSimilar, willAddMoreContentObjects, replaceLastContent);
-			Page().MainFrame().EvaluateJavaScript(js);
-		}
-				
-		public void LoadTheme(string themeName, string variantName)
-		{
-			m_ThemeLoaded = false;
-
-			string themeDirectory = System.IO.Path.Combine(ThemesDirectory, themeName) + ".AdiumMessageStyle";
-			if (!Directory.Exists(themeDirectory)) {
-				throw new DirectoryNotFoundException(themeDirectory);
-			}
-			string resourcesPath = Util.JoinPath(themeDirectory, "Contents", "Resources");
-			string plistPath     = Util.JoinPath(themeDirectory, "Contents", "Info.plist");
-			
-			// XXX: Add additional checks for other required files.
-			if (!File.Exists(plistPath)) {
-				throw new Exception("Missing required theme file: Info.plist");
-			}
-			
-			this.m_ThemeProperties = new PList(plistPath);
-			this.m_ThemeName       = themeName;
-			this.m_VariantName     = variantName;			
-
 			// Check if theme is version 1 and has its own Template.html
-			string customTemplatePath = Util.JoinPath(resourcesPath, "Template.html");
-			if (!File.Exists(customTemplatePath) && StyleVersion >= 1) {
+			string customTemplatePath = Util.JoinPath(m_StylePath, "Template.html");
+			if (!File.Exists(customTemplatePath) && m_StyleVersion >= 1) {
 				Assembly asm = Assembly.GetExecutingAssembly();
 				using (StreamReader reader = new StreamReader(asm.GetManifestResourceStream("Template.html"))) {
-					m_BaseTemplateHtml = reader.ReadToEnd();
+					m_BaseHtml = reader.ReadToEnd();
 				}
 				m_UsingCustomTemplateHtml = false;
 			} else {
-				m_BaseTemplateHtml = File.ReadAllText(customTemplatePath);
+				m_BaseHtml = File.ReadAllText(customTemplatePath);
 				m_UsingCustomTemplateHtml = true;
 			}					
 			
 			// Set up base template
-			string headerHtml     = FormatHeaderOrFooter(File.ReadAllText(Util.JoinPath(resourcesPath, "Header.html")));
-			string footerPath     = Util.JoinPath(resourcesPath, "Footer.html");
-			string footerHtml     = String.Empty;
-			if (File.Exists(footerPath)) {
-				footerHtml = FormatHeaderOrFooter(File.ReadAllText(footerPath));
-			}
+			m_HeaderHtml = FormatHeaderOrFooter(File.ReadAllText(Util.JoinPath(m_StylePath, "Header.html")));
+			string footerPath = Util.JoinPath(m_StylePath, "Footer.html");
+			m_FooterHtml = (File.Exists(footerPath)) ? FormatHeaderOrFooter(File.ReadAllText(footerPath)) : String.Empty;
 			
-			string baseUri        = "file://" + resourcesPath + "/";
-			string mainCssPath    = "main.css";
-			string variantCssPath = Util.JoinPath("Variants", variantName + ".css");
-			
-			string baseHtml       = FormatBaseTemplate(m_ThemeProperties, baseUri, mainCssPath, variantCssPath, headerHtml, footerHtml);
-			base.Page().MainFrame().SetHtml(baseHtml, themeDirectory);
-				
-			string incomingPath = Util.JoinPath(resourcesPath, "Incoming");
-			string outgoingPath = Util.JoinPath(resourcesPath, "Outgoing");
+			string incomingPath = Util.JoinPath(m_StylePath, "Incoming");
+			string outgoingPath = Util.JoinPath(m_StylePath, "Outgoing");
 			
 			// Load other templates
-			string statusPath              = Util.JoinPath(resourcesPath, "Status.html");
+			string statusPath              = Util.JoinPath(m_StylePath, "Status.html");
 			string incomingContentPath     = Util.JoinPath(incomingPath, "Content.html");
 			string incomingNextContentPath = Util.JoinPath(incomingPath, "NextContent.html");
 			string outgoingContentPath     = Util.JoinPath(outgoingPath, "Content.html");
@@ -207,7 +248,7 @@ namespace Synapse.QtClient
 			string incomingNextContextPath = Util.JoinPath(incomingPath, "NextContext.html");
 			string outgoingContextPath     = Util.JoinPath(outgoingPath, "Context.html");
 			string outgoingNextContextPath = Util.JoinPath(outgoingPath, "NextContext.html");
-			string filetransferRequestPath = Util.JoinPath(resourcesPath, "FileTransferRequest.html");
+			string filetransferRequestPath = Util.JoinPath(m_StylePath, "FileTransferRequest.html");
 			
 			/* From http://trac.adiumx.com/wiki/CreatingMessageStyles:
 			 * If Incoming/NextContent.html isn't found, Incoming/Content.html will be used
@@ -225,7 +266,7 @@ namespace Synapse.QtClient
 			this.m_ContentOutHtml     = File.Exists(outgoingContentPath)     ? File.ReadAllText(outgoingContentPath)     : this.m_ContentInHtml;
 			this.m_NextContentOutHtml = File.Exists(outgoingNextContentPath) ? File.ReadAllText(outgoingNextContentPath) : this.m_ContentOutHtml;
 			this.m_ContextOutHtml     = File.Exists(outgoingContextPath)     ? File.ReadAllText(outgoingContextPath)     : this.m_ContentOutHtml;
-			this.m_NextContextOutHtml = File.Exists(incomingContextPath)     ? File.ReadAllText(incomingContextPath)     : this.m_NextContentOutHtml;
+			this.m_NextContextOutHtml = File.Exists(outgoingNextContextPath)     ? File.ReadAllText(outgoingNextContextPath)     : this.m_NextContentInHtml;
 			
 			if (File.Exists(filetransferRequestPath)) {
 				this.m_FileTransferHtml = File.ReadAllText(filetransferRequestPath);
@@ -237,65 +278,83 @@ namespace Synapse.QtClient
 						                      withString:[NSString stringWithFormat:AILocalizedString(@"Download %@", "%@ will be a file name"), @"%fileName%"]];
 				*/
 			}
+		}
+	
+		public void AppendContent(AbstractChatContent content, bool contentIsSimilar, bool willAddMoreContentObjects, 
+		                          bool replaceLastContent)
+		{
+			if (content == null)
+				throw new ArgumentNullException("content");
 			
-			HandleJavaScriptWindowObjectCleared();
+			if (!m_ThemeLoaded)
+				throw new Exception("Call LoadTheme() first!");
 
-			m_ThemeLoaded = true;
+
+			var js = ScriptForAppendingContent(content, contentIsSimilar, willAddMoreContentObjects, replaceLastContent);
+			Page().MainFrame().EvaluateJavaScript(js);
 		}
 		#endregion
 		
 		#region Public Properties
-		public string ChatName {
-			set {
-				this.m_ChatName = value;
-			}
+		public IChatHandler ChatHandler {
+			get;
+			set;
 		}
 		
-		public string ThemeName {
-			get {
-				return m_ThemeName;
-			}
+		// FIXME: Almost all of these public r/w properties aren't used...
+		// Need to integrate with preferences...
+		
+		public bool UseCustomNameFormat {
+			get;
+			set;
 		}
 		
-		public string VariantName {
-			get {
-				return m_VariantName;
-			}
+		public bool ShowUserIcons {
+			get;
+			set;
+		}
+		
+		public bool ShowHeader {
+			get;
+			set;
+		}
+		
+		public bool AllowTextBackgrounds {
+			get;
+			set;
+		}
+		
+		public bool ShowIncomingFont {
+			get;
+			set;
+		}
+		
+		public bool ShowIncomingColors {
+			get;
+			set;
 		}
 		
 		public CustomBackgroundType CustomBackgroundType {
-			get {
-				return m_CustomBackgroundType;
-			}
-			set {
-				m_CustomBackgroundType = value;
-			}
+			get;
+			set;
 		}
 		
 		public string CustomBackgroundPath {
-			get {
-				return m_CustomBackgroundPath;
-			}
-			set {
-				m_CustomBackgroundPath = value;
-			}
+			get;
+			set;
 		}
 		
 		public string CustomBackgroundColor {
+			get;
+			set;
+		}
+		
+		public bool AllowsUserIcons {
 			get {
-				return m_CustomBackgroundColor;
-			}
-			set {
-				m_CustomBackgroundColor = value;
+				return m_AllowsUserIcons;
 			}
 		}
-#endregion
-
-		int StyleVersion {
-			get {
-				return Convert.ToInt32(m_ThemeProperties.GetValue<long>("MessageViewVersion"));
-			}
-		}
+		#endregion
 		
 		#region Private Methods
 		string ScriptForAppendingContent(AbstractChatContent content, bool contentIsSimilar, bool willAddMoreContentObjects, bool replaceLastContent)
@@ -308,7 +367,7 @@ namespace Synapse.QtClient
 			newHTML = TemplateForContent(content, contentIsSimilar);
 			newHTML = FillKeywords(newHTML, content, contentIsSimilar);
 
-			if (!m_UsingCustomTemplateHtml || StyleVersion >= 4) {
+			if (!m_UsingCustomTemplateHtml || m_StyleVersion >= 4) {
 				if (replaceLastContent)
 					script = REPLACE_LAST_MESSAGE;
 				else if (willAddMoreContentObjects) {
@@ -316,13 +375,13 @@ namespace Synapse.QtClient
 				} else {
 					script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
 				}
-			} else if (StyleVersion >= 3) {
+			} else if (m_StyleVersion >= 3) {
 				if (willAddMoreContentObjects) {
 					script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_NO_SCROLL : APPEND_MESSAGE_NO_SCROLL);
 				} else {
 					script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
 				}
-			} else if (StyleVersion >= 1) {
+			} else if (m_StyleVersion >= 1) {
 				script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
 			} else {
 				if (m_UsingCustomTemplateHtml && content is ChatContentStatus) {
@@ -392,9 +451,15 @@ namespace Synapse.QtClient
 			});
 			
 			if (content is ChatContentMessage) {
-				string userStatusIcon = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(content.Source.Bare));
 				
-				inString = inString.Replace("%userIconPath%", userStatusIcon);
+				string userIconPath = null;
+				if (ShowUserIcons) {
+					userIconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(content.Source.Bare));
+				} else {
+					userIconPath = (content.IsOutgoing) ? "Outgoing/buddy_icon.png" : "Incoming/buddy_icon.png";
+				}
+				
+				inString = inString.Replace("%userIconPath%", userIconPath);
 				inString = inString.Replace("%senderScreenName%", content.Source.ToString());
 				inString = inString.Replace("%sender%", content.SourceDisplayName);
 				inString = inString.Replace("%senderDisplayName%", content.SourceDisplayName);
@@ -430,16 +495,17 @@ namespace Synapse.QtClient
 			}
 		}
 		
-		string FormatBaseTemplate(PList themeProperties, string basePath, string mainPath, string variantPath, string headerHtml, string footerHtml)
+		string FormatBaseTemplate(string basePath, string mainPath, string variantPath)
 		{
 			mainPath = String.Format("@import url(\"{0}\");", mainPath);
 			
-			string html = this.m_BaseTemplateHtml;
+			string html = this.m_BaseHtml;
+			string headerHtml = ShowHeader ? m_HeaderHtml : String.Empty;
 			string[] substitutions = null;
-			if (StyleVersion < 3 && m_UsingCustomTemplateHtml) {
-				substitutions = new string[] { basePath, variantPath, headerHtml, footerHtml };
+			if (m_StyleVersion < 3 && m_UsingCustomTemplateHtml) {
+				substitutions = new string[] { basePath, variantPath, headerHtml, m_FooterHtml };
 			} else {
-				substitutions = new string[] { basePath, mainPath, variantPath, headerHtml, footerHtml };
+				substitutions = new string[] { basePath, mainPath, variantPath, headerHtml, m_FooterHtml };
 			}
 			for (int i = 0; i < substitutions.Length; i++) {
 				int index = html.IndexOf("%@");
@@ -447,40 +513,36 @@ namespace Synapse.QtClient
 				html = html.Insert(index, substitutions[i]);
 			}
 			
-			bool allowsCustomBackground         = !themeProperties.GetValue<bool>("DisableCustomBackground");
-			bool defaultBackgroundIsTransparent = themeProperties.GetValue<bool>("DefaultBackgroundIsTransparent");
-			string defaultBackgroundColor       = themeProperties.GetValue<string>("DefaultBackgroundColor");
-		
 			string bgStyle = String.Empty;
 			
-			if (allowsCustomBackground && (!String.IsNullOrEmpty(m_CustomBackgroundPath) || !String.IsNullOrEmpty(m_CustomBackgroundColor))) {
-				if (!String.IsNullOrEmpty(m_CustomBackgroundPath)) {
-					switch (m_CustomBackgroundType) {
+			if (m_AllowsCustomBackground && (!String.IsNullOrEmpty(this.CustomBackgroundPath) || !String.IsNullOrEmpty(this.CustomBackgroundColor))) {
+				if (!String.IsNullOrEmpty(this.CustomBackgroundPath)) {
+					switch (this.CustomBackgroundType) {
 					case CustomBackgroundType.BackgroundNormal:
 						bgStyle = String.Format(@"background-image: url('{0}'); background-repeat: no-repeat; background-attachment: fixed", 
-						                        m_CustomBackgroundPath);
+						                        this.CustomBackgroundPath);
 						break;
 					case CustomBackgroundType.BackgroundCenter:
 						bgStyle = String.Format("background-image: url('{0}'); background-position: center; background-repeat: no-repeat; background-attachment:fixed;",
-						                        m_CustomBackgroundPath);
+						                        this.CustomBackgroundPath);
 						break;
 					case CustomBackgroundType.BackgroundTile:
 						bgStyle = String.Format("background-image: url('{0}'); background-repeat: repeat;",
-						                        m_CustomBackgroundPath);
+						                        this.CustomBackgroundPath);
 						break;
 					case CustomBackgroundType.BackgroundTileCenter:
 						bgStyle = String.Format("background-image: url('{0}'); background-repeat: repeat; background-position: center;", 
-						                        m_CustomBackgroundPath);
+						                        this.CustomBackgroundPath);
 						break;
 					case CustomBackgroundType.BackgroundScale:
 						bgStyle = String.Format("background-image: url('{0}'); -webkit-background-size: 100% 100%; background-size: 100% 100%; background-attachment: fixed;", 
-						                        m_CustomBackgroundPath);
+						                        this.CustomBackgroundPath);
 						break;
 					}
 				} else {
 						bgStyle = "background-image: none;";
 				}
-				if (String.IsNullOrEmpty(m_CustomBackgroundColor)) {
+				if (String.IsNullOrEmpty(this.CustomBackgroundColor)) {
 					/*
 					float red, green, blue, alpha;
 					[customBackgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
@@ -530,18 +592,39 @@ namespace Synapse.QtClient
 		
 			return headerTemplateHtml;
 		}
+		
+		string PathForVariant (string variant)
+		{
+			// Styles before version 3 stored the default variant in main.css, and not the variants folder.
+			if (m_StyleVersion < 3 && variant == NoVariantName)
+				return "main.css";
+			else
+				return Path.Combine("Variants", String.Format("{0}.css", variant));
+		}
+		
+		string NoVariantName {
+			get {
+				string noVariantName = m_StyleInfo.Get<string>("DisplayNameForNoVariant");
+				return (!String.IsNullOrEmpty(noVariantName)) ? noVariantName : "Normal";
+			}
+		}
 		#endregion
 
 		#region Signal Handlers
 		void HandleJavaScriptWindowObjectCleared ()
 		{
 			base.Page().MainFrame().AddToJavaScriptWindowObject("Synapse", m_JSWindowObject);
-			
-			if (m_ThemeName != null) {
-				// XXX: Do anything here?
-			}
 		}
 		#endregion
+		
+		protected override void ResizeEvent (Qyoto.QResizeEvent e)
+		{
+			base.ResizeEvent (e);
+			
+			// FIXME: Seems "window.onresize" doesn't work, so we need to fake it.
+			// Qt bug?
+			base.Page().MainFrame().EvaluateJavaScript("windowDidResize()");
+		}
 	}
 	
 	public enum CustomBackgroundType
