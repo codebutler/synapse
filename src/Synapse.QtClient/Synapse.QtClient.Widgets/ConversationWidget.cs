@@ -115,6 +115,7 @@ namespace Synapse.QtClient
 		public ConversationWidget(QWidget parent) : base(parent)
 		{
 			m_JSWindowObject = new SynapseJSObject(this);
+			this.m_TimeOpened = DateTime.Now;
 		}
 		
 		#endregion
@@ -202,8 +203,6 @@ namespace Synapse.QtClient
 			if (ConversationWidget.ThemesDirectory == null) {
 				throw new Exception("Set ThemesDirectory first");
 			}
-			
-			this.m_TimeOpened = DateTime.Now;
 
 			this.ContextMenuPolicy = ContextMenuPolicy.ActionsContextMenu;
 			
@@ -583,6 +582,23 @@ namespace Synapse.QtClient
 			headerTemplateHtml = headerTemplateHtml.Replace("%destinationName%", this.m_DestinationName);
 			headerTemplateHtml = headerTemplateHtml.Replace("%destinationDisplayName%", this.m_DestinationDisplayName);
 			headerTemplateHtml = headerTemplateHtml.Replace("%timeOpened%", this.m_TimeOpened.ToString());
+			
+			string iconPath = null;
+			if (this.ChatHandler is ChatHandler) {
+				var incomingJid = ((ChatHandler)this.ChatHandler).Jid;
+				if (AvatarManager.HasAvatarHash(incomingJid)) {
+					iconPath = String.Format("avatar:/{0}", AvatarManager.GetAvatarHash(incomingJid));
+				}
+			}
+			headerTemplateHtml = headerTemplateHtml.Replace("%incomingIconPath%", (iconPath != null) ? iconPath : "incoming_icon.png");
+			
+			var outgoingJid = this.ChatHandler.Account.Jid;
+			if (AvatarManager.HasAvatarHash(outgoingJid)) {
+				iconPath = AvatarManager.GetAvatarHash(outgoingJid);
+			}
+			headerTemplateHtml = headerTemplateHtml.Replace("%outgoingIconPath%", (iconPath != null) ? iconPath : "outgoing_icon.png");
+			
+			// FIXME: %serviceIconImg%
 			
 			Regex regex = new Regex(@"%timeOpened\{(.*)\}%");
 			headerTemplateHtml = regex.Replace(headerTemplateHtml, delegate (Match match) {

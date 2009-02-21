@@ -73,14 +73,26 @@ namespace Synapse.Core
 			}
 		}
 		
-		public T GetValue<T>(string key)
+		public T Get<T>(string key)
+		{
+			return Get<T>(key, false);
+		}
+		
+		public T Get<T>(string key, bool throwIfNotFound)
 		{
 			if (values.ContainsKey(key)) {
 				return (T)values[key];
 			} else {
-				return default(T);
-				//throw new Exception("Key not found");
+				if (!throwIfNotFound)
+					return default(T);
+				else
+					throw new KeyNotFoundException(key);
 			}
+		}
+		
+		public int GetInt (string key)
+		{
+			return Convert.ToInt32(Get<long>(key));
 		}
 		
 		public bool ContainsKey(string key)
