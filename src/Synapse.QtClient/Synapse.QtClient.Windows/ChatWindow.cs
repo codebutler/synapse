@@ -110,7 +110,6 @@ namespace Synapse.QtClient.Windows
 			
 			m_ConversationWidget.ChatHandler = handler;
 
-			handler.NewContent += HandleNewContent;
 			handler.ReadyChanged += HandleReadyChanged;
 	
 			splitter.SetStretchFactor(1, 0);
@@ -269,6 +268,14 @@ namespace Synapse.QtClient.Windows
 				toWidgetAction.Visible = false;
 			}
 			
+			QObject.Connect<bool>(m_ConversationWidget.Page(), Qt.SIGNAL("loadFinished(bool)"), delegate (bool ok) {
+				if (!ok) {
+					throw new Exception("Failed to load chat html.");
+				}
+				handler.NewContent += HandleNewContent;
+				m_Handler.FireQueued();
+			});
+			
 			var settings = ServiceManager.Get<SettingsService>();
 			m_ConversationWidget.ShowHeader = settings.Get<bool>("MessageShowHeader");
 			m_ConversationWidget.ShowUserIcons = settings.Get<bool>("MessageShowAvatars");
@@ -278,8 +285,6 @@ namespace Synapse.QtClient.Windows
 				// FIXME: Put this default elsewhere...
 				m_ConversationWidget.LoadTheme("renkoo", "Blue on Steel Alternating");
 			}
-			
-			m_Handler.FireQueued();
 		}
 
 		public IChatHandler Handler {
@@ -350,7 +355,6 @@ namespace Synapse.QtClient.Windows
 				bool replaceLast = m_PreviousContent is ChatContentTyping;
 				
 				m_PreviousContent = content;
-			
 				QApplication.Invoke(delegate {
 					m_ConversationWidget.AppendContent(content, isSimilar, false, replaceLast);
 					
