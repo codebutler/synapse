@@ -17,6 +17,7 @@ FILES =  \
 	Synapse.UI.Chat/ChatContentStatus.cs \
 	Synapse.UI.Chat/ChatContentTyping.cs \
 	Synapse.UI.Chat/ChatHandler.cs \
+	Synapse.UI.Chat/FakeChatHandler.cs \
 	Synapse.UI.Chat/IChatHandler.cs \
 	Synapse.UI.Chat/IMessageDisplayFormatter.cs \
 	Synapse.UI.Chat/MucHandler.cs \

@@ -46,18 +46,29 @@ namespace Synapse.Services
 
 		public void Set (string name, object val)
 		{
-			m_Settings[name] = val;
+			lock (m_Settings) {
+				m_Settings[name] = val;
+			}
 			Save();
 		}
 
 		public T Get<T> (string name)
 		{
-			if (m_Settings.ContainsKey(name))
-				return (T)m_Settings[name];
-			else
-		    	return default(T);
+			lock (m_Settings) {
+				if (m_Settings.ContainsKey(name))
+					return (T)m_Settings[name];
+				else
+			    	return default(T);
+			}
 		}
 
+		public bool Has (string name)
+		{
+			lock (m_Settings) {
+				return m_Settings.ContainsKey(name);
+			}
+		}
+		
 		public string ServiceName {
 			get {
 				return "SettingsService";

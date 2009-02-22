@@ -104,7 +104,9 @@ namespace Synapse.UI
 		
 		public IEnumerable<RosterItem> Items {
 			get {
-				return m_Items.AsReadOnly();
+				lock (m_Items) {
+					return m_Items.AsReadOnly();
+				}
 			}
 		}
 		#endregion

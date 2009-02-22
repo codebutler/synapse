@@ -25,6 +25,7 @@ using System.Xml;
 using Qyoto;
 
 using Synapse.ServiceStack;
+using Synapse.Services;
 using Synapse.UI;
 using Synapse.UI.Services;
 using Synapse.UI.Chat;
@@ -268,7 +269,15 @@ namespace Synapse.QtClient.Windows
 				toWidgetAction.Visible = false;
 			}
 			
-			m_ConversationWidget.LoadTheme("Mockie", "Orange - Icon Left");
+			var settings = ServiceManager.Get<SettingsService>();
+			m_ConversationWidget.ShowHeader = settings.Get<bool>("MessageShowHeader");
+			m_ConversationWidget.ShowUserIcons = settings.Get<bool>("MessageShowAvatars");
+			if (settings.Has("MessageTheme") && settings.Has("MessageThemeVariant")) {
+				m_ConversationWidget.LoadTheme(settings.Get<string>("MessageTheme"), settings.Get<string>("MessageThemeVariant"));
+			} else {
+				// FIXME: Put this default elsewhere...
+				m_ConversationWidget.LoadTheme("renkoo", "Blue on Steel Alternating");
+			}
 			
 			m_Handler.FireQueued();
 		}

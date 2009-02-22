@@ -24,7 +24,9 @@ using System;
 using Qyoto;
 
 using Synapse.ServiceStack;
+using Synapse.Services;
 using Synapse.UI;
+using Synapse.UI.Chat;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
 using Synapse.QtClient;
@@ -47,6 +49,35 @@ namespace Synapse.QtClient.Windows
 			accountsList.HorizontalHeader().SetResizeMode(QHeaderView.ResizeMode.Stretch);
 			accountsList.HorizontalHeader().SetResizeMode(1, QHeaderView.ResizeMode.ResizeToContents);
 	
+			foreach (var pair in ConversationWidget.AllThemes) {
+				messageStyleCombo.AddItem(pair.Value.Get<string>("CFBundleName"), pair.Key);
+			}
+			
+			messagePreviewWebView.ChatHandler = new FakeChatHandler();
+			messagePreviewWebView.ChatHandler.NewContent += delegate(IChatHandler handler, AbstractChatContent content) {
+				QApplication.Invoke(delegate {
+					messagePreviewWebView.AppendContent(content, false, false, false);
+				});
+			};
+			
+			QObject.Connect<bool>(messagePreviewWebView.Page(), Qt.SIGNAL("loadFinished(bool)"), delegate {
+				((FakeChatHandler)messagePreviewWebView.ChatHandler).Go();
+			});
+			
+			// FIXME: Put these defaults elsewhere...
+			string themeName = "renkoo";
+			string themeVariantName = "Blue on Steel Alternating";
+			var settings = ServiceManager.Get<SettingsService>();
+			if (settings.Has("MessageTheme") && settings.Has("MessageThemeVariant")) {
+				themeName = settings.Get<string>("MessageTheme");
+				themeVariantName = settings.Get<string>("MessageThemeVariant");
+			}
+			messageStyleCombo.CurrentIndex = messageStyleCombo.FindData(themeName);
+			messageStyleVariantCombo.CurrentIndex = messageStyleVariantCombo.FindText(themeVariantName);
+			
+			showHeaderCheckBox.Checked = settings.Get<bool>("MessageShowHeader");
+			showAvatarsCheckBox.Checked = settings.Get<bool>("MessageShowAvatars");
+			
 			extensionsList.HorizontalHeader().Hide();
 			extensionsList.VerticalHeader().Hide();
 			extensionsList.SetModel(new ExtensionsItemModel(extensionsList));
@@ -83,7 +114,7 @@ namespace Synapse.QtClient.Windows
 		[Q_SLOT]
 		void on_removeAccountButton_clicked ()
 		{
-			// FIXME:
+			// FIXME: 
 			QMessageBox.Information(this, "Not Implemented", "This feature has not yet been implemented.");
 		}
 		
@@ -109,6 +140,51 @@ namespace Synapse.QtClient.Windows
 						QMessageBox.Critical(this, "Error", "Cannot modify account while connected.");
 					}
 				}
+			}
+		}
+		
+		[Q_SLOT]
+		void on_messageStyleCombo_currentIndexChanged (int index)
+		{
+			messageStyleVariantCombo.Clear();
+			var name = messageStyleCombo.ItemData(index).ToString();
+			foreach (string variantName in ConversationWidget.GetVariants(name)) {
+				messageStyleVariantCombo.AddItem(variantName);
+			}
+		}
+		
+		[Q_SLOT]
+		void on_showAvatarsCheckBox_stateChanged (int state)
+		{
+			LoadTheme();
+		}
+		
+		[Q_SLOT]
+		void on_showHeaderCheckBox_stateChanged (int state)
+		{
+			LoadTheme();
+		}
+		
+		[Q_SLOT]
+		void on_messageStyleVariantCombo_currentIndexChanged (int index)
+		{
+			LoadTheme();
+		}
+		
+		void LoadTheme ()
+		{
+			if (messagePreviewWebView.ChatHandler != null) {
+				string themeName = messageStyleCombo.ItemData(messageStyleCombo.CurrentIndex);
+				string themeVariant = messageStyleVariantCombo.CurrentText;
+				messagePreviewWebView.ShowHeader = showHeaderCheckBox.Checked;
+				messagePreviewWebView.ShowUserIcons = showAvatarsCheckBox.Checked;
+				messagePreviewWebView.LoadTheme(themeName, themeVariant);
+				
+				var settings = ServiceManager.Get<SettingsService>();
+				settings.Set("MessageTheme", themeName);
+				settings.Set("MessageThemeVariant", themeVariant);
+				settings.Set("MessageShowHeader", showHeaderCheckBox.Checked);
+				settings.Set("MessageShowAvatars", showAvatarsCheckBox.Checked);
 			}
 		}
 		

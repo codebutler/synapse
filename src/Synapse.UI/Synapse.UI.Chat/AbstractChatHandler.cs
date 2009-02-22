@@ -73,7 +73,6 @@ namespace Synapse.UI.Chat
 				while (m_ContentQueue.Count > 0) {
 					OnNewContent(m_ContentQueue.Dequeue());
 				}
-				m_ContentQueue = null;
 			}
 		}
 		

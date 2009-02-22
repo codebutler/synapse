@@ -25,6 +25,7 @@
 
 using System;
 using System.Reflection;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -87,6 +88,7 @@ namespace Synapse.QtClient
 		SynapseJSObject m_JSWindowObject;
 		
 		static string s_ThemesDirectory = null;
+		static Dictionary<string, PList> s_AllThemes;
 
 		const string APPEND_MESSAGE_WITH_SCROLL      = "checkIfScrollToBottomIsNeeded(); appendMessage(\"{0}\"); scrollToBottomIfNeeded();";
 		const string APPEND_NEXT_MESSAGE_WITH_SCROLL = "checkIfScrollToBottomIsNeeded(); appendNextMessage(\"{0}\"); scrollToBottomIfNeeded();";
@@ -107,7 +109,32 @@ namespace Synapse.QtClient
 					throw new ArgumentException("Invalid themes directory (" + value + ").", "themesDirectory");
 				}
 				s_ThemesDirectory = value;
+				
+				s_AllThemes = new Dictionary<string, PList>();
+				var dirInfo = new DirectoryInfo(s_ThemesDirectory);
+				foreach (var subDirInfo in dirInfo.GetDirectories()) {
+					if (subDirInfo.Name.EndsWith(".AdiumMessageStyle")) {
+						string plistPath = Util.JoinPath(subDirInfo.FullName, "Contents", "Info.plist");
+						s_AllThemes.Add(subDirInfo.Name.Substring(0, subDirInfo.Name.Length - subDirInfo.Extension.Length), new PList(plistPath));
+					}
+				}
 			}	
+		}
+		
+		public static IDictionary<string, PList> AllThemes {
+			get {
+				return s_AllThemes;
+			}
+		}
+		
+		public static IEnumerable<string> GetVariants (string themeName)
+		{
+			var dirInfo = new DirectoryInfo(Util.JoinPath(s_ThemesDirectory, themeName + ".AdiumMessageStyle", "Contents", "Resources", "Variants"));
+			foreach (var fileInfo in dirInfo.GetFiles()) {
+				if (fileInfo.Extension.ToLower() == ".css") {
+					yield return fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+				}
+			}
 		}
 		#endregion
 		
@@ -116,6 +143,13 @@ namespace Synapse.QtClient
 		{
 			m_JSWindowObject = new SynapseJSObject(this);
 			this.m_TimeOpened = DateTime.Now;
+			
+			this.DateFormat = "t";
+			this.ShowUserIcons = true;
+			this.ShowHeader = true;
+			this.AllowTextBackgrounds = true;
+			this.ShowIncomingFont = true;
+			this.ShowIncomingColors = true;		
 		}
 		
 		#endregion
@@ -123,6 +157,10 @@ namespace Synapse.QtClient
 		#region Public Methods
 		public void LoadTheme(string themeName, string variantName)
 		{
+			if (this.ChatHandler == null) {
+				throw new InvalidOperationException("Set ChatHandler first");
+			}
+			
 			string themeDirectory = System.IO.Path.Combine(ThemesDirectory, themeName) + ".AdiumMessageStyle";
 			if (!Directory.Exists(themeDirectory)) {
 				throw new DirectoryNotFoundException(themeDirectory);
@@ -141,14 +179,7 @@ namespace Synapse.QtClient
 	
 			// Default Behavior
 			m_AllowsCustomBackground = true;
-			m_AllowsUserIcons = true;
-			
-			DateFormat = "t";
-			ShowUserIcons = true;
-			ShowHeader = true;
-			AllowTextBackgrounds = true;
-			ShowIncomingFont = true;
-			ShowIncomingColors = true;			
+			m_AllowsUserIcons = true;	
 			
 			m_StyleVersion = m_StyleInfo.GetInt("MessageViewVersion");
 			
@@ -167,7 +198,6 @@ namespace Synapse.QtClient
 			
 			if (m_StyleInfo.ContainsKey("ShowsUserIcons")) {
 				m_AllowsUserIcons = m_StyleInfo.Get<bool>("ShowsUserIcons");
-				Console.WriteLine("Shows User Icons !! " + m_AllowsUserIcons);
 			}
 			
 			// User icon masking
@@ -288,7 +318,6 @@ namespace Synapse.QtClient
 			
 			if (!m_ThemeLoaded)
 				throw new Exception("Call LoadTheme() first!");
-
 
 			var js = ScriptForAppendingContent(content, contentIsSimilar, willAddMoreContentObjects, replaceLastContent);
 			Page().MainFrame().EvaluateJavaScript(js);
