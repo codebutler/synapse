@@ -525,7 +525,10 @@ namespace Synapse.QtClient
 			} else if (url.Scheme().ToLower() == "xmpp") {
 				// FIXME: Add xmpp: uri handler.
 				QMessageBox.Information(this.TopLevelWidget(), "Not implenented", "xmpp: uris not yet supported.");
-			} else {
+				
+			// Ignore # urls.
+			} else if (!url.HasFragment()) {
+				QMessageBox.Information(this.TopLevelWidget(), "Link Fragment", url.HasFragment() + " " + url.Fragment());
 				QMessageBox.Information(this.TopLevelWidget(), "Link URL", url.ToString());
 			}
 		}

@@ -101,6 +101,7 @@ namespace Synapse.QtClient
 			ServiceManager.RegisterService<GuiService>();
 			
 			QWebSettings.GlobalSettings().SetAttribute(QWebSettings.WebAttribute.DeveloperExtrasEnabled, true);
+			QWebSettings.GlobalSettings().SetAttribute(QWebSettings.WebAttribute.PluginsEnabled, true);
 			
 			if (Application.CommandLine.Contains ("uninstalled"))
 				ConversationWidget.ThemesDirectory = Path.Combine(Environment.CurrentDirectory, "themes");
