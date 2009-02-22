@@ -112,8 +112,6 @@ namespace Synapse.QtClient
 			QApplication.Invoke(delegate {
 				/* Create the UI */
 				Gui.MainWindow = new MainWindow();
-				Gui.DebugWindow = new DebugWindow();
-				Gui.PreferencesWindow = new PreferencesWindow();
 				Gui.TrayIcon = new TrayIcon();
 				Gui.TabbedChatsWindow = new TabbedChatsWindow();
 				
