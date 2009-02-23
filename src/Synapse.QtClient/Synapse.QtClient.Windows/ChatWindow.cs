@@ -435,7 +435,7 @@ namespace Synapse.QtClient.Windows
 
 		void HandleInsertImageActionTriggered ()
 		{
-			var dialog = new QFileDialog(this.TopLevelWidget(), "Select Avatar");
+			var dialog = new QFileDialog(this.TopLevelWidget(), "Select Photo");
 			dialog.fileMode = QFileDialog.FileMode.ExistingFile;
 			if (dialog.Exec() == (int)QFileDialog.DialogCode.Accepted && dialog.SelectedFiles().Count > 0) {
 				string fileName = dialog.SelectedFiles()[0];
