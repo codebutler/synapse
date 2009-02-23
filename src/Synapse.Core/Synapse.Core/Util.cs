@@ -84,7 +84,7 @@ namespace Synapse.Core
 		public static string EscapeHtml (string text)
 		{
 			if (!String.IsNullOrEmpty(text))
-				return text.Replace("<", "&lt;").Replace(">", "&gt;");
+				return System.Security.SecurityElement.Escape(text);
 			else
 				return String.Empty;
 		}
