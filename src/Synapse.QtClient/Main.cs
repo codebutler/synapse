@@ -113,7 +113,7 @@ namespace Synapse.QtClient
 			QApplication.Invoke(delegate {
 				/* Create the UI */
 				Gui.MainWindow = new MainWindow();
-				Gui.TrayIcon = new TrayIcon();
+				Gui.TrayIcon = new TrayIcon(m_App);
 				Gui.TabbedChatsWindow = new TabbedChatsWindow();
 				
 				OnStarted();
@@ -183,7 +183,6 @@ namespace Synapse.QtClient
 			
 		public override void Dispose ()
 		{
-			Gui.TrayIcon.Dispose();
 			QCoreApplication.Quit();
 		}
 	}
