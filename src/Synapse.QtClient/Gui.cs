@@ -36,6 +36,7 @@ namespace Synapse.QtClient
 {
 	public static class Gui
 	{
+		static DebugWindow s_DebugWindow;
 		static GlobalActions s_GlobalActions;
 		
 		public static MainWindow MainWindow {
@@ -48,14 +49,12 @@ namespace Synapse.QtClient
 			set;
 		}
 
-		public static PreferencesWindow PreferencesWindow {
-			get;
-			set;
-		}
-
 		public static DebugWindow DebugWindow {
-			get;
-			set;
+			get {
+				if (s_DebugWindow == null)
+					s_DebugWindow = new DebugWindow();
+				return s_DebugWindow;
+			}
 		}
 
 		public static TabbedChatsWindow TabbedChatsWindow {
@@ -69,6 +68,14 @@ namespace Synapse.QtClient
 					s_GlobalActions = new GlobalActions();
 				return s_GlobalActions;
 			}
+		}
+		
+		public static void ShowPreferencesWindow()
+		{
+			var preferencesWindow = new PreferencesWindow();
+			preferencesWindow.Show();
+			// FIXME: Make this a dialog...
+			// preferencesWindow.Exec();
 		}
 		
 		public static Account ShowAccountSelectMenu (QWidget attachWidget)

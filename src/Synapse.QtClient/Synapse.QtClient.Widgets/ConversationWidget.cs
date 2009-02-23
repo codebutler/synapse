@@ -130,10 +130,15 @@ namespace Synapse.QtClient
 		public static IEnumerable<string> GetVariants (string themeName)
 		{
 			var dirInfo = new DirectoryInfo(Util.JoinPath(s_ThemesDirectory, themeName + ".AdiumMessageStyle", "Contents", "Resources", "Variants"));
-			foreach (var fileInfo in dirInfo.GetFiles()) {
-				if (fileInfo.Extension.ToLower() == ".css") {
-					yield return fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+			if (dirInfo.Exists) {
+				foreach (var fileInfo in dirInfo.GetFiles()) {
+					if (fileInfo.Extension.ToLower() == ".css") {
+						yield return fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+					}
 				}
+			} else {
+				string noVariantName = s_AllThemes[themeName].ContainsKey("DisplayNameForNoVariant") ? s_AllThemes[themeName].Get<string>("DisplayNameForNoVariant") : "Normal";
+				yield return noVariantName;
 			}
 		}
 		#endregion
@@ -249,6 +254,14 @@ namespace Synapse.QtClient
 		{
 			// Check if theme is version 1 and has its own Template.html
 			string customTemplatePath = Util.JoinPath(m_StylePath, "Template.html");
+			
+			// Hack for files with bad case...
+			foreach (var fileInfo in new DirectoryInfo(m_StylePath).GetFiles()) {
+				if (fileInfo.Name.ToLower() == "template.html") {
+					customTemplatePath = Util.JoinPath(m_StylePath, fileInfo.Name);
+				}
+			}
+			
 			if (!File.Exists(customTemplatePath) && m_StyleVersion >= 1) {
 				Assembly asm = Assembly.GetExecutingAssembly();
 				using (StreamReader reader = new StreamReader(asm.GetManifestResourceStream("Template.html"))) {
@@ -261,7 +274,8 @@ namespace Synapse.QtClient
 			}					
 			
 			// Set up base template
-			m_HeaderHtml = FormatHeaderOrFooter(File.ReadAllText(Util.JoinPath(m_StylePath, "Header.html")));
+			string headerPath = Util.JoinPath(m_StylePath, "Header.html");
+			m_HeaderHtml = (File.Exists(headerPath)) ? FormatHeaderOrFooter(File.ReadAllText(headerPath)) : String.Empty;
 			string footerPath = Util.JoinPath(m_StylePath, "Footer.html");
 			m_FooterHtml = (File.Exists(footerPath)) ? FormatHeaderOrFooter(File.ReadAllText(footerPath)) : String.Empty;
 			
@@ -525,7 +539,10 @@ namespace Synapse.QtClient
 			} else if (url.Scheme().ToLower() == "xmpp") {
 				// FIXME: Add xmpp: uri handler.
 				QMessageBox.Information(this.TopLevelWidget(), "Not implenented", "xmpp: uris not yet supported.");
-			} else {
+				
+			// Ignore # urls.
+			} else if (!url.HasFragment()) {
+				QMessageBox.Information(this.TopLevelWidget(), "Link Fragment", url.HasFragment() + " " + url.Fragment());
 				QMessageBox.Information(this.TopLevelWidget(), "Link URL", url.ToString());
 			}
 		}

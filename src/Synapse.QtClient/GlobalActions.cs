@@ -154,7 +154,7 @@ namespace Synapse.QtClient
 		
 		void HandleShowPreferencesActionTriggered ()
 		{
-			Gui.PreferencesWindow.Show();
+			Gui.ShowPreferencesWindow();
 		}
 		
 		void HandleSendFeedbackActionTriggered ()
