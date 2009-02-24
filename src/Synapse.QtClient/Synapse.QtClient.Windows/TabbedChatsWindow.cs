@@ -388,7 +388,13 @@ namespace Synapse.QtClient.Windows
 					// Some people like a "psycic" mode though, so this should be configurable.
 					lock (m_ChatWindows) {
 						if (m_ChatWindows.ContainsKey(message.From.Bare) || (message.Body != null || message.Html != null )) {
-							OpenChatWindow(message.From, (message.Type == MessageType.chat), false, delegate (IChatHandler handler) {
+							bool isMucUser = false;
+							foreach (var room in m_Account.ConferenceManager.Rooms)
+								if (room.JID.BareJID.Equals(message.From.BareJID)) {
+									isMucUser = true;
+									break;
+							}
+							OpenChatWindow(message.From, isMucUser, false, delegate (IChatHandler handler) {
 								((ChatHandler)handler).AppendMessage(message);
 							});
 						}
