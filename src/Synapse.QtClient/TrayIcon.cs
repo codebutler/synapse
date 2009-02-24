@@ -35,7 +35,7 @@ namespace Synapse.QtClient
 		QAction m_ShowMainWindowAction;
 		QAction m_ShowDebugWindowAction;
 		
-		public TrayIcon ()
+		public TrayIcon (QObject parent) : base (parent)
 		{
 			m_ShowMainWindowAction = new QAction("Show Synapse", this);
 			m_ShowMainWindowAction.Checkable = true;

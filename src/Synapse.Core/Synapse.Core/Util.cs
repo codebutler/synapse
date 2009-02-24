@@ -84,7 +84,7 @@ namespace Synapse.Core
 		public static string EscapeHtml (string text)
 		{
 			if (!String.IsNullOrEmpty(text))
-				return text.Replace("<", "&lt;").Replace(">", "&gt;");
+				return System.Security.SecurityElement.Escape(text);
 			else
 				return String.Empty;
 		}
@@ -256,51 +256,54 @@ namespace Synapse.Core
 		public static string Linkify (string text)
 		{
 			Regex rx = new Regex(WEB_URL_PATTERN, RegexOptions.IgnoreCase);
-            return rx.Replace(text, delegate (Match match) {
+			return rx.Replace(text, delegate (Match match) {
 				string url = match.Captures[0].Value;
 				string fixedUrl = url.Contains("://") ? url : "http://" + url;
 				return String.Format("<a href=\"{0}\" title=\"{0}\">{1}</a>", fixedUrl, url);
 			});
 		}
+
+		// Based on code from Android. Copyright (C) 2007 The Android Open Source Project.
+		// http://www.google.com/codesearch/p?hl=en#uX1GffpyOZk/core/java/android/text/util/Linkify.java&q=linkify
 		
-        private const string WEB_URL_PATTERN = "((?:(https?)://(?:(?:[a-zA-Z0-9\\$\\-_\\.\\+!\\*'\\(\\)"
-                                                    + ",;\\?&=]|(?:%[a-fA-F0-9]{2}))+(?::(?:[a-zA-Z0-9\\$\\-_"
-                                                    + "\\.\\+!\\*'\\(\\),;\\?&=]|(?:%[a-fA-F0-9]{2}))+)?@)?)?"
-                                                    + "((?:(?:[a-zA-Z0-9][a-zA-Z0-9\\-]*\\.)+"   // named host
-                                                    + "(?:"   // plus top level domain
-                                                    + "(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])"
-                                                    + "|(?:biz|b[abdefghijmnorstvwyz])"
-                                                    + "|(?:cat|com|coop|c[acdfghiklmnoruvxyz])"
-                                                    + "|d[ejkmoz]"
-                                                    + "|(?:edu|e[cegrstu])"
-                                                    + "|f[ijkmor]"
-                                                    + "|(?:gov|g[abdefghilmnpqrstuwy])"
-                                                    + "|h[kmnrtu]"
-                                                    + "|(?:info|int|i[delmnoqrst])"
-                                                    + "|(?:jobs|j[emop])"
-                                                    + "|k[eghimnrwyz]"
-                                                    + "|l[abcikrstuvy]"
-                                                    + "|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])"
-                                                    + "|(?:name|net|n[acefgilopruz])"
-                                                    + "|(?:org|om)"
-                                                    + "|(?:pro|p[aefghklmnrstwy])"
-                                                    + "|qa"
-                                                    + "|r[eouw]"
-                                                    + "|s[abcdeghijklmnortuvyz]"
-                                                    + "|(?:tel|travel|t[cdfghjklmnoprtvwz])"
-                                                    + "|u[agkmsyz]"
-                                                    + "|v[aceginu]"
-                                                    + "|w[fs]"
-                                                    + "|y[etu]"
-                                                    + "|z[amw]))"
-                                                    + "|(?:(?:25[0-5]|2[0-4]" // or ip address
-                                                    + "[0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\\.(?:25[0-5]|2[0-4][0-9]"
-                                                    + "|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(?:25[0-5]|2[0-4][0-9]|[0-1]"
-                                                    + "[0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}"
-                                                    + "|[1-9][0-9]|[0-9])))"
-                                                    + "(?::\\d{1,5})?)" // plus option port number
-                                                    + "(/(?:(?:[a-zA-Z0-9;/\\?:@&=#~"  // plus option query params
-                                                    + "\\-\\.\\+!\\*'\\(\\),_])|(?:%[a-fA-F0-9]{2}))*)?"
-                                                    + "(?!\\w)"; // and finally, a word boundary  this is to stop foo.sure from matching as foo.su
+		private const string WEB_URL_PATTERN = "((?:(https?)://(?:(?:[a-zA-Z0-9\\$\\-_\\.\\+!\\*'\\(\\)"
+		                                     + ",;\\?&=]|(?:%[a-fA-F0-9]{2}))+(?::(?:[a-zA-Z0-9\\$\\-_"
+		                                     + "\\.\\+!\\*'\\(\\),;\\?&=]|(?:%[a-fA-F0-9]{2}))+)?@)?)?"
+		                                     + "((?:(?:[a-zA-Z0-9][a-zA-Z0-9\\-]*\\.)+"   // named host
+		                                     + "(?:"   // plus top level domain
+		                                     + "(?:aero|arpa|asia|a[cdefgilmnoqrstuwxz])"
+		                                     + "|(?:biz|b[abdefghijmnorstvwyz])"
+		                                     + "|(?:cat|com|coop|c[acdfghiklmnoruvxyz])"
+		                                     + "|d[ejkmoz]"
+		                                     + "|(?:edu|e[cegrstu])"
+		                                     + "|f[ijkmor]"
+		                                     + "|(?:gov|g[abdefghilmnpqrstuwy])"
+		                                     + "|h[kmnrtu]"
+		                                     + "|(?:info|int|i[delmnoqrst])"
+		                                     + "|(?:jobs|j[emop])"
+		                                     + "|k[eghimnrwyz]"
+		                                     + "|l[abcikrstuvy]"
+		                                     + "|(?:mil|mobi|museum|m[acdghklmnopqrstuvwxyz])"
+		                                     + "|(?:name|net|n[acefgilopruz])"
+		                                     + "|(?:org|om)"
+		                                     + "|(?:pro|p[aefghklmnrstwy])"
+		                                     + "|qa"
+		                                     + "|r[eouw]"
+		                                     + "|s[abcdeghijklmnortuvyz]"
+		                                     + "|(?:tel|travel|t[cdfghjklmnoprtvwz])"
+		                                     + "|u[agkmsyz]"
+		                                     + "|v[aceginu]"
+		                                     + "|w[fs]"
+		                                     + "|y[etu]"
+		                                     + "|z[amw]))"
+		                                     + "|(?:(?:25[0-5]|2[0-4]" // or ip address
+		                                     + "[0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\\.(?:25[0-5]|2[0-4][0-9]"
+		                                     + "|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(?:25[0-5]|2[0-4][0-9]|[0-1]"
+		                                     + "[0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(?:25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}"
+		                                     + "|[1-9][0-9]|[0-9])))"
+		                                     + "(?::\\d{1,5})?)" // plus option port number
+		                                     + "(/(?:(?:[a-zA-Z0-9;/\\?:@&=#~"  // plus option query params
+		                                     + "\\-\\.\\+!\\*'\\(\\),_])|(?:%[a-fA-F0-9]{2}))*)?"
+		                                     + "(?!\\w)"; // and finally, a word boundary  this is to stop foo.sure from matching as foo.su
 	}
 }

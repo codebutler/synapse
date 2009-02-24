@@ -72,6 +72,9 @@ namespace Synapse.QtClient.Windows
 			m_NoAccountsWidget = new NoAccountsWidget(contentWidget);
 			contentWidget.Layout().AddWidget(m_NoAccountsWidget);
 			
+			// This makes the shortcut work.
+			base.AddAction(Gui.GlobalActions.QuitAction);
+			
 			m_MainMenu = new QMenu(this);
 			m_MainMenu.AddAction(Gui.GlobalActions.NewMessageAction);
 			m_MainMenu.AddAction(Gui.GlobalActions.JoinConferenceAction);
