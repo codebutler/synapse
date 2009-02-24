@@ -57,6 +57,8 @@ namespace Synapse.QtClient.Windows
 
 		QAction m_InsertPhotoAction;
 		QAction m_InsertLinkAction;
+		
+		QAction m_InviteToMucAction;
 
 		QComboBox m_ToComboBox;
 	
@@ -190,10 +192,10 @@ namespace Synapse.QtClient.Windows
 			activitiesMenuButton.SetMenu(activitiesMenu);
 			toolbar.AddWidget(activitiesMenuButton);
 			
-			if (m_Handler is ChatHandler) {
-				activitiesMenu.AddAction(Gui.LoadIcon("internet-group-chat", 16), "Invite to Conference...");
-				activitiesMenu.AddSeparator();
-			}
+			m_InviteToMucAction = new QAction(Gui.LoadIcon("internet-group-chat", 16), "Invite to Conference...", this);
+			QObject.Connect(m_InviteToMucAction, Qt.SIGNAL("triggered()"), HandleInviteToMucActionTriggered);		
+			activitiesMenu.AddAction(m_InviteToMucAction);
+			activitiesMenu.AddSeparator();
 			
 			activitiesMenu.AddAction(Gui.LoadIcon("applications-graphics", 16), "Launch Whiteboard...");
 			activitiesMenu.AddAction(Gui.LoadIcon("desktop", 16), "Share Desktop...");
@@ -453,6 +455,12 @@ namespace Synapse.QtClient.Windows
 			if (dialog.Exec() == (int)QDialog.DialogCode.Accepted) {
 				textEdit.InsertLink(dialog.Text, dialog.Url);
 			}
+		}
+		
+		void HandleInviteToMucActionTriggered ()
+		{
+			var dialog = new InviteToMucDialog(m_Handler, this.TopLevelWidget());
+			dialog.Exec();
 		}
 
 		[Q_SLOT]
