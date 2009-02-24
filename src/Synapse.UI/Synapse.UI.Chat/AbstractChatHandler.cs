@@ -108,11 +108,10 @@ namespace Synapse.UI.Chat
 					}
 				} else {
 					fromJid = msg.From;
-					if (msg.Type == MessageType.chat) {
+					if (((ChatHandler)this).IsMucMessage)
 						from = msg.From.Resource;
-					} else {
+					else
 						from = m_Account.GetDisplayName(msg.From);
-					}
 				}
 			}
 			
