@@ -107,7 +107,7 @@ namespace Synapse.QtClient.Windows {
         
         protected void SetupUi() {
             base.ObjectName = "PreferencesWindow";
-            this.Geometry = new QRect(0, 0, 529, 475);
+            this.Geometry = new QRect(0, 0, 559, 480);
             this.WindowTitle = "Synapse Preferences";
             QVBoxLayout verticalLayout;
             verticalLayout = new QVBoxLayout(this);

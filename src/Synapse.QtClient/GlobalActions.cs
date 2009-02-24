@@ -37,6 +37,7 @@ namespace Synapse.QtClient
 			m_AccountsMenu = new QMenu();
 			
 			m_QuitAction = new QAction(Gui.LoadIcon("gtk-quit"), "Quit", this);
+			m_QuitAction.Shortcut = new QKeySequence("Ctrl+Q");
 			QObject.Connect(m_QuitAction, Qt.SIGNAL("triggered()"), HandleQuitActionTriggered);
 			
 			m_ShowPreferencesAction = new QAction(Gui.LoadIcon("gtk-preferences"), "Preferences", this);
