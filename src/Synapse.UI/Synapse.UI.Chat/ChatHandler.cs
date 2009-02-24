@@ -30,14 +30,18 @@ namespace Synapse.UI.Chat
 	public class ChatHandler : AbstractChatHandler
 	{
 		JID m_Jid;
+		bool m_IsMucUser;
 		
-		public ChatHandler (Account account, JID jid)
+		public ChatHandler (Account account, bool isMucUser, JID jid)
 			: base (account)
 		{
 			m_Jid = jid;
+			m_IsMucUser = isMucUser;
 			
 			base.Account.ConnectionStateChanged += HandleConnectionStateChanged;
 			base.Ready = (base.Account.ConnectionState == AccountConnectionState.Connected);
+			
+			base.AppendStatus(String.Format("Conversation with {0}.", jid.ToString()));
 		}
 		
 		public JID Jid {
@@ -49,6 +53,12 @@ namespace Synapse.UI.Chat
 		public string Resource {
 			get;
 			set;
+		}
+		
+		public bool IsMucMessage {
+			get {
+				return m_IsMucUser;
+			}
 		}
 		
 		public void SetPresence (Presence presence)
@@ -69,7 +79,10 @@ namespace Synapse.UI.Chat
 			if (!String.IsNullOrEmpty(html)) {
 				Message message = new Message(base.Account.Client.Document);
 				message.Type = MessageType.chat;
-				message.To = new JID(m_Jid.User, m_Jid.Server, Resource);
+				if (IsMucMessage)
+					message.To = this.Jid;
+				else
+					message.To = new JID(m_Jid.User, m_Jid.Server, Resource);
 				message.Html = html;
 
 				var activeElem = base.Account.Client.Document.CreateElement("active");

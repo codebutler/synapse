@@ -32,6 +32,7 @@ using Synapse.UI.Chat;
 using Synapse.Xmpp;
 using Synapse.QtClient;
 using Synapse.QtClient.ExtensionNodes;
+using Synapse.QtClient.Widgets;
 
 using jabber;
 using jabber.connection;
@@ -78,6 +79,7 @@ namespace Synapse.QtClient.Windows
 				var mucHandler = (MucHandler)handler;
 				participantsGrid.Model = mucHandler.GridModel;
 				participantsGrid.ContextMenuPolicy = Qt.ContextMenuPolicy.ActionsContextMenu;
+				participantsGrid.ItemActivated += HandleItemActivated;
 				
 				var group = new QActionGroup(this);
 				
@@ -106,7 +108,12 @@ namespace Synapse.QtClient.Windows
 			} else {
 				var chatHandler = (ChatHandler)handler;
 				rightContainer.Hide();
-				this.WindowTitle = chatHandler.Account.GetDisplayName(chatHandler.Jid);
+				
+				if (((ChatHandler)handler).IsMucMessage) {
+					this.WindowTitle = chatHandler.Jid.Resource;
+				} else {
+					this.WindowTitle = chatHandler.Account.GetDisplayName(chatHandler.Jid);
+				}
 				this.WindowIcon = new QIcon((QPixmap)Synapse.Xmpp.AvatarManager.GetAvatar(chatHandler.Jid));
 			}
 			
@@ -245,13 +252,17 @@ namespace Synapse.QtClient.Windows
 							}
 						}
 
-						string title = null;
-						if (handler.Account.PresenceManager[pres.From.BareJID] == null) {
-							title = String.Format("{0} (Offline)", chatHandler.Account.GetDisplayName(chatHandler.Jid));
+						if (chatHandler.IsMucMessage) {
+							toWidgetAction.Visible = false;
 						} else {
-							title = chatHandler.Account.GetDisplayName(chatHandler.Jid);	
+							string title = null;
+							if (handler.Account.PresenceManager[pres.From.BareJID] == null) {
+								title = String.Format("{0} (Offline)", chatHandler.Account.GetDisplayName(chatHandler.Jid));
+							} else {
+								title = chatHandler.Account.GetDisplayName(chatHandler.Jid);	
+							}
+							Gui.TabbedChatsWindow.SetTabTitle(this, title);
 						}
-						Gui.TabbedChatsWindow.SetTabTitle(this, title);
 					});
 				};
 				
@@ -323,26 +334,36 @@ namespace Synapse.QtClient.Windows
 			UrgencyHint = false;
 		}
 
+		void HandleItemActivated (AvatarGrid<RoomParticipant> grid, RoomParticipant participant)
+		{
+			if (!String.IsNullOrEmpty(participant.RealJID))
+				Gui.TabbedChatsWindow.StartChat(m_Handler.Account, participant.RealJID, false);	
+			else
+				Gui.TabbedChatsWindow.StartChat(m_Handler.Account, participant.NickJID, true);	
+		}
+		
 		void HandleReadyChanged (object o, EventArgs args)
 		{
 			textEdit.Enabled = m_Handler.Ready;
 		}
 		
 		void HandleNewContent (IChatHandler handler, AbstractChatContent content)
-		{			
+		{
 			if (content is ChatContentTyping) {
 				var typingContent = (ChatContentTyping)content;
 				if (m_Handler is ChatHandler) {
 					var chatHandler = (ChatHandler)m_Handler;
-					string title = null;
-					if (typingContent.TypingState != TypingState.None && typingContent.TypingState != TypingState.Active) {
-						title = String.Format("{0} ({1})", chatHandler.Account.GetDisplayName(chatHandler.Jid), typingContent.TypingState.ToString());
-					} else {
-						title = chatHandler.Account.GetDisplayName(chatHandler.Jid);
+					if (!chatHandler.IsMucMessage) {
+						string title = null;
+						if (typingContent.TypingState != TypingState.None && typingContent.TypingState != TypingState.Active) {
+							title = String.Format("{0} ({1})", chatHandler.Account.GetDisplayName(chatHandler.Jid), typingContent.TypingState.ToString());
+						} else {
+							title = chatHandler.Account.GetDisplayName(chatHandler.Jid);
+						}
+						QApplication.Invoke(delegate {
+							Gui.TabbedChatsWindow.SetTabTitle(this, title);
+						});
 					}
-					QApplication.Invoke(delegate {
-						Gui.TabbedChatsWindow.SetTabTitle(this, title);
-					});
 				}
 			} else {
 				bool isSimilar   = m_PreviousContent != null && content.IsSimilarToContent(m_PreviousContent);

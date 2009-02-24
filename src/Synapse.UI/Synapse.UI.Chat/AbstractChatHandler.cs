@@ -107,8 +107,12 @@ namespace Synapse.UI.Chat
 						from = msg.From.Resource;
 					}
 				} else {
-					from = m_Account.GetDisplayName(msg.From);
 					fromJid = msg.From;
+					if (msg.Type == MessageType.chat) {
+						from = msg.From.Resource;
+					} else {
+						from = m_Account.GetDisplayName(msg.From);
+					}
 				}
 			}
 			

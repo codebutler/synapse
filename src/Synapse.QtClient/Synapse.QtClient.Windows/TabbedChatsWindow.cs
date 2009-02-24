@@ -145,7 +145,12 @@ namespace Synapse.QtClient.Windows
 
 		public void StartChat (Account account, JID jid)
 		{
-			m_AccountManagers[account].OpenChatWindow(jid, true);
+			StartChat(account, jid, false);
+		}
+		
+		public void StartChat (Account account, JID jid, bool isMucUser)
+		{
+			m_AccountManagers[account].OpenChatWindow(jid, isMucUser, true, null);
 		}
 		
 		public ChatWindow CurrentChat {
@@ -338,18 +343,13 @@ namespace Synapse.QtClient.Windows
 				m_Account.Client.OnPresence -= HandleOnPresence;
 			}
 			
-			public void OpenChatWindow (JID jid, bool focus)
-			{
-				OpenChatWindow(jid, focus, null);
-			}
-			
-			public void OpenChatWindow (JID jid, bool focus, ChatHandlerEvent callback)
+			public void OpenChatWindow (JID jid, bool isMucUser, bool focus, ChatHandlerEvent callback)
 			{
 				QApplication.Invoke(delegate {
 					IChatHandler handler = null;
 					lock (m_ChatWindows) {
 						if (!m_ChatWindows.ContainsKey(jid.Bare)) {
-							handler = new ChatHandler(m_Account, jid.BareJID);
+							handler = new ChatHandler(m_Account, isMucUser, isMucUser ? jid : jid.BareJID);							
 							var window = new ChatWindow(handler);
 							window.Closed += HandleChatWindowClosed;
 							m_ChatWindows.Add(jid.Bare, window);
@@ -388,7 +388,7 @@ namespace Synapse.QtClient.Windows
 					// Some people like a "psycic" mode though, so this should be configurable.
 					lock (m_ChatWindows) {
 						if (m_ChatWindows.ContainsKey(message.From.Bare) || (message.Body != null || message.Html != null )) {
-							OpenChatWindow(message.From, false, delegate (IChatHandler handler) {
+							OpenChatWindow(message.From, (message.Type == MessageType.chat), false, delegate (IChatHandler handler) {
 								((ChatHandler)handler).AppendMessage(message);
 							});
 						}
