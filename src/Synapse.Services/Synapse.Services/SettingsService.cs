@@ -22,6 +22,7 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 using Synapse.Core;
 using Synapse.ServiceStack;
 
@@ -31,6 +32,13 @@ namespace Synapse.Services
 	{
 		string m_FileName = Path.Combine(Paths.ApplicationData, "settings.xml");
 		SerializableDictionary<string, object> m_Settings;
+		
+		Dictionary<string, object> m_Defaults = new Dictionary<string, object>() {
+			{ "MessageShowHeader",   false },
+			{ "MessageShowAvatars",  false },
+			{ "MessageTheme",        "renkoo" },
+			{ "MessageThemeVariant", "Blue on Steel Alternating"}
+		};
 		
 		public void Initialize ()
 		{
@@ -57,8 +65,12 @@ namespace Synapse.Services
 			lock (m_Settings) {
 				if (m_Settings.ContainsKey(name))
 					return (T)m_Settings[name];
-				else
-			    	return default(T);
+				else {
+					if (m_Defaults.ContainsKey(name)) 
+						return (T)m_Defaults[name];
+					else
+						return default(T);
+				}
 			}
 		}
 

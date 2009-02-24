@@ -64,13 +64,8 @@ namespace Synapse.QtClient.Windows
 			showHeaderCheckBox.Checked = settings.Get<bool>("MessageShowHeader");
 			showAvatarsCheckBox.Checked = settings.Get<bool>("MessageShowAvatars");
 			
-			// FIXME: Put these defaults elsewhere...
-			string themeName = "renkoo";
-			string themeVariantName = "Blue on Steel Alternating";
-			if (settings.Has("MessageTheme") && settings.Has("MessageThemeVariant")) {
-				themeName = settings.Get<string>("MessageTheme");
-				themeVariantName = settings.Get<string>("MessageThemeVariant");
-			}
+			string themeName = settings.Get<string>("MessageTheme");
+			string themeVariantName = settings.Get<string>("MessageThemeVariant");
 			
 			foreach (var pair in ConversationWidget.AllThemes) {
 				messageStyleCombo.AddItem(pair.Value.Get<string>("CFBundleName"), pair.Key);
