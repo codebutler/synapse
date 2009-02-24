@@ -54,12 +54,16 @@ namespace Synapse.UI
 			m_Room.OnParticipantJoin += HandleOnParticipantJoin;
 			m_Room.OnParticipantLeave += HandleOnParticipantLeave;
 			m_Room.OnParticipantPresenceChange += HandleOnParticipantPresenceChange;
+			m_Room.OnJoin += HandleOnJoin;
+			m_Room.OnLeave += HandleOnLeave;
 		}
 		
 		public IEnumerable<RoomParticipant> Items {
 			get {
-				foreach (RoomParticipant p in m_Room.Participants) {
-					yield return p;
+				if (m_Room.IsParticipating) {
+					foreach (RoomParticipant p in m_Room.Participants) {
+						yield return p;
+					}
 				}
 			}
 		}
@@ -164,6 +168,16 @@ namespace Synapse.UI
 		{
 			OnItemChanged(participant);
 		}
+		
+		void HandleOnLeave(Room room, Presence pres)
+		{
+			OnRefreshed();
+		}
+
+		void HandleOnJoin(Room room)
+		{
+			OnRefreshed();
+		}
 
 		protected void OnItemAdded (RoomParticipant participant)
 		{
@@ -184,6 +198,20 @@ namespace Synapse.UI
 			var evnt = ItemChanged;
 			if (evnt != null)
 				evnt(this, participant);
+		}
+		
+		protected void OnItemsChanged ()
+		{
+			var evnt = ItemsChanged;
+			if (evnt != null)
+				ItemsChanged(this, EventArgs.Empty);
+		}
+		
+		protected void OnRefreshed ()
+		{
+			var evnt = Refreshed;
+			if (evnt != null)
+				Refreshed(this, EventArgs.Empty);
 		}
 	}
 }

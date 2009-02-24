@@ -21,10 +21,12 @@
 
 using System;
 using System.Xml;
+using System.Text;
 using Synapse.Xmpp;
 using jabber;
 using jabber.connection;
 using jabber.protocol.client;
+using jabber.protocol.iq;
 using Synapse.UI;
 
 namespace Synapse.UI.Chat
@@ -40,12 +42,17 @@ namespace Synapse.UI.Chat
 			m_Room = room;
 			m_GridModel = new MucAvatarGridModel(account, room);
 			
-			m_Room.OnRoomMessage += HandleOnRoomMessage;
-			m_Room.OnSelfMessage += HandleOnSelfMessage;
-			m_Room.OnParticipantJoin += HandleOnParticipantJoin;
+			m_Room.OnRoomMessage      += HandleOnRoomMessage;
+			m_Room.OnSelfMessage      += HandleOnSelfMessage;
+			m_Room.OnJoin             += HandleOnJoin;
+			m_Room.OnLeave            += HandleOnLeave;
+			m_Room.OnParticipantJoin  += HandleOnParticipantJoin;
 			m_Room.OnParticipantLeave += HandleOnParticipantLeave;
-			m_Room.OnSubjectChange += HandleOnSubjectChange;
-			// FIXME: Handle room.OnLeave .. kicks... everything else..
+			m_Room.OnSubjectChange    += HandleOnSubjectChange;
+			m_Room.OnPresenceError    += HandleOnPresenceError;
+			m_Room.OnRoomConfig       += HandleOnRoomConfig;
+			m_Room.OnAdminMessage     += HandleOnAdminMessage;
+			m_Room.OnParticipantPresenceChange += HandleOnParticipantPresenceChange;
 		}
 		
 		public override void Send (string html)
@@ -95,12 +102,24 @@ namespace Synapse.UI.Chat
 
 		public override void Dispose ()
 		{
-			m_Room.OnRoomMessage -= HandleOnRoomMessage;
-			m_Room.OnSelfMessage -= HandleOnSelfMessage;
-			m_Room.OnParticipantJoin -= HandleOnParticipantJoin;
+			m_Room.OnRoomMessage      -= HandleOnRoomMessage;
+			m_Room.OnSelfMessage      -= HandleOnSelfMessage;
+			m_Room.OnJoin             -= HandleOnJoin;
+			m_Room.OnLeave            -= HandleOnLeave;
+			m_Room.OnParticipantJoin  -= HandleOnParticipantJoin;
 			m_Room.OnParticipantLeave -= HandleOnParticipantLeave;
-			m_Room.OnSubjectChange -= HandleOnSubjectChange;
+			m_Room.OnSubjectChange    -= HandleOnSubjectChange;
+			m_Room.OnPresenceError    -= HandleOnPresenceError;
+			m_Room.OnRoomConfig       -= HandleOnRoomConfig;
+			m_Room.OnAdminMessage     -= HandleOnAdminMessage;
+			m_Room.OnParticipantPresenceChange -= HandleOnParticipantPresenceChange;
+			
 			m_Room.Leave(String.Empty); // FIXME: Add option to set reason?
+		}
+
+		void HandleOnParticipantPresenceChange(Room room, RoomParticipant participant)
+		{
+			Console.WriteLine("Participant presence changed: " + participant.Presence.OuterXml);
 		}
 
 		void HandleOnSubjectChange(object sender, Message msg)
@@ -111,7 +130,28 @@ namespace Synapse.UI.Chat
 
 		void HandleOnParticipantLeave(Room room, RoomParticipant participant)
 		{
-			base.AppendStatus(String.Format("{0} has left the room.", participant.Nick));	
+			string reason = null;
+			RoomStatus status = RoomStatus.UNKNOWN;
+			GetReasonAndStatus(participant.Presence, out reason, out status);
+			
+			var builder = new StringBuilder();
+			builder.Append(participant.Nick);
+			
+			if (status == RoomStatus.KICKED)
+				builder.Append(" was kicked from the room");	
+			else if (status == RoomStatus.BANNED)
+				builder.Append(" has been banned from the room");
+			else
+				builder.Append(" left the room");
+			
+			if (!String.IsNullOrEmpty(reason)) {
+				builder.Append(": ");
+				builder.Append(reason);
+			} 
+			
+			builder.Append(".");
+			
+			base.AppendStatus(builder.ToString());
 		}
 
 		void HandleOnParticipantJoin(Room room, RoomParticipant participant)
@@ -127,6 +167,71 @@ namespace Synapse.UI.Chat
 		void HandleOnRoomMessage(object sender, Message msg)
 		{
 			base.AppendMessage(true, msg);
+		}
+		
+		void HandleOnAdminMessage(object sender, Message msg)
+		{
+			// FIXME: When does this happen?
+			base.AppendStatus("Admin Message: " + msg.Body);
+		}
+
+		IQ HandleOnRoomConfig(Room room, IQ parent)
+		{
+			// FIXME:
+			Console.WriteLine("Show room configuration dialog...");
+			return null;
+		}
+
+		void HandleOnPresenceError(Room room, Presence pres)
+		{
+			base.AppendStatus("Error: " + pres.Error.Condition);
+		}
+
+		void HandleOnJoin(Room room)
+		{
+			base.Ready = true;
+		}
+		
+		void HandleOnLeave(Room room, Presence presence)
+		{
+			string reason = null;
+			RoomStatus status = RoomStatus.UNKNOWN;
+			GetReasonAndStatus(presence, out reason, out status);
+			
+			var builder = new StringBuilder();
+			builder.Append("You have");
+			if (status == RoomStatus.KICKED)
+				builder.Append(" been kicked from the room");	
+			else if (status == RoomStatus.BANNED)
+				builder.Append(" been banned from the room");
+			else
+				builder.Append(" left the room");
+			
+			if (!String.IsNullOrEmpty(reason)) {
+				builder.Append(": ");
+				builder.Append(reason);
+			} 
+			
+			builder.Append(".");
+			
+			base.AppendStatus(builder.ToString());
+			
+			base.Ready = false;
+		}
+		
+		void GetReasonAndStatus (Presence presence, out string reason, out RoomStatus status)
+		{
+			reason = null;
+			status = RoomStatus.UNKNOWN;
+			
+			UserX x = (UserX)presence["x", jabber.protocol.URI.MUC_USER];
+			if (x != null) {
+				if (x.RoomItem != null)
+					reason = x.RoomItem.Reason;
+				
+				if (x.Status != null && x.Status.Length > 0)
+					status = x.Status[0];
+			}
 		}
 	}
 }

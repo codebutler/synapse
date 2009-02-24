@@ -349,7 +349,7 @@ namespace Synapse.QtClient.Windows
 					IChatHandler handler = null;
 					lock (m_ChatWindows) {
 						if (!m_ChatWindows.ContainsKey(jid.Bare)) {
-							handler = new ChatHandler(m_Account, jid);
+							handler = new ChatHandler(m_Account, jid.BareJID);
 							var window = new ChatWindow(handler);
 							window.Closed += HandleChatWindowClosed;
 							m_ChatWindows.Add(jid.Bare, window);
