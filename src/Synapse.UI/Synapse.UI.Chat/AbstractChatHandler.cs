@@ -106,12 +106,12 @@ namespace Synapse.UI.Chat
 						fromJid = msg.From;
 						from = msg.From.Resource;
 					}
+				} else if (this is ChatHandler && ((ChatHandler)this).IsMucMessage) {
+					fromJid = msg.From;
+					from = msg.From.Resource;
 				} else {
 					fromJid = msg.From;
-					if (((ChatHandler)this).IsMucMessage)
-						from = msg.From.Resource;
-					else
-						from = m_Account.GetDisplayName(msg.From);
+					from = m_Account.GetDisplayName(msg.From);
 				}
 			}
 			
