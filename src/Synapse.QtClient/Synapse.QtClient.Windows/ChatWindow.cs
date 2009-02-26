@@ -67,6 +67,19 @@ namespace Synapse.QtClient.Windows
 	
 		AbstractChatContent m_PreviousContent;
 		
+		QMenu m_ParticipantsMenu;
+		QMenu m_ParticipantItemMenu;
+		
+		QMenu m_ModeratorActionsMenu;
+		QAction m_ChangeAffiliationAction;
+		QAction m_AddAsFriendAction;
+		
+		QAction m_ModeratorAction;
+		QAction m_ParticipantAction;
+		QAction m_VisitorAction;
+		
+		RoomParticipant m_SelectedParticipant;
+		
 		internal ChatWindow (IChatHandler handler)
 		{
 			if (handler == null)
@@ -75,10 +88,12 @@ namespace Synapse.QtClient.Windows
 			
 			SetupUi();
 			
-			if (handler is MucHandler) {
+			if (handler is MucHandler) {				
+				m_ParticipantsMenu = new QMenu(this);
+								
 				var mucHandler = (MucHandler)handler;
 				participantsGrid.Model = mucHandler.GridModel;
-				participantsGrid.ContextMenuPolicy = Qt.ContextMenuPolicy.ActionsContextMenu;
+				participantsGrid.ContextMenuPolicy = Qt.ContextMenuPolicy.CustomContextMenu;
 				participantsGrid.ItemActivated += HandleItemActivated;
 				
 				var group = new QActionGroup(this);
@@ -88,20 +103,82 @@ namespace Synapse.QtClient.Windows
 				gridModeAction.SetActionGroup(group);
 				gridModeAction.Checkable = true;
 				gridModeAction.Checked = true;
-				participantsGrid.AddAction(gridModeAction);
+				m_ParticipantsMenu.AddAction(gridModeAction);
 		
 				var listModeAction = new QAction("View as List", this);
 				QObject.Connect(listModeAction, Qt.SIGNAL("triggered()"), HandleListModeActionTriggered);
 				listModeAction.SetActionGroup(group);
 				listModeAction.Checkable = true;
-				participantsGrid.AddAction(listModeAction);
+				m_ParticipantsMenu.AddAction(listModeAction);
 				
 				var separatorAction = new QAction(participantsGrid);
 				separatorAction.SetSeparator(true);
-				participantsGrid.AddAction(separatorAction);
+				m_ParticipantsMenu.AddAction(separatorAction);
 				
 				var sliderAction = new AvatarGridZoomAction<jabber.connection.RoomParticipant>(participantsGrid);
-				participantsGrid.AddAction(sliderAction);
+				m_ParticipantsMenu.AddAction(sliderAction);
+				
+				m_ParticipantItemMenu = new QMenu(this);
+				
+				var mucViewProfileAction = new QAction("View Profile", this);
+				QObject.Connect(mucViewProfileAction, Qt.SIGNAL("triggered()"), HandleMucViewProfileActionTriggered);
+				m_ParticipantItemMenu.AddAction(mucViewProfileAction);
+				
+				var mucPrivateMessageAction = new QAction("IM", this);
+				QObject.Connect(mucPrivateMessageAction, Qt.SIGNAL("triggered()"), HandleMucPrivateMessageTriggered);
+				m_ParticipantItemMenu.AddAction(mucPrivateMessageAction);
+				
+				var mucSendFileAction = new QAction("Send File...", this);
+				QObject.Connect(mucSendFileAction, Qt.SIGNAL("triggered()"), HandleMucSendFileActionTriggered);
+				m_ParticipantItemMenu.AddAction(mucSendFileAction);
+				
+				var mucViewHistoryAction = new QAction("View History", this);
+				QObject.Connect(mucViewHistoryAction, Qt.SIGNAL("triggered()"), HandleMucViewHistoryActionTriggered);
+				m_ParticipantItemMenu.AddAction(mucViewHistoryAction);
+				
+				m_ModeratorActionsMenu = new QMenu("Moderator Actions", this);
+				
+				var roomRoleActionGroup = new QActionGroup(this);
+				QObject.Connect(roomRoleActionGroup, Qt.SIGNAL("triggered()"), new SlotFunc<QAction>(HandleRoomRoleActionGroupTriggered));
+				
+				m_ModeratorAction = new QAction("Moderator", this);
+				roomRoleActionGroup.AddAction(m_ModeratorAction);
+				m_ModeratorAction.Checkable = true;
+				m_ModeratorActionsMenu.AddAction(m_ModeratorAction);
+				
+				m_ParticipantAction = new QAction("Participant", this);
+				roomRoleActionGroup.AddAction(m_ParticipantAction);
+				m_ParticipantAction.Checkable = true;				
+				m_ModeratorActionsMenu.AddAction(m_ParticipantAction);
+				
+				m_VisitorAction = new QAction("Visitor", this);
+				roomRoleActionGroup.AddAction(m_VisitorAction);
+				m_VisitorAction.Checkable = true;				
+				m_ModeratorActionsMenu.AddAction(m_VisitorAction);
+				
+				m_ModeratorActionsMenu.AddSeparator();
+				
+				var mucKickAction = new QAction("Kick...", this);
+				QObject.Connect(mucKickAction, Qt.SIGNAL("triggered()"), HandleMucKickActionTriggered);
+				m_ModeratorActionsMenu.AddAction(mucKickAction);
+				
+				var mucBanAction = new QAction("Ban...", this);
+				QObject.Connect(mucBanAction, Qt.SIGNAL("triggered()"), HandleMucBanActionTriggered);
+				m_ModeratorActionsMenu.AddAction(mucBanAction);
+				
+				m_ModeratorActionsMenu.AddSeparator();	
+				
+				m_ChangeAffiliationAction = new QAction("Change Affiliation...", this);
+				QObject.Connect(m_ChangeAffiliationAction, Qt.SIGNAL("triggered()"), HandleChangeAffiliationTriggered);
+				m_ModeratorActionsMenu.AddAction(m_ChangeAffiliationAction);
+				
+				m_ParticipantItemMenu.AddSeparator();
+				m_ParticipantItemMenu.AddMenu(m_ModeratorActionsMenu);
+				
+				m_ParticipantItemMenu.AddSeparator();
+				
+				m_AddAsFriendAction = new QAction("Add as Friend", this);
+				m_ParticipantItemMenu.AddAction(m_AddAsFriendAction);
 			
 				this.WindowTitle = mucHandler.Room.JID.User; // FIXME: Show only "user" in tab, show full room jid in title?
 				this.WindowIcon = Gui.LoadIcon("internet-group-chat");
@@ -479,6 +556,60 @@ namespace Synapse.QtClient.Windows
 			dialog.Exec();
 		}
 
+		void HandleMucViewProfileActionTriggered ()
+		{
+			var jid = !String.IsNullOrEmpty(m_SelectedParticipant.RealJID) ? m_SelectedParticipant.RealJID : m_SelectedParticipant.NickJID;
+			var window = new ProfileWindow(m_Handler.Account, jid);
+			window.Show();
+		}
+		
+		void HandleMucPrivateMessageTriggered ()
+		{
+			if (!String.IsNullOrEmpty(m_SelectedParticipant.RealJID))
+				Gui.TabbedChatsWindow.StartChat(m_Handler.Account, m_SelectedParticipant.RealJID, false);	
+			else
+				Gui.TabbedChatsWindow.StartChat(m_Handler.Account, m_SelectedParticipant.NickJID, true);
+		}
+		
+		void HandleMucSendFileActionTriggered ()
+		{
+			// FIXME: Not Implemented...
+		}		
+		
+		void HandleMucViewHistoryActionTriggered ()
+		{
+			// FIXME: Not Implemented...
+		}
+		
+		void HandleRoomRoleActionGroupTriggered (QAction action)
+		{
+			var room = ((MucHandler)m_Handler).Room;
+			if (action.Text == "Moderator" && m_SelectedParticipant.Role != RoomRole.moderator) {
+				room.ChangeRole(m_SelectedParticipant.Nick, RoomRole.moderator, null);
+			} else if (action.Text == "Participant" && m_SelectedParticipant.Role != RoomRole.participant) {
+				room.ChangeRole(m_SelectedParticipant.Nick, RoomRole.participant, null);
+			} else if (action.Text == "Visitor" && m_SelectedParticipant.Role != RoomRole.visitor) {
+				room.ChangeRole(m_SelectedParticipant.Nick, RoomRole.visitor, null);
+			}				
+		}
+		
+		void HandleMucKickActionTriggered ()
+		{
+			// FIXME: Show dialog asking for reason
+			((MucHandler)m_Handler).Room.Kick(m_SelectedParticipant.Nick, null);
+		}
+		
+		void HandleMucBanActionTriggered ()
+		{
+			// FIXME: Show dialog asking for reason
+			((MucHandler)m_Handler).Room.Ban(m_SelectedParticipant.RealJID, null);
+		}
+		
+		void HandleChangeAffiliationTriggered ()
+		{
+			
+		}
+		
 		[Q_SLOT]
 		void on_textEdit_currentCharFormatChanged (QTextCharFormat format)
 		{
@@ -487,6 +618,35 @@ namespace Synapse.QtClient.Windows
 			m_ItalicAction.Checked = font.Italic();
 			m_UnderlineAction.Checked = font.Underline();
 			m_StrikethroughAction.Checked = font.StrikeOut();
+		}
+		
+		[Q_SLOT]
+		void on_participantsGrid_customContextMenuRequested(QPoint point)
+		{
+			if (participantsGrid.HoverItem != null) {
+				
+				var mucHandler = (MucHandler)m_Handler;
+				
+				m_SelectedParticipant = participantsGrid.HoverItem;
+				
+				var me = mucHandler.Room.Participants[mucHandler.Room.RoomAndNick];
+				
+				bool isModerator = me.Role == RoomRole.moderator;
+				bool isAdminOrOwner = me.Affiliation == RoomAffiliation.admin || me.Affiliation == RoomAffiliation.owner;	
+								
+				m_ModeratorActionsMenu.Enabled = isModerator || isAdminOrOwner;
+				m_ChangeAffiliationAction.Enabled = isAdminOrOwner;
+				
+				m_ModeratorAction.Checked   = (m_SelectedParticipant.Role == RoomRole.moderator);
+				m_VisitorAction.Checked     = (m_SelectedParticipant.Role == RoomRole.visitor);
+				m_ParticipantAction.Checked = (m_SelectedParticipant.Role == RoomRole.participant);
+				
+				m_AddAsFriendAction.Enabled = !String.IsNullOrEmpty(participantsGrid.HoverItem.RealJID);
+				
+				m_ParticipantItemMenu.Popup(participantsGrid.MapToGlobal(point));
+			} else {
+				m_ParticipantsMenu.Popup(participantsGrid.MapToGlobal(point));
+			}
 		}
 	}
 }
