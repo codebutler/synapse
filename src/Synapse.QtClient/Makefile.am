@@ -129,7 +129,7 @@ PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.Xmpp.dll
 
 DLL_REFERENCES =  \
-	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll \
+	/usr/lib/cli/kdebindings-2.2/qtwebkit.dll \
 	../../contrib/Hyena.dll \
 	../../contrib/jabber-net.dll \
 	../../contrib/Mono.Addins.dll \
