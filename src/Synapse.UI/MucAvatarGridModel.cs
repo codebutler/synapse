@@ -49,11 +49,13 @@ namespace Synapse.UI
 				throw new ArgumentNullException("room");
 			
 			m_Account = account;
+			m_Account.ConnectionStateChanged +=HandleConnectionStateChanged; 
 			
 			m_Room = room;
 			m_Room.OnParticipantJoin += HandleOnParticipantJoin;
 			m_Room.OnParticipantLeave += HandleOnParticipantLeave;
 			m_Room.OnParticipantPresenceChange += HandleOnParticipantPresenceChange;
+			m_Room.OnPresenceChange += HandleOnPresenceChange;
 			m_Room.OnJoin += HandleOnJoin;
 			m_Room.OnLeave += HandleOnLeave;
 		}
@@ -154,6 +156,12 @@ namespace Synapse.UI
 			throw new NotImplementedException();
 		}
 		
+		void HandleConnectionStateChanged(Account account)
+		{
+			OnRefreshed();
+		}
+		
+		
 		void HandleOnParticipantJoin(Room room, RoomParticipant participant)
 		{
 			OnItemAdded(participant);
@@ -164,7 +172,12 @@ namespace Synapse.UI
 			OnItemRemoved(participant);
 		}
 
-		void HandleOnParticipantPresenceChange(Room room, RoomParticipant participant)
+		void HandleOnParticipantPresenceChange(Room room, RoomParticipant participant, Presence oldPresence)
+		{
+			OnItemChanged(participant);
+		}
+		
+		void HandleOnPresenceChange(Room room, RoomParticipant participant, Presence oldPresence)
 		{
 			OnItemChanged(participant);
 		}

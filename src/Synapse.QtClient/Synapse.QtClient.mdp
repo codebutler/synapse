@@ -125,6 +125,8 @@
     <File name="qt-gui/InsertLinkDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/InviteToMucDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Windows/InviteToMucDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/MucAffiliationDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/MucAffiliationDialog.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/jabber-net.dll" />
@@ -181,6 +183,7 @@
       <QyotoForm UiFileName="ErrorDialog.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="InsertLinkDialog.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="InviteToMucDialog.ui" Namespace="Synapse.QtClient.Windows" />
+      <QyotoForm UiFileName="MucAffiliationDialog.ui" Namespace="Synapse.QtClient.Windows" />
     </Forms>
   </QyotoDesignInfo>
 </Project>

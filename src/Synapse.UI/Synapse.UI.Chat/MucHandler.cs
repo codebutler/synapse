@@ -25,6 +25,7 @@ using System.Text;
 using Synapse.Xmpp;
 using jabber;
 using jabber.connection;
+using jabber.protocol;
 using jabber.protocol.client;
 using jabber.protocol.iq;
 using Synapse.UI;
@@ -52,7 +53,27 @@ namespace Synapse.UI.Chat
 			m_Room.OnPresenceError    += HandleOnPresenceError;
 			m_Room.OnRoomConfig       += HandleOnRoomConfig;
 			m_Room.OnAdminMessage     += HandleOnAdminMessage;
-			m_Room.OnParticipantPresenceChange += HandleOnParticipantPresenceChange;
+			m_Room.OnParticipantPresenceChange += HandleOnPresenceChange;
+			m_Room.OnPresenceChange  += HandleOnPresenceChange;
+			account.Client.OnIQ += HandleOnIQ;
+			account.ConnectionStateChanged +=HandleConnectionStateChanged; 
+		}
+
+		void HandleConnectionStateChanged(Account account)
+		{
+			if (account.ConnectionState == AccountConnectionState.Disconnected) {
+				if (base.Ready) {
+					base.AppendStatus("You have been disconnected.");
+					base.Ready = false;
+				}
+			}
+		}
+
+		void HandleOnIQ(object sender, IQ iq)
+		{
+			if (iq.From == m_Room.JID && iq.Type == IQType.error) {
+				base.AppendStatus(String.Format("Error: {0}", iq.Error.Condition));
+			}
 		}
 		
 		public override void Send (string html)
@@ -112,16 +133,86 @@ namespace Synapse.UI.Chat
 			m_Room.OnPresenceError    -= HandleOnPresenceError;
 			m_Room.OnRoomConfig       -= HandleOnRoomConfig;
 			m_Room.OnAdminMessage     -= HandleOnAdminMessage;
-			m_Room.OnParticipantPresenceChange -= HandleOnParticipantPresenceChange;
+			m_Room.OnPresenceChange   -= HandleOnPresenceChange;
+			m_Room.OnParticipantPresenceChange -= HandleOnPresenceChange;
+			base.Account.Client.OnIQ -= HandleOnIQ;
 			
-			m_Room.Leave(String.Empty); // FIXME: Add option to set reason?
+			if (m_Room.IsParticipating)
+				m_Room.Leave(String.Empty); // FIXME: Add option to set reason?
 		}
 
-		void HandleOnParticipantPresenceChange(Room room, RoomParticipant participant)
+		void HandleOnPresenceChange(Room room, RoomParticipant participant, Presence oldPresence)
 		{
 			Console.WriteLine("Participant presence changed: " + participant.Presence.OuterXml);
+			
+			var x1 = (UserX)oldPresence["x", URI.MUC_USER];
+			var x2 = (UserX)participant.Presence["x", URI.MUC_USER];
+			
+			var oldAffiliation = x1.RoomItem.Affiliation;
+			var newAffiliation = x2.RoomItem.Affiliation;
+			
+			var oldRole = x1.RoomItem.Role;
+			var newRole = x2.RoomItem.Role;
+			
+			var nick = (room.Nickname == participant.Nick) ? "You are" :  participant.Nick + " is";
+			
+			if (newAffiliation != oldAffiliation) {
+				switch (newAffiliation) {
+				case RoomAffiliation.admin:
+					base.AppendStatus(String.Format("{0} now a room admin.", nick));
+					break;
+				case RoomAffiliation.member:
+					// "is now a room member" sounds weird...so we show something more useful if possible.
+					switch (oldAffiliation) {
+					case RoomAffiliation.admin:
+						base.AppendStatus(String.Format("{0} longer a room admin.", nick));
+						break;
+					case RoomAffiliation.owner:
+						base.AppendStatus(String.Format("{0} no longer a room owner.", nick));
+						break;
+					default:
+						base.AppendStatus(String.Format("{0} now a room member.", nick));
+						break;
+					}
+					break;
+				case RoomAffiliation.outcast:
+					base.AppendStatus(String.Format("{0} now banned from the room.", nick));
+					break;
+				case RoomAffiliation.owner:
+					base.AppendStatus(String.Format("{0}  now a room owner.", nick));
+					break;
+				case RoomAffiliation.none:
+					switch (oldAffiliation) {
+					case RoomAffiliation.admin:
+						base.AppendStatus(String.Format("{0} no longer a room admin.", nick));
+						break;
+					case RoomAffiliation.owner:
+						base.AppendStatus(String.Format("{0} no longer a room owner.", nick));
+						break;
+					case RoomAffiliation.member:
+						base.AppendStatus(String.Format("{0} no longer a room member.", nick));
+						break;
+					case RoomAffiliation.outcast:
+						base.AppendStatus(String.Format("{0} no longer banned from the room.", nick));
+						break;
+					}
+					break;
+				}
+			} else if (newRole != oldRole) {
+				switch (newRole) {
+				case RoomRole.moderator:
+					base.AppendStatus(String.Format("{0} now a moderator.", nick));
+					break;
+				case RoomRole.participant:
+					base.AppendStatus(String.Format("{0} now a participant.", nick));
+					break;
+				case RoomRole.visitor:
+					base.AppendStatus(String.Format("{0} now a visitor.", nick));
+					break;
+				}
+			}
 		}
-
+		
 		void HandleOnSubjectChange(object sender, Message msg)
 		{
 			// FIXME: Show who set the subject. Handle null subject.
@@ -147,7 +238,7 @@ namespace Synapse.UI.Chat
 			if (!String.IsNullOrEmpty(reason)) {
 				builder.Append(": ");
 				builder.Append(reason);
-			} 
+			}
 			
 			builder.Append(".");
 			

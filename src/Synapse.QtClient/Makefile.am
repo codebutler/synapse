@@ -26,6 +26,7 @@ FILES =  \
 	qt-gui/InsertLinkDialog.cs \
 	qt-gui/InviteToMucDialog.cs \
 	qt-gui/MainWindow.cs \
+	qt-gui/MucAffiliationDialog.cs \
 	qt-gui/NoAccountsWidget.cs \
 	qt-gui/PreferencesWindow.cs \
 	qt-gui/ProfileWindow.cs \
@@ -69,6 +70,7 @@ FILES =  \
 	Synapse.QtClient.Windows/InsertLinkDialog.cs \
 	Synapse.QtClient.Windows/InviteToMucDialog.cs \
 	Synapse.QtClient.Windows/MainWindow.cs \
+	Synapse.QtClient.Windows/MucAffiliationDialog.cs \
 	Synapse.QtClient.Windows/PreferencesWindow.cs \
 	Synapse.QtClient.Windows/ProfileWindow.cs \
 	Synapse.QtClient.Windows/ServiceBrowserWindow.cs \

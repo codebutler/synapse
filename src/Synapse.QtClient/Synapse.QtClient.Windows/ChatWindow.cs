@@ -90,6 +90,8 @@ namespace Synapse.QtClient.Windows
 			
 			if (handler is MucHandler) {				
 				m_ParticipantsMenu = new QMenu(this);
+				QObject.Connect(m_ParticipantsMenu, Qt.SIGNAL("aboutToShow()"), HandleMenuAboutToShow);
+				QObject.Connect(m_ParticipantsMenu, Qt.SIGNAL("aboutToHide()"), HandleMenuAboutToHide);
 								
 				var mucHandler = (MucHandler)handler;
 				participantsGrid.Model = mucHandler.GridModel;
@@ -119,6 +121,8 @@ namespace Synapse.QtClient.Windows
 				m_ParticipantsMenu.AddAction(sliderAction);
 				
 				m_ParticipantItemMenu = new QMenu(this);
+				QObject.Connect(m_ParticipantItemMenu, Qt.SIGNAL("aboutToShow()"), HandleMenuAboutToShow);
+				QObject.Connect(m_ParticipantItemMenu, Qt.SIGNAL("aboutToHide()"), HandleMenuAboutToHide);
 				
 				var mucViewProfileAction = new QAction("View Profile", this);
 				QObject.Connect(mucViewProfileAction, Qt.SIGNAL("triggered()"), HandleMucViewProfileActionTriggered);
@@ -139,7 +143,7 @@ namespace Synapse.QtClient.Windows
 				m_ModeratorActionsMenu = new QMenu("Moderator Actions", this);
 				
 				var roomRoleActionGroup = new QActionGroup(this);
-				QObject.Connect(roomRoleActionGroup, Qt.SIGNAL("triggered()"), new SlotFunc<QAction>(HandleRoomRoleActionGroupTriggered));
+				QObject.Connect(roomRoleActionGroup, Qt.SIGNAL("triggered(QAction*)"), new SlotFunc<QAction>(HandleRoomRoleActionGroupTriggered));
 				
 				m_ModeratorAction = new QAction("Moderator", this);
 				roomRoleActionGroup.AddAction(m_ModeratorAction);
@@ -443,7 +447,7 @@ namespace Synapse.QtClient.Windows
 					}
 				}
 			} else {
-				bool isSimilar   = m_PreviousContent != null && content.IsSimilarToContent(m_PreviousContent);
+				bool isSimilar   = (!(content is ChatContentStatus)) && m_PreviousContent != null && content.IsSimilarToContent(m_PreviousContent);
 				//bool replaceLast = m_PreviousContent is ChatContentStatus && 
 				//	               content is ChatContentStatus && 
 				//	               ((ChatContentStatus)m_PreviousContent).CoalescingKey == ((ChatContentStatus)content).CoalescingKey;
@@ -607,7 +611,19 @@ namespace Synapse.QtClient.Windows
 		
 		void HandleChangeAffiliationTriggered ()
 		{
-			
+			var mucHandler = (MucHandler)m_Handler;
+			var dialog = new MucAffiliationDialog(mucHandler.Room, m_SelectedParticipant, base.TopLevelWidget());
+			dialog.Exec();
+		}
+		
+		void HandleMenuAboutToShow ()
+		{
+			participantsGrid.SuppressTooltips = true;
+		}
+		
+		void HandleMenuAboutToHide ()
+		{
+			participantsGrid.SuppressTooltips = false;
 		}
 		
 		[Q_SLOT]
