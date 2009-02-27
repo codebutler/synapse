@@ -249,7 +249,9 @@ namespace Synapse.QtClient.Widgets
 					}
 				}
 				
-				foreach (var item in m_Model.Items) {
+				// FIXME: ToArray() is here as a hack to avoid a crash if the underlying collection changes.
+				// Need to do proper locking.
+				foreach (var item in m_Model.Items.ToArray()) {
 					AddItem(item);
 				}
 				
