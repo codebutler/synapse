@@ -30,6 +30,7 @@ REFERENCES =  \
 PROJECT_REFERENCES = 
 
 DLL_REFERENCES =  \
+	../../contrib/HtmlAgilityPack.dll \
 	../../contrib/Hyena.dll \
 	../../contrib/Mono.Addins.dll
 

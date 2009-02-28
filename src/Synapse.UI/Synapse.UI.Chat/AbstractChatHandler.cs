@@ -141,7 +141,7 @@ namespace Synapse.UI.Chat
 				string body = null;
 			
 				if (!String.IsNullOrEmpty(msg.Html)) {
-					body = HtmlSanitizer.Sanitize(msg.Html);
+					body = HtmlSanitizer.Sanitize(msg.Html, true);
 				} else {
 					body = Util.EscapeHtml(msg.Body);
 					body = Util.Linkify(body);
