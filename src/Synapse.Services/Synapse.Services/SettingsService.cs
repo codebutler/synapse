@@ -35,7 +35,7 @@ namespace Synapse.Services
 		
 		Dictionary<string, object> m_Defaults = new Dictionary<string, object>() {
 			{ "MessageShowHeader",   false },
-			{ "MessageShowAvatars",  false },
+			{ "MessageShowAvatars",  true },
 			{ "MessageTheme",        "renkoo" },
 			{ "MessageThemeVariant", "Blue on Steel Alternating"}
 		};

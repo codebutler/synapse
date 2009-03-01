@@ -133,8 +133,6 @@ namespace Synapse.Core
 					attributeStringBuilder.AppendFormat("{0}=\"{1}\"", attrName, attrVal);
 				}
 			}
-			Console.WriteLine(attributeStringBuilder.ToString());
-			Console.WriteLine(attributeStringBuilder.Length);
 			if (attributeStringBuilder.Length > 0)
 				attributeStringBuilder.Insert(0, " ");
 			return attributeStringBuilder.ToString();
