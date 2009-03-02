@@ -144,57 +144,42 @@ QPushButton:checked {
 	border-radius: 5px;
 }
 
-QTabWidget::pane { /* The tab widget frame */
-	border-bottom: 1px solid #1B1B1B;
-	/*
-	border-left: 1px solid  qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #2E2E2E, stop: 1 #333333);
-	border-right: 1px solid  qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #2E2E2E, stop: 1 #333333);
-	*/
+MainTabWidget TabBar {
+	border-top: 1px solid #1B1B1B;
+	padding-top: -1px;
 }
 
-QTabWidget::tab-bar {
-	left: 10px;
-
- 	/*  FIXME */
-	/* top: 6px; */
-	top: 1px;
-}
-
-QTabBar::tab {	
+MainTabWidget Tab:!selected {
+	background: transparent;
+	
 	padding: 2px 8px;
+	
 	margin-left: 0px;
 	margin-top: 0px;
 	margin-right: 0px;
-	background: transparent;
 	margin-top: 1px;
-
- 	/* FIXME */
-	/* margin-bottom: 11px; */
 	margin-bottom: 6px;
-}
-
-QTabWidget::right-corner {
-	top: 13px;
-	left: 3px;
-}
-
-QTabBar::tab:selected {
-	background: #333;
-	border-top: 0px;
-	border-left: 1px solid #1B1B1B;
-	border-bottom: 1px solid #1B1B1B;
-	border-right: 1px solid #1B1B1B;
 	
-	padding-top: 5px;
-	margin-top: 0px;
+	border: 0px;
 }
 
-QTabBar::tab:selected:!first {
-	margin-left: -1px;
-}
-
-QTabBar::tab:!last:!selected {
+MainTabWidget Tab:!selected:!last {
 	border-right: 1px solid #1B1B1B;
+}
+
+MainTabWidget Tab:selected {
+	background: #333;
+	
+	border-top: 0px; 
+	border-left: 1px solid #1B1B1B; 
+	border-bottom: 1px solid #1B1B1B; 
+	border-right: 1px solid #1B1B1B; 	
+	
+	padding: 2px 8px; 
+	
+	margin-left: 0px; 
+	margin-top: 0px; 
+	margin-right: 0px;
 }
 
 QListView {

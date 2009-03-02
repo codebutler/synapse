@@ -23,7 +23,7 @@ namespace Synapse.QtClient.Widgets {
         
         protected QWidget widget;
         
-        protected QTabWidget tabWidget;
+        protected Synapse.QtClient.Widgets.MainTabWidget tabWidget;
         
         protected QWidget friendsTab;
         
@@ -117,12 +117,13 @@ namespace Synapse.QtClient.Widgets {
         
         protected void SetupUi() {
             base.ObjectName = "RosterWidget";
-            this.Geometry = new QRect(0, 0, 352, 473);
+            this.Geometry = new QRect(0, 0, 352, 538);
             this.WindowTitle = "RosterWidget";
             this.StyleSheet = "";
             QVBoxLayout verticalLayout_6;
             verticalLayout_6 = new QVBoxLayout(this);
             verticalLayout_6.Spacing = 0;
+            verticalLayout_6.sizeConstraint = QLayout.SizeConstraint.SetDefaultConstraint;
             verticalLayout_6.Margin = 0;
             this.m_AccountsContainer = new QWidget(this);
             this.m_AccountsContainer.ObjectName = "m_AccountsContainer";
@@ -147,12 +148,10 @@ namespace Synapse.QtClient.Widgets {
             QVBoxLayout verticalLayout_2;
             verticalLayout_2 = new QVBoxLayout(this.widget);
             verticalLayout_2.Margin = 0;
-            this.tabWidget = new QTabWidget(this.widget);
+            this.tabWidget = new Synapse.QtClient.Widgets.MainTabWidget(this.widget);
             this.tabWidget.ObjectName = "tabWidget";
             this.tabWidget.tabPosition = QTabWidget.TabPosition.South;
-            this.tabWidget.tabShape = QTabWidget.TabShape.Rounded;
-            this.tabWidget.CurrentIndex = 1;
-            this.tabWidget.UsesScrollButtons = true;
+            this.tabWidget.CurrentIndex = 0;
             verticalLayout_2.AddWidget(this.tabWidget);
             this.friendsTab = new QWidget(this.tabWidget);
             this.friendsTab.ObjectName = "friendsTab";
