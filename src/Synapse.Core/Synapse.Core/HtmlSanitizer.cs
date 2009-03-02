@@ -1,7 +1,23 @@
 //
 // HtmlSanitizer.cs
 //
-// Code from http://refactormycode.com/codes/333-sanitize-html
+// Copyright (C) 2009 Eric Butler
+//
+// Authors:
+//   Eric Butler <eric@extremeboredom.net>
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Linq;
@@ -11,8 +27,7 @@ using System.Collections.Generic;
 using HtmlAgilityPack;
 
 namespace Synapse.Core
-{
-	
+{	
 	public static class HtmlSanitizer 
 	{
 		static readonly Dictionary<string, string[]> s_WhiteList = new Dictionary<string, string[]> {
@@ -50,7 +65,7 @@ namespace Synapse.Core
 			{ "ul",         null },
 			{ "li",         null },
 			
-			{ "img",        new [] { "alt", "width", "height", "src" } },
+			{ "img",        new [] { "width", "height", "src" } },
 
 			{ "b",          null },
 			{ "i",          null },
@@ -80,8 +95,7 @@ namespace Synapse.Core
 		static void ParseNode (HtmlNode node, StringBuilder builder, bool linkify)
 		{
 			if (node is HtmlTextNode) {
-				// FIXME: Need to search entire parent tree
-				if (node.ParentNode.Name.ToLower() != "a" && linkify)
+				if (linkify && HasParent(node, "a") == false)
 					builder.Append(Util.Linkify(node.InnerText));
 				else
 					builder.Append(node.InnerText);
@@ -118,6 +132,11 @@ namespace Synapse.Core
 				// Don't allow custom titles (tooltips), and make sure one is always set.
 				node.SetAttributeValue("title", node.GetAttributeValue("href", String.Empty));
 			}
+			
+			if (name == "img") {
+				// Show something if the image fails to load for some reason.
+				node.SetAttributeValue("alt", "[IMAGE]");
+			}
 
 			var attributeStringBuilder = new StringBuilder();
 			foreach (var attr in node.Attributes) {
@@ -146,7 +165,6 @@ namespace Synapse.Core
 				return href;
 			else
 				return String.Empty; // FIXME: Might want to remove the <a> tag entirelly...
-
 		}
 
 		static string SanitizeImgSrc (string src)
@@ -155,7 +173,17 @@ namespace Synapse.Core
 			if (Regex.IsMatch(src, pattern))
 				return src;
 			else
-				return String.Empty; // FIXME: Show "missing image"?
+				return String.Empty; // FIXME: Show standard browser "missing" image?
+		}
+		
+		static bool HasParent (HtmlNode node, string parentName)
+		{
+			HtmlNode parent = node;
+			while ((parent = parent.ParentNode) != null) {
+				if (parent.Name.ToLower() == parentName.ToLower())
+					return true;
+			}
+			return false;
 		}
 	}
 }
