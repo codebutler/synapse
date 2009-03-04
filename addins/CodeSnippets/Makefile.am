@@ -15,6 +15,7 @@ RESOURCES =  \
 	ConversationHeader.html 
 REFERENCES =  \
 	$(QYOTO_LIBS) \
+	$(QTWEBKIT_SHARP_LIBS) \
 	System \
 	System.Core \
 	System.Xml
@@ -26,7 +27,6 @@ PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.UI.dll 
 
 DLL_REFERENCES =  \
-	../../../../../../usr/lib/cli/kdebindings-2.2/qtwebkit.dll \
 	../../contrib/jabber-net.dll \
 	../../contrib/Mono.Addins.dll \
 	../../contrib/Wilco.SyntaxHighlighter.dll 

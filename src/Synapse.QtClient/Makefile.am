@@ -34,6 +34,9 @@ FILES =  \
 	qt-gui/ServiceBrowserWindow.cs \
 	qt-gui/WebIdentityConfiguratorWidget.cs \
 	QtTraceListener.cs \
+	QyotoTrunk/QFormLayout.cs \
+	QyotoTrunk/QPlainTextEdit.cs \
+	QyotoTrunk/QTextBlock.cs \
 	ResizableGraphicsPixmapItem.cs \
 	ResourceFileEngine.cs \
 	Synapse.QtClient.ExtensionNodes/ActionCodon.cs \
@@ -118,6 +121,7 @@ REFERENCES =  \
 	$(NDESK_DBUS_GLIB_10_LIBS) \
 	$(NOTIFY_SHARP_LIBS) \
 	$(QYOTO_LIBS) \
+	$(QTWEBKIT_SHARP_LIBS) \
 	Mono.Posix \
 	System \
 	System.Core \
@@ -131,7 +135,6 @@ PROJECT_REFERENCES =  \
 	../../build/Debug/Synapse.Xmpp.dll
 
 DLL_REFERENCES =  \
-	/usr/lib/cli/kdebindings-2.2/qtwebkit.dll \
 	../../contrib/Hyena.dll \
 	../../contrib/jabber-net.dll \
 	../../contrib/Mono.Addins.dll \
