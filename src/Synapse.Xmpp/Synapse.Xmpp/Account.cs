@@ -82,10 +82,11 @@ namespace Synapse.Xmpp
 
 		List<StreamTypeInfo> m_StreamTypes = new List<StreamTypeInfo>();
 		
-		public event AccountEventHandler ConnectionStateChanged;
-		public event AccountEventHandler StatusChanged;
-		public event EventHandler        MyVCardUpdated;
+		public event AccountEventHandler  ConnectionStateChanged;
+		public event AccountEventHandler  StatusChanged;
+		public event EventHandler         MyVCardUpdated;
 		public event PropertyEventHandler PropertyChanged;
+		public event AccountEventHandler  ReceivedRoster;
 		
 		public Account (string user, string domain, string resource) : this (user, domain, resource, null, 5222)
 		{
@@ -131,6 +132,7 @@ namespace Synapse.Xmpp
 			m_Client.OnStreamInit += HandleOnStreamInit;
 			
 			m_Roster = new RosterManager();
+			m_Roster.OnRosterEnd += HandleOnRosterEnd;
 			m_Roster.Stream = m_Client;
 			
 			m_CapsManager = new CapsManager();
@@ -173,6 +175,13 @@ namespace Synapse.Xmpp
 
 			if (ServiceManager.Contains<NetworkService>())
 				ServiceManager.Get<NetworkService>().StateChange += HandleNetworkStateChanged;
+		}
+
+		void HandleOnRosterEnd(object sender)
+		{
+			var evnt = ReceivedRoster;
+			if (evnt != null)
+				ReceivedRoster(this);
 		}
 
 		void HandleOnBeforePresenceOut(object sender, Presence pres)

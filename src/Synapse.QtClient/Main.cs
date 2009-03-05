@@ -96,6 +96,7 @@ namespace Synapse.QtClient
 			// XXX: I dont like all of these being here.
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.XmppService>();
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.AccountService>();
+			ServiceManager.RegisterService<Synapse.QtClient.OctyService>();
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.ShoutService>();
 			ServiceManager.RegisterService<Synapse.Xmpp.Services.GeoService>();
 			ServiceManager.RegisterService<GuiService>();

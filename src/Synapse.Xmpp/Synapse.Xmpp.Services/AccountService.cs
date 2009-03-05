@@ -46,6 +46,9 @@ namespace Synapse.Xmpp.Services
 		
 		public event AccountEventHandler AccountAdded;
 		public event AccountEventHandler AccountRemoved;
+		public event AccountEventHandler AccountReceivedRoster;
+		
+		public event AccountEventHandler AccountConnectionStateChanged;
 		
 		public void Initialize ()
 		{
@@ -109,6 +112,9 @@ namespace Synapse.Xmpp.Services
 				if (AccountAdded != null) {
 					AccountAdded(account);
 				}
+				
+				account.ConnectionStateChanged += HandleAccountConnectionStateChanged;
+				account.ReceivedRoster += HandleAccountReceivedRoster;
 
 				if (account.AutoConnect)
 					account.Connect();
@@ -128,6 +134,9 @@ namespace Synapse.Xmpp.Services
 						AccountRemoved(account);
 					}
 					
+					account.ConnectionStateChanged -= HandleAccountConnectionStateChanged;
+					account.ReceivedRoster -= HandleAccountReceivedRoster;
+
 					SaveAccounts();
 				} else {
 					throw new Exception("Account not found");
@@ -173,6 +182,20 @@ namespace Synapse.Xmpp.Services
 		string IService.ServiceName {
 			get { return "AccountService"; }
 		}
+		
+		void HandleAccountConnectionStateChanged (Account account)
+		{
+			var evnt = AccountConnectionStateChanged;
+			if (evnt != null)
+				evnt(account);
+		}
+		
+		void HandleAccountReceivedRoster (Account account)
+		{
+			var evnt = AccountReceivedRoster;
+			if (evnt != null)
+				evnt(account);
+		}
 	}
 
 	public class AccountsConfig
@@ -188,6 +211,7 @@ namespace Synapse.Xmpp.Services
 		public AccountInfo ()
 		{
 			ConnectPort = 5222;
+			AutoConnect = true;
 		}
 		
 		public string User {

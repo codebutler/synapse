@@ -3,19 +3,23 @@
 FILES =  \
 	AboutDialog.cs \
 	AbstractSimpleFileEngine.cs \
+	AddOctyDialog.cs \
 	AssemblyInfo.cs \
 	AvatarFileEngine.cs \
 	AvatarGridZoomAction.cs \
 	BookmarkedMUCsModel.cs \
 	GlobalActions.cs \
+	gtk-gui/generated.cs \
 	Gui.cs \
 	IUpdateableAction.cs \
 	IWebIdentityConfigurator.cs \
 	KeyPressEater.cs \
 	Main.cs \
+	OctyService.cs \
 	qt-gui/AboutDialog.cs \
 	qt-gui/AccountStatusWidget.cs \
 	qt-gui/AddFriendWindow.cs \
+	qt-gui/AddOctyDialog.cs \
 	qt-gui/ChatWindow.cs \
 	qt-gui/DebugWindow.cs \
 	qt-gui/EditAccountDialog.cs \
@@ -84,6 +88,7 @@ FILES =  \
 	WindowMover.cs 
 
 RESOURCES =  \
+	resources/addocty.html \
 	resources/collapse.png \
 	resources/default-avatar.png \
 	resources/effects.js \
@@ -103,6 +108,7 @@ RESOURCES =  \
 	resources/octy.svg \
 	resources/octy-22.png \
 	resources/octy-32.png \
+	resources/octyaddme.png \
 	resources/profile.html \
 	resources/prototype.js \
 	resources/ServiceDiscovery.html \
@@ -122,8 +128,8 @@ REFERENCES =  \
 	$(GTK_SHARP_20_LIBS) \
 	$(NDESK_DBUS_GLIB_10_LIBS) \
 	$(NOTIFY_SHARP_LIBS) \
-	$(QYOTO_LIBS) \
 	$(QTWEBKIT_SHARP_LIBS) \
+	$(QYOTO_LIBS) \
 	Mono.Posix \
 	System \
 	System.Core \
