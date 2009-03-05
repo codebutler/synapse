@@ -115,7 +115,8 @@ namespace Synapse.QtClient
 				foreach (var subDirInfo in dirInfo.GetDirectories()) {
 					if (subDirInfo.Name.EndsWith(".AdiumMessageStyle")) {
 						string plistPath = Util.JoinPath(subDirInfo.FullName, "Contents", "Info.plist");
-						s_AllThemes.Add(subDirInfo.Name.Substring(0, subDirInfo.Name.Length - subDirInfo.Extension.Length), new PList(plistPath));
+						if (File.Exists(plistPath))
+							s_AllThemes.Add(subDirInfo.Name.Substring(0, subDirInfo.Name.Length - subDirInfo.Extension.Length), new PList(plistPath));
 					}
 				}
 			}	
