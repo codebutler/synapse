@@ -54,7 +54,8 @@ namespace Synapse.QtClient.Widgets
 				isFirstBlock = false;
 				
 				QTextBlock.iterator it;
-				for (it = block.Begin(); !it.AtEnd(); it = it++) {
+				//for (it = block.Begin(); !it.AtEnd(); it = it++) {
+				for (it = block.Begin(); !it.AtEnd(); it = it.Next()) {
 					var fragment = it.Fragment();
 					var format = fragment.CharFormat();
 					if (format.IsImageFormat()) {					

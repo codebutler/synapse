@@ -143,7 +143,7 @@ namespace Synapse.QtClient.Windows
 				m_ModeratorActionsMenu = new QMenu("Moderator Actions", this);
 				
 				var roomRoleActionGroup = new QActionGroup(this);
-				QObject.Connect(roomRoleActionGroup, Qt.SIGNAL("triggered(QAction*)"), new SlotFunc<QAction>(HandleRoomRoleActionGroupTriggered));
+				QObject.Connect(roomRoleActionGroup, Qt.SIGNAL("triggered(QAction*)"), this, Qt.SLOT("HandleRoomRoleActionGroupTriggered(QAction*)"));
 				
 				m_ModeratorAction = new QAction("Moderator", this);
 				roomRoleActionGroup.AddAction(m_ModeratorAction);
@@ -585,6 +585,7 @@ namespace Synapse.QtClient.Windows
 			// FIXME: Not Implemented...
 		}
 		
+		[Q_SLOT]
 		void HandleRoomRoleActionGroupTriggered (QAction action)
 		{
 			var room = ((MucHandler)m_Handler).Room;
