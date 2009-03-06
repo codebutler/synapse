@@ -4,7 +4,6 @@ FILES =  \
 	AssemblyInfo.cs \
 	IPasteFormatPreviewer.cs \
 	qt-gui/InsertSnippetDialog.cs \
-	qt-gui/InsertSnippetDialog.cs \
 	Synapse.Addins.CodeSnippets/CodeMessageDisplayFormatter.cs \
 	Synapse.Addins.CodeSnippets/CodeSnippetsService.cs \
 	Synapse.Addins.CodeSnippets/InsertSnippetAction.cs \
@@ -14,8 +13,8 @@ RESOURCES =  \
 	CodeSnippets.addin.xml \
 	ConversationHeader.html 
 REFERENCES =  \
-	$(QYOTO_LIBS) \
 	$(QTWEBKIT_SHARP_LIBS) \
+	$(QYOTO_LIBS) \
 	System \
 	System.Core \
 	System.Xml

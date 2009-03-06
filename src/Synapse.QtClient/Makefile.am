@@ -172,7 +172,7 @@ $(eval $(call emit-deploy-wrapper,SYNAPSE_QTCLIENT_PC,synapse.ui.pc))
 $(SYNAPSE_ADDINS): Synapse.addins
 	cp Synapse.addins $(SYNAPSE_ADDINS)
 
-$(ASSEMBLY) $(ASSEMBLY_MDB): $(build_sources) $(build_resources) $(DLL_REFERENCES) $(PROJECT_REFERENCES)
+$(ASSEMBLY) $(ASSEMBLY_MDB): $(build_sources) $(RESOURCES) $(DLL_REFERENCES) $(PROJECT_REFERENCES)
 	mkdir -p $(shell dirname $(ASSEMBLY))
 	$(MCS) $(MCS_FLAGS) -out:$(ASSEMBLY) $(build_sources) $(build_resources_embed) $(build_references_ref)
 	cp -r $(THEMES_DIR) $(BUILD_DIR)/themes
