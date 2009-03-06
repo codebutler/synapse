@@ -3,23 +3,24 @@ using System;
 
 using Qyoto;
 
+using Synapse.Core;
+
 namespace Synapse.QtClient.Widgets
 {	
 	public class MainTabWidget : QWidget
 	{
 		QStackedWidget m_Pages;
+		QStyle m_Style;
 		TabBar         m_TabBar;
 		
 		public MainTabWidget(QWidget parent) : base (parent)
 		{
 			var layout = new QVBoxLayout(this);
-			//layout.sizeConstraint  = QLayout.SizeConstraint.SetNoConstraint;
 			layout.Spacing = 0;
 			layout.Margin = 0;
 			
 			m_Pages = new QStackedWidget(this);
-			m_Pages.Layout().Margin = 0; 
-			//m_Pages.Layout().sizeConstraint = QLayout.SizeConstraint.SetDefaultConstraint;
+			m_Pages.Layout().Margin = 0;
 			layout.AddWidget(m_Pages, 1);
 			
 			m_TabBar = new TabBar(this);
@@ -53,12 +54,15 @@ namespace Synapse.QtClient.Widgets
 		
 		class TabBar : QFrame
 		{
+			Tab m_LastTab;
+			
 			public TabBar (MainTabWidget parent) : base (parent)
 			{				
+				base.SetStyleSheet(Util.ReadResource("mainwindow-tabs.qss"));
 				var layout = new QHBoxLayout(this);
 				layout.sizeConstraint = QLayout.SizeConstraint.SetNoConstraint;
 				layout.Spacing = 0;
-				layout.SetContentsMargins(10, 0, 10, 5);
+				layout.Margin = 0;
 				layout.AddStretch(1);
 				
 				base.MinimumWidth = 0;
@@ -83,7 +87,18 @@ namespace Synapse.QtClient.Widgets
 				tab.Clicked += HandleTabClicked;
 				((QHBoxLayout)base.Layout()).AddWidget(tab, 0);
 
+				if (m_LastTab != null)
+					m_LastTab.Last = false;
+				
+				tab.Last = true;
+				m_LastTab = tab;
+				
 				layout.AddItem(stretch);
+			}
+			
+			public void ReloadStylesheet ()
+			{
+				base.StyleSheet = base.StyleSheet;
 			}
 			
 			void HandleTabClicked (object o, EventArgs args)
@@ -94,6 +109,7 @@ namespace Synapse.QtClient.Widgets
 			
 			class Tab : QLabel 
 			{
+				bool m_Last = false;
 				bool m_Selected = false;
 				
 				public event EventHandler Clicked;
@@ -111,38 +127,18 @@ namespace Synapse.QtClient.Widgets
 					}
 					set {
 						m_Selected = value;
-						base.Update();
+						((TabBar)base.Parent()).ReloadStylesheet();
 					}
 				}
 				
-				protected override void PaintEvent (Qyoto.QPaintEvent arg1)
-				{
-					using (QStylePainter painter = new QStylePainter(this)) {
-						
-						//QStyleOptionFrame opt = new QStyleOptionFrame();
-						QStyleOptionTab opt = new QStyleOptionTab();
-						
-						// FIXME: if foo opt.position = QStyleOptionTab.TabPosition.End;
-						
-						opt.InitFrom(this);
-						
-						opt.State = m_Selected ? (uint)QStyle.StateFlag.State_Selected : (uint)QStyle.StateFlag.State_None;
-						
-						//if () {
-							opt.State |= (uint)QStyle.SubControl.SC_ScrollBarLast;
-						//}
-						
-						painter.DrawPrimitive(QStyle.PrimitiveElement.PE_Widget, opt);
-						painter.DrawPrimitive(QStyle.PrimitiveElement.PE_Frame, opt);						
-						
-						var textWidth = base.FontMetrics().Width(base.Text);
-						if (base.ContentsRect().Width() >= textWidth) {
-							painter.DrawItemText(base.ContentsRect(), 
-						                     	(int)TextFlag.TextSingleLine | (int) AlignmentFlag.AlignHCenter, 
-						                     	base.Palette, true, base.Text, base.ForegroundRole());
-						} else {
-							
-						}
+				[Q_PROPERTY("bool", "Last")]
+				public bool Last {
+					get {
+						return m_Last;
+					}
+					set {
+						m_Last = value;
+						((TabBar)base.Parent()).ReloadStylesheet();
 					}
 				}
 				

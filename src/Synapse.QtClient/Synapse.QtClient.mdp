@@ -131,6 +131,7 @@
     <File name="QyotoTrunk/QPlainTextEdit.cs" subtype="Code" buildaction="Compile" />
     <File name="QyotoTrunk/QFormLayout.cs" subtype="Code" buildaction="Compile" />
     <File name="QyotoTrunk/QTextBlock.cs" subtype="Code" buildaction="Compile" />
+    <File name="resources/mainwindow-tabs.qss" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/jabber-net.dll" />

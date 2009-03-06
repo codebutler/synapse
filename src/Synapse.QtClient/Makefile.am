@@ -94,6 +94,7 @@ RESOURCES =  \
 	resources/loading.gif \
 	resources/mainwindow.qss \
 	resources/mainwindow-noaccounts.qss \
+	resources/mainwindow-tabs.qss \
 	resources/menu-icon.png \
 	resources/music-16.png \
 	resources/newtab.html \
