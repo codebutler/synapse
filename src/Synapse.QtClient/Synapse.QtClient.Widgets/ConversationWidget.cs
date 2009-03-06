@@ -109,21 +109,24 @@ namespace Synapse.QtClient
 					throw new ArgumentException("Invalid themes directory (" + value + ").", "themesDirectory");
 				}
 				s_ThemesDirectory = value;
-				
-				s_AllThemes = new Dictionary<string, PList>();
-				var dirInfo = new DirectoryInfo(s_ThemesDirectory);
-				foreach (var subDirInfo in dirInfo.GetDirectories()) {
-					if (subDirInfo.Name.EndsWith(".AdiumMessageStyle")) {
-						string plistPath = Util.JoinPath(subDirInfo.FullName, "Contents", "Info.plist");
-						if (File.Exists(plistPath))
-							s_AllThemes.Add(subDirInfo.Name.Substring(0, subDirInfo.Name.Length - subDirInfo.Extension.Length), new PList(plistPath));
-					}
-				}
 			}	
 		}
 		
 		public static IDictionary<string, PList> AllThemes {
 			get {
+				// FIXME: Offer some way to reload themes... or better yet, watch the directory.
+				if (s_AllThemes == null) {				
+					s_AllThemes = new Dictionary<string, PList>();
+					var dirInfo = new DirectoryInfo(s_ThemesDirectory);
+					foreach (var subDirInfo in dirInfo.GetDirectories()) {
+						if (subDirInfo.Name.EndsWith(".AdiumMessageStyle")) {
+							string plistPath = Util.JoinPath(subDirInfo.FullName, "Contents", "Info.plist");
+							if (File.Exists(plistPath))
+								s_AllThemes.Add(subDirInfo.Name.Substring(0, subDirInfo.Name.Length - subDirInfo.Extension.Length), new PList(plistPath));
+						}
+					}
+				}
+				
 				return s_AllThemes;
 			}
 		}
