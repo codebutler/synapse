@@ -1,0 +1,42 @@
+MainTabWidget TabBar {
+	border-top: 1px solid #1B1B1B;
+	padding-top: -1px;
+	padding-left: 5px;
+	padding-bottom: 5px;
+	padding-right: 5px;
+}
+
+
+MainTabWidget Tab[Selected="false"] {
+	background: transparent;
+	
+	padding: 4px 8px;
+	
+	margin-top: 0px;
+	margin-left: 1px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 1px;
+	
+	border: 0px;
+}
+
+MainTabWidget Tab[Selected="false"][Last="false"] {
+	border-right: 1px solid #1B1B1B;
+}
+
+MainTabWidget Tab[Selected="true"] {
+	background: #333;
+	
+	border-top: 0px; 
+	border-left: 1px solid #1B1B1B; 
+	border-bottom: 1px solid #1B1B1B; 
+	border-right: 1px solid #1B1B1B; 	
+	
+	padding: 4px 8px; 
+	
+	margin-left: 0px; 
+	margin-top: 0px; 
+	margin-right: 0px;
+	margin-bottom: 0px;
+}

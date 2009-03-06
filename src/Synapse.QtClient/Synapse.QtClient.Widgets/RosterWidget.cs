@@ -180,10 +180,8 @@ namespace Synapse.QtClient.Widgets
 				return false;
 			}, this));
 			
-			QSizeGrip grip = new QSizeGrip(tabWidget);
-			tabWidget.SetCornerWidget(grip, Qt.Corner.BottomRightCorner);
-	
-			tabWidget.ElideMode = Qt.TextElideMode.ElideMiddle;
+			//QSizeGrip grip = new QSizeGrip(tabWidget);
+			//tabWidget.SetCornerWidget(grip, Qt.Corner.BottomRightCorner);
 		
 			0.UpTo(9).ForEach(num => {
 				QAction action = new QAction(this);

@@ -57,6 +57,7 @@ FILES =  \
 	Synapse.QtClient.Widgets/EditGroupsWidget.cs \
 	Synapse.QtClient.Widgets/FadingQLabel.cs \
 	Synapse.QtClient.Widgets/LightboxContainerWidget.cs \
+	Synapse.QtClient.Widgets/MainTabWidget.cs \
 	Synapse.QtClient.Widgets/NoAccountsWidget.cs \
 	Synapse.QtClient.Widgets/NotificationsWidget.cs \
 	Synapse.QtClient.Widgets/RosterWidget.cs \
@@ -93,6 +94,7 @@ RESOURCES =  \
 	resources/loading.gif \
 	resources/mainwindow.qss \
 	resources/mainwindow-noaccounts.qss \
+	resources/mainwindow-tabs.qss \
 	resources/menu-icon.png \
 	resources/music-16.png \
 	resources/newtab.html \
