@@ -425,7 +425,7 @@ namespace Synapse.QtClient.Windows
 		
 		void HandleReadyChanged (object o, EventArgs args)
 		{
-			textEdit.Enabled = m_Handler.Ready;
+			textEdit.Enabled = (m_Handler != null && m_Handler.Ready);
 		}
 		
 		void HandleNewContent (IChatHandler handler, AbstractChatContent content)
