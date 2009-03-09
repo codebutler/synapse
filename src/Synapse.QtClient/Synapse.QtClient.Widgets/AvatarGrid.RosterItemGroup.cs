@@ -203,7 +203,7 @@ namespace Synapse.QtClient.Widgets
 					m_LeftButtonDown = false;
 					var pos = arg1.Pos();
 					var pos1 = arg1.ButtonDownPos(Qt.MouseButton.LeftButton);
-					if (m_ArrowRect.Contains(pos1) && pos.Y() < m_Grid.HeaderHeight && pos1.Equals(pos)) {
+					if (pos != null && pos1 != null && m_ArrowRect.Contains(pos1) && pos.Y() < m_Grid.HeaderHeight && pos1.Equals(pos)) {
 						this.IsExpanded = !this.IsExpanded;
 						m_Grid.ResizeAndRepositionGroups();
 					}

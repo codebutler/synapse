@@ -87,19 +87,21 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 
-		void AddItem (string groupName)
+		QListWidgetItem AddItem (string groupName)
 		{			
 			QListWidgetItem item = new QListWidgetItem(groupName, listWidget);
 			item.SetFlags((uint)Qt.ItemFlag.ItemIsEnabled | (uint)Qt.ItemFlag.ItemIsUserCheckable);
 			item.SetCheckState(Qt.CheckState.Unchecked);
 			listWidget.AddItem(item);
+			return item;
 		}
 
 		[Q_SLOT]
 		void on_addButton_clicked ()
 		{
 			// FIXME: Check if already exists before adding.
-			AddItem(lineEdit.Text);
+			var item = AddItem(lineEdit.Text);
+			item.SetCheckState(Qt.CheckState.Checked);
 		}
 	}
 }
