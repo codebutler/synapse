@@ -9,7 +9,6 @@ FILES =  \
 	AvatarGridZoomAction.cs \
 	BookmarkedMUCsModel.cs \
 	GlobalActions.cs \
-	gtk-gui/generated.cs \
 	Gui.cs \
 	IUpdateableAction.cs \
 	IWebIdentityConfigurator.cs \
