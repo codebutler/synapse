@@ -355,7 +355,7 @@ namespace Synapse.UI
 				}
 			};
 			
-			account.Client.OnDisconnect += HandleOnDisconnect;
+			account.ConnectionStateChanged += HandleAccountConnectionStateChanged;
 			
 			account.PresenceManager.OnPrimarySessionChange += delegate(object sender, JID bare) {
 				/*
@@ -377,7 +377,7 @@ namespace Synapse.UI
 			return matchesName || matchesJid;
 		}
 		
-		void HandleOnDisconnect(object sender)
+		void HandleAccountConnectionStateChanged (Account account)
 		{
 			OnRefreshed();
 		}
