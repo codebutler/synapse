@@ -196,19 +196,26 @@ namespace Synapse.QtClient.Widgets
 				bool visibilityChanged = false;
 				bool groupsChanged = false;
 
-				List<string> toRemove = new List<string>();
-
-				// Check if item was added to any groups
-				foreach (string groupName in model.GetItemGroups(item)) {
-					if (!m_Items[item].ContainsKey(groupName)) {
-						AddItemToGroup(item, groupName);
-						groupsChanged = true;
+				lock (m_Items) {
+					
+					if (!m_Items.ContainsKey(item)) {
+						Console.Error.WriteLine("Item changed before being added: " + item);
+					//	model_ItemAdded(model, item);
+						return;
 					}
-				}
-				
-				// Check if item needs to be removed from any groups, redraw others.
-				// FIXME: Don't need to redraw items we just added.
-				lock (m_Items) {					
+					
+					List<string> toRemove = new List<string>();
+	
+					// Check if item was added to any groups
+					foreach (string groupName in model.GetItemGroups(item)) {
+						if (!m_Items[item].ContainsKey(groupName)) {
+							AddItemToGroup(item, groupName);
+							groupsChanged = true;
+						}
+					}
+					
+					// Check if item needs to be removed from any groups, redraw others.
+					// FIXME: Don't need to redraw items we just added.				
 					foreach (RosterItem<T> gitem in m_Items[item].Values) {
 						RosterItemGroup group = (RosterItemGroup)gitem.ParentItem();
 						var groups = model.GetItemGroups(item);
@@ -223,12 +230,12 @@ namespace Synapse.QtClient.Widgets
 							groupsChanged = true;
 						}
 					}
+					
+					foreach (string groupName in toRemove) {
+						RemoveItemFromGroup(item, groupName, false);
+					}
 				}
 				
-				foreach (string groupName in toRemove) {
-					RemoveItemFromGroup(item, groupName, false);
-				}
-
 				if (visibilityChanged || groupsChanged) {
 					ResizeAndRepositionGroups();
 				}				
@@ -474,11 +481,12 @@ namespace Synapse.QtClient.Widgets
 		}
 
 		void AddItem (T item)
-		{			
-			var groups = m_Model.GetItemGroups(item);
-		
-			foreach (string groupName in groups) {
-				AddItemToGroup(item, groupName);
+		{
+			lock (m_Items) {
+				var groups = m_Model.GetItemGroups(item);
+				foreach (string groupName in groups) {
+					AddItemToGroup(item, groupName);
+				}
 			}
 		}
 
@@ -528,20 +536,22 @@ namespace Synapse.QtClient.Widgets
 
 		void RemoveItem (T item)
 		{
-			foreach (var gitem in m_Items[item].Values) {
-				var group = (RosterItemGroup)gitem.ParentItem();
-				group.RemoveFromGroup(gitem);
-				m_Scene.RemoveItem(gitem);
+			lock (m_Items) {
+				foreach (var gitem in m_Items[item].Values) {
+					var group = (RosterItemGroup)gitem.ParentItem();
+					group.RemoveFromGroup(gitem);
+					m_Scene.RemoveItem(gitem);
+				}
+				
+				m_Items.Remove(item);
+	
+				ResizeAndRepositionGroups();
+	
+				// FIXME: stuck in a loop
+				//if (group.ChildItems().Count == 0) {
+				//	RemoveGroup(group);
+				//}
 			}
-			
-			m_Items.Remove(item);
-
-			ResizeAndRepositionGroups();
-
-			// FIXME: stuck in a loop
-			//if (group.ChildItems().Count == 0) {
-			//	RemoveGroup(group);
-			//}
 		}		
 
 		void HandleTooltipTimerTimeout()

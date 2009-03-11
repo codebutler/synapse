@@ -66,6 +66,7 @@ namespace Synapse.QtClient.Windows {
             verticalLayout.Margin = 0;
             this.textEdit = new Synapse.QtClient.Widgets.ConversationTextEdit(this.bottomContainer);
             this.textEdit.ObjectName = "textEdit";
+            this.textEdit.MinimumSize = new QSize(0, 40);
             this.textEdit.FrameShape = QFrame.Shape.NoFrame;
             verticalLayout.AddWidget(this.textEdit);
             this.splitter.AddWidget(this.bottomContainer);
