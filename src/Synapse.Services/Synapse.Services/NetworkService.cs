@@ -64,7 +64,7 @@ namespace Synapse.Services
     
     public delegate void NetworkStateChangeHandler (NetworkState state);
     
-    public class NetworkService : IService, IInitializeService
+    public class NetworkService : IService, IDelayedInitializeService
     {
         private const string BusName    = "org.freedesktop.NetworkManager";
         private const string ObjectPath = "/org/freedesktop/NetworkManager";
@@ -79,7 +79,7 @@ namespace Synapse.Services
 			}
         }
 		
-		public void Initialize ()
+		public void DelayedInitialize ()
 		{
 			if (Application.CommandLine.Contains("disable-dbus"))
 				return;

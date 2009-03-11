@@ -9,11 +9,11 @@ using Qyoto;
 
 namespace Synapse.QtClient
 {
-	public class OctyService : IService, IInitializeService
+	public class OctyService : IService, IDelayedInitializeService
 	{
 		static readonly string OCTYBOT_JID = "octy@extremeboredom.net";
 		
-		public void Initialize ()
+		public void DelayedInitialize ()
 		{
 			var accountService = ServiceManager.Get<AccountService>();
 			accountService.AccountReceivedRoster += HandleAccountReceivedRoster;

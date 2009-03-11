@@ -595,9 +595,9 @@ namespace Synapse.Xmpp
 			
 			// FIXME: Calling this in a separate thread so DNS doesn't block the UI.
 			// This should be fixed inside jabber-net.
-			new Thread(delegate () {
+			ThreadPool.QueueUserWorkItem(delegate {
 				m_Client.Connect();
-			}).Start();
+			});
 		}
 
 		public void SaveVCard ()

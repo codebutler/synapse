@@ -30,7 +30,7 @@ namespace Synapse.Services
 	public delegate void ActiveChangedHandler (bool new_value);
 	public delegate void SessionIdleChangedHandler (bool new_value);
 	
-	public class ScreensaverService : IService, IInitializeService
+	public class ScreensaverService : IService, IDelayedInitializeService
 	{
 		private const string BusName    = "org.gnome.ScreenSaver";
 		private const string ObjectPath = "/org/gnome/ScreenSaver";
@@ -192,7 +192,7 @@ namespace Synapse.Services
 			m_screenSaver.UnThrottle (throttleId);
 		}
 		
-		public void Initialize ()
+		public void DelayedInitialize ()
 		{
 			if (Application.CommandLine.Contains("disable-dbus"))
 				return;

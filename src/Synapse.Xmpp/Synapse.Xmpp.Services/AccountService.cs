@@ -25,6 +25,7 @@ using System.Xml.Serialization;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 using Mono.Addins;
 
@@ -39,7 +40,7 @@ using jabber.protocol.client;
 
 namespace Synapse.Xmpp.Services
 {
-	public class AccountService : IRequiredService, IInitializeService, IDisposable
+	public class AccountService : IRequiredService, IInitializeService, IDelayedInitializeService, IDisposable
 	{
 		List<Account> m_Accounts = new List<Account>();
 		string        m_FileName = Path.Combine(Paths.ApplicationData, "accounts.xml");
@@ -71,12 +72,24 @@ namespace Synapse.Xmpp.Services
 				}
 			}
 
+			/*
 			if (ServiceManager.Contains<ScreensaverService>()) {
 				ScreensaverService screensaver = ServiceManager.Get<ScreensaverService>();
 				screensaver.ActiveChanged +=HandleActiveChanged;
 			}
+			*/
 		}
 
+		public void DelayedInitialize ()
+		{
+			lock (m_Accounts) {	
+				foreach (Account account in m_Accounts) {
+					if (account.AutoConnect)
+						account.Connect();
+				}
+			}
+		}
+		
 		void HandleActiveChanged(bool isActive)
 		{
 			// FIXME:
@@ -94,9 +107,11 @@ namespace Synapse.Xmpp.Services
 
 		public void Dispose ()
 		{
-			foreach (Account account in m_Accounts)
-				if (account.ConnectionState != AccountConnectionState.Disconnected)
-					account.Disconnect();
+			lock (m_Accounts) {	
+				foreach (Account account in m_Accounts)
+					if (account.ConnectionState != AccountConnectionState.Disconnected)
+						account.Disconnect();
+			}
 		}
 		
 		public void AddAccount (Account account)
@@ -110,14 +125,12 @@ namespace Synapse.Xmpp.Services
 				m_Accounts.Add(account);
 			
 				if (AccountAdded != null) {
+					Console.WriteLine("Fire!");
 					AccountAdded(account);
 				}
 				
 				account.ConnectionStateChanged += HandleAccountConnectionStateChanged;
 				account.ReceivedRoster += HandleAccountReceivedRoster;
-
-				if (account.AutoConnect)
-					account.Connect();
 
 				if (save)
 					SaveAccounts();
@@ -146,21 +159,27 @@ namespace Synapse.Xmpp.Services
 		
 		public IList<Account> Accounts {
 			get {
-				return m_Accounts.AsReadOnly();
+				lock (m_Accounts) {	
+					return m_Accounts.AsReadOnly();
+				}
 			}
 		}
 
 		public IList<Account> ConnectedAccounts {
 			get {
-				return m_Accounts.FindAll(a => 
-              		a.ConnectionState == AccountConnectionState.Connected
-              	).AsReadOnly();
+				lock (m_Accounts) {	
+					return m_Accounts.FindAll(a => 
+	              		a.ConnectionState == AccountConnectionState.Connected
+              		).AsReadOnly();
+				}
 			}
 		}
 
 		public Account GetAccount(JID jid)
 		{
-			return m_Accounts.Find(a => a.Jid.Equals(jid));
+			lock (m_Accounts) {	
+				return m_Accounts.Find(a => a.Jid.Equals(jid));
+			}
 		}
 		
 		public void SaveAccounts ()

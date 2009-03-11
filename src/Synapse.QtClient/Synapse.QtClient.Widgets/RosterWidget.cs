@@ -391,32 +391,36 @@ namespace Synapse.QtClient.Widgets
 		
 		void HandleShoutHandlerAdded (IShoutHandler handler)
 		{
-			QCheckBox check = new ShoutHandlerCheckBox(handler, shoutHandlersContainer);
-			check.Checked = true;
-			shoutHandlersContainer.Layout().AddWidget(check);
-			
-			shoutHandlersBox.Show();
+			QApplication.Invoke(delegate {
+				QCheckBox check = new ShoutHandlerCheckBox(handler, shoutHandlersContainer);
+				check.Checked = true;
+				shoutHandlersContainer.Layout().AddWidget(check);
+				
+				shoutHandlersBox.Show();
+			});
 		}
 		
 		void HandleShoutHandlerRemoved (IShoutHandler handler)
 		{
-			for (int x = 0; x < shoutHandlersContainer.Layout().Count(); x++) {
-				var item = shoutHandlersContainer.Layout().ItemAt(x);
-				if (item is QWidgetItem) {
-					var check = ((ShoutHandlerCheckBox)((QWidgetItem)item).Widget());
-					if (check.Handler == handler) {
-						shoutHandlersContainer.Layout().RemoveWidget(check);
-						check.SetParent(null);
-						check.Dispose();
-						break;
+			QApplication.Invoke(delegate {
+				for (int x = 0; x < shoutHandlersContainer.Layout().Count(); x++) {
+					var item = shoutHandlersContainer.Layout().ItemAt(x);
+					if (item is QWidgetItem) {
+						var check = ((ShoutHandlerCheckBox)((QWidgetItem)item).Widget());
+						if (check.Handler == handler) {
+							shoutHandlersContainer.Layout().RemoveWidget(check);
+							check.SetParent(null);
+							check.Dispose();
+							break;
+						}
 					}
 				}
-			}
-			
-			var shoutService = ServiceManager.Get<ShoutService>();
-			if (shoutService.Handlers.Count() == 0) {
-				shoutHandlersBox.Hide();
-			}
+				
+				var shoutService = ServiceManager.Get<ShoutService>();
+				if (shoutService.Handlers.Count() == 0) {
+					shoutHandlersBox.Hide();
+				}
+			});
 		}
 		
 		#region Private Slots
@@ -578,15 +582,9 @@ namespace Synapse.QtClient.Widgets
 			}
 	
 			var feedService = ServiceManager.Get<ActivityFeedService>();
+			feedService.TemplateAdded += HandleTemplateAdded;
 			foreach (var template in feedService.Templates.Values) {
-				string category = (template.Category == null) ? null : template.Category.ToLower().Replace(" ", "-");
-				string js = Util.CreateJavascriptCall("ActivityFeed.addTemplate", template.Name, category, 
-				                                      template.SingularText, template.PluralText, template.IconUrl, 
-				                                      template.Actions);
-				var ret = m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
-				if (ret.IsNull() || !ret.ToBool()) {
-					throw new Exception("Failed to add template!\n" + js);
-				}
+				HandleTemplateAdded(template);
 			}
 
 			lock (m_FeedItemQueue) {
@@ -597,6 +595,20 @@ namespace Synapse.QtClient.Widgets
 			}
 		}
 	
+		void HandleTemplateAdded (ActivityFeedItemTemplate template)
+		{
+			QApplication.Invoke(delegate {
+				string category = (template.Category == null) ? null : template.Category.ToLower().Replace(" ", "-");
+				string js = Util.CreateJavascriptCall("ActivityFeed.addTemplate", template.Name, category, 
+								      template.SingularText, template.PluralText, template.IconUrl, 
+								      template.Actions);
+				var ret = m_ActivityWebView.Page().MainFrame().EvaluateJavaScript(js);
+				if (ret.IsNull() || !ret.ToBool()) {
+					throw new Exception("Failed to add template!\n" + js);
+				}
+			});
+		}
+
 		void HandleActivityLinkClicked (QUrl url)
 		{
 			try {

@@ -31,9 +31,9 @@ using Mono.Addins;
 
 namespace Synapse.Xmpp.Services
 {	
-	public class XmppService : IRequiredService, IInitializeService
+	public class XmppService : IRequiredService, IDelayedInitializeService
 	{
-		public void Initialize ()
+		public void DelayedInitialize ()
 		{			
 			global::OAuth.Xmpp.RequestProxies.XmppRequestProxy.Register();
 			

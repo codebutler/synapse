@@ -29,7 +29,7 @@ using Mono.Addins;
 
 namespace Synapse.Services
 {
-	public class NowPlayingService : IService, IInitializeService
+	public class NowPlayingService : IService, IDelayedInitializeService
 	{
 		bool   m_IsPlaying;
 		string m_Artist;
@@ -94,7 +94,7 @@ namespace Synapse.Services
 		}
 	#endregion
 	
-		public void Initialize ()
+		public void DelayedInitialize ()
 		{
 			AddinManager.AddExtensionNodeHandler("/Synapse/Services/NowPlaying/Providers", OnExtensionChanged);
 		}

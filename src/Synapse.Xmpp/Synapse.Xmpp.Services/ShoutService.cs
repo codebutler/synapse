@@ -31,14 +31,14 @@ namespace Synapse.Xmpp.Services
 {
 	public delegate void ShoutHandlerEventHandler (IShoutHandler handler);
 	
-	public class ShoutService : IRequiredService, IInitializeService
+	public class ShoutService : IRequiredService, IDelayedInitializeService
 	{
 		List<IShoutHandler> m_ShoutHandlers = new List<IShoutHandler>();
 		
 		public event ShoutHandlerEventHandler HandlerAdded;
 		public event ShoutHandlerEventHandler HandlerRemoved;
 		
-		public void Initialize ()
+		public void DelayedInitialize ()
 		{
 			var feed = ServiceManager.Get<ActivityFeedService>();
 			feed.AddTemplate("shout", "Friend Events", "shouts", "shout");

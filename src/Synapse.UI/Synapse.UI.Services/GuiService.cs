@@ -30,11 +30,11 @@ using Mono.Addins;
 
 namespace Synapse.UI.Services
 {
-	public class GuiService : IService, IRequiredService, IInitializeService
+	public class GuiService : IService, IRequiredService, IDelayedInitializeService
 	{
 		List<IMessageDisplayFormatter> m_MessageDisplayFormatters = new List<IMessageDisplayFormatter>();
 		
-		public void Initialize ()
+		public void DelayedInitialize ()
 		{
 			foreach (TypeExtensionNode node in AddinManager.GetExtensionNodes("/Synapse/UI/Chat/MessageDisplayFormatters")) {
 				var formatter = (IMessageDisplayFormatter)node.CreateInstance();

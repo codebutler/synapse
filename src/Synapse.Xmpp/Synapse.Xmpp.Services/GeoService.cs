@@ -29,11 +29,11 @@ using jabber;
 
 namespace Synapse.Xmpp.Services
 {
-	public class GeoService : IRequiredService, IInitializeService
+	public class GeoService : IRequiredService, IDelayedInitializeService
 	{	
 		Dictionary<JID, UserLocation> m_Locations;
 		
-		public void Initialize ()
+		public void DelayedInitialize ()
 		{
 			m_Locations = new Dictionary<JID, UserLocation>();
 		}

@@ -33,12 +33,17 @@ using Twitter;
 
 namespace Synapse.Addins.Twitter
 {	
-	public class TwitterService  : IExtensionService, IInitializeService
+	public class TwitterService  : IExtensionService, IDelayedInitializeService
 	{
 		Dictionary<string, TwitterAccountHandler> m_TwitterAccounts = new Dictionary<string, TwitterAccountHandler>();
 		List<int> m_SeenIds = new List<int>();
-		
+
 		public void Initialize ()
+		{
+			
+		}
+		
+		public void DelayedInitialize ()
 		{
 			#region Feed Templates
 			var replyAction = new NotificationAction() {
@@ -71,15 +76,13 @@ namespace Synapse.Addins.Twitter
 			}, replyAction);
 
 			#endregion
-			
-			Application.Client.Started += delegate {
-				var accountService = ServiceManager.Get<AccountService>();
-				accountService.AccountAdded   += HandleAccountAdded;
-				accountService.AccountRemoved += HandleAccountRemoved;
-				foreach (Account account in accountService.Accounts) {
-					HandleAccountAdded(account);
-				}
-			};
+
+			var accountService = ServiceManager.Get<AccountService>();
+			accountService.AccountAdded   += HandleAccountAdded;
+			accountService.AccountRemoved += HandleAccountRemoved;
+			foreach (Account account in accountService.Accounts) {
+				HandleAccountAdded(account);
+			}
 		}
 
 		public void AddStatus (AbstractTwitterItem status)

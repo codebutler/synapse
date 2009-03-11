@@ -31,11 +31,16 @@ using Wilco.SyntaxHighlighting;
 
 namespace Synapse.Addins.CodeSnippets
 {	
-	public class CodeSnippetsService : IExtensionService
+	public class CodeSnippetsService : IExtensionService, IDelayedInitializeService
 	{
 		public static readonly string CODE_NS = "http://synapse.im/protocol/code";
 		
 		public void Initialize ()
+		{
+
+		}
+
+		public void DelayedInitialize ()
 		{
 			var htmlParser = new HtmlParser();
 			foreach (var highlighter in Highlighters)

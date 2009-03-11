@@ -30,15 +30,17 @@ using Mono.Addins;
 
 namespace Synapse.Services
 {
-	public class ActivityFeedService : IService, IRequiredService, IInitializeService
+	public class ActivityFeedService : IService, IRequiredService, IDelayedInitializeService
 	{
+		public delegate void ActivityFeedTemplateEventHandler (ActivityFeedItemTemplate template);
 		public delegate void ActivityFeedItemEventHandler (IActivityFeedItem item);
 
 		Queue<IActivityFeedItem> m_Queue = new Queue<IActivityFeedItem>();
 		
 		public event ActivityFeedItemEventHandler NewItem;
+		public event ActivityFeedTemplateEventHandler TemplateAdded;
 		
-		public void Initialize ()
+		public void DelayedInitialize ()
 		{
 			AddTemplate("synapse", null, "{0}", "{0}");
 			
@@ -76,7 +78,12 @@ namespace Synapse.Services
 			bool showInMainWindow = (options.ContainsKey("ShowInMainWindow") && ((bool)options["ShowInMainWindow"]) == true);
 			string iconUrl        = (options.ContainsKey("IconUrl") ? (string)options["IconUrl"] : null);
 
-			m_Templates.Add(name, new ActivityFeedItemTemplate(name, category, singularText, pluralText, desktopNotify, showInMainWindow, iconUrl, actions));
+			var template = new ActivityFeedItemTemplate(name, category, singularText, pluralText, desktopNotify, showInMainWindow, iconUrl, actions);
+
+			m_Templates.Add(name, template);
+
+			if (TemplateAdded != null)
+				TemplateAdded(template);
 		}
 
 		public void PostItem (IActivityFeedItem item)
