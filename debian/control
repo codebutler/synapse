@@ -13,8 +13,8 @@ Build-Depends: cli-common-dev (>= 0.5.7),
 	       libmono-cairo1.0-cil,
 	       libmono-cairo2.0-cil,
 	       libmono-addins0.2-cil,
-	       libqyoto4.4-cil,
-	       libqtwebkit2.2-cil
+	       libqyoto4.4-cil (>= 4:4.2.1-0ubuntu2~ppa0~intrepid0),
+	       libqtwebkit2.2-cil (>= 4:4.2.1-0ubuntu2~ppa0~intrepid0)
 Standards-Version: 3.8.0
 Homepage: http://synapse.im/
 
