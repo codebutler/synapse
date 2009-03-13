@@ -77,6 +77,16 @@ namespace Synapse.QtClient.Widgets
 				base.SetAcceptDrops(true);
 			}
 
+			~RosterItemGroup ()
+			{
+				m_FadeAnimationTimeLine.Stop();
+				m_MoveAnimationTimeLine.Stop();
+				m_FadeAnimation = null;
+				m_FadeAnimationTimeLine = null;
+				m_MoveAnimation = null;
+				m_MoveAnimationTimeLine = null;
+			}
+			
 			public double Opacity {
 				get {
 					return m_Opacity;

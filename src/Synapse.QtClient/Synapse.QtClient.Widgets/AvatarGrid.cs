@@ -295,18 +295,24 @@ namespace Synapse.QtClient.Widgets
 
 		private void RemoveGroup (string groupName)
 		{
-			RosterItemGroup group = (RosterItemGroup) m_Groups[groupName];
-			RemoveGroup(group);
+			lock (m_Groups) {
+				RosterItemGroup group = (RosterItemGroup) m_Groups[groupName];
+				RemoveGroup(group);
+			}
 		}
 
 		void RemoveGroup (RosterItemGroup group)
 		{		
-			m_Groups.Remove(group.Name);
+			lock (m_Groups) {
+				m_Groups.Remove(group.Name);
+			}
 
 			foreach (var child in group.Children()) {
-				if (child is RosterItem<T>)
+				if (child is RosterItem<T>) {
 					RemoveItemFromGroup(((RosterItem<T>)child).Item, group.Name, false);
+				}
 			}
+
 			m_Scene.DestroyItemGroup(group);
 
 			ResizeAndRepositionGroups();

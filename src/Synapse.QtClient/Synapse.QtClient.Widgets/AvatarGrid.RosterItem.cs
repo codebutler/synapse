@@ -64,6 +64,16 @@ namespace Synapse.QtClient.Widgets
 				base.SetAcceptHoverEvents(true);
 			}
 
+			~RosterItem ()
+			{
+				m_FadeAnimationTimeLine.Stop();
+				m_MoveAnimationTimeLine.Stop();
+				m_FadeAnimation = null;
+				m_FadeAnimationTimeLine = null;
+				m_MoveAnimation = null;
+				m_MoveAnimationTimeLine = null;
+			}
+
 			public T Item {
 				get {
 					return m_Item;
