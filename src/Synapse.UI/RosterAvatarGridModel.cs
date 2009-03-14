@@ -282,10 +282,12 @@ namespace Synapse.UI
 				lock (m_Items) {
 					m_Items.Clear();
 					foreach (Account account in m_AccountService.Accounts) {
-						lock (account.Roster) {
-							foreach (JID jid in account.Roster) {
-								var item = account.Roster[jid];
-								AddItem(account, item);
+						if (account.ConnectionState == AccountConnectionState.Connected) {
+							lock (account.Roster) {
+								foreach (JID jid in account.Roster) {
+									var item = account.Roster[jid];
+									AddItem(account, item);
+								}
 							}
 						}
 					}
