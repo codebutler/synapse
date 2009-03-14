@@ -64,16 +64,6 @@ namespace Synapse.QtClient.Widgets
 				base.SetAcceptHoverEvents(true);
 			}
 
-			~RosterItem ()
-			{
-				m_FadeAnimationTimeLine.Stop();
-				m_MoveAnimationTimeLine.Stop();
-				m_FadeAnimation = null;
-				m_FadeAnimationTimeLine = null;
-				m_MoveAnimation = null;
-				m_MoveAnimationTimeLine = null;
-			}
-
 			public T Item {
 				get {
 					return m_Item;
@@ -138,6 +128,30 @@ namespace Synapse.QtClient.Widgets
 				get {
 					return (m_Grid.HoverItem != null && m_Grid.HoverItem.Equals(m_Item));
 				}
+			}
+
+			public void Remove (bool resizeAndReposition)
+			{
+				m_FadeAnimationTimeLine.Stop();
+				m_MoveAnimationTimeLine.Stop();
+				m_FadeAnimation = null;
+				m_FadeAnimationTimeLine = null;
+				m_MoveAnimation = null;
+				m_MoveAnimationTimeLine = null;
+
+				var group = (RosterItemGroup)base.ParentItem();
+				group.RemoveFromGroup(this);
+				m_Grid.Scene().RemoveItem(this);
+
+				lock (m_Grid.m_Items) {
+					m_Grid.m_Items[this.Item].Remove(group.Name);
+					if (m_Grid.m_Items[this.Item].Count == 0) {
+						m_Grid.m_Items.Remove(this.Item);
+					}
+				}
+
+				if (resizeAndReposition)
+					m_Grid.ResizeAndRepositionGroups();
 			}
 
 			protected override void MousePressEvent (Qyoto.QGraphicsSceneMouseEvent arg1)

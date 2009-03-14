@@ -76,16 +76,6 @@ namespace Synapse.QtClient.Widgets
 				base.SetAcceptHoverEvents(true);
 				base.SetAcceptDrops(true);
 			}
-
-			~RosterItemGroup ()
-			{
-				m_FadeAnimationTimeLine.Stop();
-				m_MoveAnimationTimeLine.Stop();
-				m_FadeAnimation = null;
-				m_FadeAnimationTimeLine = null;
-				m_MoveAnimation = null;
-				m_MoveAnimationTimeLine = null;
-			}
 			
 			public double Opacity {
 				get {
@@ -136,6 +126,30 @@ namespace Synapse.QtClient.Widgets
 				m_MoveAnimation.SetPosAt(1, pos);
 				m_MoveAnimationTimeLine.Start();
 			}			
+
+			public void Remove ()
+			{
+				m_FadeAnimationTimeLine.Stop();
+				m_MoveAnimationTimeLine.Stop();
+				m_FadeAnimation = null;
+				m_FadeAnimationTimeLine = null;
+				m_MoveAnimation = null;
+				m_MoveAnimationTimeLine = null;
+
+				lock (m_Grid.m_Groups) {
+					m_Grid.m_Groups.Remove(this.Name);
+				}
+
+				foreach (var child in base.Children()) {
+					if (child is RosterItem<T>) {
+						((RosterItem<T>)child).Remove(false);
+					}
+				}
+
+				m_Grid.Scene().DestroyItemGroup(this);
+
+				m_Grid.ResizeAndRepositionGroups();
+			}
 			
 			public override QRectF BoundingRect ()
 			{

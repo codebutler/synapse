@@ -249,7 +249,7 @@ namespace Synapse.QtClient.Widgets
 				
 				lock (m_Groups) {
 					foreach (var groupItem in m_Groups.Values.ToArray()) {
-						RemoveGroup(groupItem);
+						groupItem.Remove();
 					}
 					if (m_Groups.Count > 0) {
 						throw new Exception(String.Format("Something went wrong, groups should be empty, had {0}!", m_Groups.Count));
@@ -297,25 +297,8 @@ namespace Synapse.QtClient.Widgets
 		{
 			lock (m_Groups) {
 				RosterItemGroup group = (RosterItemGroup) m_Groups[groupName];
-				RemoveGroup(group);
+				group.Remove();
 			}
-		}
-
-		void RemoveGroup (RosterItemGroup group)
-		{		
-			lock (m_Groups) {
-				m_Groups.Remove(group.Name);
-			}
-
-			foreach (var child in group.Children()) {
-				if (child is RosterItem<T>) {
-					RemoveItemFromGroup(((RosterItem<T>)child).Item, group.Name, false);
-				}
-			}
-
-			m_Scene.DestroyItemGroup(group);
-
-			ResizeAndRepositionGroups();
 		}
 
 		IEnumerable<RosterItemGroup> SortedGroups {
@@ -528,12 +511,7 @@ namespace Synapse.QtClient.Widgets
 		{			
 			lock (m_Items) {
 				var graphicsItem = m_Items[item][groupName];
-				var group = (RosterItemGroup)graphicsItem.ParentItem();
-				group.RemoveFromGroup(graphicsItem);
-				m_Scene.RemoveItem(graphicsItem);
-				m_Items[item].Remove(groupName);
-				if (m_Items[item].Count == 0)
-					m_Items.Remove(item);
+				graphicsItem.Remove(false);
 			}
 
 			if (resizeAndReposition)
@@ -544,20 +522,16 @@ namespace Synapse.QtClient.Widgets
 		{
 			lock (m_Items) {
 				foreach (var gitem in m_Items[item].Values) {
-					var group = (RosterItemGroup)gitem.ParentItem();
-					group.RemoveFromGroup(gitem);
-					m_Scene.RemoveItem(gitem);
+					gitem.Remove(false);
 				}
 				
-				m_Items.Remove(item);
-	
-				ResizeAndRepositionGroups();
-	
 				// FIXME: stuck in a loop
 				//if (group.ChildItems().Count == 0) {
 				//	RemoveGroup(group);
 				//}
 			}
+
+			ResizeAndRepositionGroups();
 		}		
 
 		void HandleTooltipTimerTimeout()
