@@ -19,12 +19,13 @@ clean::
 REV_NUM=$(shell git rev-list HEAD | wc -l | sed "s/[ \t]//g")
 REV=$(shell git rev-list HEAD^!)
 DATE=$(shell date --rfc-2822)
+DIST=$(shell lsb_release -c -s)
 
 update-version:
 	echo "\
-synapse (0.1-0+git${REV_NUM}-0) `lsb_release -c -s`; urgency=low\n\
+synapse (0.1-0+git${REV_NUM}-1~${DIST}0) ${DIST}; urgency=low\n\
 \n\
   * Automatic package for revision ${REV}. \n\
 \n\
  -- Eric Butler <eric@extremeboredom.net>  ${DATE}" > debian/changelog
-	echo "\n\n*** PACKAGE WILL BE BUILT FOR `lsb_release -c -s` ***\n\n"
+	echo "\n\n*** PACKAGE WILL BE BUILT FOR ${DIST} ***\n\n"
