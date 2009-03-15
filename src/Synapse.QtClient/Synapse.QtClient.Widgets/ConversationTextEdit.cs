@@ -78,8 +78,10 @@ namespace Synapse.QtClient.Widgets
 						var italic = format.FontItalic();
 						var strike = format.FontStrikeOut();
 						
-						if (!String.IsNullOrEmpty(link))
+						if (!String.IsNullOrEmpty(link)) {
+							link = Util.EscapeHtml(link);
 							builder.AppendFormat("<a href=\"{0}\" title=\"{0}\">", link);
+						}
 
 						if (bold) builder.Append("<b>");						
 						if (underline) builder.Append("<u>");
