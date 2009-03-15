@@ -184,7 +184,10 @@ namespace Synapse.QtClient
 			
 		public override void Dispose ()
 		{
-			QCoreApplication.Quit();
+			// FIXME: This isn't enough... so we have to resort to more drastic measures below.
+			// Likely Qyoto bug.
+			QCoreApplication.Quit();			
+			System.Diagnostics.Process.GetCurrentProcess().Kill();
 		}
 	}
 }
