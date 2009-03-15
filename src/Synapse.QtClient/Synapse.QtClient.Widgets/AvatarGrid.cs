@@ -216,7 +216,7 @@ namespace Synapse.QtClient.Widgets
 					
 					// Check if item needs to be removed from any groups, redraw others.
 					// FIXME: Don't need to redraw items we just added.				
-					foreach (RosterItem<T> gitem in m_Items[item].Values) {
+					foreach (RosterItem<T> gitem in m_Items[item].Values.ToArray()) {
 						RosterItemGroup group = (RosterItemGroup)gitem.ParentItem();
 						var groups = model.GetItemGroups(item);
 						if (groups.Contains(group.Name) || (groups.Count() == 0 && group.Name == "No Group")) {
@@ -521,7 +521,7 @@ namespace Synapse.QtClient.Widgets
 		void RemoveItem (T item)
 		{
 			lock (m_Items) {
-				foreach (var gitem in m_Items[item].Values) {
+				foreach (var gitem in m_Items[item].Values.ToArray()) {
 					gitem.Remove(false);
 				}
 				
