@@ -63,6 +63,8 @@ namespace Synapse.QtClient.Windows
 				break;
 			}
 			
+			buttonBox.StandardButtons = (uint)QDialogButtonBox.StandardButton.Ok | (uint)QDialogButtonBox.StandardButton.Cancel;
+			
 			Gui.CenterWidgetOnScreen(this);
 		}
 
