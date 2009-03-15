@@ -34,11 +34,14 @@ namespace Synapse.Services
 	{
 		public delegate void ActivityFeedTemplateEventHandler (ActivityFeedItemTemplate template);
 		public delegate void ActivityFeedItemEventHandler (IActivityFeedItem item);
+		public delegate void ActivityFeedCategoryEventHandler (string category);
 
+		List<string> m_Categories = new List<string>();
 		Queue<IActivityFeedItem> m_Queue = new Queue<IActivityFeedItem>();
 		
 		public event ActivityFeedItemEventHandler NewItem;
-		public event ActivityFeedTemplateEventHandler TemplateAdded;
+		public event ActivityFeedCategoryEventHandler CategoryAdded;
+		public event ActivityFeedTemplateEventHandler TemplateAdded;		
 		
 		public void DelayedInitialize ()
 		{
@@ -60,10 +63,7 @@ namespace Synapse.Services
 
 		public IEnumerable<string> Categories {
 			get {
-				foreach (string category in m_Templates.Values.Select(t => t.Category).Distinct()) {
-					if (category != null)
-						yield return category;
-				}
+				return m_Categories.AsReadOnly();
 			}
 		}
 
@@ -82,6 +82,12 @@ namespace Synapse.Services
 
 			m_Templates.Add(name, template);
 
+			if (!String.IsNullOrEmpty(category) && !m_Categories.Contains(category)) {
+				m_Categories.Add(category);
+				if (CategoryAdded != null)
+					CategoryAdded(category);
+			}
+			
 			if (TemplateAdded != null)
 				TemplateAdded(template);
 		}

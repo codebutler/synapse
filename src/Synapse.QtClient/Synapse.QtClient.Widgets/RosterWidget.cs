@@ -263,11 +263,13 @@ namespace Synapse.QtClient.Widgets
 					}
 				}
 			};
+			feedService.CategoryAdded += delegate (string category) {
+				QApplication.Invoke(delegate {
+					HandleCategoryAdded(category);
+				});
+			};
 			foreach (string category in feedService.Categories) {
-				QAction action = new QAction(category, m_FeedFilterMenu);
-				action.Checkable = true;
-				action.Checked = true;
-				m_FeedFilterMenu.AddAction(action);
+				HandleCategoryAdded(category);
 			}
 		}
 	
@@ -609,6 +611,14 @@ namespace Synapse.QtClient.Widgets
 			});
 		}
 
+		void HandleCategoryAdded (string category)
+		{
+			QAction action = new QAction(category, m_FeedFilterMenu);
+			action.Checkable = true;
+			action.Checked = true;
+			m_FeedFilterMenu.AddAction(action);
+		}
+		
 		void HandleActivityLinkClicked (QUrl url)
 		{
 			try {
