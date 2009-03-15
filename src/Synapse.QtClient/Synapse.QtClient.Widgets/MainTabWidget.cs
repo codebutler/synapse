@@ -54,7 +54,7 @@ namespace Synapse.QtClient.Widgets
 		
 		class TabBar : QFrame
 		{
-			Tab m_LastTab;
+			Tab m_FirstTab, m_LastTab;
 			
 			public TabBar (MainTabWidget parent) : base (parent)
 			{				
@@ -64,14 +64,18 @@ namespace Synapse.QtClient.Widgets
 				layout.Spacing = 0;
 				layout.Margin = 0;
 				layout.AddStretch(1);
+				layout.AddWidget(new QSizeGrip(this), 0, (uint)AlignmentFlag.AlignBottom);
 				
 				base.MinimumWidth = 0;
 			}
 			
 			public int CurrentIndex {
 				set {
+					if (value < 0 || value > base.Layout().Count() - 2)
+						return;
+					
 					for (int x = 0; x < base.Layout().Count(); x++) {
-						var tab = (Tab)base.Layout().ItemAt(x).Widget();
+						var tab = (base.Layout().ItemAt(x).Widget() as Tab);;
 						if (tab != null)
 							tab.Selected = (x == value);
 					}
@@ -81,19 +85,21 @@ namespace Synapse.QtClient.Widgets
 			public void AddTab (string text)
 			{
 				var layout = (QHBoxLayout)base.Layout();
-				var stretch = layout.TakeAt(layout.Count() -1);
 
 				var tab = new Tab(text, this);
 				tab.Clicked += HandleTabClicked;
-				((QHBoxLayout)base.Layout()).AddWidget(tab, 0);
+				((QHBoxLayout)base.Layout()).InsertWidget(layout.Count() - 2, tab, 0);
 
 				if (m_LastTab != null)
 					m_LastTab.Last = false;
 				
+				if (m_FirstTab == null) {
+					tab.First = true;
+					m_FirstTab = tab;
+				}
+				
 				tab.Last = true;
 				m_LastTab = tab;
-				
-				layout.AddItem(stretch);
 			}
 			
 			public void ReloadStylesheet ()
@@ -109,6 +115,7 @@ namespace Synapse.QtClient.Widgets
 			
 			class Tab : QLabel 
 			{
+				bool m_First = false;
 				bool m_Last = false;
 				bool m_Selected = false;
 				
@@ -130,6 +137,17 @@ namespace Synapse.QtClient.Widgets
 						((TabBar)base.Parent()).ReloadStylesheet();
 					}
 				}
+				
+				[Q_PROPERTY("bool", "First")]
+				public bool First {
+					get {
+						return m_First;
+					}
+					set {
+						m_First = value;
+						((TabBar)base.Parent()).ReloadStylesheet();
+					}
+				}				
 				
 				[Q_PROPERTY("bool", "Last")]
 				public bool Last {

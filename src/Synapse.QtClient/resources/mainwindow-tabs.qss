@@ -2,10 +2,7 @@ MainTabWidget TabBar {
 	border-top: 1px solid #1B1B1B;
 	padding-top: -1px;
 	padding-left: 5px;
-	padding-bottom: 5px;
-	padding-right: 5px;
 }
-
 
 MainTabWidget Tab[Selected="false"] {
 	background: transparent;
@@ -16,7 +13,7 @@ MainTabWidget Tab[Selected="false"] {
 	margin-left: 1px;
 	margin-right: 0px;
 	margin-top: 0px;
-	margin-bottom: 1px;
+	margin-bottom: 6px;
 	
 	border: 0px;
 }
@@ -38,5 +35,10 @@ MainTabWidget Tab[Selected="true"] {
 	margin-left: 0px; 
 	margin-top: 0px; 
 	margin-right: 0px;
-	margin-bottom: 0px;
+	margin-bottom: 5px;
+}
+
+MainTabWidget Tab[Selected="true"][First="false"] {
+	margin-left: -1px;
+	padding-left: 9px;
 }
