@@ -38,6 +38,7 @@ namespace Synapse.QtClient.Windows
 		{
 			SetupUi();
 		
+			buttonBox.StandardButtons = (uint)QDialogButtonBox.StandardButton.Ok | (uint)QDialogButtonBox.StandardButton.Cancel | (uint)QDialogButtonBox.StandardButton.Close;
 			buttonBox.Button(QDialogButtonBox.StandardButton.Close).Hide();
 			buttonBox.Button(QDialogButtonBox.StandardButton.Ok).Text = "&Invite";
 			
