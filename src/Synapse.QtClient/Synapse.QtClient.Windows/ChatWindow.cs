@@ -474,15 +474,18 @@ namespace Synapse.QtClient.Windows
 		
 		bool HandleKeyEvent(QKeyEvent kevent)
 		{
-			if ((kevent.Modifiers() & (uint)Qt.KeyboardModifier.ControlModifier) == 0 && kevent.Key() == (int)Qt.Key.Key_Return || kevent.Key() == (int)Qt.Key.Key_Enter) {
-				string html = textEdit.ToHtml();			
-				if (m_Handler is ChatHandler) {
-					string resource = m_ToComboBox.ItemData(m_ToComboBox.CurrentIndex);
-					((ChatHandler)m_Handler).Resource = (resource == "auto") ? null : resource;
+			if (kevent.Key() == (int)Qt.Key.Key_Return || kevent.Key() == (int)Qt.Key.Key_Enter) {
+				if ((kevent.Modifiers() & (uint)Qt.KeyboardModifier.ControlModifier) == 0) {
+					string html = textEdit.ToHtml();			
+					if (m_Handler is ChatHandler) {
+						string resource = m_ToComboBox.ItemData(m_ToComboBox.CurrentIndex);
+						((ChatHandler)m_Handler).Resource = (resource == "auto") ? null : resource;
+					}					
+					m_Handler.Send(html);
+					textEdit.Clear();
+				} else {
+					textEdit.TextCursor().InsertText("\n");
 				}
-				
-				m_Handler.Send(html);
-				textEdit.Clear();
 				return true;
 			} else {
 				return false;
