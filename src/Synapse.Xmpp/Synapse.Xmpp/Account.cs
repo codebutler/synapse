@@ -243,7 +243,7 @@ namespace Synapse.Xmpp
 			RequestVCard(Jid, delegate (object o, IQ iq, object data) {
 				VCard vcard = (VCard) iq["vCard"];
 				bool noVCard = false;
-				if (iq.Type == IQType.error || vcard.ChildNodes.Count == 0) {
+				if (iq == null || iq.Type == IQType.error || vcard.ChildNodes == null || vcard.ChildNodes.Count == 0) {
 					noVCard = true;
 				}
 
