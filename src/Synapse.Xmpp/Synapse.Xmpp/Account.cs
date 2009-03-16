@@ -241,15 +241,20 @@ namespace Synapse.Xmpp
 
 			// Request own vcard.
 			RequestVCard(Jid, delegate (object o, IQ iq, object data) {
-				VCard vcard = (VCard) iq["vCard"];
-				bool noVCard = false;
-				if (iq == null || iq.Type == IQType.error || vcard.ChildNodes == null || vcard.ChildNodes.Count == 0) {
-					noVCard = true;
+				VCard vcard = null;
+								
+				if (iq != null && iq.Type != IQType.error) {
+					vcard = iq["vCard"] as VCard;
+					if (vcard != null) {
+						if (vcard.ChildNodes == null || vcard.ChildNodes.Count == 0) {
+							vcard = null;
+						}
+					}
 				}
 
 				m_MyVCard = vcard;
 
-				if (noVCard) {
+				if (vcard == null) {
 					// FIXME: Raise an event telling user to fill out profile!
 					Console.WriteLine("No VCard!");
 				} else {
