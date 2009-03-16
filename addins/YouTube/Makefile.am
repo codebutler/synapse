@@ -1,5 +1,5 @@
 # Begin MonoDevelop-maintained variables
-
+EXTRA_DIST = $(FILES) $(RESOURCES)
 FILES = YouTubeMessageDisplayFormatter.cs 
 
 RESOURCES =  \
