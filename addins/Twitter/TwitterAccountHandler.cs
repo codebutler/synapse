@@ -44,6 +44,7 @@ namespace Synapse.Addins.Twitter
 		public TwitterAccountHandler (string username, string password)
 		{
 			m_Twitter = new TwitterClient(username, password);
+			m_Twitter.Source = "synapse";
 
 			// Only show messages within the last 15 minutes.
 			m_Twitter.FriendsTimelineLastCheckedAt = DateTime.Now.ToUniversalTime() - new TimeSpan(0, 15, 0);

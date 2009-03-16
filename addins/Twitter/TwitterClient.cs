@@ -79,6 +79,11 @@ namespace Twitter
 				m_Password = value;
 			}
 		}
+		
+		public string Source {
+			get;
+			set;
+		}
 
 		public IEnumerable<AbstractTwitterItem> FriendsAndRepliesAndMessages(bool since)
 		{
@@ -160,10 +165,17 @@ namespace Twitter
 		
 		T Request<T> (string url, Dictionary<string,string> args, bool post)
 		{
+			if (!String.IsNullOrEmpty(this.Source)) {
+				args.Add("source", this.Source);
+			}
+			
 			string argsString = String.Empty;
 			if (args != null && args.Count > 0) {
-				foreach (var arg in args)
+				foreach (var arg in args) {
+					if (!String.IsNullOrEmpty(argsString))
+						argsString += "&";
 					argsString += HttpUtility.UrlEncode(arg.Key) + "=" + HttpUtility.UrlEncode(arg.Value);
+				}
 			}
 
 			HttpWebRequest request = null;
