@@ -99,14 +99,11 @@ namespace Synapse.QtClient.Windows
 			
 			this.SetGeometry(0, 0, 445, 370);
 			Gui.CenterWidgetOnScreen(this);
-
-			var closeShortcuts = new [] { "Ctrl+w", "Esc" };
-			closeShortcuts.ForEach(shortcut => {
-				QAction closeAction = new QAction(this);
-				QObject.Connect<bool>(closeAction, Qt.SIGNAL("triggered(bool)"), HandleCloseActionTriggered);
-				closeAction.Shortcut = new QKeySequence(shortcut);
-				this.AddAction(closeAction);
-			});
+	
+			QAction closeAction = new QAction(this);
+			QObject.Connect<bool>(closeAction, Qt.SIGNAL("triggered(bool)"), HandleCloseActionTriggered);
+			closeAction.Shortcut = new QKeySequence("Ctrl+w");
+			this.AddAction(closeAction);
 
 			0.UpTo(9).ForEach(num => {
 				QAction action = new QAction(this);
