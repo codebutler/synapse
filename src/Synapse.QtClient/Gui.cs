@@ -124,18 +124,23 @@ namespace Synapse.QtClient
 
 		public static QIcon LoadIcon (string name)
 		{
-			if (Gtk.IconTheme.Default == null)
-				throw new InvalidOperationException("No Default IconTheme");
-
 			QIcon icon = new QIcon();
-			int[] sizes = Gtk.IconTheme.Default.GetIconSizes(name);
-			if (sizes.Length > 0) {
-				foreach (int size in sizes) {
-					var iconInfo = Gtk.IconTheme.Default.LookupIcon(name, size, 0);
-					icon.AddFile(iconInfo.Filename, new QSize(size, size), QIcon.Mode.Normal, QIcon.State.On);
+			int[] sizes = null;
+			
+			// FIXME: Need to remove Gtk dependency.
+			if (Gtk.IconTheme.Default != null) {
+				sizes = Gtk.IconTheme.Default.GetIconSizes(name);
+				if (sizes != null && sizes.Length > 0) {
+					foreach (int size in sizes) {
+						var iconInfo = Gtk.IconTheme.Default.LookupIcon(name, size, 0);
+						if (iconInfo != null)
+							icon.AddFile(iconInfo.Filename, new QSize(size, size), QIcon.Mode.Normal, QIcon.State.On);
+					}
 				}
-			} else {			
-				// If icon wasn't found in theme, try loading from resource instead...
+			}
+			
+			// If icon wasn't found in theme, try loading from resource instead...
+			if (sizes == null || sizes.Length == 0 || icon.IsNull()) {
 				var assembly = Assembly.GetExecutingAssembly();
 				foreach (string resourceName in assembly.GetManifestResourceNames()) {
 					string pattern =  "^" + Regex.Escape(name) + @"__(\d+)\.png$";
@@ -149,6 +154,7 @@ namespace Synapse.QtClient
 					Console.WriteLine(String.Format("Icon not found: {0}", name));
 				}
 			}
+			
 			return icon;
 		}
 		
