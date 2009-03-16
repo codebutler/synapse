@@ -115,6 +115,7 @@ RESOURCES =  \
 	resources/simple-search.png \
 	resources/stock_icons/internet-group-chat__16.png \
 	resources/stock_icons/internet-group-chat__24.png \
+	resources/stock_icons/internet-group-chat__32.png \
 	resources/stock-close_12.png \
 	resources/Template.html \
 	resources/text.png \

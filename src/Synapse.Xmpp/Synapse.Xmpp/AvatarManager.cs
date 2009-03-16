@@ -134,6 +134,11 @@ namespace Synapse.Xmpp
 			return s_DefaultAvatarImage;
 		}
 		
+		public static string GetAvatarFileName (JID jid)
+		{
+			return AvatarFileName(GetAvatarHash(jid));
+		}
+		
 		void HandleOnPresence(object sender, Presence pres)
 		{			
 			// Make sure this isn't related to a MUC at all. 

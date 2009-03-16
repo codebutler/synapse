@@ -137,6 +137,7 @@
     <File name="resources/addocty.html" subtype="Code" buildaction="EmbedAsResource" />
     <File name="resources/octyaddme.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="qt-gui/AddOctyDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="resources/stock_icons/internet-group-chat__32.png" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/jabber-net.dll" />
