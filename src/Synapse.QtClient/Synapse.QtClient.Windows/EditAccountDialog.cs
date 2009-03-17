@@ -39,8 +39,6 @@ namespace Synapse.QtClient.Windows
 		{
 			SetupUi();
 			
-			QObject.Connect(this, Qt.SIGNAL("accepted()"), HandleDialogAccepted);
-			
 			m_Account = account;
 			
 			jidLineEdit.Text = account.Jid.Bare;
@@ -58,19 +56,30 @@ namespace Synapse.QtClient.Windows
 			Gui.CenterWidgetOnScreen(this);
 		}
 		
-		void HandleDialogAccepted ()
+		public override void Accept ()
 		{
+			bool error = false;
 			JID jid = null;
-			if (!JID.TryParse(jidLineEdit.Text, out jid))
+			if (!JID.TryParse(jidLineEdit.Text, out jid)) {
 				QMessageBox.Critical(this, "Problem saving account", "JID is invalid");
-			else if (String.IsNullOrEmpty(jid.User))
+				error = true;
+			} else if (String.IsNullOrEmpty(jid.User)) {
 				QMessageBox.Critical(this, "Problem saving account", "JID must have a username");
-			else if (String.IsNullOrEmpty(jid.Server))
+				error = true;
+			} else if (String.IsNullOrEmpty(jid.Server)) {
 				QMessageBox.Critical(this, "Problem saving account", "JID must have a server");
-			else if (resourceCombo.CurrentText.Trim() == String.Empty)
+				error = true;
+			} else if (resourceCombo.CurrentText.Trim() == String.Empty) {
 				QMessageBox.Critical(this, "Problem saving account", "Password may not be blank");
-			else if (resourceCombo.CurrentText.Trim() == String.Empty)
+				error = true;
+			} else if (resourceCombo.CurrentText.Trim() == String.Empty) {
 				QMessageBox.Critical(this, "Problem saving account", "Resource may not be blank");
+				error = true;
+			}
+			
+			if (error) {
+				return;
+			}
 			
 			m_Account.User = jid.User;
 			m_Account.Domain = jid.Server;
@@ -83,6 +92,8 @@ namespace Synapse.QtClient.Windows
 			m_Account.AutoConnect = autoConnectCheckBox.Checked;
 			
 			ServiceManager.Get<AccountService>().SaveAccounts();
+		
+			base.Accept ();
 		}
 	}
 }
