@@ -210,19 +210,20 @@ namespace Synapse.Xmpp
 		{
 			string jid          = ((string[])data)[0];
 			string expectedHash = ((string[])data)[1];
+			string hash         = null;
 
-			VCard vcard = (VCard)i.FirstChild;
-			string hash = null;
-			if (vcard != null && vcard.Photo != null) {
-				if (vcard.Photo.Image != null) {
-					byte[] imageData = vcard.Photo.BinVal;
-					hash = Util.SHA1(imageData);
-
-					if (expectedHash == null || hash == expectedHash) {
-						vcard.Photo.Image.Save(AvatarFileName(hash), System.Drawing.Imaging.ImageFormat.Png);
+			if (i != null && i["vCard"] != null && i["vCard"] is VCard) {
+				VCard vcard = (VCard)i["vCard"];
+				if (vcard != null && vcard.Photo != null) {
+					if (vcard.Photo.Image != null) {
+						byte[] imageData = vcard.Photo.BinVal;
+						hash = Util.SHA1(imageData);
+						if (expectedHash == null || hash == expectedHash) {
+							vcard.Photo.Image.Save(AvatarFileName(hash), System.Drawing.Imaging.ImageFormat.Png);
+						}
+					} else {
+						Console.WriteLine(String.Format("Error with avatar for: {0}. Expected hash: {1}", jid, expectedHash));
 					}
-				} else {
-					Console.WriteLine(String.Format("Error with avatar for: {0}. Expected hash: {1}", jid, expectedHash));
 				}
 			}
 			
