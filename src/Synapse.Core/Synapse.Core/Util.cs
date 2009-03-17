@@ -253,6 +253,57 @@ namespace Synapse.Core
 			System.Diagnostics.Process.Start(info);
 		}
 		
+		#region EscapeDataString
+		// Same as Uri.EscapeDataString but without length limit.
+		public static string EscapeDataString (string stringToEscape)
+		{
+			if (stringToEscape == null)
+				throw new ArgumentNullException ("stringToEscape");
+
+			bool escape = false;
+			foreach (char c in stringToEscape){
+				if (NeedToEscapeDataChar (c)){
+					escape = true;
+					break;
+				}
+			}
+			if (!escape){
+				return stringToEscape;
+			}
+			
+			StringBuilder sb = new StringBuilder ();
+			byte [] bytes = Encoding.UTF8.GetBytes (stringToEscape);
+			foreach (byte b in bytes){
+				if (NeedToEscapeDataChar ((char) b))
+					sb.Append (HexEscape ((char) b));
+				else
+					sb.Append ((char) b);
+			}
+			return sb.ToString ();
+		}
+	
+		static bool NeedToEscapeDataChar (char b)
+		{
+			return !((b >= 'A' && b <= 'Z') ||
+				 (b >= 'a' && b <= 'z') ||
+				 (b >= '0' && b <= '9') ||
+				 b == '_' || b == '~' || b == '!' || b == '\'' ||
+				 b == '(' || b == ')' || b == '*' || b == '-' || b == '.');
+		}
+		
+		static readonly string hexUpperChars = "0123456789ABCDEF";
+		
+		static string HexEscape (char character) 
+		{
+			if (character > 255) {
+				throw new ArgumentOutOfRangeException ("character");
+			}
+			
+			return "%" + hexUpperChars [((character & 0xf0) >> 4)] 
+			           + hexUpperChars [((character & 0x0f))];
+		}
+		#endregion
+		
 		public static string Linkify (string text)
 		{
 			Regex rx = new Regex(WEB_URL_PATTERN, RegexOptions.IgnoreCase);

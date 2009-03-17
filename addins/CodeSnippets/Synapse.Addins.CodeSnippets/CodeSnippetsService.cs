@@ -110,7 +110,7 @@ namespace Synapse.Addins.CodeSnippets
 			// Add text without highlighting for copy-to-clipboard option.
 			// Encode so that newlines and spaces are not lost.
 			builder.Append("<div class=\"raw\">");
-			builder.Append(Uri.EscapeDataString(text));
+			builder.Append(Util.EscapeDataString(text));
 			builder.Append("</div>");
 			
 			builder.Append("<div class=\"codeheader\">");
