@@ -295,36 +295,34 @@ namespace Synapse.Xmpp
 					StatusChanged(this);
 			}
 
-			if (m_Roster[pres.From.Bare] != null) {
-				var feed = ServiceManager.Get<ActivityFeedService>();
-				
-				if (pres.Type == PresenceType.error) {
+			var feed = ServiceManager.Get<ActivityFeedService>();
+			
+			if (pres.Type == PresenceType.error) {
+				// Display MUC errors.
+				if (pres.GetElementsByTagName("x", "http://jabber.org/protocol/muc").Count > 0) {
+					var error = pres["error"];
+					if (error != null) {
+						string message = (error["text"] != null) ? error["text"].InnerText : error.FirstChild.Name;
+						Application.Client.ShowErrorWindow("Error with conference: " + pres.From.Bare, message, null);
+					}
+				} else {
 					// FIXME: Show error
-				} else if (pres.Type == PresenceType.probe) {
-					// FIXME: Do anything here?
-				} else if (pres.Type == PresenceType.subscribe) {
-					feed.PostItem(this, pres.From, "subscribe", null, pres.Status);
-				} else if (pres.Type == PresenceType.subscribed) {
-					feed.PostItem(this, pres.From, "subscribed", null, pres.Status);
-				} else if (pres.Type == PresenceType.unsubscribe) {
-					feed.PostItem(this, pres.From, "unsubscribe", null, pres.Status);
-				} else if (pres.Type == PresenceType.unsubscribed) {
-					feed.PostItem(this, pres.From, "unsubscribed", null, pres.Status);
-				} else if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable || pres.Type == PresenceType.invisible) {
+				}
+			} else if (pres.Type == PresenceType.probe) {
+				// FIXME: Do anything here?
+			} else if (pres.Type == PresenceType.subscribe) {
+				feed.PostItem(this, pres.From, "subscribe", null, pres.Status);
+			} else if (pres.Type == PresenceType.subscribed) {
+				feed.PostItem(this, pres.From, "subscribed", null, pres.Status);
+			} else if (pres.Type == PresenceType.unsubscribe) {
+				feed.PostItem(this, pres.From, "unsubscribe", null, pres.Status);
+			} else if (pres.Type == PresenceType.unsubscribed) {
+				feed.PostItem(this, pres.From, "unsubscribed", null, pres.Status);
+			} else if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable || pres.Type == PresenceType.invisible) {
+				if (m_Roster[pres.From.Bare] != null) {
 					if (oldPresence == null || (oldPresence.Type != pres.Type || oldPresence.Show != pres.Show || oldPresence.Status != pres.Status)) {
 						if (pres.Type == PresenceType.available || pres.Type == PresenceType.unavailable) {
 							PostActivityFeedItem(pres.From, "presence", Helper.GetPresenceDisplay(pres), pres.Status);
-						}
-					}
-				}
-			} else {
-				if (pres.Type == PresenceType.error) {
-					// Display MUC errors.
-					if (pres.GetElementsByTagName("x", "http://jabber.org/protocol/muc").Count > 0) {
-						var error = pres["error"];
-						if (error != null) {
-							string message = (error["text"] != null) ? error["text"].InnerText : error.FirstChild.Name;
-							Application.Client.ShowErrorWindow("Error with conference: " + pres.From.Bare, message, null);
 						}
 					}
 				}
