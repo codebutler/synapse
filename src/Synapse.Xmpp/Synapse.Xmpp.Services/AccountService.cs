@@ -67,7 +67,14 @@ namespace Synapse.Xmpp.Services
 				
 				if (config != null) {
 					foreach (AccountInfo info in config.Accounts) {
-						AddAccount(Account.FromAccountInfo(info), false);
+						try {
+							AddAccount(Account.FromAccountInfo(info), false);
+						} catch (Exception ex) {
+							// FIXME: Show this error somewhere, mark AccountInfo invalid!
+							// FIXME: Have PreferencesDialog list AccountInfos instead of Accounts
+							// so that invalid accounts can be fixed.
+							Console.Error.WriteLine("ERROR WITH ACCOUNT SETTINGS: " + ex);
+						}
 					}
 				}
 			}
