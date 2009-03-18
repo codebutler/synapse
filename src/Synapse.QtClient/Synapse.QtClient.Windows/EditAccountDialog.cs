@@ -69,7 +69,7 @@ namespace Synapse.QtClient.Windows
 			} else if (String.IsNullOrEmpty(jid.Server)) {
 				QMessageBox.Critical(this, "Problem saving account", "JID must have a server");
 				error = true;
-			} else if (resourceCombo.CurrentText.Trim() == String.Empty) {
+			} else if (passwordLineEdit.Text.Trim() == String.Empty) {
 				QMessageBox.Critical(this, "Problem saving account", "Password may not be blank");
 				error = true;
 			} else if (resourceCombo.CurrentText.Trim() == String.Empty) {
