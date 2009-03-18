@@ -79,6 +79,29 @@ namespace Synapse.Core
 			{ "s",          null }
 		};
 		
+		public static string ToPlainText (string html)
+		{
+			var builder = new StringBuilder();
+			
+			var doc = new HtmlDocument();
+			doc.LoadHtml(html);
+			
+			foreach (var node in doc.DocumentNode.ChildNodes)
+				ExtractPlainText(node, builder);
+			
+			return builder.ToString();
+		}
+		
+		static void ExtractPlainText (HtmlNode node, StringBuilder builder)
+		{
+			if (node is HtmlTextNode) {
+				builder.Append(node.InnerText);
+			} else if (!(node is HtmlCommentNode)) {
+				foreach (var childNode in node.ChildNodes)
+					ExtractPlainText(childNode, builder);
+			}
+		}
+		
 		public static string Sanitize (string html, bool linkify)
 		{
 			var doc = new HtmlDocument();
@@ -87,12 +110,12 @@ namespace Synapse.Core
 			var builder = new StringBuilder();
 			
 			foreach (var node in doc.DocumentNode.ChildNodes)
-				ParseNode(node, builder, linkify);
+				SanitizeNode(node, builder, linkify);
 			
 			return builder.ToString();
 		}
 		
-		static void ParseNode (HtmlNode node, StringBuilder builder, bool linkify)
+		static void SanitizeNode (HtmlNode node, StringBuilder builder, bool linkify)
 		{
 			if (node is HtmlTextNode) {
 				if (linkify && HasParent(node, "a") == false)
@@ -109,13 +132,13 @@ namespace Synapse.Core
 						builder.AppendFormat("<{0}{1}>", name, attributeString);
 
 						foreach (var childNode in node.ChildNodes)
-							ParseNode(childNode, builder, linkify);
+							SanitizeNode(childNode, builder, linkify);
 												
 						builder.AppendFormat("</{0}>", name);
 					}
 				} else {
 					foreach (var childNode in node.ChildNodes)
-						ParseNode(childNode, builder, linkify);
+						SanitizeNode(childNode, builder, linkify);
 				}
 			}
 		}
@@ -136,13 +159,19 @@ namespace Synapse.Core
 			if (name == "img") {
 				// Show something if the image fails to load for some reason.
 				node.SetAttributeValue("alt", "[IMAGE]");
+				
+				// Force width
+				node.SetAttributeValue("width", "100%");
+				
+				// Remove height
+				node.SetAttributeValue("height", String.Empty);
 			}
 
 			var attributeStringBuilder = new StringBuilder();
 			foreach (var attr in node.Attributes) {
 				string attrName = attr.Name.ToLower();
+				string attrVal = attr.Value;
 				if (s_WhiteList[name] != null && s_WhiteList[name].Contains(attrName)) {
-					string attrVal = attr.Value;
 					if (name == "a" && attrName == "href")
 						attrVal = SanitizeAHref(attrVal);
 					else if (name == "img" && attrName == "src")
@@ -150,6 +179,9 @@ namespace Synapse.Core
 					if (attributeStringBuilder.Length > 0)
 						attributeStringBuilder.Append(" ");
 					attributeStringBuilder.AppendFormat("{0}=\"{1}\"", attrName, attrVal);
+				} else if (attrName == "style") {
+					// Special handling for css
+					
 				}
 			}
 			if (attributeStringBuilder.Length > 0)

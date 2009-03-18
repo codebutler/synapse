@@ -26,6 +26,7 @@ using Qyoto;
 
 using Notifications;
 
+using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Services;
 using Synapse.UI;
@@ -472,26 +473,30 @@ namespace Synapse.QtClient.Windows
 						
 						if (m_Notification == null) {
 							try {
-								if (m_Handler is MucHandler) {
-									Gdk.Pixbuf pixbuf = Gdk.Pixbuf.LoadFromResource("internet-group-chat__32.png");
-									string roomName = ((MucHandler)m_Handler).Room.JID.Bare;
-									m_Notification = new Notification(String.Format("Message from {0} in {1}", content.SourceDisplayName, roomName), ((ChatContentMessage)content).MessageHtml, pixbuf);
-									
-								} else {
-									// FIXME: Too much logic outside of AvatarManager.
-									Gdk.Pixbuf pixbuf = null;
-									string fileName = AvatarManager.GetAvatarFileName(content.Source.BareJID);
-									if (System.IO.File.Exists(fileName)) {
-										pixbuf = new Gdk.Pixbuf(fileName);
+								string plainText = HtmlSanitizer.ToPlainText(((ChatContentMessage)content).MessageHtml);
+								// Only show notifications for MUC messages that contain your name.
+								if (m_Handler is ChatHandler || (m_Handler is MucHandler && plainText.Contains(((MucHandler)m_Handler).Room.Nickname))) {
+									if (m_Handler is MucHandler) {
+										Gdk.Pixbuf pixbuf = Gdk.Pixbuf.LoadFromResource("internet-group-chat__32.png");
+										string roomName = ((MucHandler)m_Handler).Room.JID.Bare;
+										m_Notification = new Notification(String.Format("Message from {0} in {1}", content.SourceDisplayName, roomName), plainText, pixbuf);
+										
 									} else {
-										pixbuf = Gdk.Pixbuf.LoadFromResource("default-avatar.png");
-									}									
-									m_Notification = new Notification(String.Format("Message from {0}", content.SourceDisplayName), ((ChatContentMessage)content).MessageHtml, pixbuf);
+										// FIXME: Too much logic outside of AvatarManager.
+										Gdk.Pixbuf pixbuf = null;
+										string fileName = AvatarManager.GetAvatarFileName(content.Source.BareJID);
+										if (System.IO.File.Exists(fileName)) {
+											pixbuf = new Gdk.Pixbuf(fileName);
+										} else {
+											pixbuf = Gdk.Pixbuf.LoadFromResource("default-avatar.png");
+										}									
+										m_Notification = new Notification(String.Format("Message from {0}", content.SourceDisplayName), plainText, pixbuf);
+									}
+									m_Notification.Show();
+									m_Notification.Closed += delegate {
+										m_Notification = null;
+									};
 								}
-								m_Notification.Show();
-								m_Notification.Closed += delegate {
-									m_Notification = null;
-								};
 							} catch (Exception ex) {
 								Console.WriteLine("FAILED TO DISPLAY NOTIFICATION: " + ex);
 								m_Notification = null;
