@@ -56,7 +56,7 @@ namespace Synapse.Core
 			{ "strong",     null },
 			{ "var",        null },
 			
-			{ "a",          new [] { "href" } },
+			{ "a",          new [] { "href", "title" } },
 			
 			{ "dl",         null },
 			{ "dt",         null },
@@ -148,40 +148,40 @@ namespace Synapse.Core
 			string name = node.Name.ToLower();
 
 			if (name == "a") {
-				// Add a blank href attribute if one doesn't exist.
-				if (node.GetAttributeValue("href", String.Empty) == null)
-					node.SetAttributeValue("href", String.Empty);
+				node.SetAttributeValue("href", SanitizeAHref(node.GetAttributeValue("href", String.Empty)));
 
 				// Don't allow custom titles (tooltips), and make sure one is always set.
 				node.SetAttributeValue("title", node.GetAttributeValue("href", String.Empty));
+				
+				Console.WriteLine("SET ATTRIBUTE VALUE !! " + node.GetAttributeValue("title", "frak"));
 			}
 			
 			if (name == "img") {
+				node.SetAttributeValue("src", SanitizeImgSrc(node.GetAttributeValue("src", String.Empty)));
+				
+				// FIXME: 
+				
 				// Show something if the image fails to load for some reason.
-				node.SetAttributeValue("alt", "[IMAGE]");
+				//node.SetAttributeValue("alt", "[IMAGE]");
 				
 				// Force width
-				node.SetAttributeValue("width", "100%");
+				//node.SetAttributeValue("width", "100%");
 				
 				// Remove height
-				node.SetAttributeValue("height", String.Empty);
+				//node.SetAttributeValue("height", String.Empty);
 			}
 
 			var attributeStringBuilder = new StringBuilder();
 			foreach (var attr in node.Attributes) {
 				string attrName = attr.Name.ToLower();
 				string attrVal = attr.Value;
+				Console.WriteLine(attrName);
 				if (s_WhiteList[name] != null && s_WhiteList[name].Contains(attrName)) {
-					if (name == "a" && attrName == "href")
-						attrVal = SanitizeAHref(attrVal);
-					else if (name == "img" && attrName == "src")
-						attrVal = SanitizeImgSrc(attrVal);
 					if (attributeStringBuilder.Length > 0)
 						attributeStringBuilder.Append(" ");
 					attributeStringBuilder.AppendFormat("{0}=\"{1}\"", attrName, attrVal);
 				} else if (attrName == "style") {
-					// Special handling for css
-					
+					// FIXME: Special handling for css					
 				}
 			}
 			if (attributeStringBuilder.Length > 0)
