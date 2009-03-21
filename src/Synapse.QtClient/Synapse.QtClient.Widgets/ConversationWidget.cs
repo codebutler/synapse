@@ -120,9 +120,14 @@ namespace Synapse.QtClient
 					var dirInfo = new DirectoryInfo(s_ThemesDirectory);
 					foreach (var subDirInfo in dirInfo.GetDirectories()) {
 						if (subDirInfo.Name.EndsWith(".AdiumMessageStyle")) {
-							string plistPath = Util.JoinPath(subDirInfo.FullName, "Contents", "Info.plist");
-							if (File.Exists(plistPath))
-								s_AllThemes.Add(subDirInfo.Name.Substring(0, subDirInfo.Name.Length - subDirInfo.Extension.Length), new PList(plistPath));
+							try {
+								string plistPath = Util.JoinPath(subDirInfo.FullName, "Contents", "Info.plist");
+								if (File.Exists(plistPath))
+									s_AllThemes.Add(subDirInfo.Name.Substring(0, subDirInfo.Name.Length - subDirInfo.Extension.Length), new PList(plistPath));
+							} catch (Exception ex) {
+								// FIXME: Display error window
+								Console.Error.WriteLine("FAILED TO LOAD THEME " + subDirInfo.FullName + ":" + ex.ToString());								
+							}
 						}
 					}
 				}
