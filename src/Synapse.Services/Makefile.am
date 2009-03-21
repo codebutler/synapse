@@ -24,6 +24,8 @@ REFERENCES =  \
 	Mono.Posix \
 	System \
 	System.Core \
+	System.Web \
+	System.Web.Extensions \
 	System.Xml
 
 PROJECT_REFERENCES = ../../build/Debug/Synapse.Core.dll
