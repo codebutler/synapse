@@ -565,7 +565,9 @@ namespace Synapse.Xmpp
 					break;
 				}
 
-				m_Status = value;
+				if (value.Type != ClientStatusType.Offline)
+					m_Status = value;
+				
 				if (StatusChanged != null)
 					StatusChanged(this);
 			}
