@@ -77,6 +77,8 @@ namespace Synapse.QtClient.Widgets
 			
 			HandleMyVCardUpdated(null, EventArgs.Empty);
 			m_NameLabel.TextFormat = TextFormat.RichText;
+			
+			HandleAvatarUpdated(m_Account.Jid.Bare, m_Account.GetProperty("AvatarHash"));
 	
 			m_PresenceMenu = new QMenu(this);
 			QObject.Connect(m_PresenceMenu, Qt.SIGNAL("aboutToShow()"), HandlePresenceMenuAboutToShow);

@@ -197,6 +197,8 @@ namespace Synapse.Xmpp
 					s_HashCache.Remove(account.Jid.Bare);
 			}
 
+			account.SetProperty("AvatarHash", hash);
+			
 			// Re-send presence
 			if (m_Account.Status != null)
 				m_Account.Status = m_Account.Status;
