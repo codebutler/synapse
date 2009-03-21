@@ -26,6 +26,7 @@ using System.Text;
 using Synapse.Core;
 using Synapse.ServiceStack;
 using Synapse.Services;
+using System.Web.Script.Serialization;
 using Mono.Addins;
 
 namespace Synapse.Services
@@ -373,6 +374,6 @@ namespace Synapse.Services
 	{
 		public string Name { get; set; }
 		public string Label { get; set; }
-		public NotificationActionCallback Callback { get; set; }
+		[ScriptIgnore] public NotificationActionCallback Callback { get; set; }
 	}
 }
