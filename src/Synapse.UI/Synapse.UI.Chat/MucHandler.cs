@@ -210,6 +210,13 @@ namespace Synapse.UI.Chat
 					base.AppendStatus(String.Format("{0} now a visitor.", nick));
 					break;
 				}
+			} else if (participant.Presence.Show != oldPresence.Show || participant.Presence.Status != oldPresence.Status) {
+				if (participant.Presence.Type == PresenceType.available) {
+					if (!String.IsNullOrEmpty(participant.Presence.Status))
+						base.AppendStatus(String.Format("{0} now {1}: {2}.", nick, Helper.GetPresenceDisplay(participant.Presence), participant.Presence.Status));
+					else
+						base.AppendStatus(String.Format("{0} now {1}.", nick, Helper.GetPresenceDisplay(participant.Presence)));
+				}
 			}
 		}
 		

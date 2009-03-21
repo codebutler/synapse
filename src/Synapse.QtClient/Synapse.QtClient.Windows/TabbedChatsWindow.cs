@@ -344,15 +344,16 @@ namespace Synapse.QtClient.Windows
 			{
 				QApplication.Invoke(delegate {
 					IChatHandler handler = null;
+					string windowJid = isMucUser ? jid.ToString() : jid.Bare;
 					lock (m_ChatWindows) {
-						if (!m_ChatWindows.ContainsKey(jid.Bare)) {
-							handler = new ChatHandler(m_Account, isMucUser, isMucUser ? jid : jid.BareJID);							
+						if (!m_ChatWindows.ContainsKey(windowJid)) {
+							handler = new ChatHandler(m_Account, isMucUser, windowJid);							
 							var window = new ChatWindow(handler);
 							window.Closed += HandleChatWindowClosed;
-							m_ChatWindows.Add(jid.Bare, window);
+							m_ChatWindows.Add(windowJid, window);
 							Gui.TabbedChatsWindow.AddChatWindow(window, focus);
 						} else {
-							var window = m_ChatWindows[jid.Bare];
+							var window = m_ChatWindows[windowJid];
 							if (focus) {
 								Gui.TabbedChatsWindow.FocusChatWindow(window);
 							}
@@ -381,16 +382,19 @@ namespace Synapse.QtClient.Windows
 			void HandleOnMessage (object sender, Message message)
 			{
 				if (message.Type == MessageType.chat) {
-					// Make sure we don't open a new window if all we've got is a chatstate.
-					// Some people like a "psycic" mode though, so this should be configurable.
 					lock (m_ChatWindows) {
-						if (m_ChatWindows.ContainsKey(message.From.Bare) || (message.Body != null || message.Html != null )) {
-							bool isMucUser = false;
-							foreach (var room in m_Account.ConferenceManager.Rooms)
-								if (room.JID.BareJID.Equals(message.From.BareJID)) {
-									isMucUser = true;
-									break;
-							}
+						bool isMucUser = false;
+						foreach (var room in m_Account.ConferenceManager.Rooms)
+							if (room.JID.BareJID.Equals(message.From.BareJID)) {
+								isMucUser = true;
+								break;
+						}
+						// Make sure we don't open a new window if all we've got is a chatstate.
+						// Some people like a "psycic" mode though, so this should be configurable.
+						if ((isMucUser && m_ChatWindows.ContainsKey(message.From.Bare.ToString())) ||
+						    (!isMucUser && m_ChatWindows.ContainsKey(message.From.Bare)) ||
+						    (message.Body != null || message.Html != null ))
+						{
 							OpenChatWindow(message.From, isMucUser, false, delegate (IChatHandler handler) {
 								((ChatHandler)handler).AppendMessage(message);
 							});
@@ -402,7 +406,13 @@ namespace Synapse.QtClient.Windows
 			void HandleOnPresence (object o, Presence presence)
 			{
 				lock (m_ChatWindows) {
-					if (m_ChatWindows.ContainsKey(presence.From.Bare)) {
+					// Check if this presence is for a MUC (full-jid)
+					if (m_ChatWindows.ContainsKey(presence.From.ToString())) {
+						var window = m_ChatWindows[presence.From.ToString()];
+						((ChatHandler)window.Handler).SetPresence(presence);
+					
+					// If not, check if its a normal chat
+					} else if (m_ChatWindows.ContainsKey(presence.From.Bare)) {
 						var window = m_ChatWindows[presence.From.Bare];
 						((ChatHandler)window.Handler).SetPresence(presence);
 					}
@@ -414,7 +424,8 @@ namespace Synapse.QtClient.Windows
 				var window  = (ChatWindow)sender;
 				var handler = (ChatHandler)window.Handler;
 				lock (m_ChatWindows) {
-					m_ChatWindows.Remove(handler.Jid.Bare);
+					string windowJid = handler.IsMucMessage ? handler.Jid.ToString() : handler.Jid.Bare;
+					m_ChatWindows.Remove(windowJid);
 				}
 				Gui.TabbedChatsWindow.RemoveChatWindow(window);
 			}
