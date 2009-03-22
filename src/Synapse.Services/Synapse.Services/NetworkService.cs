@@ -1,5 +1,6 @@
 //
-// NetworkManager.cs
+// NetworkManager.cs: Uses NetworkManager to keep track of if you're connected
+//                    to the internet or not.
 //
 // Author:
 //   Aaron Bockover <abockover@novell.com>

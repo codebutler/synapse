@@ -38,9 +38,9 @@
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/Hyena.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
+    <ProjectReference type="Assembly" localcopy="False" specificVersion="False" refto="../../contrib/HtmlAgilityPack.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
-    <ProjectReference type="Assembly" localcopy="False" specificVersion="False" refto="../../contrib/HtmlAgilityPack.dll" />
   </References>
   <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />

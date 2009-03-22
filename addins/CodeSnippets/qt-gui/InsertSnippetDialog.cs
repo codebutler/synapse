@@ -56,7 +56,7 @@ namespace Synapse.Addins.CodeSnippets {
             gridLayout.AddWidget(this.typeComboBox, 1, 1, 1, 1);
             QSpacerItem horizontalSpacer;
             horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
-            gridLayout.AddItem(horizontalSpacer);
+            gridLayout.AddItem(horizontalSpacer, 1, 2, 1, 1);
             this.label_2 = new QLabel(this);
             this.label_2.ObjectName = "label_2";
             this.label_2.Text = "To:";
@@ -67,7 +67,7 @@ namespace Synapse.Addins.CodeSnippets {
             gridLayout.AddWidget(this.toLabel, 0, 1, 1, 1);
             QSpacerItem horizontalSpacer_3;
             horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum);
-            gridLayout.AddItem(horizontalSpacer_3);
+            gridLayout.AddItem(horizontalSpacer_3, 0, 2, 1, 1);
             this.tabWidget = new QTabWidget(this);
             this.tabWidget.ObjectName = "tabWidget";
             this.tabWidget.CurrentIndex = 0;
