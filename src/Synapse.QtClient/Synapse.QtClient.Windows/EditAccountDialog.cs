@@ -50,6 +50,16 @@ namespace Synapse.QtClient.Windows
 			
 			autoConnectCheckBox.Checked = account.AutoConnect;
 			
+			line.SetVisible(false);
+			proxyHostLabel.SetVisible(false);
+			proxyHostLineEdit.SetVisible(false);
+			proxyPortLabel.SetVisible(false);
+			proxyPortSpinBox.SetVisible(false);
+			proxyUserLabel.SetVisible(false);
+			proxyUserLineEdit.SetVisible(false);
+			proxyPassLabel.SetVisible(false);
+			proxyPassLineEdit.SetVisible(false);
+			
 			this.buttonBox.StandardButtons = (uint)QDialogButtonBox.StandardButton.Ok |
 			                                 (uint)QDialogButtonBox.StandardButton.Cancel;
 			
