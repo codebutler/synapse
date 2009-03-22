@@ -1,0 +1,15 @@
+<Addin id        = "Wikipedia"
+	   namespace = "Synapse"
+	   name      = "Wikipedia"
+	   author    = "goto"
+	   copyright = "GPLv3"
+	   version   = "0.1">
+
+	<Dependencies>
+		<Addin id="UI" version="0.1" />
+	</Dependencies>
+
+	<Extension path="/Synapse/UI/Chat/MessageDisplayFormatters">
+		<MessageDisplayFormatter class="Synapse.Addins.Wikipedia.WikipediaMessageDisplayFormatter" />
+	</Extension>
+</Addin>
