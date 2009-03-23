@@ -11,6 +11,9 @@ namespace Synapse.Addins.Wikipedia
 	public class WikipediaMessageDisplayFormatter : IMessageDisplayFormatter
 	{
 		const string WIKIPEDIA_PAGE_LINK_PATTERN = @"<a href=""http://(www\.)?([a-zA-Z]{2})\.wikipedia\.org/wiki/(.*?)""";		
+
+                const string STYLE_BEGIN = "<p style=\"background-color:white; color:black; border-width:1px; border-style:solid;\">";
+                const string STYLE_END = "</p>";
 		
 		public bool SupportsMessage(string bodyHtml, Message message)
 		{
@@ -19,8 +22,14 @@ namespace Synapse.Addins.Wikipedia
 
 		public string FormatMessage(string bodyHtml, Message message)
 		{
-			Match match = Regex.Match(bodyHtml, WIKIPEDIA_PAGE_LINK_PATTERN);
-			return bodyHtml + BuildHtmlPreview("http://" + match.Groups[2] + ".wikipedia.org/wiki/" + match.Groups[3]); // Groups[2] = Location , Groups[3] = Article
+                        string wikipediaPreviews = bodyHtml;
+                        MatchCollection matchCollection = Regex.Matches(bodyHtml, WIKIPEDIA_PAGE_LINK_PATTERN);
+                        foreach(Match match in matchCollection)
+                        {
+                                string linkUrl = "http://" + match.Groups[2] + ".wikipedia.org/wiki/" + match.Groups[3]; // Groups[2] = Location , Groups[3] = Article
+                                wikipediaPreviews += BuildHtmlPreview(linkUrl);                                 
+                        }
+                        return wikipediaPreviews;
 		}
 
 		public bool StopAfter {
@@ -46,8 +55,11 @@ namespace Synapse.Addins.Wikipedia
 						Match match = regex.Match(sourceCode);
 						string article = match.Groups[1].ToString();
 						string temp = Regex.Replace(article, "<.*?>", "");
-						temp = Regex.Replace(temp, @"\[\d*?\]", "");
-						return String.Format("<br/><p style=\"background-color:white; color:black; border-width:1px; border-style:solid;\">{0}</p>", temp);
+                                                if(temp.Length > 160)
+                                                {
+                                                        temp = String.Format("{0}[...]", temp.Remove(160));
+                                                }
+                                                return String.Format("{0}{1}{2}", STYLE_BEGIN, temp, STYLE_END);
 					}
 				}
 			} catch {
