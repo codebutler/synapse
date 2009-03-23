@@ -140,9 +140,12 @@ namespace Synapse.Xmpp
 		}
 		
 		void HandleOnPresence(object sender, Presence pres)
-		{			
+		{
+			if (pres.Type != PresenceType.available)
+				return;
+			    
 			// Make sure this isn't related to a MUC at all. 
-			// Is there really no better way?
+			// Is there really no better way? This isn't so reliable.
 			foreach (XmlNode element in pres.ChildNodes) {
 				if (element.NamespaceURI.StartsWith("http://jabber.org/protocol/muc")) {
 					return;
