@@ -234,7 +234,7 @@ namespace Synapse.Xmpp
 			if (m_PendingStatus != null) {
 				Status = m_PendingStatus;
 			} else {
-				Status = new ClientStatus(ClientStatusType.Available, null);
+				Status = new ClientStatus(ClientAvailability.Available, null);
 			}
 			
 			m_ConnectedAt = DateTime.Now;
@@ -538,35 +538,39 @@ namespace Synapse.Xmpp
 			set {
 				m_PendingStatus = null;
 
-				if (value.Type != ClientStatusType.Offline && this.ConnectionState != AccountConnectionState.Connected) {
-					m_PendingStatus = value;
-					Connect();
+				if (value == null) {
+					Disconnect();
 					return;
 				}
 				
-				switch (value.Type) {
-				case ClientStatusType.Available:
+				if (this.ConnectionState != AccountConnectionState.Connected) {
+					m_PendingStatus = value;
+					
+					if (this.ConnectionState == AccountConnectionState.Disconnected)
+						Connect();
+					
+					return;
+				}
+				
+				switch (value.Availability) {
+				case ClientAvailability.Available:
 					this.Client.Presence(PresenceType.available, value.StatusText, null, 0);
 					break;
-				case ClientStatusType.FreeToChat:
+				case ClientAvailability.FreeToChat:
 					this.Client.Presence(PresenceType.available, value.StatusText, "chat", 0);
 					break;
-				case ClientStatusType.Away:
+				case ClientAvailability.Away:
 					this.Client.Presence(PresenceType.available, value.StatusText, "away", 0);
 					break;
-				case ClientStatusType.ExtendedAway:
+				case ClientAvailability.ExtendedAway:
 					this.Client.Presence(PresenceType.available, value.StatusText, "xa", 0);
 					break;
-				case ClientStatusType.DoNotDisturb:
+				case ClientAvailability.DoNotDisturb:
 					this.Client.Presence(PresenceType.available, value.StatusText, "dnd", 0);
-					break;
-				case ClientStatusType.Offline:
-					this.Disconnect();
 					break;
 				}
 
-				if (value.Type != ClientStatusType.Offline)
-					m_Status = value;
+				m_Status = value;
 				
 				if (StatusChanged != null)
 					StatusChanged(this);
@@ -596,12 +600,15 @@ namespace Synapse.Xmpp
 			m_Client.Port        = m_ConnectPort;
 			m_Client.Password    = m_Password;
 			
-			ConnectionState = AccountConnectionState.Connecting;
-			
 			// FIXME: Calling this in a separate thread so DNS doesn't block the UI.
 			// This should be fixed inside jabber-net.
 			ThreadPool.QueueUserWorkItem(delegate {
-				m_Client.Connect();
+				// Check that connection state hasn't changed by the time this executes.
+				// Might need to lock on something to avoid race condition...
+				if (ConnectionState == AccountConnectionState.Disconnected) {	
+					ConnectionState = AccountConnectionState.Connecting;
+					m_Client.Connect();
+				}
 			});
 		}
 
@@ -644,7 +651,14 @@ namespace Synapse.Xmpp
 		
 		public void Disconnect()
 		{
+			// FIXME: This is a jabber-net bug!
+			if (ConnectionState == AccountConnectionState.Connecting) {
+				Console.Error.WriteLine("Can't disconnect while still connecting!");
+				return;
+			}
+			
 			m_Client.Close();
+			ConnectionState = AccountConnectionState.Disconnected;
 		}
 		
 		internal SerializableDictionary<string, string> Properties {
