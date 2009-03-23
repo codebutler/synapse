@@ -26,7 +26,7 @@ namespace Synapse.Addins.Wikipedia
                         MatchCollection matchCollection = Regex.Matches(bodyHtml, WIKIPEDIA_PAGE_LINK_PATTERN);
                         foreach(Match match in matchCollection)
                         {
-                                string linkUrl = "http://" + match.Groups[2] + ".wikipedia.org/wiki/" + match.Groups[3]; // Groups[2] = Location , Groups[3] = Article
+                               string linkUrl = "http://" + match.Groups[2] + ".wikipedia.org/wiki/" + match.Groups[3]; // Groups[2] = Location , Groups[3] = Article
                                 wikipediaPreviews += BuildHtmlPreview(linkUrl);                                 
                         }
                         return wikipediaPreviews;
