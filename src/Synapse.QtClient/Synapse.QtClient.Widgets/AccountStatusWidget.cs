@@ -120,7 +120,7 @@ namespace Synapse.QtClient.Widgets
 				string text = null;
 				string statusText = null;
 				if (account.Status != null) {
-					text = account.Status.TypeDisplayName;
+					text = account.Status.AvailabilityDisplayName;
 					if (!String.IsNullOrEmpty(account.Status.StatusText)) {
 						statusText = account.Status.StatusText;
 					}
@@ -182,35 +182,42 @@ namespace Synapse.QtClient.Widgets
 	
 		void HandlePresenceMenuTriggered(QAction action)
 		{
-			m_Account.Status = new ClientStatus(action.Text, String.Empty);
+			if (action.Text != "Offline")
+				m_Account.Status = new ClientStatus(action.Text, String.Empty);
+			else
+				m_Account.Status = null;
 		}
 	
 		void HandlePresenceMenuAboutToShow()
 		{
-			if (m_Account.Status != null) {
-				var currentStatus = m_Account.Status.Type;
-				switch (currentStatus) {
-				case ClientStatusType.Available:
+			if (m_Account.ConnectionState == AccountConnectionState.Connected) {
+				var currentAvailability = m_Account.Status.Availability;
+				switch (currentAvailability) {
+				case ClientAvailability.Available:
 					m_AvailableAction.Checked = true;
 					break;
-				case ClientStatusType.FreeToChat:
+				case ClientAvailability.FreeToChat:
 					m_FreeToChatAction.Checked = true;
 					break;
-				case ClientStatusType.Away:
+				case ClientAvailability.Away:
 					m_AwayAction.Checkable = true;
 					break;
-				case ClientStatusType.ExtendedAway:
+				case ClientAvailability.ExtendedAway:
 					m_ExtendedAwayAction.Checked = true;
 					break;
-				case ClientStatusType.DoNotDisturb:
+				case ClientAvailability.DoNotDisturb:
 					m_DoNotDisturbAction.Checked = true;
 					break;
-				case ClientStatusType.Offline:
-					m_OfflineAction.Checked = true;
-					break;
 				}
-			} else {
+			} else if (m_Account.ConnectionState == AccountConnectionState.Disconnected) {
 				m_OfflineAction.Checked = true;
+			} else {
+				m_AvailableAction.Checked = false;
+				m_FreeToChatAction.Checked = false;
+				m_AwayAction.Checkable = false;
+				m_ExtendedAwayAction.Checked = false;
+				m_DoNotDisturbAction.Checked = false;
+				m_OfflineAction.Checked = false;
 			}
 		}
 	}

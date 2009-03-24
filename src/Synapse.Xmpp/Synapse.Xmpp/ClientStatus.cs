@@ -24,66 +24,61 @@ using System.Text.RegularExpressions;
 
 namespace Synapse.Xmpp
 {
-	public enum ClientStatusType
+	public enum ClientAvailability
 	{
 		Available,
 		FreeToChat,
 		Away,
 		ExtendedAway,
-		DoNotDisturb,
-		Invisible,
-		Offline
+		DoNotDisturb
 	}
 	
 	public class ClientStatus
 	{
-		public ClientStatus(string typeDescription, string statusText)
+		public ClientStatus(string availabilityDescription, string statusText)
 		{
-			switch (typeDescription) {
+			switch (availabilityDescription) {
 			case "Available":
 			case null:
-				Type = ClientStatusType.Available;
+				Availability = ClientAvailability.Available;
 				break;
 			case "Free To Chat":
 			case "chat":
-				Type = ClientStatusType.FreeToChat;
+				Availability = ClientAvailability.FreeToChat;
 				break;
 			case "Away":
 			case "away":
-				Type = ClientStatusType.Away;
+				Availability = ClientAvailability.Away;
 				break;
 			case "Extended Away":
 			case "xa":
-				Type = ClientStatusType.ExtendedAway;
+				Availability = ClientAvailability.ExtendedAway;
 				break;
 			case "Do Not Disturb":
 			case "dnd":
-				Type = ClientStatusType.DoNotDisturb;
-				break;
-			case "Offline":
-				Type = ClientStatusType.Offline;
+				Availability = ClientAvailability.DoNotDisturb;
 				break;
 			default:
-				throw new ArgumentException("Unknown status type: " + typeDescription);
+				throw new ArgumentException("Unknown availability: " + availabilityDescription);
 			}
 			
 			StatusText = statusText;
 		}
 		
-		public ClientStatus(ClientStatusType type, string statusText)
+		public ClientStatus(ClientAvailability availability, string statusText)
 		{
-			Type       = type;
-			StatusText = statusText;
+			Availability = availability;
+			StatusText   = statusText;
 		}
 
-		public ClientStatusType Type {
+		public ClientAvailability Availability {
 			get;
 			set;
 		}
 
-		public string TypeDisplayName {
+		public string AvailabilityDisplayName {
 			get {
-				return Regex.Replace(this.Type.ToString(), @"(\B[A-Z])", @" $1");
+				return Regex.Replace(this.Availability.ToString(), @"(\B[A-Z])", @" $1");
 			}
 		}
 

@@ -81,7 +81,8 @@ namespace Synapse.Services
 
 			var template = new ActivityFeedItemTemplate(name, category, singularText, pluralText, desktopNotify, showInMainWindow, iconUrl, actions);
 
-			m_Templates.Add(name, template);
+			lock (m_Templates)
+				m_Templates.Add(name, template);
 
 			if (!String.IsNullOrEmpty(category) && !m_Categories.Contains(category)) {
 				m_Categories.Add(category);
@@ -99,8 +100,25 @@ namespace Synapse.Services
 				lock (m_Queue)
 					m_Queue.Enqueue(item);
 			} else {
-				NewItem(item);
+				RaiseNewItem(item);
 			}
+		}		
+		
+		public string ServiceName {
+			get { return "ActivityFeedService"; }
+		}
+
+		void RaiseNewItem (IActivityFeedItem item)
+		{
+			lock (m_Templates) {
+				if (!m_Templates.ContainsKey(item.Type)) {
+					throw new Exception("Unknown template: " + item.Type);
+				}
+			}
+
+			var evnt = NewItem;
+			if (evnt != null)
+				evnt(item);
 			
 			var template = m_Templates[item.Type];
 			if (template.DesktopNotify) {
@@ -115,10 +133,7 @@ namespace Synapse.Services
 				}
 				Application.Client.DesktopNotify(template, item, text.ToString());
 			}
-		}		
-		
-		public string ServiceName {
-			get { return "ActivityFeedService"; }
+
 		}
 		
 		void FireQueued () 
@@ -128,7 +143,7 @@ namespace Synapse.Services
 			}
 			lock (m_Queue) {
 				while (m_Queue.Count > 0)
-					NewItem(m_Queue.Dequeue());
+					RaiseNewItem(m_Queue.Dequeue());
 			}
 		}
 	}
