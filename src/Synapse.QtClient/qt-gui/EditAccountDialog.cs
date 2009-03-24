@@ -99,6 +99,10 @@ namespace Synapse.QtClient.Windows {
             this.resourceCombo.ObjectName = "resourceCombo";
             this.resourceCombo.Editable = true;
             formLayout.SetWidget(2, QFormLayout.ItemRole.FieldRole, this.resourceCombo);
+            this.resourceCombo.InsertItems(0, new System.Collections.Generic.List<string>(new string[] {
+                            "Home Computer",
+                            "Work Computer",
+                            "Laptop"}));
             QSpacerItem verticalSpacer;
             verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
             verticalLayout_2.AddItem(verticalSpacer);

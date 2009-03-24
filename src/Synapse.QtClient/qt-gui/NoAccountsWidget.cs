@@ -120,7 +120,6 @@ namespace Synapse.QtClient.Widgets {
             this.label = new QLabel(this.page_4);
             this.label.ObjectName = "label";
             this.label.Text = "Jabber ID:";
-            this.label.SetBuddy(m_LoginLineEdit);
             gridLayout.AddWidget(this.label, 0, 0, 1, 1);
             this.m_LoginLineEdit = new QLineEdit(this.page_4);
             this.m_LoginLineEdit.ObjectName = "m_LoginLineEdit";
@@ -128,7 +127,6 @@ namespace Synapse.QtClient.Widgets {
             this.label_2 = new QLabel(this.page_4);
             this.label_2.ObjectName = "label_2";
             this.label_2.Text = "Password:";
-            this.label_2.SetBuddy(m_PasswordLineEdit);
             gridLayout.AddWidget(this.label_2, 1, 0, 1, 1);
             this.m_PasswordLineEdit = new QLineEdit(this.page_4);
             this.m_PasswordLineEdit.ObjectName = "m_PasswordLineEdit";
@@ -155,6 +153,8 @@ namespace Synapse.QtClient.Widgets {
             QObject.Connect(m_PasswordLineEdit, Qt.SIGNAL("returnPressed()"), saveAccountButton, Qt.SLOT("click()"));
             QObject.Connect(m_LoginLineEdit, Qt.SIGNAL("returnPressed()"), saveAccountButton, Qt.SLOT("click()"));
             QMetaObject.ConnectSlotsByName(this);
+            this.label.SetBuddy(m_LoginLineEdit);
+            this.label_2.SetBuddy(m_PasswordLineEdit);
         }
     }
 }
