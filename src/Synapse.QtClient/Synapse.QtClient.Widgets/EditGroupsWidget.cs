@@ -35,7 +35,7 @@ namespace Synapse.QtClient.Widgets
 		{
 			SetupUi();
 
-			addButton.icon = Gui.LoadIcon("add", 16);
+			addButton.icon = Gui.LoadIcon("list-add", 16);
 		}
 	
 		public Account Account {

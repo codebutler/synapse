@@ -36,24 +36,24 @@ namespace Synapse.QtClient
 		{
 			m_AccountsMenu = new QMenu();
 			
-			m_QuitAction = new QAction(Gui.LoadIcon("gtk-quit"), "Quit", this);
+			m_QuitAction = new QAction(Gui.LoadIcon("application-exit"), "Quit", this);
 			m_QuitAction.Shortcut = new QKeySequence("Ctrl+Q");
 			QObject.Connect(m_QuitAction, Qt.SIGNAL("triggered()"), HandleQuitActionTriggered);
 			
-			m_ShowPreferencesAction = new QAction(Gui.LoadIcon("gtk-preferences"), "Preferences", this);
+			m_ShowPreferencesAction = new QAction(Gui.LoadIcon("preferences-desktop"), "Preferences", this);
 			QObject.Connect(m_ShowPreferencesAction, Qt.SIGNAL("triggered()"), HandleShowPreferencesActionTriggered);
 			
 			m_SendFeedbackAction = new QAction("Send Feedback...", this);
 			QObject.Connect(m_SendFeedbackAction, Qt.SIGNAL("triggered()"), HandleSendFeedbackActionTriggered);
 			
-			m_ShowBrowserAction = new QAction(Gui.LoadIcon("search"), "Discover Services...", this);
+			m_ShowBrowserAction = new QAction(Gui.LoadIcon("system-search"), "Discover Services...", this);
 			QObject.Connect(m_ShowBrowserAction, Qt.SIGNAL("triggered()"), HandleShowBrowserActionTriggered);
 						
-			m_NewMessageAction = new QAction(Gui.LoadIcon("gtk-new"), "New Message...", this);
+			m_NewMessageAction = new QAction(Gui.LoadIcon("document-new"), "New Message...", this);
 			
 			m_JoinMucAction = new QAction(Gui.LoadIcon("internet-group-chat"), "Create/Join Conference...", this);
 			
-			m_EditProfileAction = new QAction(Gui.LoadIcon("stock_person"), "Edit Profile...", this);
+			m_EditProfileAction = new QAction(Gui.LoadIcon("user-info"), "Edit Profile...", this);
 			QObject.Connect(m_EditProfileAction, Qt.SIGNAL("triggered()"), HandleEditProfileActionTriggered);
 			
 			m_AboutAction = new QAction(Gui.LoadIcon("help-about"), "About", this);

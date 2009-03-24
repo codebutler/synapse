@@ -56,7 +56,7 @@ namespace Synapse.QtClient.Windows
 
 			QToolButton newTabButton = new QToolButton(m_Tabs);
 			newTabButton.AutoRaise = true;
-			newTabButton.SetDefaultAction(new QAction(Gui.LoadIcon("stock_new-tab", 16), "New Tab", newTabButton));
+			newTabButton.SetDefaultAction(new QAction(Gui.LoadIcon("tab-new", 16), "New Tab", newTabButton));
 			newTabButton.SetToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly);
 			QObject.Connect<QAction>(newTabButton, Qt.SIGNAL("triggered(QAction*)"), HandleNewTab);
 			m_Tabs.SetCornerWidget(newTabButton, Qt.Corner.BottomLeftCorner);
@@ -68,7 +68,7 @@ namespace Synapse.QtClient.Windows
 			QToolButton closeTabButton = new QToolButton(m_Tabs);
 			closeTabButton.SetToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly);
 			closeTabButton.AutoRaise = true;
-			closeTabButton.SetDefaultAction(new QAction(Gui.LoadIcon("stock_close", 16), "Close Tab", closeTabButton));
+			closeTabButton.SetDefaultAction(new QAction(Gui.LoadIcon("window-close", 16), "Close Tab", closeTabButton));
 			QObject.Connect<QAction>(closeTabButton, Qt.SIGNAL("triggered(QAction*)"), HandleCloseTab);
 			rightButtonsLayout.AddWidget(closeTabButton);
 
@@ -80,7 +80,7 @@ namespace Synapse.QtClient.Windows
 			trashButton.AutoRaise = true;
 			trashButton.PopupMode = QToolButton.ToolButtonPopupMode.InstantPopup;
 			trashButton.SetMenu(menu);
-			trashButton.SetDefaultAction(new QAction(Gui.LoadIcon("trashcan_empty", 16), "Recently Closed Tabs", trashButton));
+			trashButton.SetDefaultAction(new QAction(Gui.LoadIcon("user-trash", 16), "Recently Closed Tabs", trashButton));
 			rightButtonsLayout.AddWidget(trashButton);
 
 			// FIXME: This looks bad.

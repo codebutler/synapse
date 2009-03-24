@@ -223,7 +223,7 @@ namespace Synapse.QtClient.Windows
 			QObject.Connect<QAction>(formatMenu, Qt.SIGNAL("triggered(QAction*)"), HandleFormatMenuActionTriggered);
 			formatMenuButton.ToolButtonStyle = ToolButtonStyle.ToolButtonTextBesideIcon;
 			formatMenuButton.Text = "Format";
-			formatMenuButton.icon = Gui.LoadIcon("fonts", 16);
+			formatMenuButton.icon = Gui.LoadIcon("preferences-desktop-font", 16);
 			formatMenuButton.PopupMode = QToolButton.ToolButtonPopupMode.InstantPopup;
 			formatMenuButton.SetMenu(formatMenu);
 			toolbar.AddWidget(formatMenuButton);
@@ -257,7 +257,7 @@ namespace Synapse.QtClient.Windows
 			var insertMenuButton = new QToolButton(this);
 			insertMenuButton.ToolButtonStyle = ToolButtonStyle.ToolButtonTextBesideIcon;
 			insertMenuButton.Text = "Insert";
-			insertMenuButton.icon = Gui.LoadIcon("image", 16);
+			insertMenuButton.icon = Gui.LoadIcon("image-x-generic", 16);
 			insertMenuButton.PopupMode = QToolButton.ToolButtonPopupMode.InstantPopup;
 			insertMenuButton.SetMenu(insertMenu);
 			toolbar.AddWidget(insertMenuButton);
@@ -291,7 +291,7 @@ namespace Synapse.QtClient.Windows
 			activitiesMenu.AddSeparator();
 			
 			activitiesMenu.AddAction(Gui.LoadIcon("applications-graphics", 16), "Launch Whiteboard...");
-			activitiesMenu.AddAction(Gui.LoadIcon("desktop", 16), "Share Desktop...");
+			activitiesMenu.AddAction(Gui.LoadIcon("user-desktop", 16), "Share Desktop...");
 			
 			var spacerWidget = new QWidget(toolbar);
 			spacerWidget.SetSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed);
