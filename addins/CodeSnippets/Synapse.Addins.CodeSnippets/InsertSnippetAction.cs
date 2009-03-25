@@ -40,7 +40,7 @@ namespace Synapse.Addins.CodeSnippets
 			QObject.Connect<bool>(this, Qt.SIGNAL("triggered(bool)"), HandleOnTriggered);
 			
 			base.Text = "Code Snippet...";
-			base.icon = Gui.LoadIcon("stock_script", 16);
+			base.icon = new QIcon(new QPixmap("resource:/codesnippets/insert-code.png"));
 		}
 		
 		void HandleOnTriggered (bool isChecked)

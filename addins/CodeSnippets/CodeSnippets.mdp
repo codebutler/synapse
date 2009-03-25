@@ -24,6 +24,7 @@
     <File name="Synapse.Addins.CodeSnippets/CodeMessageDisplayFormatter.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Addins.CodeSnippets/InsertSnippetAction.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.Addins.CodeSnippets/InsertSnippetDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="insert-code.png" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />

@@ -11,7 +11,8 @@ FILES =  \
 
 RESOURCES =  \
 	CodeSnippets.addin.xml \
-	ConversationHeader.html 
+	ConversationHeader.html \
+	insert-code.png 
 REFERENCES =  \
 	$(QTWEBKIT_SHARP_LIBS) \
 	$(QYOTO_LIBS) \
