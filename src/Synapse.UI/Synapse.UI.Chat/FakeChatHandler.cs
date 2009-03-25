@@ -25,6 +25,7 @@ using jabber;
 using jabber.protocol.client;
 
 using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 
 namespace Synapse.UI.Chat
 {
@@ -32,7 +33,7 @@ namespace Synapse.UI.Chat
 	{		
 		JID m_OtherJid = new JID("BritneySpears14@example.com");
 		
-		public FakeChatHandler () : base (new Account("bloodninja", "example.com", "synapse"))
+		public FakeChatHandler () : base (new Account(new AccountInfo("bloodninja", "example.com", "pass", "synapse")))
 		{
 		}
 		

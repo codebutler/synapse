@@ -68,7 +68,7 @@ namespace Synapse.Xmpp.Services
 				if (config != null) {
 					foreach (AccountInfo info in config.Accounts) {
 						try {
-							AddAccount(Account.FromAccountInfo(info), false);
+							AddAccount(new Account(info), false);
 						} catch (Exception ex) {
 							// FIXME: Show this error somewhere, mark AccountInfo invalid!
 							// FIXME: Have PreferencesDialog list AccountInfos instead of Accounts
@@ -193,7 +193,7 @@ namespace Synapse.Xmpp.Services
 		{
 			List<AccountInfo> infos = new List<AccountInfo>();
 			foreach (Account account in m_Accounts) {
-				infos.Add(account.ToAccountInfo());
+				infos.Add(account.Info);
 			}
 			
 			AccountsConfig config = new AccountsConfig();
@@ -234,10 +234,19 @@ namespace Synapse.Xmpp.Services
 	
 	public class AccountInfo
 	{
+		public AccountInfo (string user, string domain, string password, string resource) : this ()
+		{
+			User = user;
+			Domain = domain;
+			Password = password;
+			Resource = resource;
+		}
+		
 		public AccountInfo ()
 		{
 			ConnectPort = 5222;
 			AutoConnect = true;
+			ProxyType = ProxyType.System;
 		}
 		
 		public string User {
@@ -268,8 +277,36 @@ namespace Synapse.Xmpp.Services
 			get; set;
 		}
 		
+		public ProxyType ProxyType {
+			get; set;
+		}
+		
+		public string ProxyHost {
+			get; set;
+		}
+		
+		public int ProxyPort {
+			get; set;
+		}
+		
+		public string ProxyUsername {
+			get; set;
+		}
+		
+		public string ProxyPassword {
+			get; set;
+		}
+				
 		public SerializableDictionary<string, string> Properties {
 			get; set;
 		}
+	}
+	
+	public enum ProxyType {
+		System,
+		None,
+		HTTP,
+		SOCKS4,
+		SOCKS5
 	}
 }

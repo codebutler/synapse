@@ -46,14 +46,10 @@ namespace Synapse.Xmpp
 	
 	public class Account
 	{
-		string m_User;
-		string m_Domain;
-		string m_Resource;
-		string m_Password;
-		string m_ConnectServer;
-		int    m_ConnectPort;
-		bool   m_AutoConnect;
-
+		AccountInfo m_Info;
+		
+		string m_RequestedResource;
+		
 		bool m_NetworkDisconnected = false;
 
 		DateTime m_ConnectedAt;
@@ -75,8 +71,7 @@ namespace Synapse.Xmpp
 		IQTracker         m_IQTracker;
 		AvatarManager     m_AvatarManager;
 		
-		Dictionary<Type, IDiscoverable>        m_Features   = new Dictionary<Type, IDiscoverable>();
-		SerializableDictionary<string, string> m_Properties = new SerializableDictionary<string, string>();
+		Dictionary<Type, IDiscoverable> m_Features = new Dictionary<Type, IDiscoverable>();
 
 		Dictionary<JID, Presence> m_UserPresenceCache;
 
@@ -88,36 +83,16 @@ namespace Synapse.Xmpp
 		public event PropertyEventHandler PropertyChanged;
 		public event AccountEventHandler  ReceivedRoster;
 		
-		public Account (string user, string domain, string resource) : this (user, domain, resource, null, 5222)
-		{
-		}
-		
-		public Account (string user, string domain, string resource, string connectServer, int connectPort) : this ()
-		{
-			if (String.IsNullOrEmpty(user)) throw new ArgumentNullException("user");
-			if (String.IsNullOrEmpty(domain)) throw new ArgumentNullException("domain");
-			if (String.IsNullOrEmpty(resource)) throw new ArgumentNullException("resource");
+		public Account (AccountInfo info)	
+		{					
+			if (String.IsNullOrEmpty(info.User)) throw new ArgumentNullException("user");
+			if (String.IsNullOrEmpty(info.Domain)) throw new ArgumentNullException("domain");
+			if (String.IsNullOrEmpty(info.Resource)) throw new ArgumentNullException("resource");
 			
-			m_User     = user;
-			m_Domain   = domain;
-			m_Resource = resource;
-			m_ConnectServer = connectServer;
-			m_ConnectPort = connectPort;
-
+			m_Info = info;
+			
 			m_UserPresenceCache = new Dictionary<JID, Presence>();
-		}
-
-		public static Account FromAccountInfo(AccountInfo info)
-		{
-			Account account = new Account(info.User, info.Domain, info.Resource, info.ConnectServer, info.ConnectPort);
-			account.Password = info.Password;
-			account.AutoConnect = info.AutoConnect;
-			account.Properties = info.Properties;
-			return account;
-		}
 		
-		private Account ()
-		{			
 			m_Client = new JabberClient();
 			m_Client.AutoPresence = false;
 			m_Client.AutoRoster = true;
@@ -187,7 +162,7 @@ namespace Synapse.Xmpp
 		void HandleOnBeforePresenceOut(object sender, Presence pres)
 		{
 			var e = new Element("ResourceDisplay", "http://synapse.im/protocol/resourcedisplay", m_Client.Document);
-			e.InnerText = m_Resource;
+			e.InnerText = m_RequestedResource;
 			pres.AppendChild(e);
 		}
 
@@ -376,11 +351,7 @@ namespace Synapse.Xmpp
 		
 		public bool AutoConnect {
 			get {
-				return m_AutoConnect;
-			}
-			set {
-				CheckIfReadOnly();
-				m_AutoConnect = value;
+				return m_Info.AutoConnect;
 			}
 		}
 		
@@ -391,75 +362,13 @@ namespace Synapse.Xmpp
 			}
 		}
 		
-		public string Password {
-			get {
-				return m_Password;
-			}
-			set {
-				CheckIfReadOnly();
-				this.m_Password = value;
-			}
-		}
-		
-		public string User {
-			get {
-				return m_User;
-			}
-			set {
-				CheckIfReadOnly();
-				m_User = value;
-			}
-		}
-		
-		public string Domain {
-			get {
-				return m_Domain;
-			}
-			set {
-				CheckIfReadOnly();
-				m_Domain = value;
-			}
-		}
-		
-		public string Resource {
-			get {
-				return m_Resource;
-			}
-			set {
-				CheckIfReadOnly();
-				m_Resource = value;
-			}
-		}
-		
-		public string ConnectServer {
-			get {
-				return m_ConnectServer;
-			}
-			set {
-				CheckIfReadOnly();
-				m_ConnectServer = value;
-			}
-		}
-		
-		public int ConnectPort {
-			get {
-				return m_ConnectPort;
-			}
-			set {
-				CheckIfReadOnly();
-				m_ConnectPort = value;
-			}
-		}
-		
 		public JID Jid {
-			get {
-				if (string.IsNullOrEmpty(m_User))
-					throw new Exception("User is blank");
-				
-				if (string.IsNullOrEmpty(m_Domain))
-					throw new Exception("Domain is blank");
-				
-				return new JID(m_User, m_Domain, m_Resource);
+			get {				
+				if (ConnectionState != AccountConnectionState.Disconnected)
+					return m_Client.JID;
+				else {
+					return new JID(m_Info.User, m_Info.Domain, m_Info.Resource);
+				}
 			}
 		}
 
@@ -580,9 +489,20 @@ namespace Synapse.Xmpp
 			}
 		}
 		
+		public string UserDisplayName {
+			get {
+				if (m_MyVCard != null && !String.IsNullOrEmpty(m_MyVCard.Nickname))
+					return m_MyVCard.Nickname;
+				else if (m_MyVCard != null && !String.IsNullOrEmpty(m_MyVCard.FullName))
+					return m_MyVCard.FullName;
+				else
+					return this.Jid.User;
+			}
+		}
+		
 		public void Connect()
 		{
-			if (String.IsNullOrEmpty(m_Password)) {
+			if (String.IsNullOrEmpty(m_Info.Password)) {
 				throw new Exception("No password");
 			}
 
@@ -593,12 +513,17 @@ namespace Synapse.Xmpp
 			
 			m_NetworkDisconnected = false;
 			
-			m_Client.User        = m_User;
-			m_Client.Server      = m_Domain;
-			m_Client.Resource    = m_Resource;
-			m_Client.NetworkHost = m_ConnectServer;
-			m_Client.Port        = m_ConnectPort;
-			m_Client.Password    = m_Password;
+			// Store this, server might assign us something else.
+			m_RequestedResource = m_Info.Resource;
+			
+			m_Client.User        = m_Info.User;
+			m_Client.Server      = m_Info.Domain;
+			m_Client.Resource    = m_Info.Resource;
+			m_Client.NetworkHost = m_Info.ConnectServer;
+			m_Client.Port        = m_Info.ConnectPort;
+			m_Client.Password    = m_Info.Password;
+			
+			//m_Client.proxy
 			
 			// FIXME: Calling this in a separate thread so DNS doesn't block the UI.
 			// This should be fixed inside jabber-net.
@@ -661,29 +586,22 @@ namespace Synapse.Xmpp
 			ConnectionState = AccountConnectionState.Disconnected;
 		}
 		
-		internal SerializableDictionary<string, string> Properties {
-			get {
-				return m_Properties;
-			}
-			set {
-				if (value != null)
-					m_Properties = value;
-			}
-		}
-		
 		public string GetProperty (string name)
 		{
-			if (m_Properties.ContainsKey(name))
-				return m_Properties[name];
-			else
-				return null;
+			lock (m_Info.Properties) {
+				if (m_Info.Properties.ContainsKey(name))
+					return m_Info.Properties[name];
+				else	
+					return null;
+			}
 		}
 		
 		public void SetProperty (string name, string value)
 		{
 			string oldValue = GetProperty(name);
 			
-			m_Properties[name] = value;
+			lock (m_Info.Properties)
+				m_Info.Properties[name] = value;
 			
 			var accountService = ServiceManager.Get<AccountService>();
 			accountService.SaveAccounts();
@@ -692,18 +610,10 @@ namespace Synapse.Xmpp
 				PropertyChanged(this, name, oldValue, value);
 		}
 
-		public AccountInfo ToAccountInfo ()
-		{
-			AccountInfo info = new AccountInfo();
-			info.User     = m_User;
-			info.Domain   = m_Domain;
-			info.Resource = m_Resource;
-			info.Password = m_Password;
-			info.ConnectServer = m_ConnectServer;
-			info.ConnectPort = m_ConnectPort;
-			info.AutoConnect = m_AutoConnect;
-			info.Properties = m_Properties;
-			return info;
+		public AccountInfo Info {
+			get {
+				return m_Info;
+			}
 		}
 
 		public void PostActivityFeedItem (JID from, string type, string actionItem, string content)
@@ -792,13 +702,6 @@ namespace Synapse.Xmpp
 			AccountEventHandler handler = ConnectionStateChanged;
 			if (handler != null) {
 				handler(this);
-			}
-		}
-			
-		private void CheckIfReadOnly()
-		{
-			if (IsReadOnly) {
-				throw new InvalidOperationException("Cannot modify connected account");
 			}
 		}
 	}

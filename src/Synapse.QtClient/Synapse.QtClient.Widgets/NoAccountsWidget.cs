@@ -101,8 +101,7 @@ namespace Synapse.QtClient.Widgets
 			else if (String.IsNullOrEmpty(m_PasswordLineEdit.Text))
 				QMessageBox.Critical(this.TopLevelWidget(), "Synapse", "Password may not be empty");
 			else {
-				Account account = new Account(jid.User, jid.Server, "Synapse");
-				account.Password = m_PasswordLineEdit.Text;
+				Account account = new Account(new AccountInfo(jid.User, jid.Server, m_PasswordLineEdit.Text, "Synapse"));
 				AccountService service = ServiceManager.Get<AccountService>();
 				service.AddAccount(account);
 			}
