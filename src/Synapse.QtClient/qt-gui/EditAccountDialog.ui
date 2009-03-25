@@ -280,7 +280,7 @@
           <widget class="QComboBox" name="comboBox">
            <item>
             <property name="text">
-             <string>Use System Settings</string>
+             <string>Use System Settings (DOES NOT WORK)</string>
             </property>
            </item>
            <item>

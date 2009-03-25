@@ -523,7 +523,51 @@ namespace Synapse.Xmpp
 			m_Client.Port        = m_Info.ConnectPort;
 			m_Client.Password    = m_Info.Password;
 			
-			//m_Client.proxy
+			if (m_Info.ProxyType == Synapse.Xmpp.Services.ProxyType.System) {
+				// FIXME: Figure out what's wrong with libproxy
+				m_Client.Proxy = jabber.connection.ProxyType.None;
+				/*
+				try {
+					var factory = new libproxy.ProxyFactory();
+					// FIXME: This isn't good enough because m_Info.Domain might have an SRV record.
+					string server = !String.IsNullOrEmpty(m_Info.ConnectServer) ? m_Info.ConnectServer : m_Info.Domain;
+					var proxies = factory.GetProxy(String.Format("xmpp://{0}", server));
+					if (proxies.Length > 0) {
+						var proxy = new System.Uri(proxies[0]);
+						if (proxy.Scheme == "direct") {
+							m_Client.Proxy = jabber.connection.ProxyType.None;
+						} else {
+							// FIXME: Use the detected proxy!
+							Console.WriteLine("Auto-detected proxy: " + proxy);
+						}
+					} else {
+						m_Client.Proxy = jabber.connection.ProxyType.None;
+					}
+				} catch (Exception ex) {
+					// FIXME: Show error window?
+					Console.Error.WriteLine("Proxy autodetection failed: " + ex);
+					m_Client.Proxy = jabber.connection.ProxyType.None;
+				}*/
+			} else {
+				m_Client.ProxyHost = m_Info.ProxyHost;
+				m_Client.ProxyPort = m_Info.ProxyPort;
+				m_Client.ProxyUsername = m_Info.ProxyUsername;
+				m_Client.ProxyPassword = m_Info.ProxyPassword;
+				switch (m_Info.ProxyType) {
+				case Synapse.Xmpp.Services.ProxyType.None:
+					m_Client.Proxy = jabber.connection.ProxyType.None;
+					break;
+				case Synapse.Xmpp.Services.ProxyType.HTTP:
+					m_Client.Proxy = jabber.connection.ProxyType.HTTP;
+					break;
+				case Synapse.Xmpp.Services.ProxyType.SOCKS4:
+					m_Client.Proxy = jabber.connection.ProxyType.Socks4;
+					break;
+				case Synapse.Xmpp.Services.ProxyType.SOCKS5:
+					m_Client.Proxy = jabber.connection.ProxyType.Socks5;
+					break;
+				}
+			}
 			
 			// FIXME: Calling this in a separate thread so DNS doesn't block the UI.
 			// This should be fixed inside jabber-net.

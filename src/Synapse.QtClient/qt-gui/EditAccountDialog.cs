@@ -123,6 +123,10 @@ namespace Synapse.QtClient.Windows {
             this.resourceCombo.ObjectName = "resourceCombo";
             this.resourceCombo.Editable = true;
             formLayout.SetWidget(2, QFormLayout.ItemRole.FieldRole, this.resourceCombo);
+            this.resourceCombo.InsertItems(0, new System.Collections.Generic.List<string>(new string[] {
+                            "Home Computer",
+                            "Work Computer",
+                            "Laptop"}));
             QSpacerItem verticalSpacer;
             verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
             verticalLayout_2.AddItem(verticalSpacer);
@@ -206,16 +210,20 @@ namespace Synapse.QtClient.Windows {
             this.label_9 = new QLabel(this.tab_3);
             this.label_9.ObjectName = "label_9";
             this.label_9.Text = "&Type:";
-            this.label_9.SetBuddy(comboBox);
             formLayout_3.SetWidget(0, QFormLayout.ItemRole.LabelRole, this.label_9);
             this.comboBox = new QComboBox(this.tab_3);
             this.comboBox.ObjectName = "comboBox";
             formLayout_3.SetWidget(0, QFormLayout.ItemRole.FieldRole, this.comboBox);
+            this.comboBox.InsertItems(0, new System.Collections.Generic.List<string>(new string[] {
+                            "Use System Settings (DOES NOT WORK)",
+                            "No Proxy",
+                            "HTTP",
+                            "SOCKS4",
+                            "SOCKS5"}));
             this.proxyHostLabel = new QLabel(this.tab_3);
             this.proxyHostLabel.ObjectName = "proxyHostLabel";
             this.proxyHostLabel.Enabled = true;
             this.proxyHostLabel.Text = "&Host:";
-            this.proxyHostLabel.SetBuddy(proxyHostLineEdit);
             formLayout_3.SetWidget(2, QFormLayout.ItemRole.LabelRole, this.proxyHostLabel);
             this.proxyHostLineEdit = new QLineEdit(this.tab_3);
             this.proxyHostLineEdit.ObjectName = "proxyHostLineEdit";
@@ -225,7 +233,6 @@ namespace Synapse.QtClient.Windows {
             this.proxyPortLabel.ObjectName = "proxyPortLabel";
             this.proxyPortLabel.Enabled = true;
             this.proxyPortLabel.Text = "&Port:";
-            this.proxyPortLabel.SetBuddy(proxyPortSpinBox);
             formLayout_3.SetWidget(3, QFormLayout.ItemRole.LabelRole, this.proxyPortLabel);
             this.proxyPortSpinBox = new QSpinBox(this.tab_3);
             this.proxyPortSpinBox.ObjectName = "proxyPortSpinBox";
@@ -236,7 +243,6 @@ namespace Synapse.QtClient.Windows {
             this.proxyUserLabel.ObjectName = "proxyUserLabel";
             this.proxyUserLabel.Enabled = true;
             this.proxyUserLabel.Text = "&Username:";
-            this.proxyUserLabel.SetBuddy(proxyUserLineEdit);
             formLayout_3.SetWidget(4, QFormLayout.ItemRole.LabelRole, this.proxyUserLabel);
             this.proxyUserLineEdit = new QLineEdit(this.tab_3);
             this.proxyUserLineEdit.ObjectName = "proxyUserLineEdit";
@@ -246,7 +252,6 @@ namespace Synapse.QtClient.Windows {
             this.proxyPassLabel.ObjectName = "proxyPassLabel";
             this.proxyPassLabel.Enabled = true;
             this.proxyPassLabel.Text = "Pa&ssword:";
-            this.proxyPassLabel.SetBuddy(proxyPassLineEdit);
             formLayout_3.SetWidget(5, QFormLayout.ItemRole.LabelRole, this.proxyPassLabel);
             this.proxyPassLineEdit = new QLineEdit(this.tab_3);
             this.proxyPassLineEdit.ObjectName = "proxyPassLineEdit";
@@ -269,6 +274,11 @@ namespace Synapse.QtClient.Windows {
             QObject.Connect(buttonBox, Qt.SIGNAL("accepted()"), this, Qt.SLOT("accept()"));
             QObject.Connect(buttonBox, Qt.SIGNAL("rejected()"), this, Qt.SLOT("reject()"));
             QMetaObject.ConnectSlotsByName(this);
+            this.label_9.SetBuddy(comboBox);
+            this.proxyHostLabel.SetBuddy(proxyHostLineEdit);
+            this.proxyPortLabel.SetBuddy(proxyPortSpinBox);
+            this.proxyUserLabel.SetBuddy(proxyUserLineEdit);
+            this.proxyPassLabel.SetBuddy(proxyPassLineEdit);
         }
     }
 }

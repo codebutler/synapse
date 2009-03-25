@@ -136,7 +136,7 @@ namespace Synapse.QtClient.Windows
 				Account account = accountService.GetAccount(jid);
 				if (account != null) {
 					if (!account.IsReadOnly) {
-						var dialog = new EditAccountDialog(account, this);
+						var dialog = new EditAccountDialog(account.Info, this);
 						dialog.Show();
 						dialog.Exec();
 						
