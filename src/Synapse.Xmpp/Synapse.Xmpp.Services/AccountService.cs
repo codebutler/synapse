@@ -247,6 +247,7 @@ namespace Synapse.Xmpp.Services
 			ConnectPort = 5222;
 			AutoConnect = true;
 			ProxyType = ProxyType.System;
+			Properties = new SerializableDictionary<string, string>();
 		}
 		
 		public string User {
