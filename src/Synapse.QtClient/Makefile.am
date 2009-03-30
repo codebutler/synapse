@@ -37,6 +37,7 @@ FILES =  \
 	qt-gui/ServiceBrowserWindow.cs \
 	qt-gui/WebIdentityConfiguratorWidget.cs \
 	QtTraceListener.cs \
+	QyotoTrunk/QByteArrayConverter.cs \
 	QyotoTrunk/QFormLayout.cs \
 	QyotoTrunk/QPlainTextEdit.cs \
 	QyotoTrunk/QTextBlock.cs \

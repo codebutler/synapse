@@ -90,6 +90,8 @@ namespace Synapse.QtClient.Windows
 			if (handler == null)
 				throw new ArgumentNullException("handler");
 			m_Handler = handler;
+						
+			var settingsService = ServiceManager.Get<SettingsService>();
 			
 			SetupUi();
 			
@@ -103,6 +105,10 @@ namespace Synapse.QtClient.Windows
 				participantsGrid.ContextMenuPolicy = Qt.ContextMenuPolicy.CustomContextMenu;
 				participantsGrid.ItemActivated += HandleItemActivated;
 				
+				participantsGrid.ListMode = settingsService.Get<bool>("MucListMode");
+				if (settingsService.Has("MucIconSize"))
+					participantsGrid.IconSize = settingsService.Get<int>("MucIconSize");
+					
 				var group = new QActionGroup(this);
 				
 				var gridModeAction = new QAction("View as Grid", this);
@@ -116,6 +122,7 @@ namespace Synapse.QtClient.Windows
 				QObject.Connect(listModeAction, Qt.SIGNAL("triggered()"), HandleListModeActionTriggered);
 				listModeAction.SetActionGroup(group);
 				listModeAction.Checkable = true;
+				listModeAction.Checked = participantsGrid.ListMode;
 				m_ParticipantsMenu.AddAction(listModeAction);
 				
 				var separatorAction = new QAction(participantsGrid);
@@ -123,6 +130,10 @@ namespace Synapse.QtClient.Windows
 				m_ParticipantsMenu.AddAction(separatorAction);
 				
 				var sliderAction = new AvatarGridZoomAction<jabber.connection.RoomParticipant>(participantsGrid);
+				sliderAction.ValueChanged += delegate (int value) {
+					participantsGrid.IconSize = value;
+					settingsService.Set("MucIconSize", value);				
+				};
 				m_ParticipantsMenu.AddAction(sliderAction);
 				
 				m_ParticipantItemMenu = new QMenu(this);
@@ -209,6 +220,11 @@ namespace Synapse.QtClient.Windows
 	
 			splitter.SetStretchFactor(1, 0);
 			splitter_2.SetStretchFactor(1, 0);
+			
+			if (settingsService.Has("MucSplitterState")) {
+				byte[] state = settingsService.Get<byte[]>("MucSplitterState");
+				splitter_2.RestoreState(QByteArrayConverter.FromArray(state));
+			}
 		
 			KeyPressEater eater = new KeyPressEater(this);
 			eater.KeyEvent += HandleKeyEvent;
@@ -544,11 +560,17 @@ namespace Synapse.QtClient.Windows
 		void HandleGridModeActionTriggered ()
 		{
 			participantsGrid.ListMode = false;
+			
+			var settingsService = ServiceManager.Get<SettingsService>();
+			settingsService.Set("MucListMode", false);
 		}
 		
 		void HandleListModeActionTriggered ()
 		{
 			participantsGrid.ListMode = true;
+			
+			var settingsService = ServiceManager.Get<SettingsService>();
+			settingsService.Set("MucListMode", true);
 		}
 		
 		void HandleViewProfileActionTriggered ()
@@ -710,6 +732,14 @@ namespace Synapse.QtClient.Windows
 			} else {
 				m_ParticipantsMenu.Popup(participantsGrid.MapToGlobal(point));
 			}
+		}
+		
+		[Q_SLOT]
+		void on_splitter_2_splitterMoved (int pos, int index)
+		{
+			var settingsService = ServiceManager.Get<SettingsService>();
+			byte[] state = QByteArrayConverter.ToArray(splitter_2.SaveState());
+			settingsService.Set("MucSplitterState", state);
 		}
 	}
 }

@@ -25,6 +25,7 @@ using System.IO;
 using System.Collections.Generic;
 using Qyoto;
 using Synapse.ServiceStack;
+using Synapse.Services;
 using Synapse.UI.Chat;
 using Synapse.UI.Services;
 using Synapse.Xmpp;
@@ -138,7 +139,14 @@ namespace Synapse.QtClient.Windows
 			accountService.AccountRemoved += HandleAccountRemoved;
 			foreach (Account account in accountService.Accounts)
 				HandleAccountAdded(account);
+		
+			var settingsService = ServiceManager.Get<SettingsService>();
+			if (settingsService.Has("ChatsWindowGeometry")) {
+				var geometry = settingsService.Get<byte[]>("ChatsWindowGeometry");
+				base.RestoreGeometry(QByteArrayConverter.FromArray(geometry));
+			}
 		}
+		
 
 		public void StartChat (Account account, JID jid)
 		{
@@ -284,6 +292,10 @@ namespace Synapse.QtClient.Windows
 			while (m_Tabs.Count > 0)
 				HandleCloseTab(null);
 			
+			var geometry = QByteArrayConverter.ToArray(base.SaveGeometry());
+			var settingsService = ServiceManager.Get<SettingsService>();
+			settingsService.Set("ChatsWindowGeometry", geometry);
+			
 			this.Hide();
 			evnt.Accept();
 		}
@@ -300,6 +312,24 @@ namespace Synapse.QtClient.Windows
 					m_Tabs.CurrentWidget().SetFocus();
 				}
 			}
+		}
+		
+		protected override void ResizeEvent (Qyoto.QResizeEvent arg1)
+		{
+			base.ResizeEvent (arg1);
+			
+			var geometry = QByteArrayConverter.ToArray(base.SaveGeometry());
+			var settingsService = ServiceManager.Get<SettingsService>();
+			settingsService.Set("ChatsWindowGeometry", geometry);
+		}
+		
+		protected override void MoveEvent (Qyoto.QMoveEvent arg1)
+		{
+			base.MoveEvent (arg1);
+			
+			var geometry = QByteArrayConverter.ToArray(base.SaveGeometry());
+			var settingsService = ServiceManager.Get<SettingsService>();
+			settingsService.Set("ChatsWindowGeometry", geometry);
 		}
 		
 		class EmptyTab : QWebView
