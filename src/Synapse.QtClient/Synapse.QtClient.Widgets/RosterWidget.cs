@@ -307,7 +307,17 @@ namespace Synapse.QtClient.Widgets
 	
 		public void RemoveAccount(Account account)
 		{
-			throw new NotImplementedException();
+			for (int x = 0; x < m_AccountsContainer.Layout().Count(); x++) {
+				var item = m_AccountsContainer.Layout().ItemAt(x);
+				if (item is QWidgetItem) {					
+					AccountStatusWidget widget = (AccountStatusWidget)((QWidgetItem)item).Widget();
+					if (widget.Account == account) {
+						m_AccountsContainer.Layout().RemoveWidget(widget);
+						widget.SetParent(null);
+						break;
+					}
+				}
+			}
 		}
 		
 		public void AddActivityFeedItem (IActivityFeedItem item)

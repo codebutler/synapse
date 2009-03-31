@@ -121,12 +121,12 @@ namespace Synapse.Xmpp.Services
 			}
 		}
 		
-		public void AddAccount (Account account)
+		private void AddAccount (Account account)
 		{
 			AddAccount(account, true);
 		}
 		
-		public void AddAccount (Account account, bool save)
+		private void AddAccount (Account account, bool save)
 		{
 			lock (m_Accounts) {
 				m_Accounts.Add(account);
@@ -144,10 +144,19 @@ namespace Synapse.Xmpp.Services
 			}
 		}
 		
+		public void AddAccount (AccountInfo accountInfo)
+		{
+			var account = new Account(accountInfo);
+			AddAccount(account, true);
+		}
+		
 		public void RemoveAccount (Account account)
 		{
 			lock (m_Accounts) {
 				if (m_Accounts.Contains(account)) {
+					
+					account.Disconnect();
+					
 					m_Accounts.Remove(account);
 					
 					if (AccountRemoved != null) {

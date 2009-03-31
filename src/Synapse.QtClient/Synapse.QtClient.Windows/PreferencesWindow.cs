@@ -112,15 +112,32 @@ namespace Synapse.QtClient.Windows
 		[Q_SLOT]
 		void on_addAccountButton_clicked ()
 		{
-			// FIXME:
-			QMessageBox.Information(this, "Not Implemented", "This feature has not yet been implemented.");
+			var dialog = new AddAccountDialog();
+			if (dialog.Exec() == (uint)QDialog.DialogCode.Accepted) {
+				accountsList.Update();
+			}
 		}		
 	
 		[Q_SLOT]
 		void on_removeAccountButton_clicked ()
 		{
-			// FIXME: 
-			QMessageBox.Information(this, "Not Implemented", "This feature has not yet been implemented.");
+			var selected = accountsList.SelectionModel().SelectedIndexes();
+			if (selected.Count > 0) {
+				var data = accountsList.Model().Data(selected[0], (int)Qt.ItemDataRole.DisplayRole);
+				var jid = new jabber.JID((string)data);
+				
+				var accountService = ServiceManager.Get<AccountService>();				
+				Account account = accountService.GetAccount(jid);
+				if (account != null) {
+					if (QMessageBox.Question(this, "Remove Account", 
+					                         "Are you sure you want to remove this account?", 
+					                         (uint)QMessageBox.StandardButton.Yes | (uint)QMessageBox.StandardButton.No,
+					                         QMessageBox.StandardButton.No) == QMessageBox.StandardButton.Yes)
+					{						
+						accountService.RemoveAccount(account);
+					}
+				}
+			}
 		}
 		
 		[Q_SLOT]
