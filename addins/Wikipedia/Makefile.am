@@ -4,7 +4,9 @@ FILES =  \
 	AssemblyInfo.cs \
 	WikipediaMessageDisplayFormatter.cs 
 
-RESOURCES = Wikipedia.addin.xml
+RESOURCES =  \
+	logo-16.png \
+	Wikipedia.addin.xml
 
 REFERENCES =  \
 	System \

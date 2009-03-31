@@ -9,6 +9,11 @@
 		<Addin id="UI" version="0.1" />
 	</Dependencies>
 
+
+	<Extension path="/Synapse/UI/ResourceProviders">
+		<ResourceProvider id="wikipedia"/>
+	</Extension>
+	
 	<Extension path="/Synapse/UI/Chat/MessageDisplayFormatters">
 		<MessageDisplayFormatter class="Synapse.Addins.Wikipedia.WikipediaMessageDisplayFormatter" />
 	</Extension>

@@ -10,10 +10,10 @@ namespace Synapse.Addins.Wikipedia
 {
 	public class WikipediaMessageDisplayFormatter : IMessageDisplayFormatter
 	{
-		const string WIKIPEDIA_PAGE_LINK_PATTERN = @"<a href=""http://(www\.)?([a-zA-Z]{2})\.wikipedia\.org/wiki/(.*?)""";	// Pattern to see if a string contains a wikipedia-url	
+		const string WIKIPEDIA_PAGE_LINK_PATTERN = @"(<a\s.*?href=""(http://(www\.)?([a-zA-Z]{2})\.wikipedia.(com|org)/wiki/(.*?))"".*?>.*?</a>)";
 
-                const string STYLE_BEGIN = "<p style=\"background-color:white; color:black; border-width:1px; border-style:solid;\">"; // Style to format the wikipediaPreview.
-                const string STYLE_END = "</p>";
+		const string STYLE_BEGIN = "<p style=\"min-height: 20px; margin-top: 0px; padding: 2px 2px 2px 22px; background: url(resource:/wikipedia/logo-16.png) 2px 2px no-repeat white; color: black; border: 1px solid #666;\">"; // Style to format the wikipediaPreview.
+		const string STYLE_END = "</p>";
 		
 		public bool SupportsMessage(string bodyHtml, Message message)
 		{
@@ -22,15 +22,10 @@ namespace Synapse.Addins.Wikipedia
 
 		public string FormatMessage(string bodyHtml, Message message)
 		{
-                        string chatMessage = bodyHtml;
-                        MatchCollection matchCollection = Regex.Matches(bodyHtml, WIKIPEDIA_PAGE_LINK_PATTERN); // matchCollection contains (ia) the Wikipedia-Locations and the names of the articles
-
-                        foreach(Match match in matchCollection) // Maybe more than one article was posted in a message
-                        {
-                                string linkUrl = String.Format("http://{0}.wikipedia.org/wiki/{1}",  match.Groups[2], match.Groups[3]); // Groups[2] = Location , Groups[3] = Article
-                                chatMessage += BuildHtmlPreview(linkUrl); // Add the WikipediaPreview to the chatMessage                                
-                        }
-                        return chatMessage; // This will be displayed in the ChatWindow
+			return Regex.Replace(bodyHtml, WIKIPEDIA_PAGE_LINK_PATTERN, delegate (Match match) {
+				string linkUrl = match.Groups[2].Value;
+				return match.Value + BuildHtmlPreview(linkUrl);
+			}, RegexOptions.Singleline);
 		}
 
 		public bool StopAfter {
@@ -44,6 +39,7 @@ namespace Synapse.Addins.Wikipedia
 			try { // Connect to Wikipedia and read the Article
 				Uri url = new Uri(linkUrl);
 				HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+				request.UserAgent = "Mozilla/5.0"; // Seriously wikipedia?
 				request.Timeout = 2000;
 				WebResponse response = request.GetResponse();
 				string sourceCode = null;
@@ -55,25 +51,23 @@ namespace Synapse.Addins.Wikipedia
 					if (regex.IsMatch(sourceCode)) {
 						Match match = regex.Match(sourceCode);
 						string article = match.Groups[1].ToString(); // Get the first passage from the article
+						article = Synapse.Core.HtmlSanitizer.ToPlainText(article); // Remove HTML
+						article = Regex.Replace(article, @"\[\d*?\]", ""); // Remove source-tags
 
-						article = Regex.Replace(article, "(<.*?>)", delegate(Match tagmatch) { // Remove html-tags (except for <b> and </b>)
-                                                          string tag = tagmatch.Groups[1].ToString();
-                                                          if(tag.CompareTo("<b>") == 0 || tag.CompareTo("</b>") == 0)
-                                                                  return tag;
-                                                          else
-                                                                  return "";
-                                                        }); 
-                                                article = Regex.Replace(article, @"\[\d*?\]", ""); // Remove source-tags
-
-                                                if(article.Length > 160) // More than 160chars is too long.
-                                                {
-                                                        article = String.Format("{0}[...]", article.Remove(160));
-                                                }
-                                                return String.Format("{0}{1}{2}", STYLE_BEGIN, article, STYLE_END); // Format the message with html/css and return.
+						if(article.Length > 160) // More than 160chars is too long.
+						{
+							article = String.Format("{0}...", article.Remove(160));
+						}
+						
+						// FIXME:
+						// article = article.Replace(articleName, "<b>" + articleName + "</b>");
+						
+						return String.Format("{0}{1}{2}", STYLE_BEGIN, article, STYLE_END); // Format the message with html/css and return.
 					}
 				}
-			} catch {
+			} catch (Exception ex) {
 				Console.Error.WriteLine("WikipediaMessageDisplayFormatter.BuildHtmlPreview(string linkUrl) has an error (Maybe The Article doesn't exist?)");
+				Console.Error.WriteLine(ex);
 			}
 			return String.Empty; // No Preview
 		}
