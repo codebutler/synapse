@@ -58,7 +58,7 @@ namespace Synapse.Addins.Wikipedia
 
 						article = Regex.Replace(article, "(<.*?>)", delegate(Match tagmatch) { // Remove html-tags (except for <b> and </b>)
                                                           string tag = tagmatch.Groups[1].ToString();
-                                                          if(tag.CompareTo("<b>") == 0 | tag.CompareTo("</b>") == 0)
+                                                          if(tag.CompareTo("<b>") == 0 || tag.CompareTo("</b>") == 0)
                                                                   return tag;
                                                           else
                                                                   return "";
