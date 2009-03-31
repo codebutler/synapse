@@ -363,8 +363,8 @@ namespace Synapse.Xmpp
 		}
 		
 		public JID Jid {
-			get {				
-				if (ConnectionState != AccountConnectionState.Disconnected)
+			get {
+				if (ConnectionState != AccountConnectionState.Disconnected && m_Client.JID != null)
 					return m_Client.JID;
 				else {
 					return new JID(m_Info.User, m_Info.Domain, m_Info.Resource);
