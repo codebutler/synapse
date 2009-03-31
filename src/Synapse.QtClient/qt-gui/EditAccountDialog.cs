@@ -53,11 +53,35 @@ namespace Synapse.QtClient.Windows {
         
         protected QCheckBox autoConnectCheckBox;
         
+        protected QWidget tab_3;
+        
+        protected QLabel label_9;
+        
+        protected QComboBox comboBox;
+        
+        protected QLabel proxyHostLabel;
+        
+        protected QLineEdit proxyHostLineEdit;
+        
+        protected QLabel proxyPortLabel;
+        
+        protected QSpinBox proxyPortSpinBox;
+        
+        protected QLabel proxyUserLabel;
+        
+        protected QLineEdit proxyUserLineEdit;
+        
+        protected QLabel proxyPassLabel;
+        
+        protected QLineEdit proxyPassLineEdit;
+        
+        protected QFrame line;
+        
         protected QDialogButtonBox buttonBox;
         
         protected void SetupUi() {
             base.ObjectName = "EditAccountDialog";
-            this.Geometry = new QRect(0, 0, 368, 263);
+            this.Geometry = new QRect(0, 0, 343, 261);
             this.WindowTitle = "Edit Account";
             this.Modal = true;
             QVBoxLayout verticalLayout;
@@ -66,7 +90,7 @@ namespace Synapse.QtClient.Windows {
             this.tabWidget = new QTabWidget(this);
             this.tabWidget.ObjectName = "tabWidget";
             this.tabWidget.Enabled = true;
-            this.tabWidget.CurrentIndex = 0;
+            this.tabWidget.CurrentIndex = 3;
             verticalLayout.AddWidget(this.tabWidget);
             this.tab = new QWidget(this.tabWidget);
             this.tab.ObjectName = "tab";
@@ -99,6 +123,10 @@ namespace Synapse.QtClient.Windows {
             this.resourceCombo.ObjectName = "resourceCombo";
             this.resourceCombo.Editable = true;
             formLayout.SetWidget(2, QFormLayout.ItemRole.FieldRole, this.resourceCombo);
+            this.resourceCombo.InsertItems(0, new System.Collections.Generic.List<string>(new string[] {
+                            "Home Computer",
+                            "Work Computer",
+                            "Laptop"}));
             QSpacerItem verticalSpacer;
             verticalSpacer = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
             verticalLayout_2.AddItem(verticalSpacer);
@@ -156,7 +184,7 @@ namespace Synapse.QtClient.Windows {
             QSpacerItem verticalSpacer_2;
             verticalSpacer_2 = new QSpacerItem(20, 170, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
             verticalLayout_3.AddItem(verticalSpacer_2);
-            this.tabWidget.AddTab(this.tab_4, "Connection");
+            this.tabWidget.AddTab(this.tab_4, "Server");
             this.tab_2 = new QWidget(this.tabWidget);
             this.tab_2.ObjectName = "tab_2";
             QVBoxLayout verticalLayout_4;
@@ -170,6 +198,74 @@ namespace Synapse.QtClient.Windows {
             verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
             verticalLayout_4.AddItem(verticalSpacer_3);
             this.tabWidget.AddTab(this.tab_2, "Options");
+            this.tab_3 = new QWidget(this.tabWidget);
+            this.tab_3.ObjectName = "tab_3";
+            QVBoxLayout verticalLayout_5;
+            verticalLayout_5 = new QVBoxLayout(this.tab_3);
+            verticalLayout_5.Margin = 6;
+            QFormLayout formLayout_3;
+            formLayout_3 = new QFormLayout();
+            verticalLayout_5.AddLayout(formLayout_3);
+            formLayout_3.fieldGrowthPolicy = QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow;
+            this.label_9 = new QLabel(this.tab_3);
+            this.label_9.ObjectName = "label_9";
+            this.label_9.Text = "&Type:";
+            formLayout_3.SetWidget(0, QFormLayout.ItemRole.LabelRole, this.label_9);
+            this.comboBox = new QComboBox(this.tab_3);
+            this.comboBox.ObjectName = "comboBox";
+            formLayout_3.SetWidget(0, QFormLayout.ItemRole.FieldRole, this.comboBox);
+            this.comboBox.InsertItems(0, new System.Collections.Generic.List<string>(new string[] {
+                            "Use System Settings (DOES NOT WORK)",
+                            "No Proxy",
+                            "HTTP",
+                            "SOCKS4",
+                            "SOCKS5"}));
+            this.proxyHostLabel = new QLabel(this.tab_3);
+            this.proxyHostLabel.ObjectName = "proxyHostLabel";
+            this.proxyHostLabel.Enabled = true;
+            this.proxyHostLabel.Text = "&Host:";
+            formLayout_3.SetWidget(2, QFormLayout.ItemRole.LabelRole, this.proxyHostLabel);
+            this.proxyHostLineEdit = new QLineEdit(this.tab_3);
+            this.proxyHostLineEdit.ObjectName = "proxyHostLineEdit";
+            this.proxyHostLineEdit.Enabled = true;
+            formLayout_3.SetWidget(2, QFormLayout.ItemRole.FieldRole, this.proxyHostLineEdit);
+            this.proxyPortLabel = new QLabel(this.tab_3);
+            this.proxyPortLabel.ObjectName = "proxyPortLabel";
+            this.proxyPortLabel.Enabled = true;
+            this.proxyPortLabel.Text = "&Port:";
+            formLayout_3.SetWidget(3, QFormLayout.ItemRole.LabelRole, this.proxyPortLabel);
+            this.proxyPortSpinBox = new QSpinBox(this.tab_3);
+            this.proxyPortSpinBox.ObjectName = "proxyPortSpinBox";
+            this.proxyPortSpinBox.Enabled = true;
+            this.proxyPortSpinBox.Maximum = 66666;
+            formLayout_3.SetWidget(3, QFormLayout.ItemRole.FieldRole, this.proxyPortSpinBox);
+            this.proxyUserLabel = new QLabel(this.tab_3);
+            this.proxyUserLabel.ObjectName = "proxyUserLabel";
+            this.proxyUserLabel.Enabled = true;
+            this.proxyUserLabel.Text = "&Username:";
+            formLayout_3.SetWidget(4, QFormLayout.ItemRole.LabelRole, this.proxyUserLabel);
+            this.proxyUserLineEdit = new QLineEdit(this.tab_3);
+            this.proxyUserLineEdit.ObjectName = "proxyUserLineEdit";
+            this.proxyUserLineEdit.Enabled = true;
+            formLayout_3.SetWidget(4, QFormLayout.ItemRole.FieldRole, this.proxyUserLineEdit);
+            this.proxyPassLabel = new QLabel(this.tab_3);
+            this.proxyPassLabel.ObjectName = "proxyPassLabel";
+            this.proxyPassLabel.Enabled = true;
+            this.proxyPassLabel.Text = "Pa&ssword:";
+            formLayout_3.SetWidget(5, QFormLayout.ItemRole.LabelRole, this.proxyPassLabel);
+            this.proxyPassLineEdit = new QLineEdit(this.tab_3);
+            this.proxyPassLineEdit.ObjectName = "proxyPassLineEdit";
+            this.proxyPassLineEdit.Enabled = true;
+            formLayout_3.SetWidget(5, QFormLayout.ItemRole.FieldRole, this.proxyPassLineEdit);
+            this.line = new QFrame(this.tab_3);
+            this.line.ObjectName = "line";
+            this.line.FrameShape = QFrame.Shape.HLine;
+            this.line.FrameShadow = QFrame.Shadow.Sunken;
+            formLayout_3.SetWidget(1, QFormLayout.ItemRole.LabelRole, this.line);
+            QSpacerItem verticalSpacer_4;
+            verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding);
+            verticalLayout_5.AddItem(verticalSpacer_4);
+            this.tabWidget.AddTab(this.tab_3, "Proxy");
             this.buttonBox = new QDialogButtonBox(this);
             this.buttonBox.ObjectName = "buttonBox";
             this.buttonBox.Orientation = Qt.Orientation.Horizontal;
@@ -178,6 +274,11 @@ namespace Synapse.QtClient.Windows {
             QObject.Connect(buttonBox, Qt.SIGNAL("accepted()"), this, Qt.SLOT("accept()"));
             QObject.Connect(buttonBox, Qt.SIGNAL("rejected()"), this, Qt.SLOT("reject()"));
             QMetaObject.ConnectSlotsByName(this);
+            this.label_9.SetBuddy(comboBox);
+            this.proxyHostLabel.SetBuddy(proxyHostLineEdit);
+            this.proxyPortLabel.SetBuddy(proxyPortSpinBox);
+            this.proxyUserLabel.SetBuddy(proxyUserLineEdit);
+            this.proxyPassLabel.SetBuddy(proxyPassLineEdit);
         }
     }
 }

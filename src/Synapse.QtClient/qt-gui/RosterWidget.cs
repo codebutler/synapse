@@ -262,12 +262,10 @@ namespace Synapse.QtClient.Widgets {
             this.label_2 = new QLabel(this.joinMucContainer);
             this.label_2.ObjectName = "label_2";
             this.label_2.Text = "Room:";
-            this.label_2.SetBuddy(mucRoomLineEdit);
             gridLayout.AddWidget(this.label_2, 0, 0, 1, 1);
             this.label_5 = new QLabel(this.joinMucContainer);
             this.label_5.ObjectName = "label_5";
             this.label_5.Text = "Server:";
-            this.label_5.SetBuddy(mucServerLineEdit);
             gridLayout.AddWidget(this.label_5, 1, 0, 1, 1);
             this.mucServerLineEdit = new QLineEdit(this.joinMucContainer);
             this.mucServerLineEdit.ObjectName = "mucServerLineEdit";
@@ -280,7 +278,6 @@ namespace Synapse.QtClient.Widgets {
             this.label_6 = new QLabel(this.joinMucContainer);
             this.label_6.ObjectName = "label_6";
             this.label_6.Text = "Nickname:";
-            this.label_6.SetBuddy(mucNicknameLineEdit);
             gridLayout.AddWidget(this.label_6, 2, 0, 1, 1);
             this.mucNicknameLineEdit = new QLineEdit(this.joinMucContainer);
             this.mucNicknameLineEdit.ObjectName = "mucNicknameLineEdit";
@@ -288,7 +285,6 @@ namespace Synapse.QtClient.Widgets {
             this.label = new QLabel(this.joinMucContainer);
             this.label.ObjectName = "label";
             this.label.Text = "Password:";
-            this.label.SetBuddy(mucPasswordLineEdit);
             gridLayout.AddWidget(this.label, 3, 0, 1, 1);
             this.mucPasswordLineEdit = new QLineEdit(this.joinMucContainer);
             this.mucPasswordLineEdit.ObjectName = "mucPasswordLineEdit";
@@ -481,6 +477,10 @@ namespace Synapse.QtClient.Widgets {
             QObject.Connect(mucServerLineEdit, Qt.SIGNAL("returnPressed()"), m_JoinChatButton, Qt.SLOT("click()"));
             QObject.Connect(mucNicknameLineEdit, Qt.SIGNAL("returnPressed()"), m_JoinChatButton, Qt.SLOT("click()"));
             QMetaObject.ConnectSlotsByName(this);
+            this.label_2.SetBuddy(mucRoomLineEdit);
+            this.label_5.SetBuddy(mucServerLineEdit);
+            this.label_6.SetBuddy(mucNicknameLineEdit);
+            this.label.SetBuddy(mucPasswordLineEdit);
         }
     }
 }

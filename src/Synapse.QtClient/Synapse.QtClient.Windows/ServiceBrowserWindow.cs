@@ -55,10 +55,10 @@ namespace Synapse.QtClient.Windows
 			
 			this.WindowTitle = String.Format("XMPP Browser - {0}", account.Jid);
 	
-			m_BackAction    = new QAction(Gui.LoadIcon("back", 16), "Back", this);
-			m_ForwardAction = new QAction(Gui.LoadIcon("forward", 16), "Forward", this);
-			m_ReloadAction  = new QAction(Gui.LoadIcon("reload", 16), "Reload", this);
-			m_StopAction    = new QAction(Gui.LoadIcon("stop", 16), "Stop", this);
+			m_BackAction    = new QAction(Gui.LoadIcon("go-previous", 16), "Back", this);
+			m_ForwardAction = new QAction(Gui.LoadIcon("go-next", 16), "Forward", this);
+			m_ReloadAction  = new QAction(Gui.LoadIcon("view-refresh", 16), "Reload", this);
+			m_StopAction    = new QAction(Gui.LoadIcon("process-stop", 16), "Stop", this);
 			m_HomeAction    = new QAction(Gui.LoadIcon("go-home", 16), "Home", this);
 			m_GoAction      = new QAction("Go", this);
 

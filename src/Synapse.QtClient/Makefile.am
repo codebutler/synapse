@@ -17,6 +17,7 @@ FILES =  \
 	OctyService.cs \
 	qt-gui/AboutDialog.cs \
 	qt-gui/AccountStatusWidget.cs \
+	qt-gui/AddAccountDialog.cs \
 	qt-gui/AddFriendWindow.cs \
 	qt-gui/AddOctyDialog.cs \
 	qt-gui/ChatWindow.cs \
@@ -37,6 +38,7 @@ FILES =  \
 	qt-gui/ServiceBrowserWindow.cs \
 	qt-gui/WebIdentityConfiguratorWidget.cs \
 	QtTraceListener.cs \
+	QyotoTrunk/QByteArrayConverter.cs \
 	QyotoTrunk/QFormLayout.cs \
 	QyotoTrunk/QPlainTextEdit.cs \
 	QyotoTrunk/QTextBlock.cs \
@@ -65,6 +67,7 @@ FILES =  \
 	Synapse.QtClient.Widgets/NotificationsWidget.cs \
 	Synapse.QtClient.Widgets/RosterWidget.cs \
 	Synapse.QtClient.Widgets/WebIdentityConfiguratorWidget.cs \
+	Synapse.QtClient.Windows/AddAccountDialog.cs \
 	Synapse.QtClient.Windows/AddFriendWindow.cs \
 	Synapse.QtClient.Windows/ChatWindow.cs \
 	Synapse.QtClient.Windows/DebugWindow.cs \

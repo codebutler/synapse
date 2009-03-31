@@ -30,7 +30,7 @@ namespace Synapse.QtClient.Windows
 		{
 			SetupUi();
 			
-			iconLabel.Pixmap = Gui.LoadIcon("error").Pixmap(32);
+			iconLabel.Pixmap = Gui.LoadIcon("dialog-error").Pixmap(32);
 			
 			titleLabel.Text = "<b>" + Qt.Escape(errorTitle) + "</b>";
 			messageLabel.Text = !String.IsNullOrEmpty(errorMessage) ? errorMessage : String.Empty;

@@ -80,8 +80,13 @@ namespace Synapse.QtClient.Widgets
 		{
 			SetupUi();
 			
+			var settingsService = ServiceManager.Get<SettingsService>();
+			
 			m_RosterModel = new RosterAvatarGridModel();
+			m_RosterModel.ShowTransports = settingsService.Get<bool>("RosterShowTransports");
+			m_RosterModel.ShowOffline = settingsService.Get<bool>("RosterShowOffline");
 			rosterGrid.Model = m_RosterModel;
+			rosterGrid.ListMode = settingsService.Get<bool>("RosterListMode");
 			rosterGrid.ItemActivated += HandleItemActivated;
 			rosterGrid.ShowGroupCounts = true;
 			rosterGrid.InstallEventFilter(new KeyPressEater(delegate (QKeyEvent evnt) {
@@ -94,6 +99,9 @@ namespace Synapse.QtClient.Widgets
 				return false;
 			}, this));
 	
+			if (settingsService.Has("RosterIconSize"))
+				rosterGrid.IconSize = settingsService.Get<int>("RosterIconSize");
+			
 			var accountService = ServiceManager.Get<AccountService>();
 			accountService.AccountAdded += HandleAccountAdded;
 			accountService.AccountRemoved += HandleAccountRemoved;
@@ -114,13 +122,14 @@ namespace Synapse.QtClient.Widgets
 			m_GridModeAction = new QAction("View as Grid", this);
 			m_GridModeAction.SetActionGroup(rosterViewActionGroup);
 			m_GridModeAction.Checkable = true;
-			m_GridModeAction.Checked = true;
 			m_RosterMenu.AddAction(m_GridModeAction);
 	
 			m_ListModeAction = new QAction("View as List", this);
 			m_ListModeAction.SetActionGroup(rosterViewActionGroup);
 			m_ListModeAction.Checkable = true;
 			m_RosterMenu.AddAction(m_ListModeAction);
+			
+			rosterGrid.ListMode = m_ListModeAction.Checked;
 	
 			m_RosterMenu.AddSeparator();
 			
@@ -135,6 +144,10 @@ namespace Synapse.QtClient.Widgets
 			m_RosterMenu.AddSeparator();
 	
 			var sliderAction = new AvatarGridZoomAction<Synapse.UI.RosterItem>(rosterGrid);
+			sliderAction.ValueChanged += delegate(int value) {
+				rosterGrid.IconSize = value;
+				settingsService.Set("RosterIconSize", value);				
+			};
 			m_RosterMenu.AddAction(sliderAction);
 			
 			m_InviteActions = new List<QAction>();
@@ -294,7 +307,17 @@ namespace Synapse.QtClient.Widgets
 	
 		public void RemoveAccount(Account account)
 		{
-			throw new NotImplementedException();
+			for (int x = 0; x < m_AccountsContainer.Layout().Count(); x++) {
+				var item = m_AccountsContainer.Layout().ItemAt(x);
+				if (item is QWidgetItem) {					
+					AccountStatusWidget widget = (AccountStatusWidget)((QWidgetItem)item).Widget();
+					if (widget.Account == account) {
+						m_AccountsContainer.Layout().RemoveWidget(widget);
+						widget.SetParent(null);
+						break;
+					}
+				}
+			}
 		}
 		
 		public void AddActivityFeedItem (IActivityFeedItem item)
@@ -544,10 +567,13 @@ namespace Synapse.QtClient.Widgets
 		
 		void HandleRosterMenuTriggered (QAction action)
 		{
+			var settingsService = ServiceManager.Get<SettingsService>();
 			if (action == m_ShowOfflineAction) {
 				m_RosterModel.ShowOffline = action.Checked;
+				settingsService.Set("RosterShowOffline", m_RosterModel.ShowOffline);
 			} else if (action == m_ShowTransportsAction) {
 				m_RosterModel.ShowTransports = action.Checked;
+				settingsService.Set("RosterShowTransports", m_RosterModel.ShowTransports);
 			}
 		}
 	
@@ -560,6 +586,8 @@ namespace Synapse.QtClient.Widgets
 				rosterGrid.ListMode = !action.Checked;
 				rosterViewButton.icon  = new QIcon(new QPixmap("resource:/view-grid.png"));
 			}
+			var settingsService = ServiceManager.Get<SettingsService>();
+			settingsService.Set("RosterListMode", m_ListModeAction.Checked);
 		}
 		
 		[Q_SLOT]

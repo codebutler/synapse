@@ -445,7 +445,6 @@ namespace Synapse.QtClient.Windows {
             this.label_5 = new QLabel(this.tab_2);
             this.label_5.ObjectName = "label_5";
             this.label_5.Text = "Search:";
-            this.label_5.SetBuddy(avatarSearchLineEdit);
             gridLayout_2.AddWidget(this.label_5, 0, 0, 1, 1);
             this.avatarSearchLineEdit = new QLineEdit(this.tab_2);
             this.avatarSearchLineEdit.ObjectName = "avatarSearchLineEdit";
@@ -491,6 +490,7 @@ namespace Synapse.QtClient.Windows {
             QObject.Connect(buttonBox, Qt.SIGNAL("rejected()"), this, Qt.SLOT("reject()"));
             QObject.Connect(buttonBox, Qt.SIGNAL("accepted()"), this, Qt.SLOT("accept()"));
             QMetaObject.ConnectSlotsByName(this);
+            this.label_5.SetBuddy(avatarSearchLineEdit);
         }
     }
 }

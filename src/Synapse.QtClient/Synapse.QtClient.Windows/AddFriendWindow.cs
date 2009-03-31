@@ -41,7 +41,7 @@ namespace Synapse.QtClient.Windows
 	
 			closeButton.icon = Gui.LoadIcon("window-close", 16);
 	
-			QPushButton addButton = new QPushButton(Gui.LoadIcon("add", 16), "Add Friend");
+			QPushButton addButton = new QPushButton(Gui.LoadIcon("list-add", 16), "Add Friend");
 			addButton.SetParent(buttonBox);
 			buttonBox.AddButton(addButton, QDialogButtonBox.ButtonRole.AcceptRole);
 	

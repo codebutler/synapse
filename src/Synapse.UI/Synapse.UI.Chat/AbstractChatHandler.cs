@@ -93,7 +93,7 @@ namespace Synapse.UI.Chat
 			JID fromJid = null;
 			
 			if (msg.From == null) {
-				from = m_Account.User;
+				from = m_Account.UserDisplayName;
 				fromJid = m_Account.Jid;
 			} else {
 				if (this is MucHandler) {

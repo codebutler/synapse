@@ -180,6 +180,9 @@ namespace Synapse.QtClient.Windows {
             comboBox_3_sizePolicy.SetHeightForWidth(this.comboBox_3.SizePolicy.HasHeightForWidth());
             this.comboBox_3.SizePolicy = comboBox_3_sizePolicy;
             formLayout_2.SetWidget(0, QFormLayout.ItemRole.FieldRole, this.comboBox_3);
+            this.comboBox_3.InsertItems(0, new System.Collections.Generic.List<string>(new string[] {
+                            "Grid",
+                            "List"}));
             this.horizontalSlider = new QSlider(this.groupBox_5);
             this.horizontalSlider.ObjectName = "horizontalSlider";
             QSizePolicy horizontalSlider_sizePolicy;
@@ -203,6 +206,9 @@ namespace Synapse.QtClient.Windows {
             comboBox_4_sizePolicy.SetHeightForWidth(this.comboBox_4.SizePolicy.HasHeightForWidth());
             this.comboBox_4.SizePolicy = comboBox_4_sizePolicy;
             formLayout_2.SetWidget(1, QFormLayout.ItemRole.FieldRole, this.comboBox_4);
+            this.comboBox_4.InsertItems(0, new System.Collections.Generic.List<string>(new string[] {
+                            "Name",
+                            "Status"}));
             this.label_7 = new QLabel(this.groupBox_5);
             this.label_7.ObjectName = "label_7";
             this.label_7.Text = "Sort By:";
@@ -237,6 +243,8 @@ namespace Synapse.QtClient.Windows {
             comboBox_5_sizePolicy.SetHeightForWidth(this.comboBox_5.SizePolicy.HasHeightForWidth());
             this.comboBox_5.SizePolicy = comboBox_5_sizePolicy;
             gridLayout_6.AddWidget(this.comboBox_5, 0, 1, 1, 1);
+            this.comboBox_5.InsertItems(0, new System.Collections.Generic.List<string>(new string[] {
+                            "Disabled"}));
             this.label_8 = new QLabel(this.groupBox_6);
             this.label_8.ObjectName = "label_8";
             this.label_8.Text = "Theme:";

@@ -23,14 +23,20 @@ using System;
 
 using Qyoto;
 
+using Synapse.ServiceStack;
+using Synapse.Services;
 using Synapse.QtClient.Widgets;
 
 namespace Synapse.QtClient
 {
+	public delegate void ValueEventHandler (int value);
+	
 	public class AvatarGridZoomAction<T> : QWidgetAction
 	{
 		AvatarGrid<T> m_Grid;
 		QWidget m_SliderContainer;
+		
+		public event ValueEventHandler ValueChanged;
 		
 		public AvatarGridZoomAction(AvatarGrid<T> grid) : base (grid)
 		{
@@ -40,8 +46,8 @@ namespace Synapse.QtClient
 			m_SliderContainer.Layout().AddWidget(new QLabel("Zoom:", m_SliderContainer));
 			var zoomSlider = new QSlider(Orientation.Horizontal, m_SliderContainer);
 			zoomSlider.Minimum = 16;
-			zoomSlider.Maximum = 60;
-			zoomSlider.Value = m_Grid.IconSize;
+			zoomSlider.Maximum = 60;			
+			zoomSlider.Value = m_Grid.IconSize;			
 			QObject.Connect<int>(zoomSlider, Qt.SIGNAL("valueChanged(int)"), HandleZoomSliderValueChanged);
 			m_SliderContainer.Layout().AddWidget(zoomSlider);
 			
@@ -50,7 +56,8 @@ namespace Synapse.QtClient
 		
 		void HandleZoomSliderValueChanged (int value)
 		{
-			m_Grid.IconSize = value;
+			if (ValueChanged != null)
+				ValueChanged(value);
 		}
 	}
 }

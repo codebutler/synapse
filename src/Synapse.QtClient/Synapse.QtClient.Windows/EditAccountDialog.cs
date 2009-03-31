@@ -33,22 +33,49 @@ namespace Synapse.QtClient.Windows
 {
 	public partial class EditAccountDialog : QDialog
 	{
-		Account m_Account;
+		AccountInfo m_AccountInfo;
 		
-		public EditAccountDialog (Account account, QWidget parentWindow) : base (parentWindow)
+		public EditAccountDialog (AccountInfo accountInfo, QWidget parentWindow) : base (parentWindow)
 		{
 			SetupUi();
 			
-			m_Account = account;
+			m_AccountInfo = accountInfo;
 			
-			jidLineEdit.Text = account.Jid.Bare;
-			passwordLineEdit.Text = account.Password;
-			resourceCombo.SetEditText(account.Resource);
+			jidLineEdit.Text = String.Format("{0}@{1}", accountInfo.User, accountInfo.Domain);
+			passwordLineEdit.Text = accountInfo.Password;
+			resourceCombo.SetEditText(accountInfo.Resource);
 			
-			serverLineEdit.Text = account.ConnectServer;
-			portSpinBox.Value = account.ConnectPort;
+			serverLineEdit.Text = accountInfo.ConnectServer;
+			portSpinBox.Value = accountInfo.ConnectPort;
 			
-			autoConnectCheckBox.Checked = account.AutoConnect;
+			autoConnectCheckBox.Checked = accountInfo.AutoConnect;
+			
+			switch (m_AccountInfo.ProxyType) {
+			case ProxyType.System:
+				comboBox.CurrentIndex = 0;
+				ShowProxyWidgets(false);
+				break;
+			case ProxyType.None:
+				comboBox.CurrentIndex = 1;
+				ShowProxyWidgets(false);
+				break;
+			case ProxyType.HTTP:
+				comboBox.CurrentIndex = 2;
+				ShowProxyWidgets(true);
+				break;
+			case ProxyType.SOCKS4:
+				comboBox.CurrentIndex = 3;
+				ShowProxyWidgets(true);
+				break;
+			case ProxyType.SOCKS5:
+				comboBox.CurrentIndex = 4;
+				ShowProxyWidgets(true);
+				break;
+			}
+			proxyHostLineEdit.Text = m_AccountInfo.ProxyHost;
+			proxyPortSpinBox.Value = m_AccountInfo.ProxyPort;
+			proxyUserLineEdit.Text = m_AccountInfo.ProxyUsername;
+			proxyPassLineEdit.Text = m_AccountInfo.ProxyPassword;
 			
 			this.buttonBox.StandardButtons = (uint)QDialogButtonBox.StandardButton.Ok |
 			                                 (uint)QDialogButtonBox.StandardButton.Cancel;
@@ -81,19 +108,86 @@ namespace Synapse.QtClient.Windows
 				return;
 			}
 			
-			m_Account.User = jid.User;
-			m_Account.Domain = jid.Server;
-			m_Account.Password = passwordLineEdit.Text;
-			m_Account.Resource = resourceCombo.CurrentText;
+			m_AccountInfo.User = jid.User;
+			m_AccountInfo.Domain = jid.Server;
+			m_AccountInfo.Password = passwordLineEdit.Text;
+			m_AccountInfo.Resource = resourceCombo.CurrentText;
 			
-			m_Account.ConnectServer = serverLineEdit.Text;
-			m_Account.ConnectPort = portSpinBox.Value;
+			m_AccountInfo.ConnectServer = serverLineEdit.Text;
+			m_AccountInfo.ConnectPort = portSpinBox.Value;
 			
-			m_Account.AutoConnect = autoConnectCheckBox.Checked;
+			m_AccountInfo.AutoConnect = autoConnectCheckBox.Checked;
+			
+			switch (comboBox.CurrentIndex) {
+			case 0:
+				m_AccountInfo.ProxyType = ProxyType.System;
+				break;
+			case 1:
+				m_AccountInfo.ProxyType = ProxyType.None;
+				break;
+			case 2:
+				m_AccountInfo.ProxyType = ProxyType.HTTP;
+				break;
+			case 3:
+				m_AccountInfo.ProxyType = ProxyType.SOCKS4;
+				break;
+			case 4:
+				m_AccountInfo.ProxyType = ProxyType.SOCKS5;
+				break;
+			}
+			m_AccountInfo.ProxyHost = proxyHostLineEdit.Text;
+			m_AccountInfo.ProxyPort = proxyPortSpinBox.Value;
+			m_AccountInfo.ProxyUsername = proxyUserLineEdit.Text;
+			m_AccountInfo.ProxyPassword = proxyPassLineEdit.Text;
 			
 			ServiceManager.Get<AccountService>().SaveAccounts();
 		
 			base.Accept ();
+		}
+		
+		[Q_SLOT]
+		void on_comboBox_activated (int index)
+		{
+			/* 
+			   0: Use System Settings
+	           1: No Proxy
+	           2: HTTP
+	           3: SOCKS4
+	           4: SOCKS5
+	        */
+			
+			switch (index) {
+			case 0:
+			case 1:
+				ShowProxyWidgets(false);
+				break;
+			default:
+				ShowProxyWidgets(true);
+				break;
+			}
+			
+			switch (index) {
+			case 2:
+				proxyPortSpinBox.Value = 8080;
+				break;
+			case 3:
+			case 4:
+				proxyPortSpinBox.Value = 1080;
+				break;
+			}
+		}
+		
+		void ShowProxyWidgets (bool show)
+		{	
+			line.SetVisible(show);
+			proxyHostLabel.SetVisible(show);
+			proxyHostLineEdit.SetVisible(show);
+			proxyPortLabel.SetVisible(show);
+			proxyPortSpinBox.SetVisible(show);
+			proxyUserLabel.SetVisible(show);
+			proxyUserLineEdit.SetVisible(show);
+			proxyPassLabel.SetVisible(show);
+			proxyPassLineEdit.SetVisible(show);
 		}
 	}
 }

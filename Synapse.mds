@@ -1,5 +1,4 @@
-<Combine name="Synapse" fileversion="2.0">
-  <Policies />
+<Combine fileversion="2.0" name="Synapse">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="CombineConfiguration">
       <Entry build="True" name="Synapse.Core" configuration="Debug" />
@@ -20,7 +19,7 @@
       <Entry build="True" name="Unit Tests" configuration="Release" />
     </Configuration>
   </Configurations>
-  <StartMode startupentry="Synapse.Core" single="True">
+  <StartMode startupentry="Synapse.QtClient" single="True">
     <Execute type="None" entry="Synapse.Core" />
     <Execute type="None" entry="Synapse.Services" />
     <Execute type="None" entry="Synapse.Xmpp" />

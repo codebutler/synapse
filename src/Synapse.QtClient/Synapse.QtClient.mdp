@@ -138,6 +138,9 @@
     <File name="resources/octyaddme.png" subtype="Code" buildaction="EmbedAsResource" />
     <File name="qt-gui/AddOctyDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="resources/stock_icons/internet-group-chat__32.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="QyotoTrunk/QByteArrayConverter.cs" subtype="Code" buildaction="Compile" />
+    <File name="Synapse.QtClient.Windows/AddAccountDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="qt-gui/AddAccountDialog.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/jabber-net.dll" />
@@ -159,7 +162,6 @@
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Xmpp" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
-    <ProjectReference type="Gac" localcopy="True" refto="notify-sharp, Version=0.4.0.0, Culture=neutral, PublicKeyToken=2df29c54e245917a" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="qtwebkit, Version=2.2.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
   </References>
@@ -196,6 +198,7 @@
       <QyotoForm UiFileName="InviteToMucDialog.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="MucAffiliationDialog.ui" Namespace="Synapse.QtClient.Windows" />
       <QyotoForm UiFileName="AddOctyDialog.ui" Namespace="Synapse.QtClient.Windows" />
+      <QyotoForm UiFileName="AddAccountDialog.ui" Namespace="Synapse.QtClient.Windows" />
     </Forms>
   </QyotoDesignInfo>
 </Project>

@@ -245,7 +245,6 @@ namespace Synapse.QtClient.Widgets
 		private void model_Refreshed (object o, EventArgs args)
 		{
 			QApplication.Invoke(delegate {
-				Console.WriteLine("Model Refreshed");
 				
 				lock (m_Groups) {
 					foreach (var groupItem in m_Groups.Values.ToArray()) {
@@ -263,8 +262,6 @@ namespace Synapse.QtClient.Widgets
 				}
 				
 				ResizeAndRepositionGroups();
-
-				Console.WriteLine("End Model Refreshed");
 			});
 		}
 

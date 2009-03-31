@@ -114,6 +114,21 @@ namespace Synapse.QtClient.Widgets
 			m_OfflineAction.Checkable = true;
 		}
 		
+		~AccountStatusWidget ()
+		{
+			m_Account.ConnectionStateChanged -= OnAccountStateChanged;
+			m_Account.StatusChanged -= OnAccountStateChanged;
+			m_Account.MyVCardUpdated -= HandleMyVCardUpdated;
+			m_Account.AvatarManager.AvatarUpdated -= HandleAvatarUpdated;
+			m_Account = null;
+		}
+		
+		public Account Account {
+			get {
+				return m_Account;
+			}
+		}
+		
 		void OnAccountStateChanged (Account account)
 		{
 			QApplication.Invoke(delegate {
