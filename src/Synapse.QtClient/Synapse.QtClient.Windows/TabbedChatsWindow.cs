@@ -308,7 +308,7 @@ namespace Synapse.QtClient.Windows
 		protected override void ChangeEvent (Qyoto.QEvent arg1)
 		{
 			if (arg1.type() == QEvent.TypeOf.ActivationChange) {
-				if (this.IsActiveWindow) {
+				if (this.IsActiveWindow && m_Tabs.CurrentWidget() != null) {
 					m_Tabs.CurrentWidget().SetFocus();
 				}
 			}
