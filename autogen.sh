@@ -56,9 +56,11 @@ fi
 #        exit 1
 #}
 
-if test -z "$*"; then
-        echo "I am going to run ./configure with no arguments - if you wish "
-        echo "to pass any to it, please specify them on the $0 command line."
+if test x$NOCONF = x; then
+	if test -z "$*"; then
+		echo "I am going to run ./configure with no arguments - if you wish "
+		echo "to pass any to it, please specify them on the $0 command line."
+	fi
 fi
 
 case $CC in
@@ -79,5 +81,7 @@ $AUTOMAKE --add-missing --gnu $am_opt
 echo "Running $AUTOCONF ..."
 $AUTOCONF
 
-echo Running $srcdir/configure $conf_flags "$@" ...
-$srcdir/configure --enable-maintainer-mode $conf_flags "$@" \
+if test x$NOCONF = x; then
+	echo Running $srcdir/configure $conf_flags "$@" ...
+	$srcdir/configure --enable-maintainer-mode $conf_flags "$@"
+fi

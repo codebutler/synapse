@@ -1,5 +1,9 @@
 #!/usr/bin/make -f
 
+common-configure-indep::
+	# Run autogen.sh if needed. Perhaps not the best place for this?
+	if [ ! -e configure ]; then NOCONF=1 ./autogen.sh ; fi
+
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/rules/simple-patchsys.mk
 include /usr/share/cdbs/1/class/gnome.mk
