@@ -67,6 +67,9 @@ case $CC in
 *xlc | *xlc\ * | *lcc | *lcc\ *) am_opt=--include-deps;;
 esac
 
+# Without this the version number doesn't update...
+rm -rf autom4te.cache
+
 (grep "^AM_PROG_LIBTOOL" $CONFIGURE >/dev/null) && {
     echo "Running $LIBTOOLIZE ..."
     $LIBTOOLIZE --force --copy
@@ -83,5 +86,5 @@ $AUTOCONF
 
 if test x$NOCONF = x; then
 	echo Running $srcdir/configure $conf_flags "$@" ...
-	$srcdir/configure --enable-maintainer-mode $conf_flags "$@"
+	$srcdir/configure $conf_flags "$@"
 fi

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-m4_define([synapse_version], m4_esyscmd([./version.sh]))
+m4_define([synapse_version], [m4_esyscmd([./version.sh])])
 
 AC_PREREQ([2.54])
 AC_INIT([Synapse], [synapse_version])
@@ -73,3 +73,7 @@ addins/Wikipedia/Makefile
 ])
 
 AC_OUTPUT
+
+echo ""
+echo "Synapse ${VERSION} ready to build!"
+echo ""
