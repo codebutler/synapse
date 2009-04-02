@@ -69,6 +69,7 @@ namespace Synapse.QtClient
 			Gtk.Application.Init();
 			
 			m_App = new QApplication(args);
+			m_App.QuitOnLastWindowClosed = false;
 			m_App.ApplicationName = "Synapse";
 			m_App.ApplicationVersion = "0.1";
 			
