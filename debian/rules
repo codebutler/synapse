@@ -20,14 +20,14 @@ binary-predeb/synapse::
 clean::
 	rm -rf $(MONO_SHARED_DIR)/.wapi
 
-REV_NUM=$(shell git rev-list HEAD | wc -l | sed "s/[ \t]//g")
+VERSION=$(shell ./version.sh)
 REV=$(shell git rev-list HEAD^!)
 DATE=$(shell date --rfc-2822)
 DIST=$(shell lsb_release -c -s)
 
 update-version:
 	echo "\
-synapse (0.1-0+git${REV_NUM}-1~${DIST}0) ${DIST}; urgency=low\n\
+synapse (${VERSION}-1~${DIST}0) ${DIST}; urgency=low\n\
 \n\
   * Automatic package for revision ${REV}. \n\
 \n\

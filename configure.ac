@@ -1,8 +1,10 @@
 dnl Process this file with autoconf to produce a configure script.
 
+m4_define([synapse_version], m4_esyscmd([./version.sh]))
+
 AC_PREREQ([2.54])
-AC_INIT([Synapse], [0.1])
-AM_INIT_AUTOMAKE([foreign])
+AC_INIT([Synapse], [synapse_version])
+AM_INIT_AUTOMAKE([foreign tar-pax])
 
 dnl pkg-config
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
