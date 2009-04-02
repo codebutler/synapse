@@ -58,7 +58,13 @@ namespace Synapse.QtClient
 		public Client (string[] args)
 		{	
 			Log.Information ("Starting Synapse");
-			PlatformHacks.SetProcessName("synapse");
+			
+			try {
+				PlatformHacks.SetProcessName("synapse");
+			} catch (Exception ex) {
+				Console.WriteLine("[WARNING] Failed to set process name: " + ex.Message);
+			}
+			
 			GLib.Global.ProgramName = "Synapse";
 			Gtk.Application.Init();
 			
