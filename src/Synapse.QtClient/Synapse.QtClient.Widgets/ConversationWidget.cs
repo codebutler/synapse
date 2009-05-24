@@ -703,6 +703,16 @@ namespace Synapse.QtClient
 			// Qt bug?
 			base.Page().MainFrame().EvaluateJavaScript("windowDidResize()");
 		}
+		
+		protected override void KeyPressEvent (Qyoto.QKeyEvent arg1)
+		{
+			arg1.Ignore();
+		}
+		
+		protected override void DragEnterEvent (Qyoto.QDragEnterEvent arg1)
+		{
+			arg1.Ignore();
+		}
 	}
 	
 	public enum CustomBackgroundType
