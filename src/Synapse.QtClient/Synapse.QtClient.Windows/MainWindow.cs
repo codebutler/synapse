@@ -27,6 +27,7 @@ using System.Reflection;
 using Synapse.Core;
 using Synapse.UI;
 using Synapse.ServiceStack;
+using Synapse.Services;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
 using Synapse.QtClient.Widgets;
@@ -100,6 +101,12 @@ namespace Synapse.QtClient.Windows
 			foreach (Account account in accountService.Accounts) {
 				AddAccount(account);
 			}
+			
+			var settingsService = ServiceManager.Get<SettingsService>();
+			if (settingsService.Has("MainWindowGeometry")) {
+				var geometry = settingsService.Get<byte[]>("MainWindowGeometry");
+				base.RestoreGeometry(QByteArrayConverter.FromArray(geometry));
+			}
 		}
 		
 		public new void Show ()
@@ -161,5 +168,31 @@ namespace Synapse.QtClient.Windows
 			var buttonPos = menuButton.MapToGlobal(new QPoint(0, menuButton.Height()));
 			m_MainMenu.Popup(buttonPos);
 		}
+		
+		
+		protected override void MoveEvent (Qyoto.QMoveEvent arg1)
+		{
+			base.MoveEvent(arg1);
+			SaveGeometry();
+		}
+		
+		protected override void ResizeEvent (Qyoto.QResizeEvent arg1)
+		{
+			base.ResizeEvent(arg1);
+			SaveGeometry();
+		}
+		
+		protected override void CloseEvent (Qyoto.QCloseEvent arg1)
+		{
+			base.CloseEvent(arg1);
+			SaveGeometry();
+		}
+
+		void SaveGeometry()
+		{
+			var geometry = QByteArrayConverter.ToArray(base.SaveGeometry());
+			var settingsService = ServiceManager.Get<SettingsService>();
+			settingsService.Set("MainWindowGeometry", geometry);
+		}		
 	}
 }

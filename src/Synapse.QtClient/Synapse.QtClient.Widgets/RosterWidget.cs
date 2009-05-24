@@ -86,7 +86,6 @@ namespace Synapse.QtClient.Widgets
 			m_RosterModel.ShowTransports = settingsService.Get<bool>("RosterShowTransports");
 			m_RosterModel.ShowOffline = settingsService.Get<bool>("RosterShowOffline");
 			rosterGrid.Model = m_RosterModel;
-			rosterGrid.ListMode = settingsService.Get<bool>("RosterListMode");
 			rosterGrid.ItemActivated += HandleItemActivated;
 			rosterGrid.ShowGroupCounts = true;
 			rosterGrid.InstallEventFilter(new KeyPressEater(delegate (QKeyEvent evnt) {
@@ -129,7 +128,13 @@ namespace Synapse.QtClient.Widgets
 			m_ListModeAction.Checkable = true;
 			m_RosterMenu.AddAction(m_ListModeAction);
 			
-			rosterGrid.ListMode = m_ListModeAction.Checked;
+			if (settingsService.Get<bool>("RosterListMode")) {
+				rosterGrid.ListMode = true;
+				m_ListModeAction.Checked = true;
+			} else {
+				rosterGrid.ListMode = false;
+				m_GridModeAction.Checked = true;
+			}
 	
 			m_RosterMenu.AddSeparator();
 			
