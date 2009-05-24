@@ -46,7 +46,7 @@ namespace Synapse.QtClient.Windows
 		string m_NoAccountsStyleSheet;
 		
 		public MainWindow()
-		{
+		{			
 			SetupUi();
 			base.WindowFlags = (uint)Qt.WindowType.FramelessWindowHint;
 			

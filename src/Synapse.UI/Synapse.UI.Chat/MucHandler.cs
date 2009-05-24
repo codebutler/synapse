@@ -143,8 +143,6 @@ namespace Synapse.UI.Chat
 
 		void HandleOnPresenceChange(Room room, RoomParticipant participant, Presence oldPresence)
 		{
-			Console.WriteLine("Participant presence changed: " + participant.Presence.OuterXml);
-			
 			var x1 = (UserX)oldPresence["x", URI.MUC_USER];
 			var x2 = (UserX)participant.Presence["x", URI.MUC_USER];
 			

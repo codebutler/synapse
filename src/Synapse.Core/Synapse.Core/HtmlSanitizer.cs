@@ -152,8 +152,6 @@ namespace Synapse.Core
 
 				// Don't allow custom titles (tooltips), and make sure one is always set.
 				node.SetAttributeValue("title", node.GetAttributeValue("href", String.Empty));
-				
-				Console.WriteLine("SET ATTRIBUTE VALUE !! " + node.GetAttributeValue("title", "frak"));
 			}
 			
 			if (name == "img") {
@@ -175,7 +173,6 @@ namespace Synapse.Core
 			foreach (var attr in node.Attributes) {
 				string attrName = attr.Name.ToLower();
 				string attrVal = attr.Value;
-				Console.WriteLine(attrName);
 				if (s_WhiteList[name] != null && s_WhiteList[name].Contains(attrName)) {
 					if (attributeStringBuilder.Length > 0)
 						attributeStringBuilder.Append(" ");

@@ -63,6 +63,10 @@ namespace Synapse.UI.Chat
 		
 		public void SetPresence (Presence presence)
 		{
+			// FIXME: Show "user wants to be your friend. Approve | Deny", etc.
+			if (presence.Type != PresenceType.available && presence.Type != PresenceType.unavailable)
+				return;
+
 			string message = null;
 			string fromName = base.Account.GetDisplayName(presence.From);
 			if (!String.IsNullOrEmpty(presence.Status)) {

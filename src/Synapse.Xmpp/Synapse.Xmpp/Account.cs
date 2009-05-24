@@ -170,7 +170,10 @@ namespace Synapse.Xmpp
 		{
 			if (msg.Type == MessageType.normal) {
 				var invite = (Invite)msg.X.FirstChild;
-				PostActivityFeedItem(invite.From, "invite", msg.From, invite.Reason);
+				if (invite != null)
+					PostActivityFeedItem(invite.From, "invite", msg.From, invite.Reason);
+				else
+					Console.WriteLine("What kind of invite is this?? " + msg.OuterXml);
 			} else if (msg.Type == MessageType.error) {
 				var feed = ServiceManager.Get<ActivityFeedService>();
 				feed.PostItem(this, null, "account-error", Jid.Bare, String.Format("Failed to send conference invitation: {0}.", msg["error"].FirstChild.Name));

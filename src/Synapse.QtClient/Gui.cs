@@ -133,7 +133,7 @@ namespace Synapse.QtClient
 				if (sizes != null && sizes.Length > 0) {
 					foreach (int size in sizes) {
 						var iconInfo = Gtk.IconTheme.Default.LookupIcon(name, size, 0);
-						if (iconInfo != null)
+						if (iconInfo != null && System.IO.File.Exists(iconInfo.Filename))
 							icon.AddFile(iconInfo.Filename, new QSize(size, size), QIcon.Mode.Normal, QIcon.State.On);
 					}
 				}
