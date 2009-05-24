@@ -113,7 +113,7 @@ namespace Synapse.QtClient.Widgets {
         
         protected QPushButton sendShoutButton;
         
-        protected QWebView m_ActivityWebView;
+        protected Synapse.QtClient.Widgets.StubbornWebView m_ActivityWebView;
         
         protected void SetupUi() {
             base.ObjectName = "RosterWidget";
@@ -151,7 +151,7 @@ namespace Synapse.QtClient.Widgets {
             this.tabWidget = new Synapse.QtClient.Widgets.MainTabWidget(this.widget);
             this.tabWidget.ObjectName = "tabWidget";
             this.tabWidget.tabPosition = QTabWidget.TabPosition.South;
-            this.tabWidget.CurrentIndex = 0;
+            this.tabWidget.CurrentIndex = 2;
             verticalLayout_2.AddWidget(this.tabWidget);
             this.friendsTab = new QWidget(this.tabWidget);
             this.friendsTab.ObjectName = "friendsTab";
@@ -459,7 +459,7 @@ namespace Synapse.QtClient.Widgets {
             this.sendShoutButton.Text = "Shout!";
             horizontalLayout_3.AddWidget(this.sendShoutButton);
             verticalLayout.AddWidget(this.shoutContainer);
-            this.m_ActivityWebView = new QWebView(this.activityTab);
+            this.m_ActivityWebView = new Synapse.QtClient.Widgets.StubbornWebView(this.activityTab);
             this.m_ActivityWebView.ObjectName = "m_ActivityWebView";
             QSizePolicy m_ActivityWebView_sizePolicy;
             m_ActivityWebView_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding);

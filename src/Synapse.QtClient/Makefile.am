@@ -66,6 +66,7 @@ FILES =  \
 	Synapse.QtClient.Widgets/NoAccountsWidget.cs \
 	Synapse.QtClient.Widgets/NotificationsWidget.cs \
 	Synapse.QtClient.Widgets/RosterWidget.cs \
+	Synapse.QtClient.Widgets/StubbornWebView.cs \
 	Synapse.QtClient.Widgets/WebIdentityConfiguratorWidget.cs \
 	Synapse.QtClient.Windows/AddAccountDialog.cs \
 	Synapse.QtClient.Windows/AddFriendWindow.cs \

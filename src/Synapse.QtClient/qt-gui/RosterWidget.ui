@@ -62,7 +62,7 @@
           <enum>QTabWidget::South</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="friendsTab">
           <attribute name="title">
@@ -708,7 +708,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item>
-            <widget class="QWebView" name="m_ActivityWebView">
+            <widget class="Synapse.QtClient.Widgets.StubbornWebView" name="m_ActivityWebView">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                <horstretch>0</horstretch>
@@ -734,9 +734,9 @@ p, li { white-space: pre-wrap; }
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QWebView</class>
-   <extends>QWidget</extends>
-   <header>QtWebKit/QWebView</header>
+   <class>Synapse.QtClient.Widgets.StubbornWebView</class>
+   <extends>QWebView</extends>
+   <header>conversationwidget.h</header>
   </customwidget>
   <customwidget>
    <class>Synapse.QtClient.Widgets.AvatarGrid&lt;Synapse.UI.RosterItem&gt;</class>

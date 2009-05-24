@@ -30,6 +30,7 @@ using Synapse.UI.Chat;
 using Synapse.Xmpp;
 using Synapse.Xmpp.Services;
 using Synapse.QtClient;
+using Synapse.QtClient.Widgets;
 using Synapse.QtClient.ExtensionNodes;
 
 using Mono.Addins;

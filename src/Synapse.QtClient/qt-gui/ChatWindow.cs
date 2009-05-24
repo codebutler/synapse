@@ -19,7 +19,7 @@ namespace Synapse.QtClient.Windows {
         
         protected QSplitter splitter;
         
-        protected Synapse.QtClient.ConversationWidget m_ConversationWidget;
+        protected Synapse.QtClient.Widgets.ConversationWidget m_ConversationWidget;
         
         protected QWidget bottomContainer;
         
@@ -54,7 +54,7 @@ namespace Synapse.QtClient.Windows {
             this.splitter.OpaqueResize = true;
             this.splitter.ChildrenCollapsible = false;
             this.splitter_2.AddWidget(this.splitter);
-            this.m_ConversationWidget = new Synapse.QtClient.ConversationWidget(this.splitter);
+            this.m_ConversationWidget = new Synapse.QtClient.Widgets.ConversationWidget(this.splitter);
             this.m_ConversationWidget.ObjectName = "m_ConversationWidget";
             this.m_ConversationWidget.Url = new QUrl("about:blank");
             this.splitter.AddWidget(this.m_ConversationWidget);

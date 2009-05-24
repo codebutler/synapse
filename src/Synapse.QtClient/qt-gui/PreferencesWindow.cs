@@ -57,7 +57,7 @@ namespace Synapse.QtClient.Windows {
         
         protected QWidget tab_5;
         
-        protected Synapse.QtClient.ConversationWidget messagePreviewWebView;
+        protected Synapse.QtClient.Widgets.ConversationWidget messagePreviewWebView;
         
         protected QFrame line;
         
@@ -260,7 +260,7 @@ namespace Synapse.QtClient.Windows {
             verticalLayout_5 = new QVBoxLayout(this.tab_5);
             verticalLayout_5.Spacing = 0;
             verticalLayout_5.Margin = 0;
-            this.messagePreviewWebView = new Synapse.QtClient.ConversationWidget(this.tab_5);
+            this.messagePreviewWebView = new Synapse.QtClient.Widgets.ConversationWidget(this.tab_5);
             this.messagePreviewWebView.ObjectName = "messagePreviewWebView";
             QSizePolicy messagePreviewWebView_sizePolicy;
             messagePreviewWebView_sizePolicy = new QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed);

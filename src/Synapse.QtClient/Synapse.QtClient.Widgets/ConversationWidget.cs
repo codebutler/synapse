@@ -39,9 +39,9 @@ using Synapse.UI.Chat;
 using Synapse.Xmpp;
 using Mono.Addins;
 
-namespace Synapse.QtClient
+namespace Synapse.QtClient.Widgets
 {
-	public class ConversationWidget : QWebView
+	public class ConversationWidget : StubbornWebView
 	{
 		#region Private Variables
 		int    m_StyleVersion;
@@ -702,16 +702,6 @@ namespace Synapse.QtClient
 			// FIXME: Seems "window.onresize" doesn't work, so we need to fake it.
 			// Qt bug?
 			base.Page().MainFrame().EvaluateJavaScript("windowDidResize()");
-		}
-		
-		protected override void KeyPressEvent (Qyoto.QKeyEvent arg1)
-		{
-			arg1.Ignore();
-		}
-		
-		protected override void DragEnterEvent (Qyoto.QDragEnterEvent arg1)
-		{
-			arg1.Ignore();
 		}
 	}
 	

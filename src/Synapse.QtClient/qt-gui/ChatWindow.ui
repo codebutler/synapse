@@ -44,7 +44,7 @@
       <property name="childrenCollapsible">
        <bool>false</bool>
       </property>
-      <widget class="Synapse.QtClient.ConversationWidget" name="m_ConversationWidget" native="true">
+      <widget class="Synapse.QtClient.Widgets.ConversationWidget" name="m_ConversationWidget" native="true">
        <property name="url" stdset="0">
         <url>
          <string>about:blank</string>
@@ -98,7 +98,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Synapse.QtClient.ConversationWidget</class>
+   <class>Synapse.QtClient.Widgets.ConversationWidget</class>
+   <extends>QWebView</extends>
+   <header>conversationwidgtet.h</header>
   </customwidget>
   <customwidget>
    <class>Synapse.QtClient.Widgets.AvatarGrid&lt;jabber.connection.RoomParticipant&gt;</class>

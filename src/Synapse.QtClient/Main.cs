@@ -38,6 +38,7 @@ using QtWebKit;
 
 using Notifications;
 
+using Synapse.QtClient.Widgets;
 using Synapse.QtClient.Windows;
 
 namespace Synapse.QtClient
