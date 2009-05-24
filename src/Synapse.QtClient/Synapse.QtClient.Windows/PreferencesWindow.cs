@@ -257,22 +257,31 @@ namespace Synapse.QtClient.Windows
 	
 			public override QModelIndex Index (int row, int column, Qyoto.QModelIndex parent)
 			{
-				Account account = ServiceManager.Get<AccountService>().Accounts[row];
-				return CreateIndex(row, column, account);
+				var accounts = ServiceManager.Get<AccountService>().Accounts;
+				if (accounts.Count >= row + 1) {
+					Account account = accounts[row];
+					return CreateIndex(row, column, account);
+				} else {
+					return CreateIndex(-1, -1);
+				}
 			}
 	
 			public override QVariant Data (Qyoto.QModelIndex index, int role)
 			{
-				Account account = (Account)index.InternalPointer();
-				if (index.Column() == 0) {
-					if (role == (int)Qt.ItemDataRole.DisplayRole) {
-						return account.Jid.ToString();
-					} else if (role == (int)Qt.ItemDataRole.CheckStateRole) {
-						return (int)Qt.CheckState.Checked;
-					}
-				} else if (index.Column() == 1) {
-					if (role == (int)Qt.ItemDataRole.DisplayRole) {
-						return account.ConnectionState.ToString();
+				if (index.IsValid()) {
+					Account account = (Account)index.InternalPointer();
+					if (account != null) {
+						if (index.Column() == 0) {
+							if (role == (int)Qt.ItemDataRole.DisplayRole) {
+								return account.Jid.ToString();
+							} else if (role == (int)Qt.ItemDataRole.CheckStateRole) {
+								return (int)Qt.CheckState.Checked;
+							}
+						} else if (index.Column() == 1) {
+							if (role == (int)Qt.ItemDataRole.DisplayRole) {
+								return account.ConnectionState.ToString();
+							}
+						}
 					}
 				}
 				return new QVariant();
