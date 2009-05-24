@@ -52,7 +52,7 @@ namespace Synapse.QtClient.Widgets
 				
 		protected override bool AcceptNavigationRequest (Qyoto.QWebFrame frame, Qyoto.QNetworkRequest request, Qyoto.QWebPage.NavigationType type)
 		{
-			if (request.Url().Scheme() != "resource")
+			if (type != NavigationType.NavigationTypeLinkClicked && request.Url().Scheme() != "resource")
 				return false;
 			else
 				return base.AcceptNavigationRequest(frame, request, type);
