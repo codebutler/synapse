@@ -114,6 +114,7 @@ RESOURCES =  \
 	resources/octyaddme.png \
 	resources/profile.html \
 	resources/prototype.js \
+	resources/scroll-thumb.png \
 	resources/ServiceDiscovery.html \
 	resources/simple-add.png \
 	resources/simple-search.png \

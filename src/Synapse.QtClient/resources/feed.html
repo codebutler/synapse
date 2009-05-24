@@ -43,17 +43,35 @@
 				text-decoration: underline;
 			}
 			div.timestamp {
-					float: right;
-					font-size: xx-small;
+				float: right;
+				font-size: xx-small;
 			}
 			a {
 				color: #6A6A6A;
 			}
 			.music {
-					background: url('resource:/music-16.png') no-repeat;
+				background: url('resource:/music-16.png') no-repeat;
 			}
 			div#actions {
 				text-align: right;
+			}
+			::-webkit-scrollbar {
+				width: 15px;
+			}
+			/* FIXME: We use an image for now because QtWebKit sucks at rendering rounded borders.
+			::-webkit-scrollbar-thumb:vertical {
+				background-color: #4F4F4F;
+				border: 1px solid #4F4F4F;
+				-webkit-border-radius: 5px;
+			}
+			*/
+			::-webkit-scrollbar-thumb:vertical {
+				-webkit-border-image: url('resource:/scroll-thumb.png') 5 0 5 0;
+				border-width: 5px 0px;
+			}
+			::-webkit-scrollbar-track-piece:vertical
+			{
+				background-color: #2D2D2D;
 			}
 		</style>
 		<script type="text/javascript">

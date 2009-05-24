@@ -142,6 +142,7 @@
     <File name="Synapse.QtClient.Windows/AddAccountDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="qt-gui/AddAccountDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="Synapse.QtClient.Widgets/StubbornWebView.cs" subtype="Code" buildaction="Compile" />
+    <File name="resources/scroll-thumb.png" subtype="Code" buildaction="EmbedAsResource" />
   </Contents>
   <References>
     <ProjectReference type="Assembly" localcopy="True" refto="../../contrib/jabber-net.dll" />
