@@ -58,11 +58,11 @@ namespace Synapse.Xmpp
 			if (!Directory.Exists(s_AvatarPath))
 				Directory.CreateDirectory(s_AvatarPath);
 
-			s_DefaultAvatarImage = Application.CreateImage("resource:/default-avatar.png");
+			s_DefaultAvatarImage = Application.Client.CreateImageFromResource("default-avatar.png");
 			if (s_DefaultAvatarImage == null)
 				throw new Exception("Unable to load default avatar!");
 
-			s_AvatarCache.Add("octy", Application.CreateImage("resource:/octy-32.png"));
+			s_AvatarCache.Add("octy", Application.Client.CreateImageFromResource("octy-32.png"));
 		}
 		
 		public AvatarManager(Account account)
@@ -124,7 +124,7 @@ namespace Synapse.Xmpp
 						return s_AvatarCache[hash];
 					} else {
 						if (AvatarExists(hash)) {
-							object obj = Application.CreateImage(AvatarFileName(hash));
+							object obj = Application.Client.CreateImage(AvatarFileName(hash));
 							s_AvatarCache[hash] = obj;
 							return obj;
 						}

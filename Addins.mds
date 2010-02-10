@@ -1,34 +1,26 @@
 <Combine name="Addins" fileversion="2.0">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="CombineConfiguration">
-      <Entry build="True" name="CodeSnippets" configuration="Debug" />
       <Entry build="True" name="Banshee" configuration="Debug" />
-      <Entry build="True" name="Twitter" configuration="Debug" />
       <Entry build="True" name="Flickr" configuration="Debug" />
       <Entry build="True" name="YouTube" configuration="Debug" />
       <Entry build="True" name="Wikipedia" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
-      <Entry build="True" name="CodeSnippets" configuration="Release" />
       <Entry build="True" name="Banshee" configuration="Release" />
-      <Entry build="True" name="Twitter" configuration="Release" />
       <Entry build="True" name="Flickr" configuration="Release" />
       <Entry build="True" name="YouTube" configuration="Release" />
       <Entry build="True" name="Wikipedia" configuration="Release" />
     </Configuration>
   </Configurations>
-  <StartMode startupentry="CodeSnippets" single="True">
-    <Execute type="None" entry="CodeSnippets" />
+  <StartMode startupentry="Banshee" single="True">
     <Execute type="None" entry="Banshee" />
-    <Execute type="None" entry="Twitter" />
     <Execute type="None" entry="Flickr" />
     <Execute type="None" entry="YouTube" />
     <Execute type="None" entry="Wikipedia" />
   </StartMode>
   <Entries>
-    <Entry filename="addins/CodeSnippets/CodeSnippets.mdp" />
     <Entry filename="addins/Banshee/Banshee.mdp" />
-    <Entry filename="addins/Twitter/Twitter.mdp" />
     <Entry filename="addins/Flickr/Flickr.mdp" />
     <Entry filename="addins/YouTube/YouTube.mdp" />
     <Entry filename="addins/Wikipedia/Wikipedia.mdp" />

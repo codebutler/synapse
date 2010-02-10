@@ -1,31 +1,30 @@
-<Project name="Twitter" fileversion="2.0" language="C#" DefaultNamespace="Synapse.Addins.Twitter" UseParentDirectoryAsNamespace="True" targetFramework="3.5" ctype="DotNetProject">
+<Project name="Twitter" fileversion="2.0" DefaultNamespace="Synapse.Addins.Twitter" language="C#" UseParentDirectoryAsNamespace="True" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug/addins" assembly="Twitter" />
       <Build debugmode="True" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" />
-      <EnvironmentVariables />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Release/addins" assembly="Twitter" />
       <Build debugmode="False" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="Twitter.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="TwitterClient.cs" subtype="Code" buildaction="Compile" />
-    <File name="TwitterService.cs" subtype="Code" buildaction="Compile" />
-    <File name="TwitterAccountHandler.cs" subtype="Code" buildaction="Compile" />
-    <File name="twitm-48.png" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="twitm-16.png" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
-    <File name="ViewOnTwitterAction.cs" subtype="Code" buildaction="Compile" />
-    <File name="TwitterConfigurationDialog.cs" subtype="Code" buildaction="Compile" />
-    <File name="TwitterWebIdentityConfigurator.cs" subtype="Code" buildaction="Compile" />
-    <File name="qt-gui/TwitterConfigurationDialog.cs" subtype="Code" buildaction="Compile" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Twitter.addin.xml" />
+    <File subtype="Code" buildaction="Compile" name="TwitterClient.cs" />
+    <File subtype="Code" buildaction="Compile" name="TwitterService.cs" />
+    <File subtype="Code" buildaction="Compile" name="TwitterAccountHandler.cs" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="twitm-48.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="twitm-16.png" />
+    <File subtype="Code" buildaction="Compile" name="AssemblyInfo.cs" />
+    <File subtype="Code" buildaction="Compile" name="ViewOnTwitterAction.cs" />
+    <File subtype="Code" buildaction="Compile" name="TwitterConfigurationDialog.cs" />
+    <File subtype="Code" buildaction="Compile" name="TwitterWebIdentityConfigurator.cs" />
+    <File subtype="Code" buildaction="Compile" name="qt-gui/TwitterConfigurationDialog.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -35,14 +34,12 @@
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Xmpp" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Services" />
-    <ProjectReference type="Assembly" localcopy="False" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
-    <ProjectReference type="Project" localcopy="False" refto="Synapse.QtClient" />
-    <ProjectReference type="Gac" localcopy="False" refto="qt-dotnet, Version=4.4.0.0, Culture=neutral, PublicKeyToken=194a23ba31c08164" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="False" refto="../../contrib/Mono.Addins.dll" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Core" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <Deployment.LinuxDeployData generatePcFile="False" />
-  <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
+  <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />
     <DeployFilesVar />
     <ResourcesVar Sync="True" Name="RESOURCES" />

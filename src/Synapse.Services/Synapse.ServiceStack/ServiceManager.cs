@@ -104,7 +104,7 @@ namespace Synapse.ServiceStack
 			RegisterService<ActivityFeedService>();
 		}
 		
-		private static void OnClientStarted(Client client)
+		private static void OnClientStarted(IClient client)
 		{
 			DelayedInitialize ();
 		}

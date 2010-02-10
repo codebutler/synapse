@@ -1,42 +1,42 @@
-<Project name="Synapse.UI" fileversion="2.0" language="C#" UseParentDirectoryAsNamespace="True" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
+<Project name="Synapse.UI" fileversion="2.0" DefaultNamespace="Synapse.UI" language="C#" UseParentDirectoryAsNamespace="True" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug" assembly="Synapse.UI" />
       <Build debugmode="True" target="Library" />
-      <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Release" assembly="Synapse.UI" />
       <Build debugmode="False" target="Library" />
-      <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
-    <File name="RosterAvatarGridModel.cs" subtype="Code" buildaction="Compile" />
-    <File name="MucAvatarGridModel.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="ResourceProviderCodon.cs" subtype="Code" buildaction="Compile" />
-    <File name="template4dotnet.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/AbstractChatContent.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/ChatContentStatus.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/ChatContentContext.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/ChatContentMessage.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/ChatContentTyping.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/ChatContentNotification.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/ChatContentEvent.cs" subtype="Code" buildaction="Compile" />
-    <File name="IAvatarProvider.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/ChatHandler.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/MucHandler.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/IChatHandler.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/AbstractChatHandler.cs" subtype="Code" buildaction="Compile" />
-    <File name="ResourceCodon.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Services/GuiService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/IMessageDisplayFormatter.cs" subtype="Code" buildaction="Compile" />
-    <File name="IAvatarGridModel.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.UI.Chat/FakeChatHandler.cs" subtype="Code" buildaction="Compile" />
+    <File subtype="Code" buildaction="Compile" name="AssemblyInfo.cs" />
+    <File subtype="Code" buildaction="Compile" name="RosterAvatarGridModel.cs" />
+    <File subtype="Code" buildaction="Compile" name="MucAvatarGridModel.cs" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Synapse.UI.addin.xml" />
+    <File subtype="Code" buildaction="Compile" name="ResourceProviderCodon.cs" />
+    <File subtype="Code" buildaction="Compile" name="template4dotnet.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/AbstractChatContent.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/ChatContentStatus.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/ChatContentContext.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/ChatContentMessage.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/ChatContentTyping.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/ChatContentNotification.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/ChatContentEvent.cs" />
+    <File subtype="Code" buildaction="Compile" name="IAvatarProvider.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/ChatHandler.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/MucHandler.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/IChatHandler.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/AbstractChatHandler.cs" />
+    <File subtype="Code" buildaction="Compile" name="ResourceCodon.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Services/GuiService.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/IMessageDisplayFormatter.cs" />
+    <File subtype="Code" buildaction="Compile" name="IAvatarGridModel.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.UI.Chat/FakeChatHandler.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="False" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -47,10 +47,11 @@
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Services" />
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Xmpp" />
-    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/HtmlAgilityPack.dll" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.4.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
   </References>
-  <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
+  <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />
     <DeployFilesVar />
     <ResourcesVar Sync="True" Name="RESOURCES" />

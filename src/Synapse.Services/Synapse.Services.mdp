@@ -1,37 +1,36 @@
-<Project name="Synapse.Services" fileversion="2.0" language="C#" UseParentDirectoryAsNamespace="True" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
+<Project name="Synapse.Services" fileversion="2.0" DefaultNamespace="Synapse.Services" language="C#" UseParentDirectoryAsNamespace="True" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug" assembly="Synapse.Services" />
       <Build debugmode="True" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
-      <EnvironmentVariables />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Release" assembly="Synapse.Services" />
       <Build debugmode="False" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="Synapse.Services/NetworkService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Services/ScreensaverService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Services/NowPlayingService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/IService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/ServiceManager.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/IRequiredService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/IInitializeService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/IExtensionService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/ServiceStartedHandler.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/IDelayedInitializeService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/Application.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/Client.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.ServiceStack/IRegisterOnDemandService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Services.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="Synapse.Services/SettingsService.cs" subtype="Code" buildaction="Compile" />
-    <File name="Synapse.Services/ActivityFeedService.cs" subtype="Code" buildaction="Compile" />
-    <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.Services/NowPlayingService.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.ServiceStack/IService.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.ServiceStack/ServiceManager.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.ServiceStack/IRequiredService.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.ServiceStack/IInitializeService.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.ServiceStack/IExtensionService.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.ServiceStack/ServiceStartedHandler.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.ServiceStack/IDelayedInitializeService.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.ServiceStack/Application.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.ServiceStack/IClient.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.ServiceStack/IRegisterOnDemandService.cs" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Synapse.Services.addin.xml" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.Services/SettingsService.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.Services/ActivityFeedService.cs" />
+    <File subtype="Code" buildaction="Compile" name="AssemblyInfo.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.Services/NetworkService.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.Services/ScreensaverService.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -39,13 +38,12 @@
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Core" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Hyena.dll" />
-    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/NDesk.DBus.dll" />
-    <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Addins, Version=0.4.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
   </References>
-  <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
+  <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />
     <DeployFilesVar />
     <ResourcesVar Sync="True" Name="RESOURCES" />

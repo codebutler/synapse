@@ -149,7 +149,7 @@ namespace Synapse.Xmpp
 			AddFeature(new UserWebIdentities(this));
 
 			if (ServiceManager.Contains<NetworkService>())
-				ServiceManager.Get<NetworkService>().StateChange += HandleNetworkStateChanged;
+				ServiceManager.Get<NetworkService>().StateChanged += HandleNetworkStateChanged;
 		}
 
 		void HandleOnRosterEnd(object sender)

@@ -1,0 +1,22 @@
+<Addin id     = "GtkClient"
+	namespace = "Synapse"
+	name      = "Synapse Gtk Client"
+	author    = "Eric Butler"
+	copyright = "GPLv3"
+	url       = "http://synapse.im/"
+	isroot    = "true"
+	version   = "0.1">
+	
+	<Dependencies>
+		<Addin id="Core" version="0.1" />
+		<Addin id="Services" version="0.1" />
+	</Dependencies>
+	
+	<Extension path="/Synapse/PlatformServices/ScreensaverProvider">
+		<ScreensaverProvider class="Synapse.PlatformServices.Linux.GnomeScreensaverProvider" />
+	</Extension>
+	
+	<Extension path="/Synapse/PlatformServices/NetworkProvider">
+		<NetworkProvider class="Synapse.PlatformServices.Linux.NetworkManager" />
+	</Extension>
+</Addin>

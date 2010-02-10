@@ -13,4 +13,12 @@
 	<ExtensionPoint path="/Synapse/Services/NowPlaying/Providers">
 		<ExtensionNode name="NowPlayingProvider" />
 	</ExtensionPoint>
+	
+	<ExtensionPoint path="/Synapse/PlatformServices/ScreensaverProvider">
+		<ExtensionNode name="ScreensaverProvider" />
+	</ExtensionPoint>
+	
+	<ExtensionPoint path="/Synapse/PlatformServices/NetworkProvider">
+		<ExtensionNode name="NetworkProvider" />
+	</ExtensionPoint>
 </Addin>

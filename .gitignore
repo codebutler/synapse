@@ -3,6 +3,7 @@
 *.usertasks
 *.pc
 *.swp
+*.DS_Store
 configure
 Makefile
 Makefile.in

@@ -1,107 +1,80 @@
 //
-// NetworkManager.cs: Uses NetworkManager to keep track of if you're connected
-//                    to the internet or not.
+// NetworkService.cs
+// 
+// Copyright (C) 2010 Eric Butler
 //
-// Author:
-//   Aaron Bockover <abockover@novell.com>
+// Authors:
+//   Eric Butler <eric@codebutler.com>
 //
-// Copyright (C) 2005-2008 Novell, Inc.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// This file was copied from Banshee - http://banshee-project.org/
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
-
-using NDesk.DBus;
-
-using Synapse.Core;
 using Synapse.ServiceStack;
+using Hyena;
+using Mono.Addins;
 
 namespace Synapse.Services
 {
-    public enum NetworkState : uint {
+	public delegate void NetworkStateChangeHandler (NetworkState state);
+	
+    public enum NetworkState : uint 
+	{
         Unknown = 0,
         Asleep,
         Connecting,
         Connected,
         Disconnected
-    }
+    }	
 	
-	public enum DeviceType : uint {
-		Unknown = 0,
-		Ethernet,
-		Wireless
+	public interface INetworkProvider
+	{
+		event NetworkStateChangeHandler StateChanged;
+		NetworkState State { get; }
 	}
-    
-    [Interface("org.freedesktop.NetworkManager")]
-    internal interface INetworkManager
-    {
-        event NetworkStateChangeHandler StateChange;
-        NetworkState state ();
-		bool get_wireless_enabled ();
-    }
-    
-    public delegate void NetworkStateChangeHandler (NetworkState state);
-    
-    public class NetworkService : IService, IDelayedInitializeService
-    {
-        private const string BusName    = "org.freedesktop.NetworkManager";
-        private const string ObjectPath = "/org/freedesktop/NetworkManager";
+	
+	public class NetworkService : IService, IDelayedInitializeService
+	{
+		INetworkProvider m_Provider;
 		
-        private INetworkManager m_manager;
-        
-        public event NetworkStateChangeHandler StateChange;
-		
-        public NetworkState State {
-            get {
-				return m_manager.state ();
-			}
-        }
+		public event NetworkStateChangeHandler StateChanged;
 		
 		public void DelayedInitialize ()
 		{
-			if (Application.CommandLine.Contains("disable-dbus"))
-				return;
-			
-			if (!Bus.System.NameHasOwner (BusName))
-                throw new ApplicationException(String.Format("Name {0} has no owner", BusName));
-			
-            m_manager = Bus.System.GetObject<INetworkManager> (BusName, new ObjectPath(ObjectPath));
-            m_manager.StateChange += Manager_StateChange;
+			foreach (TypeExtensionNode node in AddinManager.GetExtensionNodes("/Synapse/PlatformServices/NetworkProvider")) {
+				try {
+					m_Provider = (INetworkProvider)node.CreateInstance(typeof(INetworkProvider));
+					m_Provider.StateChanged += HandleNetworkStateChanged;
+					Log.DebugFormat("Loaded INetworkProvider: {0}", m_Provider.GetType().FullName);
+					break;
+				} catch (Exception ex) {
+					Log.Exception("INetworkProvider extension failed to load", ex);
+				}
+			}
 		}
 		
-		private void Manager_StateChange (NetworkState state)
-        {
-            NetworkStateChangeHandler handler = StateChange;
-            if (handler != null) {
-                handler (state);
-            }
-        }
-
+		public NetworkState State {
+			get { return m_Provider.State; }
+		}
+		
+		void HandleNetworkStateChanged (NetworkState state)
+		{
+			if (StateChanged != null)
+				StateChanged(state);
+		}
+		
 		string IService.ServiceName {
 			get { return "NetworkService"; }
 		}
-    }
+	}
 }

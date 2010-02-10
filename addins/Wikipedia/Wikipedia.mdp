@@ -1,24 +1,23 @@
-<Project name="Wikipedia" fileversion="2.0" language="C#" targetFramework="3.5" ctype="DotNetProject">
+<Project name="Wikipedia" fileversion="2.0" DefaultNamespace="Wikipedia" language="C#" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="../../build/Debug/addins" assembly="Wikipedia" />
       <Build debugmode="True" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" />
-      <EnvironmentVariables />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Release" assembly="Wikipedia" />
       <Build debugmode="False" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="WikipediaMessageDisplayFormatter.cs" subtype="Code" buildaction="Compile" />
-    <File name="Wikipedia.addin.xml" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
-    <File name="logo-16.png" subtype="Code" buildaction="EmbedAsResource" />
+    <File subtype="Code" buildaction="Compile" name="WikipediaMessageDisplayFormatter.cs" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Wikipedia.addin.xml" />
+    <File subtype="Code" buildaction="Compile" name="AssemblyInfo.cs" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="logo-16.png" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="False" refto="Synapse.UI" />
@@ -28,9 +27,8 @@
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Core" />
     <ProjectReference type="Project" localcopy="False" refto="Synapse.Services" />
-    <ProjectReference type="Assembly" localcopy="False" specificVersion="False" refto="../../contrib/Mono.Addins.dll" />
   </References>
-  <MonoDevelop.Autotools.MakefileInfo IntegrationEnabled="True" RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
+  <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile.am" SyncReferences="True" IsAutotoolsProject="True" RelativeConfigureInPath="../..">
     <BuildFilesVar Sync="True" Name="FILES" />
     <DeployFilesVar />
     <ResourcesVar Sync="True" Name="RESOURCES" />

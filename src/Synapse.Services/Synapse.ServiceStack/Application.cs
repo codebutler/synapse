@@ -30,12 +30,14 @@
 //
 
 using System;
+using System.IO;
 using System.Diagnostics;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Threading;
 using Mono.Unix;
 using Synapse.Core;
+using Hyena;
 using Hyena.CommandLine;
 
 namespace Synapse.ServiceStack
@@ -46,21 +48,45 @@ namespace Synapse.ServiceStack
     {   
         public static event ShutdownRequestHandler ShutdownRequested;
 
-		private static Client s_Client;
+		private static IClient s_Client;
         private static bool shutting_down;
 
-        public static void Initialize (Client client)
+        public static void Initialize (IClient client)
         {
 			if (client == null)
 				throw new ArgumentNullException("client");
 			s_Client = client;
 			
+			Log.InformationFormat("Starting Synapse ({0})", client.ClientId);
+			
+			AppDomain.CurrentDomain.UnhandledException += HandleAppDomainCurrentDomainUnhandledException;
+			
+			try {
+				PlatformHacks.SetProcessName("synapse");
+			} catch (Exception ex) {
+				Log.WarningFormat("Failed to set process name: {0}", ex.Message);
+			}
+				
 			CommandLine = new CommandLineParser();
 			
             ServiceManager.Initialize();
         }
 
-		public static Client Client {
+        static void HandleAppDomainCurrentDomainUnhandledException (object sender, UnhandledExceptionEventArgs args)
+        {
+			Exception ex = (Exception)args.ExceptionObject;
+			Console.Error.WriteLine("UNHANDLED EXCEPTION: " + ex);
+			string desktopPath = Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+			string crashFileName = Path.Combine(desktopPath, String.Format("synapse-crash-{0}.log", DateTime.Now.ToFileTime()));
+			string crashLog = args.ExceptionObject.ToString();
+			Util.WriteToFile(crashFileName, crashLog);
+
+			s_Client.ShowErrorWindow("Unhandled Exception", ex);
+			
+			Shutdown();
+        }
+
+		public static IClient Client {
 			get {
 				return s_Client;
 			}
@@ -94,16 +120,6 @@ namespace Synapse.ServiceStack
         {
             return !String.IsNullOrEmpty (Environment.GetEnvironmentVariable (env));
         }
-
-		public static object CreateImage (byte[] data)
-		{
-			return s_Client.CreateImage(data);
-		}
-		
-		public static object CreateImage (string fileName)
-		{
-			return s_Client.CreateImage(fileName);
-		}
 		
         public static bool ShuttingDown {
             get { return shutting_down; }
@@ -136,7 +152,7 @@ namespace Synapse.ServiceStack
         private static void Dispose ()
         {
             ServiceManager.Shutdown();
-			s_Client.Dispose();
+			s_Client.Exit();
         }
     }
 }
