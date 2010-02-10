@@ -5,7 +5,7 @@
 //
 // Authors:
 //   Eric Butler <eric@codebutler.com>
-//   
+//   Christian Hergert <chris@dronelabs.com>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,12 +22,18 @@
 
 using System;
 using Gtk;
+using Synapse.ServiceStack;
+using Synapse.Xmpp;
+using Synapse.Xmpp.Services;
 using Synapse.GtkClient.Widgets;
 
 namespace Synapse.GtkClient.Windows
 {
 	public class MainWindow : Window
 	{
+		NoAccountsWidget m_NoAccountsWidget;
+		RosterWidget     m_RosterWidget;
+		
 		public MainWindow () : base (WindowType.Toplevel)
 		{
 			base.Title = "Synapse";
@@ -40,7 +46,6 @@ namespace Synapse.GtkClient.Windows
 			base.Add(vbox);
 			vbox.Show();
 
-			
 			var ebox = new Gtk.EventBox();
             ebox.ModifyBg(StateType.Normal, new Gdk.Color(0x03, 0x06, 0x0b));
             vbox.PackStart(ebox, false, true, 0);
@@ -95,10 +100,48 @@ namespace Synapse.GtkClient.Windows
 			close.Add(close_img);
 			close_img.Show();
 
-			var noAccounts = new NoAccountsWidget();
-			vbox.PackStart(noAccounts);
-			noAccounts.Show();
-
+			m_NoAccountsWidget = new NoAccountsWidget();
+			vbox.PackStart(m_NoAccountsWidget);
+			
+			m_RosterWidget = new RosterWidget();
+			vbox.PackStart(m_RosterWidget);
+			
+			var accountService = ServiceManager.Get<AccountService>();
+			accountService.AccountAdded += AccountAdded;
+			accountService.AccountRemoved += AccountRemoved;
+			foreach (Account account in accountService.Accounts)
+				AccountAdded(account);
+			
+			HideShowNoAccountsWidget();
+		}
+		
+		void AccountAdded (Account account)
+		{
+			Gtk.Application.Invoke(delegate {
+				m_RosterWidget.AddAccount(account);
+				HideShowNoAccountsWidget();
+			});
+		}
+		
+		void AccountRemoved (Account account)
+		{
+			Gtk.Application.Invoke(delegate {
+				m_RosterWidget.RemoveAccount(account);
+				HideShowNoAccountsWidget();
+			});
+		}
+		
+		void HideShowNoAccountsWidget ()
+		{
+			if (m_RosterWidget.AccountsCount > 0) {
+				// FIXME: Clear max width
+				m_NoAccountsWidget.Hide();
+				m_RosterWidget.Show();
+			} else {
+				// FIXME: Set max width to 384px
+				m_RosterWidget.Hide();
+				m_NoAccountsWidget.Show();
+			}
 		}
 	}
 }

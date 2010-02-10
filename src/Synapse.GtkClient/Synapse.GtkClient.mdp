@@ -30,6 +30,8 @@
     <File subtype="Code" buildaction="Compile" name="Synapse.GtkClient.Windows/MainWindow.cs" />
     <File subtype="Directory" buildaction="Compile" name="Synapse.GtkClient.Widgets" />
     <File subtype="Code" buildaction="Compile" name="Synapse.GtkClient.Widgets/NoAccountsWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.GtkClient.Widgets/RosterWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="Synapse.GtkClient.Widgets/AccountStatusWidget.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -45,5 +47,6 @@
     <ProjectReference type="Project" localcopy="True" refto="Synapse.Xmpp" />
     <ProjectReference type="Project" localcopy="True" refto="Synapse.UI" />
     <ProjectReference type="Assembly" localcopy="True" specificVersion="False" refto="../../contrib/jabber-net.dll" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
   </References>
 </Project>

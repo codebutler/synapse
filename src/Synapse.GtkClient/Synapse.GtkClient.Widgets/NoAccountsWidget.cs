@@ -37,6 +37,7 @@ namespace Synapse.GtkClient.Widgets
 		public NoAccountsWidget ()
 		{
 			//this.BorderWidth = 6;
+			this.Visible = false;
 
 			embed = new Clutter.Embed();
 			embed.Stage.Color = new Clutter.Color(0x03, 0x06, 0x0b);
