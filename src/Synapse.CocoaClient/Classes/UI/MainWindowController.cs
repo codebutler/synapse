@@ -21,6 +21,7 @@
 
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 using Monobjc;
 using Monobjc.Cocoa;
@@ -42,6 +43,8 @@ namespace Synapse.CocoaClient
 		[ObjectiveCField] public NSWindow addAccountWindow;
 		[ObjectiveCField] public NSTextField loginField;
 		[ObjectiveCField] public NSTextField passwordField;
+		
+		List<AccountStatusViewController> m_AccountViews = new List<AccountStatusViewController>();
 		
 		public MainWindowController ()
 		{
@@ -136,6 +139,11 @@ namespace Synapse.CocoaClient
 		void AccountAdded (Account account)
 		{
 			ToggleWelcomeView();
+			
+			var viewController = new AccountStatusViewController(account);
+			m_AccountViews.Add(viewController);
+			
+			base.Window.ContentView.AddSubview(viewController.View);
 		}
 		
 		void AccountRemoved (Account account)
