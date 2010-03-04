@@ -1,16 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{54CE9B44-385C-4469-8D44-656B6E1AB342}</ProjectGuid>
+    <ProjectGuid>{C5518C86-09CA-427B-836A-65C551836AB1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Synapse.Xmpp</RootNamespace>
     <AssemblyName>Synapse.Xmpp</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +20,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <Execution>
-      <Execution clr-version="Net_2_0" xmlns="" />
+      <Execution clr-version="Net_2_0" />
     </Execution>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <Execution>
-      <Execution clr-version="Net_2_0" xmlns="" />
+      <Execution clr-version="Net_2_0" />
     </Execution>
   </PropertyGroup>
   <ItemGroup>
@@ -66,16 +64,14 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="jabber-net, Version=2.0.0.613, Culture=neutral, PublicKeyToken=924c5b18328d6f09">
       <HintPath>..\..\contrib\jabber-net.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="Mono.Addins, Version=0.4.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+    <Reference Include="System.Web" />
+    <Reference Include="Mono.Addins">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\contrib\Mono.Addins.dll</HintPath>
     </Reference>
@@ -87,18 +83,20 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Synapse.Core\Synapse.Core.csproj">
-      <Project>{244D9655-86AC-438A-9CC3-29281430B393}</Project>
+      <Project>{72DAF9C5-7295-4882-9CD1-AEE5FD2AB44B}</Project>
       <Name>Synapse.Core</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Synapse.Services\Synapse.Services.csproj">
       <Project>{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}</Project>
       <Name>Synapse.Services</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>
-      <Properties xmlns="">
+      <Properties InternalTargetFrameworkVersion="3.5">
         <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile.am" SyncReferences="true" IsAutotoolsProject="true" RelativeConfigureInPath="../..">
           <BuildFilesVar Sync="true" Name="FILES" />
           <DeployFilesVar />

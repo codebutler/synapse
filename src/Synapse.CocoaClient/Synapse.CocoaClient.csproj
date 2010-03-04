@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{693F7CF4-FC8B-42F8-AAE8-6DD002C022D5}</ProjectGuid>
+    <ProjectTypeGuids>{BAF265F1-4F39-46F3-BA25-37173E815138};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Synapse.CocoaClient</RootNamespace>
+    <BundleIdentifier>im.synapse.CocoaClient</BundleIdentifier>
+    <MainNibFile>MainMenu.xib</MainNibFile>
+    <BundleDisplayName>Synapse</BundleDisplayName>
+    <BundleVersion>0.1</BundleVersion>
+    <AssemblyName>Synapse.CocoaClient</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\Debug</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="Classes\UI\MainWindowController.cs" />
+    <Compile Include="Classes\AppDelegate.cs" />
+    <Compile Include="Classes\UI\AccountStatusViewController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classes\" />
+    <Folder Include="Classes\UI\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\resources\oceanbg.png" />
+    <Content Include="..\..\resources\octy.png" />
+    <Content Include="..\..\resources\octy-32.png" />
+    <Content Include="..\..\resources\octy-22.png" />
+    <Content Include="..\..\resources\default-avatar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Resources\MainMenu.xib" />
+    <Page Include="Resources\AccountStatusView.xib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Monobjc.Cocoa, Version=2.0.476.0, Culture=neutral, PublicKeyToken=d5a8d181860c16be" />
+    <Reference Include="Monobjc, Version=2.0.476.0, Culture=neutral, PublicKeyToken=d5a8d181860c16be" />
+    <Reference Include="Hyena, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\contrib\Hyena.dll</HintPath>
+    </Reference>
+    <Reference Include="jabber-net, Version=2.0.0.613, Culture=neutral, PublicKeyToken=924c5b18328d6f09">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\contrib\jabber-net.dll</HintPath>
+    </Reference>
+    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=924c5b18328d6f09">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\contrib\zlib.net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Synapse.UI\Synapse.UI.csproj">
+      <Project>{9B13B8FD-FC7F-496D-AC0E-5487C0D1608F}</Project>
+      <Name>Synapse.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Synapse.Core\Synapse.Core.csproj">
+      <Project>{72DAF9C5-7295-4882-9CD1-AEE5FD2AB44B}</Project>
+      <Name>Synapse.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Synapse.Services\Synapse.Services.csproj">
+      <Project>{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}</Project>
+      <Name>Synapse.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Synapse.Xmpp\Synapse.Xmpp.csproj">
+      <Project>{C5518C86-09CA-427B-836A-65C551836AB1}</Project>
+      <Name>Synapse.Xmpp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties InternalTargetFrameworkVersion="3.5" />
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>

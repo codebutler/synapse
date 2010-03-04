@@ -3,81 +3,72 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{72DAF9C5-7295-4882-9CD1-AEE5FD2AB44B}</ProjectGuid>
+    <ProjectGuid>{57470D69-BC99-40FC-AD1A-4BCB94B02D9C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Synapse.Core</RootNamespace>
-    <AssemblyName>Synapse.Core</AssemblyName>
+    <RootNamespace>Flickr</RootNamespace>
+    <AssemblyName>Flickr</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\Debug</OutputPath>
+    <OutputPath>..\..\build\Debug\addins</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Execution>
-      <Execution clr-version="Net_2_0" />
-    </Execution>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\Release</OutputPath>
+    <OutputPath>..\..\build\Release\addins</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Execution>
-      <Execution clr-version="Net_2_0" />
-    </Execution>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Synapse.Core\Paths.cs" />
-    <Compile Include="Synapse.Core\ReadOnlyDictionary.cs" />
-    <Compile Include="Synapse.Core\Util.cs" />
-    <Compile Include="Synapse.Core\Serialization.cs" />
-    <Compile Include="Synapse.Core\StringWriterWithEncoding.cs" />
-    <Compile Include="Synapse.Core\PlatformHacks.cs" />
-    <Compile Include="Synapse.Core\XdgBaseDirectorySpec.cs" />
-    <Compile Include="Synapse.Core\UserException.cs" />
-    <Compile Include="Synapse.Core\SerializableDictionary.cs" />
-    <Compile Include="Synapse.Core.ExtensionMethods\StringExtensions.cs" />
-    <Compile Include="Synapse.Core.ExtensionMethods\IEnumerable.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Synapse.Core\PList.cs" />
-    <Compile Include="Synapse.Core\Magic.cs" />
-    <Compile Include="Synapse.Core\HtmlSanitizer.cs" />
+    <Compile Include="FlickrAvatarProvider.cs" />
+    <Compile Include="FlickrMessageDisplayFormatter.cs" />
+    <Compile Include="Flickr.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Synapse.Core.addin.xml">
-      <LogicalName>Synapse.Core.addin.xml</LogicalName>
+    <EmbeddedResource Include="Flickr.addin.xml">
+      <LogicalName>Flickr.addin.xml</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="Mono.Posix" />
-    <Reference Include="Hyena, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\contrib\Hyena.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="Mono.Addins">
+    <Reference Include="jabber-net, Version=2.0.0.613, Culture=neutral, PublicKeyToken=924c5b18328d6f09">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\contrib\Mono.Addins.dll</HintPath>
-    </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\contrib\HtmlAgilityPack.dll</HintPath>
+      <HintPath>..\..\contrib\jabber-net.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web.Extensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Synapse.UI\Synapse.UI.csproj">
+      <Project>{9B13B8FD-FC7F-496D-AC0E-5487C0D1608F}</Project>
+      <Name>Synapse.UI</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Synapse.Services\Synapse.Services.csproj">
+      <Project>{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}</Project>
+      <Name>Synapse.Services</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Synapse.Core\Synapse.Core.csproj">
+      <Project>{72DAF9C5-7295-4882-9CD1-AEE5FD2AB44B}</Project>
+      <Name>Synapse.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>
       <Properties InternalTargetFrameworkVersion="3.5">
+        <Deployment.LinuxDeployData generatePcFile="false" />
         <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile.am" SyncReferences="true" IsAutotoolsProject="true" RelativeConfigureInPath="../..">
           <BuildFilesVar Sync="true" Name="FILES" />
           <DeployFilesVar />
