@@ -146,6 +146,10 @@
       <Project>{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}</Project>
       <Name>Synapse.Services</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Synapse.UI\Synapse.UI.csproj">
+      <Project>{9B13B8FD-FC7F-496D-AC0E-5487C0D1608F}</Project>
+      <Name>Synapse.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Synapse.Xmpp\Synapse.Xmpp.csproj">
       <Project>{54CE9B44-385C-4469-8D44-656B6E1AB342}</Project>
       <Name>Synapse.Xmpp</Name>

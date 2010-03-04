@@ -23,5 +23,5 @@ debian/stamp*
 debian/synapse*
 debian/files
 debian/synapse/
-src/Synapse.QtClient/synapse
 src/*/obj
+addins/*/obj

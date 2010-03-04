@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,6 +9,13 @@
     <OutputType>Library</OutputType>
     <RootNamespace>YouTube</RootNamespace>
     <AssemblyName>YouTube</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,20 +51,24 @@
     <Reference Include="jabber-net, Version=2.0.0.613, Culture=neutral, PublicKeyToken=924c5b18328d6f09">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\contrib\jabber-net.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Synapse.Services\Synapse.Services.csproj">
-      <Project>{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}</Project>
-      <Name>Synapse.Services</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\Synapse.Core\Synapse.Core.csproj">
       <Project>{72DAF9C5-7295-4882-9CD1-AEE5FD2AB44B}</Project>
       <Name>Synapse.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Synapse.Services\Synapse.Services.csproj">
+      <Project>{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}</Project>
+      <Name>Synapse.Services</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Synapse.UI\Synapse.UI.csproj">
       <Project>{9B13B8FD-FC7F-496D-AC0E-5487C0D1608F}</Project>
       <Name>Synapse.UI</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
