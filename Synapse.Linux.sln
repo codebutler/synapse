@@ -1,0 +1,92 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Synapse.GtkClient", "src\Synapse.GtkClient\Synapse.GtkClient.csproj", "{41161442-7503-4E41-9522-C4FC451E206F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Synapse.Core", "src\Synapse.Core\Synapse.Core.csproj", "{72DAF9C5-7295-4882-9CD1-AEE5FD2AB44B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Synapse.UI", "src\Synapse.UI\Synapse.UI.csproj", "{9B13B8FD-FC7F-496D-AC0E-5487C0D1608F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Synapse.Services", "src\Synapse.Services\Synapse.Services.csproj", "{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Synapse.Xmpp", "src\Synapse.Xmpp\Synapse.Xmpp.csproj", "{C5518C86-09CA-427B-836A-65C551836AB1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Addins", "Addins", "{977BC9B7-C959-412F-B179-43EDA0664F06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banshee", "addins\Banshee\Banshee.csproj", "{0D3634E2-B918-416E-B0BB-B595220A8125}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YouTube", "addins\YouTube\YouTube.csproj", "{BF64FCA2-FD25-42A1-A0B7-EA48B839EFE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wikipedia", "addins\Wikipedia\Wikipedia.csproj", "{01F669C5-BD80-42E8-BA49-68DE4D28C5E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flickr", "addins\Flickr\Flickr.csproj", "{57470D69-BC99-40FC-AD1A-4BCB94B02D9C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Tests", "Unit Tests", "{D0BD9162-489E-49B5-B2B0-CC6965CCF545}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syanpse.Core.Tests", "unit-tests\Syanpse.Core.Tests\Syanpse.Core.Tests.csproj", "{143B9EF3-6841-454B-B231-9EDB495FA3FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01F669C5-BD80-42E8-BA49-68DE4D28C5E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01F669C5-BD80-42E8-BA49-68DE4D28C5E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01F669C5-BD80-42E8-BA49-68DE4D28C5E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01F669C5-BD80-42E8-BA49-68DE4D28C5E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D3634E2-B918-416E-B0BB-B595220A8125}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D3634E2-B918-416E-B0BB-B595220A8125}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D3634E2-B918-416E-B0BB-B595220A8125}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D3634E2-B918-416E-B0BB-B595220A8125}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}.Release|Any CPU.Build.0 = Release|Any CPU
+		{143B9EF3-6841-454B-B231-9EDB495FA3FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{143B9EF3-6841-454B-B231-9EDB495FA3FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{143B9EF3-6841-454B-B231-9EDB495FA3FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{143B9EF3-6841-454B-B231-9EDB495FA3FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41161442-7503-4E41-9522-C4FC451E206F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41161442-7503-4E41-9522-C4FC451E206F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41161442-7503-4E41-9522-C4FC451E206F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41161442-7503-4E41-9522-C4FC451E206F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57470D69-BC99-40FC-AD1A-4BCB94B02D9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57470D69-BC99-40FC-AD1A-4BCB94B02D9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57470D69-BC99-40FC-AD1A-4BCB94B02D9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57470D69-BC99-40FC-AD1A-4BCB94B02D9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72DAF9C5-7295-4882-9CD1-AEE5FD2AB44B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72DAF9C5-7295-4882-9CD1-AEE5FD2AB44B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72DAF9C5-7295-4882-9CD1-AEE5FD2AB44B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72DAF9C5-7295-4882-9CD1-AEE5FD2AB44B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B13B8FD-FC7F-496D-AC0E-5487C0D1608F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B13B8FD-FC7F-496D-AC0E-5487C0D1608F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B13B8FD-FC7F-496D-AC0E-5487C0D1608F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B13B8FD-FC7F-496D-AC0E-5487C0D1608F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF64FCA2-FD25-42A1-A0B7-EA48B839EFE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF64FCA2-FD25-42A1-A0B7-EA48B839EFE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF64FCA2-FD25-42A1-A0B7-EA48B839EFE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF64FCA2-FD25-42A1-A0B7-EA48B839EFE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5518C86-09CA-427B-836A-65C551836AB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5518C86-09CA-427B-836A-65C551836AB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5518C86-09CA-427B-836A-65C551836AB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5518C86-09CA-427B-836A-65C551836AB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0D3634E2-B918-416E-B0BB-B595220A8125} = {977BC9B7-C959-412F-B179-43EDA0664F06}
+		{BF64FCA2-FD25-42A1-A0B7-EA48B839EFE3} = {977BC9B7-C959-412F-B179-43EDA0664F06}
+		{01F669C5-BD80-42E8-BA49-68DE4D28C5E0} = {977BC9B7-C959-412F-B179-43EDA0664F06}
+		{57470D69-BC99-40FC-AD1A-4BCB94B02D9C} = {977BC9B7-C959-412F-B179-43EDA0664F06}
+		{143B9EF3-6841-454B-B231-9EDB495FA3FD} = {D0BD9162-489E-49B5-B2B0-CC6965CCF545}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = src\Synapse.GtkClient\Synapse.GtkClient.csproj
+		Policies = $0
+		$0.ChangeLogPolicy = $1
+		$1.UpdateMode = ProjectRoot
+		$1.MessageStyle = $2
+		$2.LineAlign = 0
+		$1.inheritsSet = Mono
+		name = Synapse
+	EndGlobalSection
+EndGlobal
