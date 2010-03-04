@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Synapse.Services</RootNamespace>
+    <AssemblyName>Synapse.Services</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Execution>
+      <Execution clr-version="Net_2_0" xmlns="" />
+    </Execution>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Execution>
+      <Execution clr-version="Net_2_0" xmlns="" />
+    </Execution>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Synapse.Services\NowPlayingService.cs" />
+    <Compile Include="Synapse.ServiceStack\IService.cs" />
+    <Compile Include="Synapse.ServiceStack\ServiceManager.cs" />
+    <Compile Include="Synapse.ServiceStack\IRequiredService.cs" />
+    <Compile Include="Synapse.ServiceStack\IInitializeService.cs" />
+    <Compile Include="Synapse.ServiceStack\IExtensionService.cs" />
+    <Compile Include="Synapse.ServiceStack\ServiceStartedHandler.cs" />
+    <Compile Include="Synapse.ServiceStack\IDelayedInitializeService.cs" />
+    <Compile Include="Synapse.ServiceStack\Application.cs" />
+    <Compile Include="Synapse.ServiceStack\IClient.cs" />
+    <Compile Include="Synapse.ServiceStack\IRegisterOnDemandService.cs" />
+    <Compile Include="Synapse.Services\SettingsService.cs" />
+    <Compile Include="Synapse.Services\ActivityFeedService.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Synapse.Services\NetworkService.cs" />
+    <Compile Include="Synapse.Services\ScreensaverService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Synapse.Services.addin.xml">
+      <LogicalName>Synapse.Services.addin.xml</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Posix">
+      <HintPath>..\..\contrib\dotnet\Mono.Posix.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Hyena, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\contrib\Hyena.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=0.4.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\contrib\Mono.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Synapse.Core\Synapse.Core.csproj">
+      <Project>{244D9655-86AC-438A-9CC3-29281430B393}</Project>
+      <Name>Synapse.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties xmlns="">
+        <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile.am" SyncReferences="true" IsAutotoolsProject="true" RelativeConfigureInPath="../..">
+          <BuildFilesVar Sync="true" Name="FILES" />
+          <DeployFilesVar />
+          <ResourcesVar Sync="true" Name="RESOURCES" />
+          <OthersVar />
+          <GacRefVar Sync="true" Name="REFERENCES" />
+          <AsmRefVar Sync="true" Name="DLL_REFERENCES" />
+          <ProjectRefVar Sync="true" Name="PROJECT_REFERENCES" />
+        </MonoDevelop.Autotools.MakefileInfo>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>

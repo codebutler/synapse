@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="Synapse.WpfClient.Views.NoAccountsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Synapse.WpfClient"
+             xmlns:localv="clr-namespace:Synapse.WpfClient.Views" 
+             xmlns:localvm="clr-namespace:Synapse.WpfClient.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <Image Name="octyImage" HorizontalAlignment="Center" Grid.Row="0" Stretch="None" Source="/Synapse.WpfClient;component/Resources/octy.png" Margin="12,12,12,6">
+            <Image.RenderTransform>
+                <TranslateTransform />
+            </Image.RenderTransform>
+        </Image>
+
+        <ContentControl Grid.Row="1" Content="{Binding Path=BottomStuff}">
+            <ContentControl.Resources>
+                <ResourceDictionary>
+                    <DataTemplate DataType="{x:Type localvm:WelcomeVM}">
+                        <localv:WelcomeView />
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type localvm:AddFirstAccountVM}">
+                        <localv:AddFirstAccountView />
+                    </DataTemplate>
+                </ResourceDictionary>
+            </ContentControl.Resources>
+        </ContentControl>
+    </Grid>
+</UserControl>

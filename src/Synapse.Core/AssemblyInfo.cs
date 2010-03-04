@@ -27,4 +27,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyProduct("Synapse")]
 [assembly: AssemblyCopyright("(C) 2008-2009 Eric Butler")]
 
-[assembly: AssemblyVersion("0.1.*.*")]
+[assembly: AssemblyVersion("0.1")]

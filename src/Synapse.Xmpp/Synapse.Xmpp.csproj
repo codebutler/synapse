@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{54CE9B44-385C-4469-8D44-656B6E1AB342}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Synapse.Xmpp</RootNamespace>
+    <AssemblyName>Synapse.Xmpp</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Execution>
+      <Execution clr-version="Net_2_0" xmlns="" />
+    </Execution>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Execution>
+      <Execution clr-version="Net_2_0" xmlns="" />
+    </Execution>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Synapse.Xmpp\Account.cs" />
+    <Compile Include="Synapse.Xmpp\IDiscoverable.cs" />
+    <Compile Include="Synapse.Xmpp\Namespace.cs" />
+    <Compile Include="Synapse.Xmpp\PersonalEventing.cs" />
+    <Compile Include="Synapse.Xmpp\Microblogging.cs" />
+    <Compile Include="Synapse.Xmpp\UserMood.cs" />
+    <Compile Include="Synapse.Xmpp\UserTune.cs" />
+    <Compile Include="Synapse.Xmpp\ClientStatus.cs" />
+    <Compile Include="Synapse.Xmpp\UserAvatars.cs" />
+    <Compile Include="Synapse.Xmpp\AvatarManager.cs" />
+    <Compile Include="Synapse.Xmpp\ChatStates.cs" />
+    <Compile Include="Synapse.Xmpp\XmppUriQueryInfo.cs" />
+    <Compile Include="Synapse.Xmpp\Helper.cs" />
+    <Compile Include="Synapse.Xmpp.Services\AccountService.cs" />
+    <Compile Include="Synapse.Xmpp\XmppActivityFeedItem.cs" />
+    <Compile Include="Synapse.Xmpp.Services\ShoutService.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Synapse.Xmpp.Services\XmppService.cs" />
+    <Compile Include="Synapse.Xmpp\UserWebIdentities.cs" />
+    <Compile Include="Synapse.Xmpp\StreamTypeInfo.cs" />
+    <Compile Include="Synapse.Xmpp.Services\GeoService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Synapse.Xmpp.addin.xml">
+      <LogicalName>Synapse.Xmpp.addin.xml</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="jabber-net, Version=2.0.0.613, Culture=neutral, PublicKeyToken=924c5b18328d6f09">
+      <HintPath>..\..\contrib\jabber-net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="Mono.Addins, Version=0.4.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\contrib\Mono.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="Hyena, Version=1.4.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\contrib\Hyena.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Synapse.Core\Synapse.Core.csproj">
+      <Project>{244D9655-86AC-438A-9CC3-29281430B393}</Project>
+      <Name>Synapse.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Synapse.Services\Synapse.Services.csproj">
+      <Project>{1027F2F0-95B1-4A50-AF3B-5B88C3BCD490}</Project>
+      <Name>Synapse.Services</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties xmlns="">
+        <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile.am" SyncReferences="true" IsAutotoolsProject="true" RelativeConfigureInPath="../..">
+          <BuildFilesVar Sync="true" Name="FILES" />
+          <DeployFilesVar />
+          <ResourcesVar Sync="true" Name="RESOURCES" />
+          <OthersVar />
+          <GacRefVar Sync="true" Name="REFERENCES" />
+          <AsmRefVar Sync="true" Name="DLL_REFERENCES" />
+          <ProjectRefVar Sync="true" Name="PROJECT_REFERENCES" />
+        </MonoDevelop.Autotools.MakefileInfo>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>

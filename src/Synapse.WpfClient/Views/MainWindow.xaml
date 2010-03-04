@@ -1,0 +1,120 @@
+﻿<Window x:Class="Synapse.WpfClient.Views.MainWindow" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dropShadow="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+        xmlns:snappy="clr-namespace:ImageSnappingToPixels"
+        xmlns:local="clr-namespace:Synapse.WpfClient"
+        xmlns:localv="clr-namespace:Synapse.WpfClient.Views"
+        xmlns:localvm="clr-namespace:Synapse.WpfClient.ViewModels"
+        Title="MainWindow"
+        Height="440"
+        Width="260"
+        AllowsTransparency="True" 
+        ResizeMode="CanResizeWithGrip"
+        WindowStyle="None"
+        MaxWidth="384"
+        MinWidth="250"
+        MinHeight="380"
+        SnapsToDevicePixels="True" 
+        Icon="/Synapse.WpfClient;component/Resources/octy.png" 
+        MouseDown="Window_MouseDown">
+    
+    <Window.Background>
+        <SolidColorBrush />
+    </Window.Background>
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Resources.xaml">
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Border CornerRadius="0" x:Name="Box" SnapsToDevicePixels="True" Background="#FF03060B"> 
+        <Grid SnapsToDevicePixels="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Height="30" Name="titleGrid" VerticalAlignment="Top" SnapsToDevicePixels="True" Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="6"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Synapse" Name="label3" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" Margin="38,0,0,0" />
+
+                <Border VerticalAlignment="Center" Grid.Column="1">
+                    <Button Style="{StaticResource titlebarButtonStyle}" Name="menuButton" Width="10" Height="10">
+                        <Border>
+                            <snappy:PixelPerfectImage Source="/Synapse.WpfClient;component/Resources/menu-icon.png" />
+                        </Border>
+                    </Button>
+                </Border>
+
+                <Border VerticalAlignment="Center" Grid.Column="2">
+                    <Button Style="{StaticResource titlebarButtonStyle}"
+                            Name="closeButton"
+                            Width="10"
+                            Height="10" 
+                            Command="{ Binding Path=CloseCommand, Source={x:Static localvm:MainWindowVM.Instance }}">
+                        <Border>
+                            <snappy:PixelPerfectImage Source="/Synapse.WpfClient;component/Resources/stock-close_12.png" />
+                        </Border>
+                    </Button>
+                </Border>
+            </Grid>
+
+            <ContentControl Grid.Row="1" Content="{Binding Path=ContentVM}">
+                <ContentControl.Resources>
+                    <ResourceDictionary>
+                        <DataTemplate DataType="{x:Type localvm:NoAccountsVM}">
+                            <localv:NoAccountsView />
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type localvm:RosterVM}">
+                            <localv:RosterView />
+                        </DataTemplate>
+                    </ResourceDictionary>
+                </ContentControl.Resources>
+            </ContentControl>
+            
+            <Grid.Background>
+                <ImageBrush ImageSource="/Synapse.WpfClient;component/Resources/oceanbg.png" Stretch="None" AlignmentY="Top" />
+            </Grid.Background>
+        </Grid>
+    </Border>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation
+                        Storyboard.TargetName="octyImage"
+                        Storyboard.TargetProperty="(Image.RenderTransform).(TranslateTransform.Y)"
+                        By="15"
+                        Duration="0:0:3"
+                        RepeatBehavior="Forever"
+                        AutoReverse="True">
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+    
+    <Window.OpacityMask>
+        <VisualBrush>
+            <VisualBrush.Visual>
+                <Border CornerRadius="6,6,0,6"  
+                        Width="{Binding ElementName=Box, Path=ActualWidth}"
+                        Height="{Binding ElementName=Box, Path=ActualHeight}"
+                        Background="Black" />
+            </VisualBrush.Visual>
+        </VisualBrush>
+    </Window.OpacityMask>
+</Window>
